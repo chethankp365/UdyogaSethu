@@ -1,0 +1,72 @@
+{
+  "@@locale": "en",
+  "appName": "UdyogaSethu",
+  "@appName": {
+    "description": "Application name"
+  },
+  "taglinePart1": "Bridging Work.",
+  "@taglinePart1": {
+    "description": "First green part of tagline"
+  },
+  "taglinePart2": "Empowering Lives.",
+  "@taglinePart2": {
+    "description": "Second orange part of tagline"
+  },
+  "splashInitializing": "Initializing UdyogaSethu...",
+  "@splashInitializing": {
+    "description": "Progress bar label on splash"
+  },
+  "chipAiMatching": "AI Matching",
+  "@chipAiMatching": {
+    "description": "AI matching feature chip"
+  },
+  "chipSecure": "Secure",
+  "@chipSecure": {
+    "description": "Secure feature chip"
+  },
+  "chipVerified": "Verified",
+  "@chipVerified": {
+    "description": "Verified feature chip"
+  },
+  "versionLabel": "Version {version}",
+  "@versionLabel": {
+    "description": "Version string footer",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "introSkip": "Skip",
+  "@introSkip": {
+    "description": "Skip onboarding button"
+  },
+  "introHeadline": "Built for India. For Every Worker.",
+  "@introHeadline": {
+    "description": "Intro screen main headline"
+  },
+  "introSubtitle": "Find jobs, grow skills, earn better and live with dignity.",
+  "@introSubtitle": {
+    "description": "Intro screen subtitle"
+  },
+  "introFeature1Title": "Find Jobs Near You",
+  "@introFeature1Title": {
+    "description": "Intro feature card 1 title"
+  },
+  "introFeature2Title": "Secure Payments",
+  "@introFeature2Title": {
+    "description": "Intro feature card 2 title"
+  },
+  "introFeature3Title": "AI Voice Assistant",
+  "@introFeature3Title": {
+    "description": "Intro feature card 3 title"
+  },
+  "introNext": "Next ->",
+  "@introNext": {
+    "description": "Next onboarding button"
+  },
+  "introGetStarted": "Get Started ->",
+  "@introGetStarted": {
+    "description": "Get Started onboarding button"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "@@locale": "ta",
+  "appName": "உத்யோகசேது",
+  "taglinePart1": "வேலை இணைப்பு.",
+  "taglinePart2": "வாழ்க்கை மேம்பாடு.",
+  "splashInitializing": "உத்யோகசேது தொடங்குகிறது...",
+  "chipAiMatching": "AI பொருத்தம்",
+  "chipSecure": "பாதுகாப்பானது",
+  "chipVerified": "சரிபார்க்கப்பட்டது",
+  "versionLabel": "பதிப்பு {version}",
+  "introSkip": "தவிர்",
+  "introHeadline": "இந்தியாவிற்காக உருவாக்கப்பட்டது. ஒவ்வொரு தொழிலாளிக்கும்.",
+  "introSubtitle": "அருகிலுள்ள வேலைகளைக் கண்டறியவும், திறன்களை வளர்க்கவும், சிறப்பாகச் சம்பாதிக்கவும்.",
+  "introFeature1Title": "அருகிலுள்ள வேலைகளைக் கண்டறியவும்",
+  "introFeature2Title": "பாதுகாப்பான கொடுப்பனவுகள்",
+  "introFeature3Title": "AI குரல் உதவியாளர்",
+  "introNext": "அடுத்து ->",
+  "introGetStarted": "தொடங்கு ->"
+}

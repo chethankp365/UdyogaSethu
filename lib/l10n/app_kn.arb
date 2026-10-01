@@ -1,0 +1,19 @@
+{
+  "@@locale": "kn",
+  "appName": "ಉದ್ಯೋಗಸೇತು",
+  "taglinePart1": "ಕೆಲಸ ಜೋಡಣೆ.",
+  "taglinePart2": "ಬಾಳಿಗೆ ಸಬಲೀಕರಣ.",
+  "splashInitializing": "ಉದ್ಯೋಗಸೇತು ಪ್ರಾರಂಭಿಸಲಾಗುತ್ತಿದೆ...",
+  "chipAiMatching": "ಎಐ ಮ್ಯಾಚಿಂಗ್",
+  "chipSecure": "ಸುರಕ್ಷಿತ",
+  "chipVerified": "ದೃಢೀಕೃತ",
+  "versionLabel": "ಆವೃತ್ತಿ {version}",
+  "introSkip": "ಸ್ಕಿಪ್",
+  "introHeadline": "ಭಾರತಕ್ಕಾಗಿ ನಿರ್ಮಿಸಲಾಗಿದೆ. ಪ್ರತಿಯೊಬ್ಬ ಕಾರ್ಮಿಕನಿಗಾಗಿ.",
+  "introSubtitle": "ಹತ್ತಿರದ ಕೆಲಸ ಹುಡುಕಿ, ಕೌಶಲ್ಯ ಬೆಳೆಸಿ, ಉತ್ತಮವಾಗಿ ಸಂಪಾದಿಸಿ ಗೌರವದಿಂದ ಬಾಳಿ.",
+  "introFeature1Title": "ನಿಮ್ಮ ಹತ್ತಿರದ ಕೆಲಸಗಳು",
+  "introFeature2Title": "ಸುರಕ್ಷಿತ ಪಾವತಿಗಳು",
+  "introFeature3Title": "ಎಐ ಧ್ವನಿ ಸಹಾಯಕ",
+  "introNext": "ಮುಂದೆ ->",
+  "introGetStarted": "ಆರಂಭಿಸಿ ->"
+}

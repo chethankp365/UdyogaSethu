@@ -1,0 +1,19 @@
+{
+  "@@locale": "te",
+  "appName": "ఉద్యోగసేతు",
+  "taglinePart1": "పని అనుసంధానం.",
+  "taglinePart2": "జీవితాల సాధికారత.",
+  "splashInitializing": "ఉద్యోగసేతు ప్రారంభమవుతోంది...",
+  "chipAiMatching": "AI మ్యాచింగ్",
+  "chipSecure": "సురక్షితం",
+  "chipVerified": "ధృవీకరించబడింది",
+  "versionLabel": "వెర్షన్ {version}",
+  "introSkip": "స్కిప్",
+  "introHeadline": "భారత్ కోసం నిర్మించబడింది. ప్రతీ కార్మికుడి కోసం.",
+  "introSubtitle": "దగ్గరలోని పనులు వెతకండి, నైపుణ్యాలు పెంచుకోండి, మెరుగ్గా సంపాదించండి.",
+  "introFeature1Title": "మీ సమీపంలో పనులు వెతకండి",
+  "introFeature2Title": "సురక్షిత చెల్లింపులు",
+  "introFeature3Title": "AI వాయిస్ అసిస్టెంట్",
+  "introNext": "తరువాత ->",
+  "introGetStarted": "ప్రారంభించండి ->"
+}
