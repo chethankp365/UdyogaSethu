@@ -8,7 +8,7 @@
 - [x] **P0.5**: Router and role-based app shells (Status: Done | Configured GoRouter with StatefulShellRoute.indexedStack for 4 role shells, AppSessionNotifier, typed AppRoutes, RoleBottomNavBar with raised mic FAB, responsive AdminShell with NavigationRail, /dev/role debug switcher, NotFoundScreen, and udyogasethu:// Android deep links)
 
 ## Phase 1 (Database, security and server logic)
-- [ ] **P1.1**: Schema part 1: identity, roles and profiles (Status: Todo)
+- [x] **P1.1**: Schema part 1: identity, roles and profiles (Status: Done | Created migration 0010_identity.sql with PostGIS/pgcrypto/trgm extensions, enums, 9 tables, GIST/trigram indexes, updated_at & handle_new_user triggers, RLS enabled, and server-computed column comments. Pushed & linted cleanly on Supabase)
 - [ ] **P1.2**: Schema part 2: jobs, bookings and farm marketplace (Status: Todo)
 - [ ] **P1.3**: Schema part 3: money, trust and safety (Status: Todo)
 - [ ] **P1.4**: Schema part 4: engagement, admin and content (Status: Todo)
