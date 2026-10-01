@@ -80,10 +80,13 @@ class StatusChip extends StatelessWidget {
             Icon(icon, size: 14, color: text),
             const SizedBox(width: 4),
           ],
-          Text(
-            label,
-            style: AppTypography.bodySmall(text).copyWith(
-              fontWeight: FontWeight.bold,
+          Flexible(
+            child: Text(
+              label,
+              style: AppTypography.bodySmall(text).copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

@@ -17,9 +17,9 @@ class Env {
     return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1temJwZXFrZm9tbnl3dXpvcWlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA4NDUyNTMsImV4cCI6MjEwNjQyMTI1M30.rT_c9tN4QNukP_fewnMC7kzkI6KPXO4UxNAIqXvEHoc';
   }
 
-  /// Returns true if required environment variables are set via dart-define/env.json.
+  /// Returns true if valid Supabase configuration is available.
   static bool get isConfigured =>
-      _envUrl.trim().isNotEmpty && _envAnonKey.trim().isNotEmpty;
+      supabaseUrl.trim().isNotEmpty && supabaseAnonKey.trim().isNotEmpty;
 }
 
 /// A human-readable error screen shown when required environment variables are missing.
