@@ -430,4 +430,68 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get breadcrumbSeeker => 'श्रमिक > नौकरी चाहने वाले';
+
+  @override
+  String get loginTitle => 'मोबाइल नंबर लॉगिन';
+
+  @override
+  String get loginSubtitle =>
+      'तत्काल SMS लॉगिन के लिए 10 अंकों का मोबाइल नंबर दर्ज करें।';
+
+  @override
+  String get phoneInputLabel => 'मोबाइल फोन नंबर';
+
+  @override
+  String get phonePrefix => 'IN +91';
+
+  @override
+  String get getOtpCode => 'SMS OTP सत्यापन कोड प्राप्त करें';
+
+  @override
+  String get agreeTermsDisclaimer =>
+      'मैं सेवा की शर्तों और गोपनीयता नीति से सहमत हूं';
+
+  @override
+  String get continueWithGoogle => 'Google के साथ जारी रखें';
+
+  @override
+  String get googleSignInNotice => 'Google साइन-इन अगले चरण में सक्षम होगा';
+
+  @override
+  String get otpTitle => 'सत्यापन कोड दर्ज करें';
+
+  @override
+  String otpSubtitle(Object maskedPhone) {
+    return '+91 $maskedPhone पर भेजा गया 6-अंकीय OTP दर्ज करें';
+  }
+
+  @override
+  String get verifyAndLogin => 'सत्यापित करें और लॉगिन करें';
+
+  @override
+  String resendCodeIn(Object seconds) {
+    return '$seconds सेकंड में कोड पुनः भेजें';
+  }
+
+  @override
+  String get resendCode => 'कोड पुनः भेजें';
+
+  @override
+  String get maxResendsReached =>
+      'इस सत्र के लिए अधिकतम 3 पुनः भेजने की सीमा समाप्त हो गई है।';
+
+  @override
+  String get changeNumber => 'नंबर बदलें';
+
+  @override
+  String get invalidOtpError =>
+      'अमान्य या समाप्त हो चुका OTP। कृपया 6-अंकीय कोड की जांच करें।';
+
+  @override
+  String get rateLimitError =>
+      'बहुत सारे OTP अनुरोध। कृपया थोड़ी देर बाद प्रयास करें।';
+
+  @override
+  String get termsRequiredError =>
+      'आगे बढ़ने के लिए कृपया सेवा की शर्तों को स्वीकार करें।';
 }

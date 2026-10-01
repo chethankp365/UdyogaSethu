@@ -124,6 +124,25 @@
   "loginLink": "Log in",
   "listenToStepOptions": "Listen to options in {language}",
   "breadcrumbWorker": "Worker",
-  "breadcrumbSeeker": "Worker > Job Seeker"
+  "breadcrumbSeeker": "Worker > Job Seeker",
+  "loginTitle": "Mobile Number Login",
+  "loginSubtitle": "Enter 10-digit mobile number for instant SMS login.",
+  "phoneInputLabel": "MOBILE PHONE NUMBER",
+  "phonePrefix": "IN +91",
+  "getOtpCode": "Get SMS OTP Verification Code",
+  "agreeTermsDisclaimer": "I agree to the Terms of Service and Privacy Policy",
+  "continueWithGoogle": "Continue with Google",
+  "googleSignInNotice": "Google sign-in will be enabled in Phase 2.5",
+  "otpTitle": "Enter Verification Code",
+  "otpSubtitle": "Enter 6-digit OTP sent to +91 {maskedPhone}",
+  "verifyAndLogin": "Verify & Login",
+  "resendCodeIn": "Resend code in {seconds}s",
+  "resendCode": "Resend Code",
+  "maxResendsReached": "Maximum 3 resends reached for this session.",
+  "changeNumber": "Change number",
+  "invalidOtpError": "Invalid or expired verification code. Please check the 6-digit code and try again.",
+  "rateLimitError": "Too many OTP requests. Please wait a moment before trying again.",
+  "termsRequiredError": "Please accept the Terms of Service to proceed."
 }
+
 

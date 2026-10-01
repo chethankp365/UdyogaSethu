@@ -124,6 +124,25 @@
   "loginLink": "லாகின் செய்யவும்",
   "listenToStepOptions": "{language} இல் விருப்பங்களைக் கேட்கவும்",
   "breadcrumbWorker": "தொழிலாளி",
-  "breadcrumbSeeker": "தொழிலாளி > வேலை தேடுபவர்"
+  "breadcrumbSeeker": "தொழிலாளி > வேலை தேடுபவர்",
+  "loginTitle": "மொபைல் எண் லாகின்",
+  "loginSubtitle": "உடனடி SMS லாகினுக்கு 10 இலக்க மொபைல் எண்ணை உள்ளிடவும்.",
+  "phoneInputLabel": "மொபைல் போன் எண்",
+  "phonePrefix": "IN +91",
+  "getOtpCode": "SMS OTP சரிபார்ப்பு குறியீட்டைப் பெறவும்",
+  "agreeTermsDisclaimer": "சேவை விதிமுறைகள் மற்றும் தனியுரிமைக் கொள்கையை ஏற்கிறேன்",
+  "continueWithGoogle": "Google மூலம் தொடரவும்",
+  "googleSignInNotice": "Google லாகின் அடுத்த கட்டத்தில் இயங்கும்",
+  "otpTitle": "சரிபார்ப்பு குறியீட்டை உள்ளிடவும்",
+  "otpSubtitle": "+91 {maskedPhone} க்கு அனுப்பப்பட்ட 6 இலக்க OTP ஐ உள்ளிடவும்",
+  "verifyAndLogin": "சரிபார்த்து லாகின் செய்யவும்",
+  "resendCodeIn": "{seconds} வினாடிகளில் குறியீட்டை மீண்டும் அனுப்பவும்",
+  "resendCode": "குறியீட்டை மீண்டும் அனுப்பு",
+  "maxResendsReached": "இந்த அமர்வுக்கு அதிகபட்சம் 3 முறை மீண்டும் அனுப்பப்பட்டுள்ளது.",
+  "changeNumber": "எண்ணை மாற்றவும்",
+  "invalidOtpError": "தவறான அல்லது காலாவதியான OTP. 6 இலக்க குறியீட்டை சரிபார்க்கவும்.",
+  "rateLimitError": "அதிகமான OTP கோரிக்கைகள். சிறிது நேரம் கழித்து முயற்சிக்கவும்.",
+  "termsRequiredError": "தொடர சேவை விதிமுறைகளை ஏற்கவும்."
 }
+
 

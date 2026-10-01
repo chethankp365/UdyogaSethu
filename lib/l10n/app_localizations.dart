@@ -859,6 +859,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Worker > Job Seeker'**
   String get breadcrumbSeeker;
+
+  /// No description provided for @loginTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile Number Login'**
+  String get loginTitle;
+
+  /// No description provided for @loginSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter 10-digit mobile number for instant SMS login.'**
+  String get loginSubtitle;
+
+  /// No description provided for @phoneInputLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'MOBILE PHONE NUMBER'**
+  String get phoneInputLabel;
+
+  /// No description provided for @phonePrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'IN +91'**
+  String get phonePrefix;
+
+  /// No description provided for @getOtpCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Get SMS OTP Verification Code'**
+  String get getOtpCode;
+
+  /// No description provided for @agreeTermsDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'I agree to the Terms of Service and Privacy Policy'**
+  String get agreeTermsDisclaimer;
+
+  /// No description provided for @continueWithGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get continueWithGoogle;
+
+  /// No description provided for @googleSignInNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Google sign-in will be enabled in Phase 2.5'**
+  String get googleSignInNotice;
+
+  /// No description provided for @otpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Verification Code'**
+  String get otpTitle;
+
+  /// No description provided for @otpSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter 6-digit OTP sent to +91 {maskedPhone}'**
+  String otpSubtitle(Object maskedPhone);
+
+  /// No description provided for @verifyAndLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify & Login'**
+  String get verifyAndLogin;
+
+  /// No description provided for @resendCodeIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code in {seconds}s'**
+  String resendCodeIn(Object seconds);
+
+  /// No description provided for @resendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend Code'**
+  String get resendCode;
+
+  /// No description provided for @maxResendsReached.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum 3 resends reached for this session.'**
+  String get maxResendsReached;
+
+  /// No description provided for @changeNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Change number'**
+  String get changeNumber;
+
+  /// No description provided for @invalidOtpError.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid or expired verification code. Please check the 6-digit code and try again.'**
+  String get invalidOtpError;
+
+  /// No description provided for @rateLimitError.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many OTP requests. Please wait a moment before trying again.'**
+  String get rateLimitError;
+
+  /// No description provided for @termsRequiredError.
+  ///
+  /// In en, this message translates to:
+  /// **'Please accept the Terms of Service to proceed.'**
+  String get termsRequiredError;
 }
 
 class _AppLocalizationsDelegate

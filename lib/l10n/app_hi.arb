@@ -124,6 +124,25 @@
   "loginLink": "लॉग इन करें",
   "listenToStepOptions": "{language} में विकल्प सुनें",
   "breadcrumbWorker": "श्रमिक",
-  "breadcrumbSeeker": "श्रमिक > नौकरी चाहने वाले"
+  "breadcrumbSeeker": "श्रमिक > नौकरी चाहने वाले",
+  "loginTitle": "मोबाइल नंबर लॉगिन",
+  "loginSubtitle": "तत्काल SMS लॉगिन के लिए 10 अंकों का मोबाइल नंबर दर्ज करें।",
+  "phoneInputLabel": "मोबाइल फोन नंबर",
+  "phonePrefix": "IN +91",
+  "getOtpCode": "SMS OTP सत्यापन कोड प्राप्त करें",
+  "agreeTermsDisclaimer": "मैं सेवा की शर्तों और गोपनीयता नीति से सहमत हूं",
+  "continueWithGoogle": "Google के साथ जारी रखें",
+  "googleSignInNotice": "Google साइन-इन अगले चरण में सक्षम होगा",
+  "otpTitle": "सत्यापन कोड दर्ज करें",
+  "otpSubtitle": "+91 {maskedPhone} पर भेजा गया 6-अंकीय OTP दर्ज करें",
+  "verifyAndLogin": "सत्यापित करें और लॉगिन करें",
+  "resendCodeIn": "{seconds} सेकंड में कोड पुनः भेजें",
+  "resendCode": "कोड पुनः भेजें",
+  "maxResendsReached": "इस सत्र के लिए अधिकतम 3 पुनः भेजने की सीमा समाप्त हो गई है।",
+  "changeNumber": "नंबर बदलें",
+  "invalidOtpError": "अमान्य या समाप्त हो चुका OTP। कृपया 6-अंकीय कोड की जांच करें।",
+  "rateLimitError": "बहुत सारे OTP अनुरोध। कृपया थोड़ी देर बाद प्रयास करें।",
+  "termsRequiredError": "आगे बढ़ने के लिए कृपया सेवा की शर्तों को स्वीकार करें।"
 }
+
 

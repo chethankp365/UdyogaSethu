@@ -436,4 +436,69 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get breadcrumbSeeker => 'ಕಾರ್ಮಿಕ > ಉದ್ಯೋಗಾಕಾಂಕ್ಷಿ';
+
+  @override
+  String get loginTitle => 'ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ಲಾಗಿನ್';
+
+  @override
+  String get loginSubtitle =>
+      'ತಕ್ಷಣದ SMS ಲಾಗಿನ್‌ಗಾಗಿ 10 ಆಂಕಿಗಳ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ.';
+
+  @override
+  String get phoneInputLabel => 'ಮೊಬೈಲ್ ಫೋನ್ ಸಂಖ್ಯೆ';
+
+  @override
+  String get phonePrefix => 'IN +91';
+
+  @override
+  String get getOtpCode => 'SMS OTP ದೃಢೀಕರಣ ಕೋಡ್ ಪಡೆಯಿರಿ';
+
+  @override
+  String get agreeTermsDisclaimer =>
+      'ನಾನು ಸೇವಾ ನಿಯಮಗಳು ಮತ್ತು ಗೌಪ್ಯತಾ ನೀತಿಯನ್ನು ಒಪ್ಪುತ್ತೇನೆ';
+
+  @override
+  String get continueWithGoogle => 'Google ನೊಂದಿಗೆ ಮುಂದುವರಿಯಿರಿ';
+
+  @override
+  String get googleSignInNotice =>
+      'Google ಲಾಗಿನ್ ಮುಂದಿನ ಹಂತದಲ್ಲಿ ಸಕ್ರಿಯಗೊಳ್ಳುತ್ತದೆ';
+
+  @override
+  String get otpTitle => 'ದೃಢೀಕರಣ ಕೋಡ್ ನಮೂದಿಸಿ';
+
+  @override
+  String otpSubtitle(Object maskedPhone) {
+    return '+91 $maskedPhone ಗೆ ಕಳುಹಿಸಲಾದ 6 ಆಂಕಿಗಳ OTP ನಮೂದಿಸಿ';
+  }
+
+  @override
+  String get verifyAndLogin => 'ದೃಢೀಕರಿಸಿ ಮತ್ತು ಲಾಗಿನ್ ಮಾಡಿ';
+
+  @override
+  String resendCodeIn(Object seconds) {
+    return '$seconds ಸೆಕೆಂಡುಗಳಲ್ಲಿ ಕೋಡ್ ಮರುಕಳುಹಿಸಿ';
+  }
+
+  @override
+  String get resendCode => 'ಕೋಡ್ ಮರುಕಳುಹಿಸಿ';
+
+  @override
+  String get maxResendsReached =>
+      'ಈ ಸೆಷನ್‌ನಲ್ಲಿ ಗರಿಷ್ಠ 3 ಬಾರಿ ಮರುಕಳುಹಿಸುವಿಕೆ ಪೂರ್ಣಗೊಂಡಿದೆ.';
+
+  @override
+  String get changeNumber => 'ಸಂಖ್ಯೆ ಬದಲಾಯಿಸಿ';
+
+  @override
+  String get invalidOtpError =>
+      'ಅಮಾನ್ಯ ಅಥವಾ ಅವಧಿ ಮೀರಿದ OTP. ದಯವಿಟ್ಟು 6 ಆಂಕಿಗಳ ಕೋಡ್ ಪರಿಶೀಲಿಸಿ.';
+
+  @override
+  String get rateLimitError =>
+      'ಹೆಚ್ಚಿನ OTP ವಿನಂತಿಗಳು ಬಂದಿವೆ. ದಯವಿಟ್ಟು ಸ್ವಲ್ಪ ಸಮಯ ಕಾದು ಪ್ರಯತ್ನಿಸಿ.';
+
+  @override
+  String get termsRequiredError =>
+      'ಮುಂದುವರಿಯಲು ದಯವಿಟ್ಟು ಸೇವಾ ನಿಯಮಗಳನ್ನು ಒಪ್ಪಿಕೊಳ್ಳಿ.';
 }

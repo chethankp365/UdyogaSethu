@@ -434,4 +434,67 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get breadcrumbSeeker => 'தொழிலாளி > வேலை தேடுபவர்';
+
+  @override
+  String get loginTitle => 'மொபைல் எண் லாகின்';
+
+  @override
+  String get loginSubtitle =>
+      'உடனடி SMS லாகினுக்கு 10 இலக்க மொபைல் எண்ணை உள்ளிடவும்.';
+
+  @override
+  String get phoneInputLabel => 'மொபைல் போன் எண்';
+
+  @override
+  String get phonePrefix => 'IN +91';
+
+  @override
+  String get getOtpCode => 'SMS OTP சரிபார்ப்பு குறியீட்டைப் பெறவும்';
+
+  @override
+  String get agreeTermsDisclaimer =>
+      'சேவை விதிமுறைகள் மற்றும் தனியுரிமைக் கொள்கையை ஏற்கிறேன்';
+
+  @override
+  String get continueWithGoogle => 'Google மூலம் தொடரவும்';
+
+  @override
+  String get googleSignInNotice => 'Google லாகின் அடுத்த கட்டத்தில் இயங்கும்';
+
+  @override
+  String get otpTitle => 'சரிபார்ப்பு குறியீட்டை உள்ளிடவும்';
+
+  @override
+  String otpSubtitle(Object maskedPhone) {
+    return '+91 $maskedPhone க்கு அனுப்பப்பட்ட 6 இலக்க OTP ஐ உள்ளிடவும்';
+  }
+
+  @override
+  String get verifyAndLogin => 'சரிபார்த்து லாகின் செய்யவும்';
+
+  @override
+  String resendCodeIn(Object seconds) {
+    return '$seconds வினாடிகளில் குறியீட்டை மீண்டும் அனுப்பவும்';
+  }
+
+  @override
+  String get resendCode => 'குறியீட்டை மீண்டும் அனுப்பு';
+
+  @override
+  String get maxResendsReached =>
+      'இந்த அமர்வுக்கு அதிகபட்சம் 3 முறை மீண்டும் அனுப்பப்பட்டுள்ளது.';
+
+  @override
+  String get changeNumber => 'எண்ணை மாற்றவும்';
+
+  @override
+  String get invalidOtpError =>
+      'தவறான அல்லது காலாவதியான OTP. 6 இலக்க குறியீட்டை சரிபார்க்கவும்.';
+
+  @override
+  String get rateLimitError =>
+      'அதிகமான OTP கோரிக்கைகள். சிறிது நேரம் கழித்து முயற்சிக்கவும்.';
+
+  @override
+  String get termsRequiredError => 'தொடர சேவை விதிமுறைகளை ஏற்கவும்.';
 }

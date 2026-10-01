@@ -11,7 +11,10 @@ import 'package:udyogasethu/core/widgets/component_gallery_screen.dart';
 import 'package:udyogasethu/core/widgets/connection_debug_screen.dart';
 import 'package:udyogasethu/core/widgets/dev_assets_screen.dart';
 import 'package:udyogasethu/core/widgets/not_found_screen.dart';
+import 'package:udyogasethu/features/auth/presentation/login_screen.dart';
+import 'package:udyogasethu/features/auth/presentation/otp_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/intro_screen.dart';
+
 import 'package:udyogasethu/features/onboarding/presentation/language_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/role_tree_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/splash_screen.dart';
@@ -77,12 +80,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
       GoRoute(
         path: AppRoutes.login,
-        builder: (context, state) => const PlaceholderScreen(
-          title: 'Phone OTP & Social Login',
-          roleName: 'Authentication',
-          icon: Icons.lock_rounded,
-        ),
+        builder: (context, state) => const LoginScreen(),
       ),
+      GoRoute(
+        path: AppRoutes.otp,
+        builder: (context, state) => const OtpScreen(),
+      ),
+
       GoRoute(
         path: AppRoutes.profileSetupSeeker,
         builder: (context, state) => const PlaceholderScreen(

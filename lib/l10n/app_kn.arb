@@ -124,6 +124,25 @@
   "loginLink": "ಲಾಗಿನ್ ಮಾಡಿ",
   "listenToStepOptions": "{language} ನಲ್ಲಿ ಆಯ್ಕೆಗಳನ್ನು ಆಲಿಸಿ",
   "breadcrumbWorker": "ಕಾರ್ಮಿಕ",
-  "breadcrumbSeeker": "ಕಾರ್ಮಿಕ > ಉದ್ಯೋಗಾಕಾಂಕ್ಷಿ"
+  "breadcrumbSeeker": "ಕಾರ್ಮಿಕ > ಉದ್ಯೋಗಾಕಾಂಕ್ಷಿ",
+  "loginTitle": "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ಲಾಗಿನ್",
+  "loginSubtitle": "ತಕ್ಷಣದ SMS ಲಾಗಿನ್‌ಗಾಗಿ 10 ಆಂಕಿಗಳ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ.",
+  "phoneInputLabel": "ಮೊಬೈಲ್ ಫೋನ್ ಸಂಖ್ಯೆ",
+  "phonePrefix": "IN +91",
+  "getOtpCode": "SMS OTP ದೃಢೀಕರಣ ಕೋಡ್ ಪಡೆಯಿರಿ",
+  "agreeTermsDisclaimer": "ನಾನು ಸೇವಾ ನಿಯಮಗಳು ಮತ್ತು ಗೌಪ್ಯತಾ ನೀತಿಯನ್ನು ಒಪ್ಪುತ್ತೇನೆ",
+  "continueWithGoogle": "Google ನೊಂದಿಗೆ ಮುಂದುವರಿಯಿರಿ",
+  "googleSignInNotice": "Google ಲಾಗಿನ್ ಮುಂದಿನ ಹಂತದಲ್ಲಿ ಸಕ್ರಿಯಗೊಳ್ಳುತ್ತದೆ",
+  "otpTitle": "ದೃಢೀಕರಣ ಕೋಡ್ ನಮೂದಿಸಿ",
+  "otpSubtitle": "+91 {maskedPhone} ಗೆ ಕಳುಹಿಸಲಾದ 6 ಆಂಕಿಗಳ OTP ನಮೂದಿಸಿ",
+  "verifyAndLogin": "ದೃಢೀಕರಿಸಿ ಮತ್ತು ಲಾಗಿನ್ ಮಾಡಿ",
+  "resendCodeIn": "{seconds} ಸೆಕೆಂಡುಗಳಲ್ಲಿ ಕೋಡ್ ಮರುಕಳುಹಿಸಿ",
+  "resendCode": "ಕೋಡ್ ಮರುಕಳುಹಿಸಿ",
+  "maxResendsReached": "ಈ ಸೆಷನ್‌ನಲ್ಲಿ ಗರಿಷ್ಠ 3 ಬಾರಿ ಮರುಕಳುಹಿಸುವಿಕೆ ಪೂರ್ಣಗೊಂಡಿದೆ.",
+  "changeNumber": "ಸಂಖ್ಯೆ ಬದಲಾಯಿಸಿ",
+  "invalidOtpError": "ಅಮಾನ್ಯ ಅಥವಾ ಅವಧಿ ಮೀರಿದ OTP. ದಯವಿಟ್ಟು 6 ಆಂಕಿಗಳ ಕೋಡ್ ಪರಿಶೀಲಿಸಿ.",
+  "rateLimitError": "ಹೆಚ್ಚಿನ OTP ವಿನಂತಿಗಳು ಬಂದಿವೆ. ದಯವಿಟ್ಟು ಸ್ವಲ್ಪ ಸಮಯ ಕಾದು ಪ್ರಯತ್ನಿಸಿ.",
+  "termsRequiredError": "ಮುಂದುವರಿಯಲು ದಯವಿಟ್ಟು ಸೇವಾ ನಿಯಮಗಳನ್ನು ಒಪ್ಪಿಕೊಳ್ಳಿ."
 }
+
 

@@ -3,17 +3,37 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+enum AppExceptionType {
+  network,
+  auth,
+  rateLimit,
+  validation,
+  timeout,
+  database,
+  unknown,
+}
+
 /// Base class for all application-specific exceptions.
 abstract class AppException implements Exception {
   final String messageKey;
   final String? originalMessage;
   final StackTrace? stackTrace;
+  final AppExceptionType type;
 
   const AppException({
     required this.messageKey,
     this.originalMessage,
     this.stackTrace,
+    this.type = AppExceptionType.unknown,
   });
+
+  String get message => originalMessage ?? messageKey;
+
+  const factory AppException.network([String? message]) = NetworkException;
+  const factory AppException.auth(String message, {String? code}) = AppAuthException;
+  const factory AppException.rateLimit(String message) = RateLimitException;
+  const factory AppException.validation(String message) = ValidationException;
+  const factory AppException.unknown(String message) = UnknownException;
 
   @override
   String toString() => '$runtimeType: [$messageKey] ${originalMessage ?? ""}';
@@ -28,25 +48,20 @@ abstract class AppException implements Exception {
         error.toString().contains('SocketException') ||
         error.toString().contains('Failed host lookup') ||
         error.toString().contains('ClientException')) {
-      return NetworkException(
-        messageKey: 'error_network_offline',
-        originalMessage: 'No internet connection',
-        stackTrace: stackTrace,
-      );
+      return const NetworkException('No internet connection');
     }
 
     if (error is TimeoutException || error.toString().contains('TimeoutException')) {
-      return AppTimeoutException(
+      return const AppTimeoutException(
         messageKey: 'error_timeout',
         originalMessage: 'Request timed out',
-        stackTrace: stackTrace,
       );
     }
 
     if (error is AuthException) {
       return AppAuthException(
+        error.message,
         messageKey: _mapAuthErrorKey(error.message),
-        originalMessage: error.message,
         stackTrace: stackTrace,
       );
     }
@@ -69,8 +84,7 @@ abstract class AppException implements Exception {
     }
 
     return UnknownException(
-      messageKey: 'error_unknown',
-      originalMessage: error.toString(),
+      error.toString(),
       stackTrace: stackTrace,
     );
   }
@@ -91,11 +105,12 @@ abstract class AppException implements Exception {
 }
 
 class NetworkException extends AppException {
-  const NetworkException({
-    super.messageKey = 'error_network_offline',
-    super.originalMessage,
-    super.stackTrace,
-  });
+  const NetworkException([String? message])
+      : super(
+          messageKey: 'error_network_offline',
+          originalMessage: message ?? 'No internet connection',
+          type: AppExceptionType.network,
+        );
 }
 
 class AppTimeoutException extends AppException {
@@ -103,15 +118,36 @@ class AppTimeoutException extends AppException {
     super.messageKey = 'error_timeout',
     super.originalMessage,
     super.stackTrace,
-  });
+  }) : super(type: AppExceptionType.timeout);
 }
 
 class AppAuthException extends AppException {
-  const AppAuthException({
-    required super.messageKey,
-    super.originalMessage,
+  final String? code;
+
+  const AppAuthException(
+    String message, {
+    super.messageKey = 'error_auth_general',
+    this.code,
     super.stackTrace,
-  });
+  }) : super(originalMessage: message, type: AppExceptionType.auth);
+}
+
+class RateLimitException extends AppException {
+  const RateLimitException(String message)
+      : super(
+          messageKey: 'error_rate_limit',
+          originalMessage: message,
+          type: AppExceptionType.rateLimit,
+        );
+}
+
+class ValidationException extends AppException {
+  const ValidationException(String message)
+      : super(
+          messageKey: 'error_validation',
+          originalMessage: message,
+          type: AppExceptionType.validation,
+        );
 }
 
 class DatabaseException extends AppException {
@@ -122,7 +158,7 @@ class DatabaseException extends AppException {
     super.originalMessage,
     this.code,
     super.stackTrace,
-  });
+  }) : super(type: AppExceptionType.database);
 }
 
 class EdgeFunctionException extends AppException {
@@ -144,11 +180,11 @@ class EdgeFunctionException extends AppException {
 }
 
 class UnknownException extends AppException {
-  const UnknownException({
+  const UnknownException(
+    String? message, {
     super.messageKey = 'error_unknown',
-    super.originalMessage,
     super.stackTrace,
-  });
+  }) : super(originalMessage: message, type: AppExceptionType.unknown);
 }
 
 /// A lightweight, privacy-focused logger that redacts tokens and phone numbers.

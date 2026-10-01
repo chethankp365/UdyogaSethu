@@ -434,4 +434,69 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get breadcrumbSeeker => 'కార్మికుడు > ఉద్యోగార్థి';
+
+  @override
+  String get loginTitle => 'మొబైల్ నంబర్ లాగిన్';
+
+  @override
+  String get loginSubtitle =>
+      'తక్షణ SMS లాగిన్ కోసం 10 అంకెల మొబైల్ నంబర్‌ను నమోదు చేయండి.';
+
+  @override
+  String get phoneInputLabel => 'మొబైల్ ఫోన్ నంబర్';
+
+  @override
+  String get phonePrefix => 'IN +91';
+
+  @override
+  String get getOtpCode => 'SMS OTP నిర్ధారణ కోడ్ పొందండి';
+
+  @override
+  String get agreeTermsDisclaimer =>
+      'నేను సేవా నిబంధనలు మరియు గోప్యతా విధానానికి అంగీకరిస్తున్నాను';
+
+  @override
+  String get continueWithGoogle => 'Google తో కొనసాగించండి';
+
+  @override
+  String get googleSignInNotice =>
+      'Google సైన్-ఇన్ తదుపరి దశలో ప్రారంభించబడుతుంది';
+
+  @override
+  String get otpTitle => 'నిర్ధారణ కోడ్ నమోదు చేయండి';
+
+  @override
+  String otpSubtitle(Object maskedPhone) {
+    return '+91 $maskedPhone కు పంపిన 6-అంకెల OTP ఎంటర్ చేయండి';
+  }
+
+  @override
+  String get verifyAndLogin => 'ధృవీకరించి లాగిన్ చేయండి';
+
+  @override
+  String resendCodeIn(Object seconds) {
+    return '$seconds సెకన్లలో కోడ్ మళ్లీ పంపండి';
+  }
+
+  @override
+  String get resendCode => 'కోడ్ మళ్లీ పంపండి';
+
+  @override
+  String get maxResendsReached =>
+      'ఈ సెషన్‌కు గరిష్టంగా 3 సార్లు కోడ్ పంపడం పూర్తయింది.';
+
+  @override
+  String get changeNumber => 'నంబర్ మార్చండి';
+
+  @override
+  String get invalidOtpError =>
+      'చెల్లని లేదా గడువు ముగిసిన OTP. దయచేసి 6-అంకెల కోడ్‌ను సరిచూసుకోండి.';
+
+  @override
+  String get rateLimitError =>
+      'చాలా ఎక్కువ OTP అభ్యర్థనలు. దయచేసి కాసేపు ఆగి ప్రయత్నించండి.';
+
+  @override
+  String get termsRequiredError =>
+      'కొనసాగడానికి దయచేసి సేవా నిబంధనలను అంగీకరించండి.';
 }

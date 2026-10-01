@@ -433,4 +433,68 @@ class AppLocalizationsMr extends AppLocalizations {
 
   @override
   String get breadcrumbSeeker => 'Worker > Job Seeker';
+
+  @override
+  String get loginTitle => 'Mobile Number Login';
+
+  @override
+  String get loginSubtitle =>
+      'Enter 10-digit mobile number for instant SMS login.';
+
+  @override
+  String get phoneInputLabel => 'MOBILE PHONE NUMBER';
+
+  @override
+  String get phonePrefix => 'IN +91';
+
+  @override
+  String get getOtpCode => 'Get SMS OTP Verification Code';
+
+  @override
+  String get agreeTermsDisclaimer =>
+      'I agree to the Terms of Service and Privacy Policy';
+
+  @override
+  String get continueWithGoogle => 'Continue with Google';
+
+  @override
+  String get googleSignInNotice =>
+      'Google sign-in will be enabled in Phase 2.5';
+
+  @override
+  String get otpTitle => 'Enter Verification Code';
+
+  @override
+  String otpSubtitle(Object maskedPhone) {
+    return 'Enter 6-digit OTP sent to +91 $maskedPhone';
+  }
+
+  @override
+  String get verifyAndLogin => 'Verify & Login';
+
+  @override
+  String resendCodeIn(Object seconds) {
+    return 'Resend code in ${seconds}s';
+  }
+
+  @override
+  String get resendCode => 'Resend Code';
+
+  @override
+  String get maxResendsReached => 'Maximum 3 resends reached for this session.';
+
+  @override
+  String get changeNumber => 'Change number';
+
+  @override
+  String get invalidOtpError =>
+      'Invalid or expired verification code. Please check the 6-digit code and try again.';
+
+  @override
+  String get rateLimitError =>
+      'Too many OTP requests. Please wait a moment before trying again.';
+
+  @override
+  String get termsRequiredError =>
+      'Please accept the Terms of Service to proceed.';
 }
