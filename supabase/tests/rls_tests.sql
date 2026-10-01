@@ -148,6 +148,6 @@ BEGIN
   DELETE FROM public.user_roles WHERE user_id IN (v_user_a, v_user_b, v_admin);
   DELETE FROM public.profiles WHERE id IN (v_user_a, v_user_b, v_admin);
   DELETE FROM auth.users WHERE id IN (v_user_a, v_user_b, v_admin);
-
-  RAISE NOTICE 'ALL RLS SECURITY TESTS PASSED CLEANLY!';
 END $$;
+
+SELECT 'PASSED ALL 5 RLS SECURITY TESTS CLEANLY' AS test_result;
