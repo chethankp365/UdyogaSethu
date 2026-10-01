@@ -10,7 +10,7 @@
 ## Phase 1 (Database, security and server logic)
 - [x] **P1.1**: Schema part 1: identity, roles and profiles (Status: Done | Created migration 0010_identity.sql with PostGIS/pgcrypto/trgm extensions, enums, 9 tables, GIST/trigram indexes, updated_at & handle_new_user triggers, RLS enabled, and server-computed column comments. Pushed & linted cleanly on Supabase)
 - [x] **P1.2**: Schema part 2: jobs, bookings and farm marketplace (Status: Done | Created migration 0020_marketplace.sql with 15 enums including assignment_status & order_status, 19 tables for jobs/assignments/timeline/evidence/produce/carts/orders/subscriptions/group_orders/resources, bigint paise money checks, GIST/btree indexes, updated_at triggers, and RLS enabled. Pushed & linted cleanly on Supabase)
-- [ ] **P1.3**: Schema part 3: money, trust and safety (Status: Todo)
+- [x] **P1.3**: Schema part 3: money, trust and safety (Status: Done | Created migration 0030_money_trust.sql with 11 custom enums, 16 tables including wallets, append-only ledger_entries, payments, payouts, kyc_records, face_profiles, verification_attempts, consent_logs, fraud_flags, ratings_reviews, favourites, disputes, dispute_evidence, emergency_contacts, sos_incidents, and protection_claims. Includes trg_prevent_ledger_mutation trigger blocking UPDATE/DELETE, wallet_balances view, GIST/btree indexes, updated_at triggers, and RLS enabled. Pushed & verified append-only exception on Supabase)
 - [ ] **P1.4**: Schema part 4: engagement, admin and content (Status: Todo)
 - [ ] **P1.5**: Row Level Security and storage buckets (Status: Todo)
 - [ ] **P1.6**: SQL functions: nearby search, job state machine and wallet (Status: Todo)
