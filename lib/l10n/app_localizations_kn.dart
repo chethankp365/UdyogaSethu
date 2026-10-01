@@ -31,7 +31,7 @@ class AppLocalizationsKn extends AppLocalizations {
   String get chipVerified => 'ದೃಢೀಕೃತ';
 
   @override
-  String versionLabel(String version) {
+  String versionLabel(Object version) {
     return 'ಆವೃತ್ತಿ $version';
   }
 
@@ -60,4 +60,293 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get introGetStarted => 'ಆರಂಭಿಸಿ ->';
+
+  @override
+  String get languageScreenTitle => 'ನಿಮ್ಮ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ';
+
+  @override
+  String get languageScreenSubtitle =>
+      'ನಾವು ಎಲ್ಲವನ್ನೂ ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲಿ ತೋರಿಸುತ್ತೇವೆ';
+
+  @override
+  String listenToWelcomeIn(Object language) {
+    return '$language ಭಾಷೆಯಲ್ಲಿ ಸ್ವಾಗತ ಕೇಳಿ';
+  }
+
+  @override
+  String ttsVoiceMissingHint(Object language) {
+    return '$language ಧ್ವನಿ ಇಂಜಿನ್ ಲಭ್ಯವಿಲ್ಲ. ಧ್ವನಿ ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ತೆರೆಯಲು ಸ್ಪರ್ಶಿಸಿ.';
+  }
+
+  @override
+  String get welcomeSpeechSentence =>
+      'ಉದ್ಯೋಗಸೇತುಗೆ ಸುಸ್ವಾಗತ. ಕೆಲಸವನ್ನು ಜೋಡಿಸಿ ಬಾಳನ್ನು ಸಬಲಗೊಳಿಸುತ್ತಿದ್ದೇವೆ.';
+
+  @override
+  String get continueButton => 'ಮುಂದುವರಿಯಿರಿ ->';
+
+  @override
+  String get save => 'ಉಳಿಸಿ';
+
+  @override
+  String get cancel => 'ರದ್ದುಮಾಡಿ';
+
+  @override
+  String get back => 'ಹಿಂತಿರುಗಿ';
+
+  @override
+  String get retry => 'ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ';
+
+  @override
+  String get apply => 'ಅರ್ಜಿ ಸಲ್ಲಿಸಿ';
+
+  @override
+  String get submit => 'ಸಲ್ಲಿಸಿ';
+
+  @override
+  String get search => 'ಹುಡುಕಿ';
+
+  @override
+  String get filter => 'ಫಿಲ್ಟರ್';
+
+  @override
+  String get edit => 'ಸಂಪಾದಿಸಿ';
+
+  @override
+  String get delete => 'ಅಳಿಸಿ';
+
+  @override
+  String get confirm => 'ಖಚಿತಪಡಿಸಿ';
+
+  @override
+  String get logout => 'ನಿರ್ಗಮಿಸಿ';
+
+  @override
+  String get navHome => 'ಮುಖಪುಟ';
+
+  @override
+  String get navJobs => 'ಕೆಲಸಗಳು';
+
+  @override
+  String get navMessages => 'ಸಂದೇಶಗಳು';
+
+  @override
+  String get navProfile => 'ಪ್ರೊಫೈಲ್';
+
+  @override
+  String get navWorkers => 'ಕಾರ್ಮಿಕರು';
+
+  @override
+  String get navMarketplace => 'ಮಾರುಕಟ್ಟೆ';
+
+  @override
+  String get navMandi => 'ಮಂಡಿ';
+
+  @override
+  String get navWallet => 'ವ್ಯಾಲೆಟ್';
+
+  @override
+  String get navSettings => 'ಸೆಟ್ಟಿಂಗ್‌ಗಳು';
+
+  @override
+  String get navSafety => 'ಸುರಕ್ಷತೆ';
+
+  @override
+  String get statusAvailable => 'ಲಭ್ಯವಿದೆ';
+
+  @override
+  String get statusBusy => 'ಕಾರ್ಯನಿರತ';
+
+  @override
+  String get statusOffline => 'ಆಫ್‌ಲೈನ್';
+
+  @override
+  String get statusVerified => 'ದೃಢೀಕೃತ';
+
+  @override
+  String get statusPending => 'ಬಾಕಿ ಇದೆ';
+
+  @override
+  String get statusNotStarted => 'ಪ್ರಾರಂಭವಾಗಿಲ್ಲ';
+
+  @override
+  String get statusRejected => 'ತಿರಸ್ಕರಿಸಲಾಗಿದೆ';
+
+  @override
+  String get statusReviewRequired => 'ಪರಿಶೀಲನೆ ಅಗತ್ಯವಿದೆ';
+
+  @override
+  String get statusActive => 'ಸಕ್ರಿಯ';
+
+  @override
+  String get statusCompleted => 'ಪೂರ್ಣಗೊಂಡಿದೆ';
+
+  @override
+  String get statusCancelled => 'ರದ್ದುಗೊಳಿಸಲಾಗಿದೆ';
+
+  @override
+  String get statusInProgress => 'ಪ್ರಗತಿಯಲ್ಲಿದೆ';
+
+  @override
+  String get roleSeeker => 'ಉದ್ಯೋಗಾಕಾಂಕ್ಷಿ';
+
+  @override
+  String get roleProvider => 'ಕೆಲಸ ನೀಡುವವರು';
+
+  @override
+  String get roleFarmer => 'ರೈತರು';
+
+  @override
+  String get roleAdmin => 'ಅಡ್ಮಿನ್';
+
+  @override
+  String get seekerTypeInformal => 'ಅಸಂಘಟಿತ ಕಾರ್ಮಿಕರು';
+
+  @override
+  String get seekerTypeStudent => 'ವಿದ್ಯಾರ್ಥಿ';
+
+  @override
+  String get seekerTypePartTime => 'ಅರೆಕಾಲಿಕ ಕಾರ್ಮಿಕರು';
+
+  @override
+  String get providerTypeHousehold => 'ಗೃಹಬಳಕೆ';
+
+  @override
+  String get providerTypeEmployer => 'ಉದ್ಯಮ / ಯಜಮಾನರು';
+
+  @override
+  String get docTypeAadhaar => 'ಆಧಾರ್ ಕಾರ್ಡ್';
+
+  @override
+  String get docTypePan => 'ಪ್ಯಾನ್ ಕಾರ್ಡ್';
+
+  @override
+  String get docTypeDrivingLicence => 'ಚಾಲನಾ ಪರವಾನಗಿ';
+
+  @override
+  String get docTypeBankAccount => 'ಬ್ಯಾಂಕ್ ಖಾತೆ / ಯುಪಿಐ';
+
+  @override
+  String get phoneNumber => 'ಮೊಬೈಲ್ ಸಂಖ್ಯೆ';
+
+  @override
+  String get enterPhone => 'ನಿಮ್ಮ 10-ಅಂಕಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ';
+
+  @override
+  String get otpCode => 'ಒಟಿಪಿ ಕೋಡ್';
+
+  @override
+  String enterOtp(Object phone) {
+    return '$phone ಗೆ ಕಳುಹಿಸಲಾದ 6-ಅಂಕಿಯ ಒಟಿಪಿ ನಮೂದಿಸಿ';
+  }
+
+  @override
+  String get fullName => 'ಪೂರ್ಣ ಹೆಸರು';
+
+  @override
+  String get enterName => 'ನಿಮ್ಮ ಪೂರ್ಣ ಹೆಸರನ್ನು ನಮೂದಿಸಿ';
+
+  @override
+  String get city => 'ನಗರ';
+
+  @override
+  String get pincode => 'ಪಿನ್‌ಕೋಡ್';
+
+  @override
+  String get requiredField => 'ಈ ಕ್ಷೇತ್ರ ಕಡ್ಡಾಯವಾಗಿದೆ';
+
+  @override
+  String get invalidPhone =>
+      'ದಯವಿಟ್ಟು ಮಾನ್ಯವಾದ 10-ಅಂಕಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ';
+
+  @override
+  String get invalidOtp => 'ದಯವಿಟ್ಟು ಮಾನ್ಯವಾದ 6-ಅಂಕಿಯ ಒಟಿಪಿ ನಮೂದಿಸಿ';
+
+  @override
+  String get errorNetworkOffline => 'ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕವಿಲ್ಲ. ಜಾಲಬಂಧ ಪರಿಶೀಲಿಸಿ.';
+
+  @override
+  String get errorTimeout => 'ವಿನಂತಿ ಸಮಯ ಮೀರಿದೆ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.';
+
+  @override
+  String get errorAuthGeneral => 'ಪ್ರಮಾಣೀಕರಣ ವಿಫಲವಾಗಿದೆ.';
+
+  @override
+  String get errorDatabase => 'ಡೇಟಾಬೇಸ್ ದೋಷ ಸಂಭವಿಸಿದೆ.';
+
+  @override
+  String get errorUnknown => 'ನಿರೀಕ್ಷಿಸದ ದೋಷ ಉಂಟಾಗಿದೆ.';
+
+  @override
+  String get errorEdgeFunction => 'ಸೇವೆ ವಿನಂತಿ ವಿಫಲವಾಗಿದೆ.';
+
+  @override
+  String amountRupees(Object amount) {
+    return '₹$amount';
+  }
+
+  @override
+  String wagePerDay(Object amount) {
+    return '₹$amount/ದಿನ';
+  }
+
+  @override
+  String wagePerHour(Object amount) {
+    return '₹$amount/ಗಂಟೆ';
+  }
+
+  @override
+  String get wageTypeDaily => 'ದಿನಗೂಲಿ';
+
+  @override
+  String get wageTypeHourly => 'ಗಂಟೆಗೂಲಿ';
+
+  @override
+  String get wageTypeFixed => 'ನಿಗದಿತ ಮೊತ್ತ';
+
+  @override
+  String walletBalance(Object balance) {
+    return 'ವ್ಯಾಲೆಟ್ ಬಾಕಿ: ₹$balance';
+  }
+
+  @override
+  String jobsCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ಕೆಲಸಗಳು ಸಿಕ್ಕಿವೆ',
+      one: '1 ಕೆಲಸ ಸಿಕ್ಕಿದೆ',
+      zero: 'ಯಾವ ಕೆಲಸಗಳೂ ಸಿಗಲಿಲ್ಲ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String applicantsCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ಅರ್ಜಿದಾರರು',
+      one: '1 ಅರ್ಜಿದಾರರು',
+      zero: 'ಯಾರೂ ಅರ್ಜಿ ಸಲ್ಲಿಸಿಲ್ಲ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String distanceKm(Object distance) {
+    return '$distance ಕಿಮೀ ದೂರದಲ್ಲಿದೆ';
+  }
+
+  @override
+  String get todayGoal => 'ಇಂದಿನ ಗುರಿ';
+
+  @override
+  String get activeJobs => 'ಸಕ್ರಿಯ ಕೆಲಸಗಳು';
+
+  @override
+  String get recentActivity => 'ಇತ್ತೀಚಿನ ಚಟುವಟಿಕೆ';
+
+  @override
+  String get viewAll => 'ಎಲ್ಲವನ್ನೂ ವೀಕ್ಷಿಸಿ';
 }

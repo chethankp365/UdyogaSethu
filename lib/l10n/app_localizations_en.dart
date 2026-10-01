@@ -31,7 +31,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chipVerified => 'Verified';
 
   @override
-  String versionLabel(String version) {
+  String versionLabel(Object version) {
     return 'Version $version';
   }
 
@@ -59,4 +59,293 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get introGetStarted => 'Get Started ->';
+
+  @override
+  String get languageScreenTitle => 'Choose your language';
+
+  @override
+  String get languageScreenSubtitle =>
+      'We will show everything in your language';
+
+  @override
+  String listenToWelcomeIn(Object language) {
+    return 'Listen to welcome in $language';
+  }
+
+  @override
+  String ttsVoiceMissingHint(Object language) {
+    return 'Voice engine for $language is not installed. Tap to open Text-to-Speech settings.';
+  }
+
+  @override
+  String get welcomeSpeechSentence =>
+      'Welcome to UdyogaSethu. Connecting work and empowering lives.';
+
+  @override
+  String get continueButton => 'Continue ->';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get back => 'Back';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get apply => 'Apply';
+
+  @override
+  String get submit => 'Submit';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get filter => 'Filter';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get logout => 'Log Out';
+
+  @override
+  String get navHome => 'Home';
+
+  @override
+  String get navJobs => 'Jobs';
+
+  @override
+  String get navMessages => 'Messages';
+
+  @override
+  String get navProfile => 'Profile';
+
+  @override
+  String get navWorkers => 'Workers';
+
+  @override
+  String get navMarketplace => 'Marketplace';
+
+  @override
+  String get navMandi => 'Mandi';
+
+  @override
+  String get navWallet => 'Wallet';
+
+  @override
+  String get navSettings => 'Settings';
+
+  @override
+  String get navSafety => 'Safety';
+
+  @override
+  String get statusAvailable => 'Available';
+
+  @override
+  String get statusBusy => 'Busy';
+
+  @override
+  String get statusOffline => 'Offline';
+
+  @override
+  String get statusVerified => 'Verified';
+
+  @override
+  String get statusPending => 'Pending';
+
+  @override
+  String get statusNotStarted => 'Not Started';
+
+  @override
+  String get statusRejected => 'Rejected';
+
+  @override
+  String get statusReviewRequired => 'Review Required';
+
+  @override
+  String get statusActive => 'Active';
+
+  @override
+  String get statusCompleted => 'Completed';
+
+  @override
+  String get statusCancelled => 'Cancelled';
+
+  @override
+  String get statusInProgress => 'In Progress';
+
+  @override
+  String get roleSeeker => 'Job Seeker';
+
+  @override
+  String get roleProvider => 'Job Provider';
+
+  @override
+  String get roleFarmer => 'Farmer';
+
+  @override
+  String get roleAdmin => 'Admin';
+
+  @override
+  String get seekerTypeInformal => 'Informal Worker';
+
+  @override
+  String get seekerTypeStudent => 'Student';
+
+  @override
+  String get seekerTypePartTime => 'Part-Time Worker';
+
+  @override
+  String get providerTypeHousehold => 'Household';
+
+  @override
+  String get providerTypeEmployer => 'Business / Employer';
+
+  @override
+  String get docTypeAadhaar => 'Aadhaar Card';
+
+  @override
+  String get docTypePan => 'PAN Card';
+
+  @override
+  String get docTypeDrivingLicence => 'Driving Licence';
+
+  @override
+  String get docTypeBankAccount => 'Bank Account / UPI';
+
+  @override
+  String get phoneNumber => 'Phone Number';
+
+  @override
+  String get enterPhone => 'Enter your 10-digit mobile number';
+
+  @override
+  String get otpCode => 'Verification Code';
+
+  @override
+  String enterOtp(Object phone) {
+    return 'Enter the 6-digit OTP sent to $phone';
+  }
+
+  @override
+  String get fullName => 'Full Name';
+
+  @override
+  String get enterName => 'Enter your full name';
+
+  @override
+  String get city => 'City';
+
+  @override
+  String get pincode => 'PIN Code';
+
+  @override
+  String get requiredField => 'This field is required';
+
+  @override
+  String get invalidPhone => 'Please enter a valid 10-digit mobile number';
+
+  @override
+  String get invalidOtp => 'Please enter a valid 6-digit OTP';
+
+  @override
+  String get errorNetworkOffline =>
+      'No internet connection. Please check your network.';
+
+  @override
+  String get errorTimeout => 'Request timed out. Please try again.';
+
+  @override
+  String get errorAuthGeneral => 'Authentication failed. Please try again.';
+
+  @override
+  String get errorDatabase => 'Database error occurred.';
+
+  @override
+  String get errorUnknown => 'An unexpected error occurred.';
+
+  @override
+  String get errorEdgeFunction => 'Service request failed.';
+
+  @override
+  String amountRupees(Object amount) {
+    return '₹$amount';
+  }
+
+  @override
+  String wagePerDay(Object amount) {
+    return '₹$amount/day';
+  }
+
+  @override
+  String wagePerHour(Object amount) {
+    return '₹$amount/hr';
+  }
+
+  @override
+  String get wageTypeDaily => 'Daily Wage';
+
+  @override
+  String get wageTypeHourly => 'Hourly Wage';
+
+  @override
+  String get wageTypeFixed => 'Fixed Payment';
+
+  @override
+  String walletBalance(Object balance) {
+    return 'Wallet Balance: ₹$balance';
+  }
+
+  @override
+  String jobsCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count jobs found',
+      one: '1 job found',
+      zero: 'No jobs found',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String applicantsCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count applicants',
+      one: '1 applicant',
+      zero: 'No applicants',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String distanceKm(Object distance) {
+    return '$distance km away';
+  }
+
+  @override
+  String get todayGoal => 'Today\'s Goal';
+
+  @override
+  String get activeJobs => 'Active Jobs';
+
+  @override
+  String get recentActivity => 'Recent Activity';
+
+  @override
+  String get viewAll => 'View All';
 }
