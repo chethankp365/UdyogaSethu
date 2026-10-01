@@ -13,11 +13,16 @@ final GoRouter appRouter = GoRouter(
       path: '/',
       builder: (context, state) => const PlaceholderHomeScreen(),
     ),
-    if (kDebugMode)
+    if (kDebugMode) ...[
       GoRoute(
         path: '/dev/gallery',
         builder: (context, state) => const ComponentGalleryScreen(),
       ),
+      GoRoute(
+        path: '/dev/connection',
+        builder: (context, state) => const ConnectionDebugScreen(),
+      ),
+    ],
   ],
 );
 
@@ -69,11 +74,19 @@ class PlaceholderHomeScreen extends StatelessWidget {
                   const SizedBox(height: 24),
                   if (kDebugMode) ...[
                     AppButton(
-                      label: '🎨 Open Design System Gallery (/dev/gallery)',
+                      label: '🎨 Component Gallery',
                       onPressed: () {
                         context.push('/dev/gallery');
                       },
                       variant: AppButtonVariant.primary,
+                    ),
+                    const SizedBox(height: 12),
+                    AppButton(
+                      label: '⚡ Connection Debug',
+                      onPressed: () {
+                        context.push('/dev/connection');
+                      },
+                      variant: AppButtonVariant.secondary,
                     ),
                     const SizedBox(height: 12),
                   ],

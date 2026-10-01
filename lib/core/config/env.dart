@@ -4,13 +4,22 @@ import 'package:flutter/material.dart';
 class Env {
   Env._();
 
-  static const String supabaseUrl = String.fromEnvironment('SUPABASE_URL');
-  static const String supabaseAnonKey =
-      String.fromEnvironment('SUPABASE_ANON_KEY');
+  static const String _envUrl = String.fromEnvironment('SUPABASE_URL');
+  static const String _envAnonKey = String.fromEnvironment('SUPABASE_ANON_KEY');
 
-  /// Returns true if all required environment variables are set and non-empty.
+  static String get supabaseUrl {
+    if (_envUrl.trim().isNotEmpty) return _envUrl;
+    return 'https://mmzbpeqkfomnywuzoqii.supabase.co';
+  }
+
+  static String get supabaseAnonKey {
+    if (_envAnonKey.trim().isNotEmpty) return _envAnonKey;
+    return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1temJwZXFrZm9tbnl3dXpvcWlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA4NDUyNTMsImV4cCI6MjEwNjQyMTI1M30.rT_c9tN4QNukP_fewnMC7kzkI6KPXO4UxNAIqXvEHoc';
+  }
+
+  /// Returns true if required environment variables are set via dart-define/env.json.
   static bool get isConfigured =>
-      supabaseUrl.trim().isNotEmpty && supabaseAnonKey.trim().isNotEmpty;
+      _envUrl.trim().isNotEmpty && _envAnonKey.trim().isNotEmpty;
 }
 
 /// A human-readable error screen shown when required environment variables are missing.

@@ -18,3 +18,4 @@ export 'mic_fab.dart';
 export 'progress_ring.dart';
 export 'info_banner.dart';
 export 'responsive_container.dart';
+export 'connection_debug_screen.dart';

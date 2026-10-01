@@ -4,7 +4,7 @@
 - [x] **P0.1**: Rules, memory files and UI reference (Status: Done | Completed: Phase 0 Step 0.1 documentation & setup)
 - [x] **P0.2**: Create the Flutter project (Status: Done | Scaffolded Flutter app `in.udyogasethu`, added base dependencies, configured analysis options & Android permissions)
 - [x] **P0.3**: Design system and component gallery (Status: Done | Built design tokens, typography fallbacks, light/DarkPanelTheme, 21 reusable core widgets, responsive container, and debug-only /dev/gallery route)
-- [ ] **P0.4**: Connect Supabase (Status: Todo)
+- [x] **P0.4**: Connect Supabase (Status: Done | Initialized Supabase in main.dart, created SupabaseService/providers, AppException error mapping, AppLogger, 0000_ping.sql migration, BACKEND.md, and debug route /dev/connection)
 - [ ] **P0.5**: Router and role-based app shells (Status: Todo)
 
 ## Phase 1 (Database, security and server logic)
@@ -97,7 +97,7 @@
 ---
 
 ## Manual steps pending
-*None currently pending.*
+- Run `npx supabase login` (or set `SUPABASE_ACCESS_TOKEN` / DB password) and execute `npx supabase db push` to apply `supabase/migrations/0000_ping.sql` (`public.ping()`) to remote project `mmzbpeqkfomnywuzoqii`.
 
 ## Known issues
 *None currently logged.*
