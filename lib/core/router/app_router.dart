@@ -204,63 +204,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         ],
       ),
 
-      // 4. Admin Shell (StatefulShellRoute with 4 tabs)
-      StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) {
-          return AdminShell(navigationShell: navigationShell);
-        },
-        branches: [
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: AppRoutes.adminDashboard,
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Platform Operations & Impact',
-                  roleName: 'Admin',
-                  icon: Icons.dashboard_rounded,
-                ),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: AppRoutes.adminVerification,
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Verification Queue',
-                  roleName: 'Admin',
-                  icon: Icons.verified_user_rounded,
-                ),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: AppRoutes.adminDisputes,
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Dispute Resolution & Escrow',
-                  roleName: 'Admin',
-                  icon: Icons.gavel_rounded,
-                ),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: AppRoutes.adminAnalytics,
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Analytics & Moderation',
-                  roleName: 'Admin',
-                  icon: Icons.bar_chart_rounded,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-
       // Debug Routes
       if (kDebugMode) ...[
         GoRoute(

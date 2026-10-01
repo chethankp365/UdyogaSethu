@@ -31,12 +31,6 @@ class AppRoutes {
   static const String farmerChat = '/farmer/chat';
   static const String farmerProfile = '/farmer/profile';
 
-  // Admin Shell Tabs
-  static const String adminDashboard = '/admin/dashboard';
-  static const String adminVerification = '/admin/verification';
-  static const String adminDisputes = '/admin/disputes';
-  static const String adminAnalytics = '/admin/analytics';
-
   // Shared Feature Screens
   static const String settings = '/settings';
   static const String safetyHub = '/safety';

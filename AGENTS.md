@@ -22,4 +22,6 @@
 
 • **Migrations**: New numbered file in `supabase/migrations`; never edit an applied migration.
 
+• **App Roles & Scope**: App roles are strictly Job Seeker, Job Provider, and Farmer. The Admin Console is built in a separate web/desktop project and is OUT OF SCOPE for this Flutter app (Phase 9 is skipped).
+
 • **Do not**: Add unneeded packages, rewrite unrelated files, leave stubs that look finished (mark them `// TODO(P#.#)` and list them in PROGRESS.md).

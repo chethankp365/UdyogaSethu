@@ -110,20 +110,6 @@ class RoleSwitcherDebugScreen extends ConsumerWidget {
                       context.go(AppRoutes.farmerHome);
                     },
                   ),
-                  _RoleButton(
-                    title: 'Admin Console Shell',
-                    subtitle: 'Dashboard, Verification, Disputes, Analytics',
-                    icon: Icons.admin_panel_settings_outlined,
-                    color: AppColors.sosRed,
-                    isSelected: sessionData.activeRole == UserRole.admin,
-                    onTap: () {
-                      ref.read(appSessionProvider.notifier).updateSession(
-                            status: AuthSessionStatus.ready,
-                            role: UserRole.admin,
-                          );
-                      context.go(AppRoutes.adminDashboard);
-                    },
-                  ),
                 ],
               ),
               const SizedBox(height: AppSpacing.xl),

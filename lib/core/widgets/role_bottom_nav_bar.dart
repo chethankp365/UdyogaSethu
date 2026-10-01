@@ -157,13 +157,6 @@ class RoleBottomNavBar extends StatelessWidget {
           _TabConfig(Icons.chat_bubble_rounded, 'Chat'),
           _TabConfig(Icons.person_rounded, 'Profile'),
         ];
-      case UserRole.admin:
-        return const [
-          _TabConfig(Icons.dashboard_rounded, 'Dashboard'),
-          _TabConfig(Icons.verified_user_rounded, 'Verification'),
-          _TabConfig(Icons.gavel_rounded, 'Disputes'),
-          _TabConfig(Icons.bar_chart_rounded, 'Analytics'),
-        ];
     }
   }
 }

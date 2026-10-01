@@ -15,7 +15,6 @@ enum UserRole {
   seeker,
   provider,
   farmer,
-  admin,
 }
 
 /// Session data snapshot.
@@ -73,8 +72,6 @@ class AppSessionNotifier extends Notifier<AppSessionData> {
         return AppRoutes.providerHome;
       case UserRole.farmer:
         return AppRoutes.farmerHome;
-      case UserRole.admin:
-        return AppRoutes.adminDashboard;
     }
   }
 }

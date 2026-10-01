@@ -81,11 +81,8 @@
 - [ ] **P8.5**: Financial inclusion helper, wellness benefits and trust circles (Status: Todo)
 - [ ] **P8.6**: Simple mode, low-data mode, text size, voice hints and offline view (Status: Todo)
 
-## Phase 9 (Admin console)
-- [ ] **P9.1**: Admin shell, operations dashboard and social impact (Status: Todo)
-- [ ] **P9.2**: Verification review queue and training attendance (Status: Todo)
-- [ ] **P9.3**: Fraud monitoring and dispute resolution (Status: Todo)
-- [ ] **P9.4**: Policy studio, moderation and governance content (Status: Todo)
+## Phase 9 (Admin console - SKIPPED)
+*Note: The Admin Console is built in a separate web/desktop project and is out of scope for this Flutter app.*
 
 ## Phase 10 (Polish, security, tests and release)
 - [ ] **P10.1**: Guided demo scenarios (Status: Todo)

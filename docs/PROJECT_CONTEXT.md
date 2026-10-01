@@ -11,7 +11,7 @@
   1. **Job Seeker**: Informal / Skilled Worker (`informal`), Student Part-Time Worker (`student`), or Flexible Part-Time Worker (`part_time`).
   2. **Job Provider**: Households, site supervisors, and employers who post daily wage jobs, manage applicants, and book verified workers.
 * **Farmer Role**: Independent smallholders, agri-producers, dairy farmers, and farm cooperatives selling produce directly and managing farm resources.
-* **Admin Role**: Platform governance, verification review queue, fraud monitoring, policy studio, and social impact analytics. Separate administrative access tier.
+* **Admin Console**: Built as a separate web/desktop application (out of scope for this mobile Flutter app). Backend admin roles/RLS remain intact on Supabase.
 * **Multi-Role Capability**: A single user account can hold multiple roles (e.g. Job Seeker + Job Provider + Farmer). One role is active at a time, selectable via an in-app Role Switcher. Seeker type can be updated after login.
 * **Pre-login Role Tree**: New users navigate the role tree before sign-in; role choice is preserved locally and persisted upon first login.
 
