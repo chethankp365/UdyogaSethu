@@ -1,105 +1,281 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:udyogasethu/core/theme/app_colors.dart';
+import 'package:udyogasethu/core/router/app_session.dart';
+import 'package:udyogasethu/core/router/app_shells.dart';
+import 'package:udyogasethu/core/router/placeholder_screen.dart';
+import 'package:udyogasethu/core/router/role_switcher_debug_screen.dart';
+import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/widgets/component_gallery_screen.dart';
-import 'package:udyogasethu/core/widgets/widgets.dart';
+import 'package:udyogasethu/core/widgets/connection_debug_screen.dart';
+import 'package:udyogasethu/core/widgets/not_found_screen.dart';
 
-/// Router configuration for UdyogaSethu.
-final GoRouter appRouter = GoRouter(
-  initialLocation: '/',
-  routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const PlaceholderHomeScreen(),
-    ),
-    if (kDebugMode) ...[
-      GoRoute(
-        path: '/dev/gallery',
-        builder: (context, state) => const ComponentGalleryScreen(),
-      ),
-      GoRoute(
-        path: '/dev/connection',
-        builder: (context, state) => const ConnectionDebugScreen(),
-      ),
-    ],
-  ],
-);
+final appRouterProvider = Provider<GoRouter>((ref) {
+  final sessionData = ref.watch(appSessionProvider);
 
-/// Placeholder home screen shown when environment is properly configured.
-class PlaceholderHomeScreen extends StatelessWidget {
-  const PlaceholderHomeScreen({super.key});
+  return GoRouter(
+    initialLocation: AppRoutes.seekerHome,
+    errorBuilder: (context, state) => NotFoundScreen(state: state),
+    redirect: (context, state) {
+      final loc = state.uri.toString();
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('UdyogaSethu'),
-        backgroundColor: AppColors.headerGreenDark,
-        foregroundColor: Colors.white,
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: ResponsiveContainer(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.handshake_outlined,
-                    size: 72,
-                    color: AppColors.primaryTeal,
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'UdyogaSethu',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.headerGreenDark,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Bridging Work. Empowering Lives.',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: AppColors.textMuted,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 24),
-                  const VerifiedBadge(type: VerifiedBadgeType.worker),
-                  const SizedBox(height: 24),
-                  if (kDebugMode) ...[
-                    AppButton(
-                      label: '🎨 Component Gallery',
-                      onPressed: () {
-                        context.push('/dev/gallery');
-                      },
-                      variant: AppButtonVariant.primary,
-                    ),
-                    const SizedBox(height: 12),
-                    AppButton(
-                      label: '⚡ Connection Debug',
-                      onPressed: () {
-                        context.push('/dev/connection');
-                      },
-                      variant: AppButtonVariant.secondary,
-                    ),
-                    const SizedBox(height: 12),
-                  ],
-                  const StatusChip(
-                    label: 'Phase 0 Step 0.3 - Design System Built',
-                    style: StatusChipStyle.success,
-                  ),
-                ],
+      // Allow all /dev/ routes without session redirects in debug mode
+      if (kDebugMode && loc.startsWith('/dev/')) {
+        return null;
+      }
+
+      // If session is ready and on root '/', redirect to active role home
+      if (loc == '/') {
+        return AppSessionNotifier.getHomeForRole(sessionData.activeRole);
+      }
+
+      return null;
+    },
+    routes: [
+      // 1. Job Seeker Shell (StatefulShellRoute with 4 tabs)
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return SeekerShell(navigationShell: navigationShell);
+        },
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.seekerHome,
+                builder: (context, state) => const PlaceholderScreen(
+                  title: 'Home Feed & Recommendations',
+                  roleName: 'Job Seeker',
+                  icon: Icons.home_rounded,
+                ),
               ),
-            ),
+            ],
           ),
-        ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.seekerJobs,
+                builder: (context, state) => const PlaceholderScreen(
+                  title: 'Nearby Jobs & Map',
+                  roleName: 'Job Seeker',
+                  icon: Icons.work_rounded,
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.seekerChat,
+                builder: (context, state) => const PlaceholderScreen(
+                  title: 'Protected Inbox & Chat',
+                  roleName: 'Job Seeker',
+                  icon: Icons.chat_bubble_rounded,
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.seekerProfile,
+                builder: (context, state) => const PlaceholderScreen(
+                  title: 'Seeker Profile & Trust Kit',
+                  roleName: 'Job Seeker',
+                  icon: Icons.person_rounded,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
-    );
-  }
-}
+
+      // 2. Job Provider Shell (StatefulShellRoute with 4 tabs)
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return ProviderShell(navigationShell: navigationShell);
+        },
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.providerHome,
+                builder: (context, state) => const PlaceholderScreen(
+                  title: 'Employer Dashboard & Active Jobs',
+                  roleName: 'Job Provider',
+                  icon: Icons.home_rounded,
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.providerWorkers,
+                builder: (context, state) => const PlaceholderScreen(
+                  title: 'Worker Search & Hires',
+                  roleName: 'Job Provider',
+                  icon: Icons.people_alt_rounded,
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.providerChat,
+                builder: (context, state) => const PlaceholderScreen(
+                  title: 'Worker Messages & Calls',
+                  roleName: 'Job Provider',
+                  icon: Icons.chat_bubble_rounded,
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.providerProfile,
+                builder: (context, state) => const PlaceholderScreen(
+                  title: 'Employer Profile & Billing',
+                  roleName: 'Job Provider',
+                  icon: Icons.person_rounded,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+
+      // 3. Farmer Shell (StatefulShellRoute with 4 tabs)
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return FarmerShell(navigationShell: navigationShell);
+        },
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.farmerHome,
+                builder: (context, state) => const PlaceholderScreen(
+                  title: 'Farmer Dashboard & Mandi Prices',
+                  roleName: 'Farmer',
+                  icon: Icons.home_rounded,
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.farmerMarket,
+                builder: (context, state) => const PlaceholderScreen(
+                  title: 'Produce Marketplace & Labour Hiring',
+                  roleName: 'Farmer',
+                  icon: Icons.storefront_rounded,
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.farmerChat,
+                builder: (context, state) => const PlaceholderScreen(
+                  title: 'Buyer & Worker Chat',
+                  roleName: 'Farmer',
+                  icon: Icons.chat_bubble_rounded,
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.farmerProfile,
+                builder: (context, state) => const PlaceholderScreen(
+                  title: 'Farm Profile & Certificates',
+                  roleName: 'Farmer',
+                  icon: Icons.person_rounded,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+
+      // 4. Admin Shell (StatefulShellRoute with 4 tabs)
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return AdminShell(navigationShell: navigationShell);
+        },
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.adminDashboard,
+                builder: (context, state) => const PlaceholderScreen(
+                  title: 'Platform Operations & Impact',
+                  roleName: 'Admin',
+                  icon: Icons.dashboard_rounded,
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.adminVerification,
+                builder: (context, state) => const PlaceholderScreen(
+                  title: 'Verification Queue',
+                  roleName: 'Admin',
+                  icon: Icons.verified_user_rounded,
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.adminDisputes,
+                builder: (context, state) => const PlaceholderScreen(
+                  title: 'Dispute Resolution & Escrow',
+                  roleName: 'Admin',
+                  icon: Icons.gavel_rounded,
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.adminAnalytics,
+                builder: (context, state) => const PlaceholderScreen(
+                  title: 'Analytics & Moderation',
+                  roleName: 'Admin',
+                  icon: Icons.bar_chart_rounded,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+
+      // Debug Routes
+      if (kDebugMode) ...[
+        GoRoute(
+          path: AppRoutes.devGallery,
+          builder: (context, state) => const ComponentGalleryScreen(),
+        ),
+        GoRoute(
+          path: AppRoutes.devConnection,
+          builder: (context, state) => const ConnectionDebugScreen(),
+        ),
+        GoRoute(
+          path: AppRoutes.devRole,
+          builder: (context, state) => const RoleSwitcherDebugScreen(),
+        ),
+      ],
+    ],
+  );
+});

@@ -23,20 +23,22 @@ void main() async {
   );
 }
 
-class UdyogaSethuApp extends StatelessWidget {
+class UdyogaSethuApp extends ConsumerWidget {
   const UdyogaSethuApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (!Env.isConfigured) {
       return const MissingEnvScreen();
     }
+
+    final router = ref.watch(appRouterProvider);
 
     return MaterialApp.router(
       title: 'UdyogaSethu',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      routerConfig: appRouter,
+      routerConfig: router,
     );
   }
 }

@@ -1,0 +1,51 @@
+/// Central typed route names and path definitions for UdyogaSethu.
+class AppRoutes {
+  AppRoutes._();
+
+  // Root & Auth / Onboarding
+  static const String splash = '/splash';
+  static const String intro = '/intro';
+  static const String language = '/language';
+  static const String roleTree = '/role-tree';
+  static const String login = '/login';
+  static const String otp = '/otp';
+  static const String profileSetupSeeker = '/profile-setup/seeker';
+  static const String profileSetupFarmer = '/profile-setup/farmer';
+  static const String profileSetupProvider = '/profile-setup/provider';
+
+  // Seeker Shell Tabs
+  static const String seekerHome = '/seeker/home';
+  static const String seekerJobs = '/seeker/jobs';
+  static const String seekerChat = '/seeker/chat';
+  static const String seekerProfile = '/seeker/profile';
+
+  // Provider Shell Tabs
+  static const String providerHome = '/provider/home';
+  static const String providerWorkers = '/provider/workers';
+  static const String providerChat = '/provider/chat';
+  static const String providerProfile = '/provider/profile';
+
+  // Farmer Shell Tabs
+  static const String farmerHome = '/farmer/home';
+  static const String farmerMarket = '/farmer/market';
+  static const String farmerChat = '/farmer/chat';
+  static const String farmerProfile = '/farmer/profile';
+
+  // Admin Shell Tabs
+  static const String adminDashboard = '/admin/dashboard';
+  static const String adminVerification = '/admin/verification';
+  static const String adminDisputes = '/admin/disputes';
+  static const String adminAnalytics = '/admin/analytics';
+
+  // Shared Feature Screens
+  static const String settings = '/settings';
+  static const String safetyHub = '/safety';
+  static const String wallet = '/wallet';
+  static const String jobDetail = '/job/:id';
+  static const String produceDetail = '/produce/:id';
+
+  // Debug Routes (gated under kDebugMode)
+  static const String devGallery = '/dev/gallery';
+  static const String devConnection = '/dev/connection';
+  static const String devRole = '/dev/role';
+}
