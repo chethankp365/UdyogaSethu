@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="rpBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E0F2FE" />
+      <stop offset="100%" stop-color="#BAE6FD" />
+    </linearGradient>
+  </defs>
+
+  <rect width="200" height="200" rx="32" fill="url(#rpBg)" />
+  <circle cx="100" cy="100" r="75" fill="#7DD3FC" opacity="0.4" />
+
+  <!-- Provider Body -->
+  <path d="M 40 175 Q 100 130 160 175 L 160 200 L 40 200 Z" fill="#0288D1" />
+  <path d="M 85 140 L 115 140 L 115 200 L 85 200 Z" fill="#0369A1" />
+
+  <!-- Provider Head -->
+  <circle cx="100" cy="95" r="38" fill="#FDBA74" />
+  <circle cx="86" cy="90" r="4" fill="#1E293B" />
+  <circle cx="114" cy="90" r="4" fill="#1E293B" />
+  <path d="M 86 106 Q 100 120 114 106" fill="none" stroke="#1E293B" stroke-width="3.5" stroke-linecap="round" />
+
+  <!-- Dark Hair -->
+  <path d="M 60 85 Q 100 45 140 85 Q 100 68 60 85 Z" fill="#1E293B" />
+</svg>

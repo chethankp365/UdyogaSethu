@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%">
+  <defs>
+    <linearGradient id="fjBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E6F4EA" />
+      <stop offset="100%" stop-color="#A7F3D0" />
+    </linearGradient>
+    <linearGradient id="pinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F97316" />
+      <stop offset="100%" stop-color="#EA580C" />
+    </linearGradient>
+  </defs>
+
+  <rect width="120" height="120" rx="24" fill="url(#fjBg)" />
+  
+  <!-- Map Lines -->
+  <path d="M 20 45 L 50 30 L 80 45 L 100 35" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.6" />
+  <path d="M 20 85 L 50 70 L 80 85 L 100 75" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.6" />
+  <line x1="50" y1="30" x2="50" y2="70" stroke="#10B981" stroke-width="2" stroke-dasharray="4 3" opacity="0.6" />
+  <line x1="80" y1="45" x2="80" y2="85" stroke="#10B981" stroke-width="2" stroke-dasharray="4 3" opacity="0.6" />
+
+  <!-- Location Pin -->
+  <path d="M 60 25 C 46 25 35 36 35 50 C 35 68 60 95 60 95 C 60 95 85 68 85 50 C 85 36 74 25 60 25 Z" fill="url(#pinGrad)" />
+  <circle cx="60" cy="48" r="11" fill="#FFFFFF" />
+  <circle cx="60" cy="48" r="6" fill="#0A4D2E" />
+</svg>

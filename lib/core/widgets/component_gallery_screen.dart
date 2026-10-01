@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:udyogasethu/core/theme/app_spacing.dart';
 import 'package:udyogasethu/core/theme/app_theme.dart';
 import 'package:udyogasethu/core/widgets/widgets.dart';
@@ -68,6 +69,28 @@ class _ComponentGalleryScreenState extends State<ComponentGalleryScreen> {
                                 ),
                               );
                             }).toList(),
+                          ),
+                          const Divider(),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: [
+                              OutlinedButton.icon(
+                                icon: const Icon(Icons.image_rounded, size: 18),
+                                label: const Text('/dev/assets'),
+                                onPressed: () => GoRouter.of(context).push('/dev/assets'),
+                              ),
+                              OutlinedButton.icon(
+                                icon: const Icon(Icons.swap_horiz_rounded, size: 18),
+                                label: const Text('/dev/role'),
+                                onPressed: () => GoRouter.of(context).push('/dev/role'),
+                              ),
+                              OutlinedButton.icon(
+                                icon: const Icon(Icons.wifi_tethering_rounded, size: 18),
+                                label: const Text('/dev/connection'),
+                                onPressed: () => GoRouter.of(context).push('/dev/connection'),
+                              ),
+                            ],
                           ),
                         ],
                       ),

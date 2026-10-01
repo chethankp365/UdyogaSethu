@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgCircleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E6F4EA" />
+      <stop offset="100%" stop-color="#A7F3D0" />
+    </linearGradient>
+    <linearGradient id="farmerShirt" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#0A4D2E" />
+    </linearGradient>
+    <linearGradient id="workerShirt" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FB8C00" />
+      <stop offset="100%" stop-color="#E65100" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background Circle -->
+  <circle cx="300" cy="225" r="190" fill="url(#bgCircleGrad)" opacity="0.9" />
+
+  <!-- Center Worker (Constructions/Technical - Orange Helmet) -->
+  <g transform="translate(230, 110)">
+    <!-- Body -->
+    <path d="M 30 150 Q 70 120 110 150 L 125 240 L 15 240 Z" fill="url(#workerShirt)" />
+    <path d="M 60 150 L 80 150 L 80 240 L 60 240 Z" fill="#F97316" />
+    <!-- Head -->
+    <circle cx="70" cy="90" r="35" fill="#FDBA74" />
+    <!-- Smile & Eyes -->
+    <circle cx="58" cy="85" r="4" fill="#1E293B" />
+    <circle cx="82" cy="85" r="4" fill="#1E293B" />
+    <path d="M 58 100 Q 70 115 82 100" fill="none" stroke="#1E293B" stroke-width="3" stroke-linecap="round" />
+    <!-- Yellow Hardhat -->
+    <path d="M 25 80 Q 70 30 115 80 Z" fill="#FACC15" />
+    <rect x="20" y="75" width="100" height="10" rx="4" fill="#EAB308" />
+    <!-- Wrench in Hand -->
+    <rect x="110" y="160" width="12" height="60" rx="4" fill="#94A3B8" transform="rotate(-30 110 160)" />
+    <circle cx="125" cy="140" r="14" fill="#64748B" />
+    <circle cx="125" cy="140" r="6" fill="#FDBA74" />
+  </g>
+
+  <!-- Left Farmer (Green Turban & Paddy Leaf) -->
+  <g transform="translate(100, 140)">
+    <!-- Body -->
+    <path d="M 20 140 Q 60 115 100 140 L 110 220 L 10 220 Z" fill="url(#farmerShirt)" />
+    <!-- Head -->
+    <circle cx="60" cy="85" r="32" fill="#FDBA74" />
+    <!-- Smile & Eyes -->
+    <circle cx="48" cy="80" r="3.5" fill="#1E293B" />
+    <circle cx="72" cy="80" r="3.5" fill="#1E293B" />
+    <path d="M 50 95 Q 60 108 70 95" fill="none" stroke="#1E293B" stroke-width="3" stroke-linecap="round" />
+    <!-- Green Traditional Turban / Towel -->
+    <path d="M 25 75 Q 60 40 95 75 Q 60 55 25 75 Z" fill="#0F623F" />
+    <circle cx="60" cy="50" r="18" fill="#10B981" />
+    <!-- Paddy Crop in Hand -->
+    <path d="M 15 130 Q 5 90 25 60 Q 20 90 35 120" fill="#22C55E" />
+    <path d="M 25 60 Q 35 40 45 65" fill="#86EFAC" />
+    <path d="M 15 80 Q 0 65 10 50" fill="#86EFAC" />
+  </g>
+
+  <!-- Right Delivery/Service Worker (Blue Cap & Smartphone) -->
+  <g transform="translate(370, 140)">
+    <!-- Body -->
+    <path d="M 20 140 Q 60 115 100 140 L 110 220 L 10 220 Z" fill="#0288D1" />
+    <!-- Head -->
+    <circle cx="60" cy="85" r="32" fill="#FDBA74" />
+    <!-- Smile & Eyes -->
+    <circle cx="48" cy="80" r="3.5" fill="#1E293B" />
+    <circle cx="72" cy="80" r="3.5" fill="#1E293B" />
+    <path d="M 50 95 Q 60 108 70 95" fill="none" stroke="#1E293B" stroke-width="3" stroke-linecap="round" />
+    <!-- Blue Cap -->
+    <path d="M 25 75 Q 60 45 95 75 Z" fill="#0369A1" />
+    <rect x="15" y="72" width="50" height="8" rx="3" fill="#0288D1" />
+    <!-- Smartphone in Hand -->
+    <rect x="85" y="125" width="28" height="50" rx="4" fill="#0F172A" />
+    <rect x="88" y="130" width="22" height="38" rx="2" fill="#38BDF8" />
+  </g>
+
+  <!-- Decorative Green Sprouts Ground -->
+  <path d="M 100 370 Q 300 340 500 370 L 500 420 L 100 420 Z" fill="#0A4D2E" opacity="0.15" />
+</svg>

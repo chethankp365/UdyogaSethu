@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%">
+  <defs>
+    <linearGradient id="spBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ECFDF5" />
+      <stop offset="100%" stop-color="#D1FAE5" />
+    </linearGradient>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#0A4D2E" />
+    </linearGradient>
+  </defs>
+
+  <rect width="120" height="120" rx="24" fill="url(#spBg)" />
+  
+  <!-- Shield Background -->
+  <path d="M 60 20 L 95 32 C 95 65 80 92 60 102 C 40 92 25 65 25 32 Z" fill="url(#shieldGrad)" />
+  
+  <!-- Inner Shield Border -->
+  <path d="M 60 28 L 87 38 C 87 64 74 86 60 94 C 46 86 33 64 33 38 Z" fill="none" stroke="#A7F3D0" stroke-width="3" opacity="0.6" />
+
+  <!-- Indian Rupee Symbol (₹) & Checkmark -->
+  <text x="60" y="66" font-family="Arial, sans-serif" font-size="34" font-weight="bold" fill="#FFFFFF" text-anchor="middle">₹</text>
+
+  <!-- Green Checkmark Badge -->
+  <circle cx="85" cy="80" r="14" fill="#F97316" />
+  <path d="M 78 80 L 83 85 L 92 75" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

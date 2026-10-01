@@ -9,6 +9,7 @@ import 'package:udyogasethu/core/router/role_switcher_debug_screen.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/widgets/component_gallery_screen.dart';
 import 'package:udyogasethu/core/widgets/connection_debug_screen.dart';
+import 'package:udyogasethu/core/widgets/dev_assets_screen.dart';
 import 'package:udyogasethu/core/widgets/not_found_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -217,6 +218,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         GoRoute(
           path: AppRoutes.devRole,
           builder: (context, state) => const RoleSwitcherDebugScreen(),
+        ),
+        GoRoute(
+          path: AppRoutes.devAssets,
+          builder: (context, state) => const DevAssetsScreen(),
         ),
       ],
     ],

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%">
+  <defs>
+    <linearGradient id="aiBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF7ED" />
+      <stop offset="100%" stop-color="#FFEDD5" />
+    </linearGradient>
+    <linearGradient id="micGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F97316" />
+      <stop offset="100%" stop-color="#E65100" />
+    </linearGradient>
+  </defs>
+
+  <rect width="120" height="120" rx="24" fill="url(#aiBg)" />
+
+  <!-- Voice Sound Waves -->
+  <path d="M 22 60 Q 22 45 32 45" fill="none" stroke="#F97316" stroke-width="3" stroke-linecap="round" opacity="0.4" />
+  <path d="M 18 60 Q 18 38 32 38" fill="none" stroke="#F97316" stroke-width="3" stroke-linecap="round" opacity="0.2" />
+  <path d="M 98 60 Q 98 45 88 45" fill="none" stroke="#F97316" stroke-width="3" stroke-linecap="round" opacity="0.4" />
+  <path d="M 102 60 Q 102 38 88 38" fill="none" stroke="#F97316" stroke-width="3" stroke-linecap="round" opacity="0.2" />
+
+  <!-- Center Glowing Microphone Badge -->
+  <circle cx="60" cy="60" r="30" fill="url(#micGrad)" />
+  
+  <!-- Microphone Icon -->
+  <rect x="52" y="42" width="16" height="26" rx="8" fill="#FFFFFF" />
+  <path d="M 44 54 C 44 68 76 68 76 54" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" />
+  <line x1="60" y1="68" x2="60" y2="76" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" />
+  <line x1="50" y1="76" x2="70" y2="76" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" />
+
+  <!-- AI Sparkles -->
+  <path d="M 85 30 L 88 22 L 96 19 L 88 16 L 85 8 L 82 16 L 74 19 L 82 22 Z" fill="#10B981" />
+  <path d="M 32 28 L 34 22 L 40 20 L 34 18 L 32 12 L 30 18 L 24 20 L 30 22 Z" fill="#FACC15" />
+</svg>

@@ -42,4 +42,5 @@ class AppRoutes {
   static const String devGallery = '/dev/gallery';
   static const String devConnection = '/dev/connection';
   static const String devRole = '/dev/role';
+  static const String devAssets = '/dev/assets';
 }
