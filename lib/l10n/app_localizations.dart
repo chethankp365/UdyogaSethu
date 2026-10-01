@@ -709,6 +709,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View All'**
   String get viewAll;
+
+  /// No description provided for @roleTreeTitleStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Who are you?'**
+  String get roleTreeTitleStep1;
+
+  /// No description provided for @roleTreeSubtitleStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Select your account category to get started.'**
+  String get roleTreeSubtitleStep1;
+
+  /// No description provided for @roleTreeTitleStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you want to do?'**
+  String get roleTreeTitleStep2;
+
+  /// No description provided for @roleTreeSubtitleStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your role on UdyogaSethu.'**
+  String get roleTreeSubtitleStep2;
+
+  /// No description provided for @roleTreeTitleStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us about you'**
+  String get roleTreeTitleStep3;
+
+  /// No description provided for @roleTreeSubtitleStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the type of work that matches your schedule.'**
+  String get roleTreeSubtitleStep3;
+
+  /// No description provided for @roleCategoryWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker'**
+  String get roleCategoryWorker;
+
+  /// No description provided for @roleCategoryWorkerDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Find daily-wage work, part-time jobs, or hire workers'**
+  String get roleCategoryWorkerDesc;
+
+  /// No description provided for @roleCategoryFarmer.
+  ///
+  /// In en, this message translates to:
+  /// **'Farmer'**
+  String get roleCategoryFarmer;
+
+  /// No description provided for @roleCategoryFarmerDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Sell crops directly to buyers without middleman cuts'**
+  String get roleCategoryFarmerDesc;
+
+  /// No description provided for @roleSeekerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Seeker'**
+  String get roleSeekerTitle;
+
+  /// No description provided for @roleSeekerDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Find daily-wage and part-time work with instant pay'**
+  String get roleSeekerDesc;
+
+  /// No description provided for @roleProviderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Provider'**
+  String get roleProviderTitle;
+
+  /// No description provided for @roleProviderDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Post jobs, hire verified workers, buy fresh produce'**
+  String get roleProviderDesc;
+
+  /// No description provided for @seekerTypeInformalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Informal / Daily-wage Worker'**
+  String get seekerTypeInformalTitle;
+
+  /// No description provided for @seekerTypeInformalDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Find construction, delivery, plumbing jobs & instant UPI pay'**
+  String get seekerTypeInformalDesc;
+
+  /// No description provided for @seekerTypeStudentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Student'**
+  String get seekerTypeStudentTitle;
+
+  /// No description provided for @seekerTypeStudentDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Part-time shifts fitted around study schedule'**
+  String get seekerTypeStudentDesc;
+
+  /// No description provided for @seekerTypePartTimeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Part-time / Flexible Worker'**
+  String get seekerTypePartTimeTitle;
+
+  /// No description provided for @seekerTypePartTimeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Flexible daily or weekend shifts'**
+  String get seekerTypePartTimeDesc;
+
+  /// No description provided for @alreadyHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account?'**
+  String get alreadyHaveAccount;
+
+  /// No description provided for @loginLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Log in'**
+  String get loginLink;
+
+  /// No description provided for @listenToStepOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Listen to options in {language}'**
+  String listenToStepOptions(Object language);
+
+  /// No description provided for @breadcrumbWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker'**
+  String get breadcrumbWorker;
+
+  /// No description provided for @breadcrumbSeeker.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker > Job Seeker'**
+  String get breadcrumbSeeker;
 }
 
 class _AppLocalizationsDelegate

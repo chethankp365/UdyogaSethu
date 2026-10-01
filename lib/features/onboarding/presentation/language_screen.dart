@@ -225,10 +225,11 @@ class _LanguageScreenState extends ConsumerState<LanguageScreen> {
               // 5. Primary Action Button (Continue ->)
               AppButton(
                 label: l10n.continueButton,
-                onPressed: () => context.go(AppRoutes.login),
+                onPressed: () => context.go(AppRoutes.roleTree),
                 variant: AppButtonVariant.primary,
                 fullWidth: true,
               ),
+
 
               const SizedBox(height: 8),
             ],

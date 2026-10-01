@@ -349,4 +349,91 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get viewAll => 'ಎಲ್ಲವನ್ನೂ ವೀಕ್ಷಿಸಿ';
+
+  @override
+  String get roleTreeTitleStep1 => 'ನೀವು ಯಾರು?';
+
+  @override
+  String get roleTreeSubtitleStep1 =>
+      'ಪ್ರಾರಂಭಿಸಲು ನಿಮ್ಮ ಖಾತೆ ವರ್ಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ.';
+
+  @override
+  String get roleTreeTitleStep2 => 'ನೀವೇನು ಮಾಡಲು ಬಯಸುತ್ತೀರಿ?';
+
+  @override
+  String get roleTreeSubtitleStep2 =>
+      'ಉದ್ಯೋಗಸೇತುವಿನಲ್ಲಿ ನಿಮ್ಮ ಪಾತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ.';
+
+  @override
+  String get roleTreeTitleStep3 => 'ನಿಮ್ಮ ಬಗ್ಗೆ ನಮಗೆ ತಿಳಿಸಿ';
+
+  @override
+  String get roleTreeSubtitleStep3 =>
+      'ನಿಮ್ಮ ಸಮಯಕ್ಕೆ ಹೊಂದುವ ಕೆಲಸದ ಮಾದರಿಯನ್ನು ಆಯ್ಕೆಮಾಡಿ.';
+
+  @override
+  String get roleCategoryWorker => 'ಕಾರ್ಮಿಕ / ಉದ್ಯೋಗಿ';
+
+  @override
+  String get roleCategoryWorkerDesc =>
+      'ದೈನಂದಿನ ಕೂಲಿ ಕೆಲಸ, ಅರೆಕಾಲಿಕ ಕೆಲಸಗಳನ್ನು ಹುಡುಕಿ ಅಥವಾ ಕಾರ್ಮಿಕರನ್ನು ನೇಮಿಸಿ';
+
+  @override
+  String get roleCategoryFarmer => 'ರೈತ';
+
+  @override
+  String get roleCategoryFarmerDesc =>
+      'ಮಧ್ಯವರ್ತಿಗಳಿಲ್ಲದೆ ನೇರವಾಗಿ ಬೆಳೆಗಳನ್ನು ಗ್ರಾಹಕರಿಗೆ ಮಾರಾಟ ಮಾಡಿ';
+
+  @override
+  String get roleSeekerTitle => 'ಉದ್ಯೋಗಾಕಾಂಕ್ಷಿ';
+
+  @override
+  String get roleSeekerDesc =>
+      'ದೈನಂದಿನ ಕೂಲಿ ಮತ್ತು ಅರೆಕಾಲಿಕ ಕೆಲಸ ಹಾಗೂ ತಕ್ಷಣದ ಹಣಪಾವತಿ ಪಡೆಯಿರಿ';
+
+  @override
+  String get roleProviderTitle => 'ಉದ್ಯೋಗದಾತ';
+
+  @override
+  String get roleProviderDesc =>
+      'ಕೆಲಸಗಳನ್ನು ಪೋಸ್ಟ್ ಮಾಡಿ, ದೃಢೀಕರಿಸಿದ ಕಾರ್ಮಿಕರನ್ನು ನೇಮಿಸಿ, ತರಕಾರಿಗಳನ್ನು ಖರೀದಿಸಿ';
+
+  @override
+  String get seekerTypeInformalTitle => 'ಅಸಂಘಟಿತ / ದೈನಂದಿನ ಕೂಲಿ ಕಾರ್ಮಿಕ';
+
+  @override
+  String get seekerTypeInformalDesc =>
+      'ಕಟ್ಟಡ ನಿರ್ಮಾಣ, ಡೆಲಿವರಿ, ಪ್ಲಂಬಿಂಗ್ ಕೆಲಸ ಮತ್ತು ತಕ್ಷಣದ ಯುಪಿಐ ಪಾವತಿ ಪಡೆಯಿರಿ';
+
+  @override
+  String get seekerTypeStudentTitle => 'ವಿದ್ಯಾರ್ಥಿ';
+
+  @override
+  String get seekerTypeStudentDesc =>
+      'ಅಧ್ಯಯನ ಸಮಯದ ಜೊತೆಗೆ ಹೊಂದಿಕೊಳ್ಳುವ ಅರೆಕಾಲಿಕ ಕೆಲಸಗಳು';
+
+  @override
+  String get seekerTypePartTimeTitle => 'ಅರೆಕಾಲಿಕ / ನಮ್ಯ ಕಾರ್ಮಿಕ';
+
+  @override
+  String get seekerTypePartTimeDesc =>
+      'ಫ್ಲೆಕ್ಸಿಬಲ್ ದೈನಂದಿನ ಅಥವಾ ವಾರಾಂತ್ಯದ ಪಾಳಿಗಳು';
+
+  @override
+  String get alreadyHaveAccount => 'ಈಗಾಗಲೇ ಖಾತೆ ಇದೆಯೇ?';
+
+  @override
+  String get loginLink => 'ಲಾಗಿನ್ ಮಾಡಿ';
+
+  @override
+  String listenToStepOptions(Object language) {
+    return '$language ನಲ್ಲಿ ಆಯ್ಕೆಗಳನ್ನು ಆಲಿಸಿ';
+  }
+
+  @override
+  String get breadcrumbWorker => 'ಕಾರ್ಮಿಕ';
+
+  @override
+  String get breadcrumbSeeker => 'ಕಾರ್ಮಿಕ > ಉದ್ಯೋಗಾಕಾಂಕ್ಷಿ';
 }

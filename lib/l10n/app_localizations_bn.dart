@@ -348,4 +348,89 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get viewAll => 'View All';
+
+  @override
+  String get roleTreeTitleStep1 => 'Who are you?';
+
+  @override
+  String get roleTreeSubtitleStep1 =>
+      'Select your account category to get started.';
+
+  @override
+  String get roleTreeTitleStep2 => 'What do you want to do?';
+
+  @override
+  String get roleTreeSubtitleStep2 => 'Choose your role on UdyogaSethu.';
+
+  @override
+  String get roleTreeTitleStep3 => 'Tell us about you';
+
+  @override
+  String get roleTreeSubtitleStep3 =>
+      'Select the type of work that matches your schedule.';
+
+  @override
+  String get roleCategoryWorker => 'Worker';
+
+  @override
+  String get roleCategoryWorkerDesc =>
+      'Find daily-wage work, part-time jobs, or hire workers';
+
+  @override
+  String get roleCategoryFarmer => 'Farmer';
+
+  @override
+  String get roleCategoryFarmerDesc =>
+      'Sell crops directly to buyers without middleman cuts';
+
+  @override
+  String get roleSeekerTitle => 'Job Seeker';
+
+  @override
+  String get roleSeekerDesc =>
+      'Find daily-wage and part-time work with instant pay';
+
+  @override
+  String get roleProviderTitle => 'Job Provider';
+
+  @override
+  String get roleProviderDesc =>
+      'Post jobs, hire verified workers, buy fresh produce';
+
+  @override
+  String get seekerTypeInformalTitle => 'Informal / Daily-wage Worker';
+
+  @override
+  String get seekerTypeInformalDesc =>
+      'Find construction, delivery, plumbing jobs & instant UPI pay';
+
+  @override
+  String get seekerTypeStudentTitle => 'Student';
+
+  @override
+  String get seekerTypeStudentDesc =>
+      'Part-time shifts fitted around study schedule';
+
+  @override
+  String get seekerTypePartTimeTitle => 'Part-time / Flexible Worker';
+
+  @override
+  String get seekerTypePartTimeDesc => 'Flexible daily or weekend shifts';
+
+  @override
+  String get alreadyHaveAccount => 'Already have an account?';
+
+  @override
+  String get loginLink => 'Log in';
+
+  @override
+  String listenToStepOptions(Object language) {
+    return 'Listen to options in $language';
+  }
+
+  @override
+  String get breadcrumbWorker => 'Worker';
+
+  @override
+  String get breadcrumbSeeker => 'Worker > Job Seeker';
 }

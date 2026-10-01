@@ -349,4 +349,89 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get viewAll => 'అన్నీ చూడండి';
+
+  @override
+  String get roleTreeTitleStep1 => 'మీరు ఎవరు?';
+
+  @override
+  String get roleTreeSubtitleStep1 =>
+      'ప్రారంభించడానికి మీ ఖాతా వర్గాన్ని ఎంచుకోండి.';
+
+  @override
+  String get roleTreeTitleStep2 => 'మీరు ఏమి చేయాలనుకుంటున్నారు?';
+
+  @override
+  String get roleTreeSubtitleStep2 => 'ఉద్యోగసేతులో మీ పాత్రను ఎంచుకోండి.';
+
+  @override
+  String get roleTreeTitleStep3 => 'మీ గురించి మాకు చెప్పండి';
+
+  @override
+  String get roleTreeSubtitleStep3 => 'మీ సమయానికి తగిన పని రకాన్ని ఎంచుకోండి.';
+
+  @override
+  String get roleCategoryWorker => 'కార్మికుడు';
+
+  @override
+  String get roleCategoryWorkerDesc =>
+      'దినసరి కూలీ పనులు, పార్ట్-టైమ్ ఉద్యోగాలు వెతకండి లేదా కార్మికులను నియమించండి';
+
+  @override
+  String get roleCategoryFarmer => 'రైతు';
+
+  @override
+  String get roleCategoryFarmerDesc =>
+      'దళారులు లేకుండా నేరుగా కొనుగోలుదారులకు పంటలను విక్రయించండి';
+
+  @override
+  String get roleSeekerTitle => 'ఉద్యోగార్థి';
+
+  @override
+  String get roleSeekerDesc =>
+      'దినసరి కూలీ మరియు పార్ట్-టైమ్ పనులు, తక్షణ చెల్లింపులు పొందండి';
+
+  @override
+  String get roleProviderTitle => 'ఉద్యోగదాత';
+
+  @override
+  String get roleProviderDesc =>
+      'పనులు పోస్ట్ చేయండి, ధృవీకరించబడిన కార్మికులను నియమించండి';
+
+  @override
+  String get seekerTypeInformalTitle => 'అసంఘటిత / దినసరి కూలీ కార్మికుడు';
+
+  @override
+  String get seekerTypeInformalDesc =>
+      'నిర్మాణం, డెలివరీ, ప్లంబింగ్ పనులు మరియు తక్షణ యూపీఐ చెల్లింపు';
+
+  @override
+  String get seekerTypeStudentTitle => 'విద్యార్థి';
+
+  @override
+  String get seekerTypeStudentDesc =>
+      'చదువుకునే సమయంతో కూడిన పార్ట్-టైమ్ పనులు';
+
+  @override
+  String get seekerTypePartTimeTitle => 'పార్ట్-టైమ్ / ఫ్లెక్సిబుల్ కార్మికుడు';
+
+  @override
+  String get seekerTypePartTimeDesc =>
+      'ఫ్లెక్సిబుల్ రోజువారీ లేదా వారాంతపు షిఫ్టులు';
+
+  @override
+  String get alreadyHaveAccount => 'ఇప్పటికే ఖాతా ఉందా?';
+
+  @override
+  String get loginLink => 'లాగిన్ అవ్వండి';
+
+  @override
+  String listenToStepOptions(Object language) {
+    return '$language లో ఆప్షన్లను వినండి';
+  }
+
+  @override
+  String get breadcrumbWorker => 'కార్మికుడు';
+
+  @override
+  String get breadcrumbSeeker => 'కార్మికుడు > ఉద్యోగార్థి';
 }

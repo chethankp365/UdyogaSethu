@@ -347,4 +347,87 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get viewAll => 'सभी देखें';
+
+  @override
+  String get roleTreeTitleStep1 => 'आप कौन हैं?';
+
+  @override
+  String get roleTreeSubtitleStep1 => 'शुरू करने के लिए अपनी श्रेणी चुनें।';
+
+  @override
+  String get roleTreeTitleStep2 => 'आप क्या करना चाहते हैं?';
+
+  @override
+  String get roleTreeSubtitleStep2 => 'उद्योगसेतु पर अपनी भूमिका चुनें।';
+
+  @override
+  String get roleTreeTitleStep3 => 'अपने बारे में बताएं';
+
+  @override
+  String get roleTreeSubtitleStep3 =>
+      'अपने समय के अनुसार कार्य का प्रकार चुनें।';
+
+  @override
+  String get roleCategoryWorker => 'श्रमिक / कार्यकर्ता';
+
+  @override
+  String get roleCategoryWorkerDesc =>
+      'दैनिक मजदूरी, पार्ट-टाइम काम खोजें या श्रमिकों को रखें';
+
+  @override
+  String get roleCategoryFarmer => 'किसान';
+
+  @override
+  String get roleCategoryFarmerDesc =>
+      'बिना बिचौलियों के सीधे खरीदारों को फसल बेचें';
+
+  @override
+  String get roleSeekerTitle => 'नौकरी चाहने वाले';
+
+  @override
+  String get roleSeekerDesc =>
+      'दैनिक मजदूरी और पार्ट-टाइम काम और तुरंत भुगतान पाएं';
+
+  @override
+  String get roleProviderTitle => 'काम देने वाले';
+
+  @override
+  String get roleProviderDesc =>
+      'काम पोस्ट करें, सत्यापित श्रमिकों को रखें, ताजी उपज खरीदें';
+
+  @override
+  String get seekerTypeInformalTitle => 'अनौपचारिक / दैनिक मजदूरी श्रमिक';
+
+  @override
+  String get seekerTypeInformalDesc =>
+      'निर्माण, डिलीवरी, प्लंबिंग काम और तुरंत यूपीआई भुगतान पाएं';
+
+  @override
+  String get seekerTypeStudentTitle => 'छात्र';
+
+  @override
+  String get seekerTypeStudentDesc => 'पढ़ाई के समय के साथ पार्ट-टाइम काम';
+
+  @override
+  String get seekerTypePartTimeTitle => 'पार्ट-टाइम / लकीला काम';
+
+  @override
+  String get seekerTypePartTimeDesc => 'लचीली दैनिक या सप्ताहांत शिफ्ट';
+
+  @override
+  String get alreadyHaveAccount => 'क्या आपके पास पहले से खाता है?';
+
+  @override
+  String get loginLink => 'लॉग इन करें';
+
+  @override
+  String listenToStepOptions(Object language) {
+    return '$language में विकल्प सुनें';
+  }
+
+  @override
+  String get breadcrumbWorker => 'श्रमिक';
+
+  @override
+  String get breadcrumbSeeker => 'श्रमिक > नौकरी चाहने वाले';
 }

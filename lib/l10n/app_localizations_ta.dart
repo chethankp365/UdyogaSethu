@@ -348,4 +348,90 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get viewAll => 'அனைத்தையும் பார்';
+
+  @override
+  String get roleTreeTitleStep1 => 'நீங்கள் யார்?';
+
+  @override
+  String get roleTreeSubtitleStep1 =>
+      'தொடங்க உங்கள் கணக்கு வகையைத் தேர்ந்தெடுக்கவும்.';
+
+  @override
+  String get roleTreeTitleStep2 => 'நீங்கள் என்ன செய்ய விரும்புகிறீர்கள்?';
+
+  @override
+  String get roleTreeSubtitleStep2 =>
+      'உத்யோகசேதுவில் உங்கள் பங்கைத் தேர்ந்தெடுக்கவும்.';
+
+  @override
+  String get roleTreeTitleStep3 => 'உங்களைப் பற்றி கூறுங்கள்';
+
+  @override
+  String get roleTreeSubtitleStep3 =>
+      'உங்கள் நேரத்திற்கு ஏற்ற வேலை வகையைத் தேர்ந்தெடுக்கவும்.';
+
+  @override
+  String get roleCategoryWorker => 'பணியாளர் / தொழிலாளி';
+
+  @override
+  String get roleCategoryWorkerDesc =>
+      'தினசரி கூலி வேலை, பகுதி நேர வேலைகளைக் கண்டறியவும் அல்லது பணியாளர்களை நியமிக்கவும்';
+
+  @override
+  String get roleCategoryFarmer => 'விவசாயி';
+
+  @override
+  String get roleCategoryFarmerDesc =>
+      'தரகர்கள் இன்றி நேரடியாக பயிர்களை விற்கவும்';
+
+  @override
+  String get roleSeekerTitle => 'வேலை தேடுபவர்';
+
+  @override
+  String get roleSeekerDesc =>
+      'தினசரி கூலி மற்றும் பகுதி நேர வேலைகள் மற்றும் உடனடி கட்டணம் பெறவும்';
+
+  @override
+  String get roleProviderTitle => 'வேலை வழங்குபவர்';
+
+  @override
+  String get roleProviderDesc =>
+      'வேலைகளைப் பதிவிடவும், சரிபார்க்கப்பட்ட பணியாளர்களை நியமிக்கவும்';
+
+  @override
+  String get seekerTypeInformalTitle => 'அமைப்பசாரா / தினசரி கூலி தொழிலாளி';
+
+  @override
+  String get seekerTypeInformalDesc =>
+      'கட்டுமானம், டெலிவரி, பிளம்பிங் வேலைகள் மற்றும் உடனடி யுபிஐ கட்டணம் பெறவும்';
+
+  @override
+  String get seekerTypeStudentTitle => 'மாணவர்';
+
+  @override
+  String get seekerTypeStudentDesc => 'படிப்பு நேரத்துடன் பகுதி நேர வேலைகள்';
+
+  @override
+  String get seekerTypePartTimeTitle => 'பகுதி நேர / ஃப்ளெக்சிபிள் தொழிலாளி';
+
+  @override
+  String get seekerTypePartTimeDesc =>
+      'ஃப்ளெக்சிபிள் தினசரி அல்லது வார இறுதி ஷிப்டுகள்';
+
+  @override
+  String get alreadyHaveAccount => 'ஏற்கனவே கணக்கு உள்ளதா?';
+
+  @override
+  String get loginLink => 'லாகின் செய்யவும்';
+
+  @override
+  String listenToStepOptions(Object language) {
+    return '$language இல் விருப்பங்களைக் கேட்கவும்';
+  }
+
+  @override
+  String get breadcrumbWorker => 'தொழிலாளி';
+
+  @override
+  String get breadcrumbSeeker => 'தொழிலாளி > வேலை தேடுபவர்';
 }

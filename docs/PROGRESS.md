@@ -20,7 +20,8 @@
 ## Phase 2 (Onboarding and real authentication)
 - [x] **P2.1**: Splash and intro screens with real bootstrapping (Status: Done | Created `SplashScreen` matching Screen 1 in UI_REFERENCE.md with logo, green/orange split tagline, city-bridge vector SVG, progress bar, `AI Matching`/`Secure`/`Verified` feature pills, and dynamic version label via package_info_plus. Implemented `BootstrapNotifier` in `bootstrap_service.dart` performing real bootstrapping (checking package info, reading SharedPreferences, restoring Supabase auth session & profiles table, with minimum 1.2s display time). Created `IntroScreen` matching Screen 2 with headline, subtitle, hero SVG, 3 feature tiles, Skip and Next actions persisted via SharedPreferences `has_seen_intro`. Added localization ARB files `app_en.arb`, `app_kn.arb`, `app_hi.arb`, `app_te.arb`, `app_ta.arb` with AppLocalizations generation. Added comprehensive unit & widget tests in `test/onboarding_test.dart` covering UI and session routing logic)
 - [x] **P2.2**: Localization and language selection (Status: Done | Configured Flutter gen-l10n with ARB files for 8 locales (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`) with 100+ common keys, ICU plurals, placeholders, and Indian rupee formatting. Built Riverpod `LocaleNotifier` in `locale_controller.dart` persisting language selection in `SharedPreferences` and updating `profiles.language` on sign-in. Built `LanguageScreen` (`Screen 3` in UI_REFERENCE.md) with 8 country-coded language selector cards, audio preview button using `flutter_tts` speaking localized welcome sentence with fallback hint for missing voice engines, and `CompactLanguageSelector` chip row for header/login screens. Created `tool/check_l10n.dart` checking key completeness across all ARB files, verified Noto Indic font fallbacks, clean `flutter analyze`, and unit/widget tests in `test/l10n_test.dart`)
-- [ ] **P2.3**: The new role tree: Worker or Farmer, then Seeker or Provider, then type (Status: Todo)
+- [x] **P2.3**: The new role tree: Worker or Farmer, then Seeker or Provider, then type (Status: Done | Built guided decision tree in `RoleTreeScreen` and `RoleTreeNotifier` with 3-step navigation: Step 1 (Worker vs Farmer), Step 2 (Job Seeker vs Job Provider), Step 3 (Informal vs Student vs Part-Time Seeker). Includes step dots, breadcrumbs, low-literacy TTS voice narration button, `CompactLanguageSelector`, direct login shortcut, and local persistence of `PendingRoleSelection` via `SharedPreferences`. Added 100% complete localization keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`), verified with `check_l10n.dart`, clean `flutter analyze`, and unit/widget test coverage in `test/role_tree_test.dart` and `test/role_tree_widget_test.dart`)
+
 - [ ] **P2.4**: Real phone OTP login (Status: Todo)
 - [ ] **P2.5**: Real Google sign-in and account linking (Status: Todo)
 - [ ] **P2.6**: Post-login bootstrap, role assignment and route guards (Status: Todo)
@@ -94,7 +95,8 @@
 ---
 
 ## Manual steps pending
-*None currently pending (0000_ping.sql migration pushed and verified).*
+*None currently pending.*
 
 ## Known issues
 *None currently logged.*
+
