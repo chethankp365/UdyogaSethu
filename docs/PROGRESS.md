@@ -3,7 +3,7 @@
 ## Phase 0 (Foundation)
 - [x] **P0.1**: Rules, memory files and UI reference (Status: Done | Completed: Phase 0 Step 0.1 documentation & setup)
 - [x] **P0.2**: Create the Flutter project (Status: Done | Scaffolded Flutter app `in.udyogasethu`, added base dependencies, configured analysis options & Android permissions)
-- [ ] **P0.3**: Design system and component gallery (Status: Todo)
+- [x] **P0.3**: Design system and component gallery (Status: Done | Built design tokens, typography fallbacks, light/DarkPanelTheme, 21 reusable core widgets, responsive container, and debug-only /dev/gallery route)
 - [ ] **P0.4**: Connect Supabase (Status: Todo)
 - [ ] **P0.5**: Router and role-based app shells (Status: Todo)
 
