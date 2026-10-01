@@ -1,0 +1,21 @@
+# UdyogaSethu Git Ignore Configuration
+
+# Credentials, keys & environment files
+env.json
+*.keystore
+*.jks
+.env*
+google-services.json
+supabase/.temp
+
+# Miscellaneous / Temporary
+*.log
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+build/
+.dart_tool/
+.pub/
+.packages
+pubspec.lock
