@@ -13,7 +13,6 @@ import 'package:udyogasethu/core/widgets/dev_assets_screen.dart';
 import 'package:udyogasethu/core/widgets/not_found_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/intro_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/language_screen.dart';
-import 'package:udyogasethu/features/onboarding/presentation/role_tree_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/splash_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -68,10 +67,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.language,
         builder: (context, state) => const LanguageScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.roleTree,
-        builder: (context, state) => const RoleTreeScreen(),
       ),
       GoRoute(
         path: AppRoutes.login,

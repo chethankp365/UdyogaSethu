@@ -225,7 +225,7 @@ class _LanguageScreenState extends ConsumerState<LanguageScreen> {
               // 5. Primary Action Button (Continue ->)
               AppButton(
                 label: l10n.continueButton,
-                onPressed: () => context.go(AppRoutes.roleTree),
+                onPressed: () => context.go(AppRoutes.login),
                 variant: AppButtonVariant.primary,
                 fullWidth: true,
               ),
