@@ -12,6 +12,7 @@ This document records key design, architectural, role model, and implementation 
 | D6 | Five languages fully translated (en, kn, hi, te, ta); mr, bn, or fall back to English until P10.2 | Adopted | Multilingual Strategy |
 | D7 | Riverpod without codegen, go_router, supabase_flutter | Adopted | State & Navigation Stack |
 | D8 | AI = Gemini API via ai-assist | Adopted | AI Assistant Backend |
+| D9 | Temporarily removed permission_handler during P0.2 scaffold to avoid Android compileSdk 37 conflict with AGP 9.1.0; will be re-added in the specific prompt/phase that needs it (e.g. Phase 3/4) | Adopted | Build Compatibility |
 
 ## Technical & Simulation Decisions
 
