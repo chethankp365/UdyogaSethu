@@ -125,6 +125,24 @@ class DatabaseException extends AppException {
   });
 }
 
+class EdgeFunctionException extends AppException {
+  final String code;
+  final int statusCode;
+  final dynamic details;
+
+  const EdgeFunctionException({
+    required this.code,
+    required this.statusCode,
+    super.messageKey = 'error_edge_function',
+    super.originalMessage,
+    this.details,
+    super.stackTrace,
+  });
+
+  @override
+  String toString() => 'EdgeFunctionException: [$code (HTTP $statusCode)] ${originalMessage ?? ""}';
+}
+
 class UnknownException extends AppException {
   const UnknownException({
     super.messageKey = 'error_unknown',
