@@ -349,4 +349,72 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get viewAll => 'ಎಲ್ಲವನ್ನೂ ವೀಕ್ಷಿಸಿ';
+
+  @override
+  String get roleTreeTitleStep1 => 'ನೀವು ಯಾರು?';
+
+  @override
+  String get roleTreeTitleStep2 => 'ನೀವು ಏನು ಮಾಡಲು ಬಯಸುತ್ತೀರಿ?';
+
+  @override
+  String get roleTreeTitleStep3 => 'ನಿಮ್ಮ ಬಗ್ಗೆ ನಮಗೆ ತಿಳಿಸಿ';
+
+  @override
+  String get roleCardWorkerTitle => 'ಕಾರ್ಮಿಕರು';
+
+  @override
+  String get roleCardWorkerDesc =>
+      'ದಿನಗೂಲಿ ಕೆಲಸಗಳು, ಅರೆಕಾಲಿಕ ಕೆಲಸ ಹುಡುಕಿ ಅಥವಾ ಕೆಲಸಗಾರರನ್ನು ನೇಮಿಸಿ';
+
+  @override
+  String get roleCardFarmerTitle => 'ರೈತರು';
+
+  @override
+  String get roleCardFarmerDesc =>
+      'ಬೆಳೆ ಮಾರಾಟ ಮಾಡಿ, ಕೃಷಿ ಉಪಕರಣ ಖರೀದಿಸಿ ಮತ್ತು ಕೃಷಿ ಕಾರ್ಮಿಕರನ್ನು ನೇಮಿಸಿ';
+
+  @override
+  String get roleCardJobSeekerTitle => 'ಉದ್ಯೋಗಾಕಾಂಕ್ಷಿ';
+
+  @override
+  String get roleCardJobSeekerDesc =>
+      'ನಿಮ್ಮ ಹತ್ತಿರದ ದಿನಗೂಲಿ ಅಥವಾ ಅರೆಕಾಲಿಕ ಕೆಲಸಗಳನ್ನು ಹುಡುಕಿ';
+
+  @override
+  String get roleCardJobProviderTitle => 'ಕೆಲಸ ನೀಡುವವರು';
+
+  @override
+  String get roleCardJobProviderDesc =>
+      'ಕೆಲಸ ಪೋಸ್ಟ್ ಮಾಡಿ, ದೃಢೀಕೃತ ಕಾರ್ಮಿಕರನ್ನು ನೇಮಿಸಿ ಮತ್ತು ತಾಜಾ ಬೆಳೆ ಖರೀದಿಸಿ';
+
+  @override
+  String get seekerTypeInformalTitle => 'ಅಸಂಘಟಿತ / ದಿನಗೂಲಿ ಕಾರ್ಮಿಕರು';
+
+  @override
+  String get seekerTypeInformalDesc =>
+      'ಕಟ್ಟಡ ನಿರ್ಮಾಣ, ಡೆಲಿವರಿ, ಪ್ಲಂಬಿಂಗ್ ಕೆಲಸಗಳನ್ನು ತ್ವರಿತ ಪಾವತಿಯೊಂದಿಗೆ ಪಡೆಯಿರಿ';
+
+  @override
+  String get seekerTypeStudentTitle => 'ವಿದ್ಯಾರ್ಥಿ';
+
+  @override
+  String get seekerTypeStudentDesc => 'ನಮ್ಯ ಕೆಲಸದ ಸಮಯ, ಕಲಿಯುತ್ತಲೇ ಆದಾಯ ಗಳಿಸಿ';
+
+  @override
+  String get seekerTypePartTimeTitle => 'ಅರೆಕಾಲಿಕ ಕಾರ್ಮಿಕರು';
+
+  @override
+  String get seekerTypePartTimeDesc =>
+      'ನಿಮ್ಮ ಅನುಕೂಲಕ್ಕೆ ತಕ್ಕಂತೆ ಪಾಳಿ ಆಯ್ಕೆಮಾಡಿ ಹೆಚ್ಚುವರಿ ಆದಾಯ ಗಳಿಸಿ';
+
+  @override
+  String get alreadyHaveAccount => 'ಈಗಾಗಲೇ ಖಾತೆ ಇದೆಯೇ? ಲಾಗಿನ್ ಮಾಡಿ';
+
+  @override
+  String get speakQuestion => 'ಪ್ರಶ್ನೆ ಮತ್ತು ಆಯ್ಕೆಗಳನ್ನು ಕೇಳಿ';
+
+  @override
+  String stepIndicator(Object step, Object total) {
+    return 'ಹಂತ $step / $total';
+  }
 }

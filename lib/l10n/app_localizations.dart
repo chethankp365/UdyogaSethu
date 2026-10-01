@@ -709,6 +709,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View All'**
   String get viewAll;
+
+  /// No description provided for @roleTreeTitleStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Who are you?'**
+  String get roleTreeTitleStep1;
+
+  /// No description provided for @roleTreeTitleStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you want to do?'**
+  String get roleTreeTitleStep2;
+
+  /// No description provided for @roleTreeTitleStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us about you'**
+  String get roleTreeTitleStep3;
+
+  /// No description provided for @roleCardWorkerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker'**
+  String get roleCardWorkerTitle;
+
+  /// No description provided for @roleCardWorkerDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Find daily wage jobs, part-time work, or hire workers'**
+  String get roleCardWorkerDesc;
+
+  /// No description provided for @roleCardFarmerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Farmer'**
+  String get roleCardFarmerTitle;
+
+  /// No description provided for @roleCardFarmerDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Sell crops, buy farm resources, and hire agricultural labour'**
+  String get roleCardFarmerDesc;
+
+  /// No description provided for @roleCardJobSeekerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Seeker'**
+  String get roleCardJobSeekerTitle;
+
+  /// No description provided for @roleCardJobSeekerDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Find daily-wage, part-time, or flexible work near you'**
+  String get roleCardJobSeekerDesc;
+
+  /// No description provided for @roleCardJobProviderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Provider'**
+  String get roleCardJobProviderTitle;
+
+  /// No description provided for @roleCardJobProviderDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Post jobs, hire verified workers, and buy fresh produce'**
+  String get roleCardJobProviderDesc;
+
+  /// No description provided for @seekerTypeInformalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Informal / Daily-wage Worker'**
+  String get seekerTypeInformalTitle;
+
+  /// No description provided for @seekerTypeInformalDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Find construction, delivery, plumbing jobs with instant pay'**
+  String get seekerTypeInformalDesc;
+
+  /// No description provided for @seekerTypeStudentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Student'**
+  String get seekerTypeStudentTitle;
+
+  /// No description provided for @seekerTypeStudentDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Flexible work hours, earn income while learning'**
+  String get seekerTypeStudentDesc;
+
+  /// No description provided for @seekerTypePartTimeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Part-time / Flexible Worker'**
+  String get seekerTypePartTimeTitle;
+
+  /// No description provided for @seekerTypePartTimeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your shifts and earn extra income on your terms'**
+  String get seekerTypePartTimeDesc;
+
+  /// No description provided for @alreadyHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account? Log in'**
+  String get alreadyHaveAccount;
+
+  /// No description provided for @speakQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Listen to question and options'**
+  String get speakQuestion;
+
+  /// No description provided for @stepIndicator.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} of {total}'**
+  String stepIndicator(Object step, Object total);
 }
 
 class _AppLocalizationsDelegate

@@ -349,4 +349,72 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get viewAll => 'అన్నీ చూడండి';
+
+  @override
+  String get roleTreeTitleStep1 => 'మీరు ఎవరు?';
+
+  @override
+  String get roleTreeTitleStep2 => 'మీరు ఏమి చేయాలనుకుంటున్నారు?';
+
+  @override
+  String get roleTreeTitleStep3 => 'మీ గురించి చెప్పండి';
+
+  @override
+  String get roleCardWorkerTitle => 'కార్మికుడు';
+
+  @override
+  String get roleCardWorkerDesc =>
+      'రోజువారీ పనులు, పార్ట్ టైమ్ పనులు వెతకండి లేదా కార్మికులను నియమించండి';
+
+  @override
+  String get roleCardFarmerTitle => 'రైతు';
+
+  @override
+  String get roleCardFarmerDesc =>
+      'పంటలు అమ్మండి, వ్యవసాయ వనరులు కొనండి మరియు కార్మికులను నియమించండి';
+
+  @override
+  String get roleCardJobSeekerTitle => 'ఉద్యోగార్థి';
+
+  @override
+  String get roleCardJobSeekerDesc =>
+      'మీ సమీపంలో రోజువారీ లేదా పార్ట్ టైమ్ పనులు వెతకండి';
+
+  @override
+  String get roleCardJobProviderTitle => 'పని ఇచ్చేవారు';
+
+  @override
+  String get roleCardJobProviderDesc =>
+      'పనులు పోస్ట్ చేయండి, ధృవీకరించబడిన కార్మికులను నియమించండి';
+
+  @override
+  String get seekerTypeInformalTitle => 'అసంఘటిత / రోజువారీ కార్మికులు';
+
+  @override
+  String get seekerTypeInformalDesc =>
+      'తక్షణ చెల్లింపుతో నిర్మాణ, డెలివరీ, ప్లంబింగ్ పనులు పొందండి';
+
+  @override
+  String get seekerTypeStudentTitle => 'విద్యార్థి';
+
+  @override
+  String get seekerTypeStudentDesc => 'సులభ సమయాలు, చదువుకుంటూనే సంపాదించండి';
+
+  @override
+  String get seekerTypePartTimeTitle => 'పార్ట్ టైమ్ / ఫ్లెక్సిబుల్ కార్మికులు';
+
+  @override
+  String get seekerTypePartTimeDesc =>
+      'మీ సౌకర్యార్థం షిఫ్ట్‌లు ఎంచుకుని అదనపు ఆదాయం పొందండి';
+
+  @override
+  String get alreadyHaveAccount => 'ఇప్పటికే ఖాతా ఉందా? లాగిన్ అవ్వండి';
+
+  @override
+  String get speakQuestion => 'ప్రశ్న మరియు ఎంపికలను వినండి';
+
+  @override
+  String stepIndicator(Object step, Object total) {
+    return 'దశ $step / $total';
+  }
 }
