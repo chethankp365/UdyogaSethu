@@ -521,4 +521,192 @@ class AppLocalizationsOr extends AppLocalizations {
   @override
   String get googlePlayServicesMissing =>
       'Google Play Services is unavailable on this device.';
+
+  @override
+  String wizardStepProgress(Object current, Object total) {
+    return 'Step $current of $total';
+  }
+
+  @override
+  String get wizardStep1Title => 'Basics';
+
+  @override
+  String get wizardStep1Subtitle =>
+      'Enter your name, photo, gender, and languages.';
+
+  @override
+  String get wizardStep2Title => 'Skills & Interests';
+
+  @override
+  String get wizardStep2Subtitle => 'Select your skills or academic interests.';
+
+  @override
+  String get wizardStep3Title => 'Experience & Rate';
+
+  @override
+  String get wizardStep3Subtitle =>
+      'Set your experience years and expected rates.';
+
+  @override
+  String get wizardStep4Title => 'Availability';
+
+  @override
+  String get wizardStep4Subtitle => 'Set your status, working days, and hours.';
+
+  @override
+  String get wizardStep5Title => 'Location';
+
+  @override
+  String get wizardStep5Subtitle =>
+      'Grant location access and set your service radius.';
+
+  @override
+  String get wizardStep6Title => 'Type Specific Details';
+
+  @override
+  String get wizardStep6Subtitle =>
+      'Enter details for your worker profile type.';
+
+  @override
+  String get wizardStep7Title => 'Review & Finish';
+
+  @override
+  String get wizardStep7Subtitle =>
+      'Review your profile details before finishing.';
+
+  @override
+  String get takePhotoCamera => 'Take Photo (Camera)';
+
+  @override
+  String get chooseGallery => 'Choose from Gallery';
+
+  @override
+  String get changePhoto => 'Change Photo';
+
+  @override
+  String get uploadingPhoto => 'Uploading photo...';
+
+  @override
+  String get uploadPhotoError => 'Photo upload failed. Tap to retry.';
+
+  @override
+  String get genderLabel => 'Gender (Optional)';
+
+  @override
+  String get genderMale => 'Male';
+
+  @override
+  String get genderFemale => 'Female';
+
+  @override
+  String get genderOther => 'Other';
+
+  @override
+  String get genderPreferNot => 'Prefer not to say';
+
+  @override
+  String get languagesLabel => 'Languages Spoken';
+
+  @override
+  String get selectCategories => 'Select Categories';
+
+  @override
+  String get selectSkills => 'Select Skills';
+
+  @override
+  String get informalSkillRequired =>
+      'Informal workers must select at least 1 skill.';
+
+  @override
+  String get addSubjectOrInterest => 'Add Subject / Interest';
+
+  @override
+  String get subjectsInterestsLabel => 'Subjects or Interests';
+
+  @override
+  String get experienceYearsLabel => 'Years of Experience';
+
+  @override
+  String get dailyRateLabel => 'Expected Daily Rate (₹)';
+
+  @override
+  String get hourlyRateLabel => 'Expected Hourly Rate (₹)';
+
+  @override
+  String wageBandHint(Object max, Object min, Object unit) {
+    return 'Suggested fair wage band: ₹$min - ₹$max / $unit';
+  }
+
+  @override
+  String get workingDaysLabel => 'Working Days';
+
+  @override
+  String get workHoursLabel => 'Working Hours';
+
+  @override
+  String get studentWeeklyHoursLabel => 'Preferred Weekly Hours';
+
+  @override
+  String get partTimeShiftLabel => 'Preferred Shift Slot';
+
+  @override
+  String get shiftMorning => 'Morning Shift (6 AM - 2 PM)';
+
+  @override
+  String get shiftEvening => 'Evening Shift (2 PM - 10 PM)';
+
+  @override
+  String get shiftFlexible => 'Flexible Shift';
+
+  @override
+  String get locationConsentTitle => 'Just-in-Time Location Access';
+
+  @override
+  String get locationConsentText =>
+      'UdyogaSethu uses your GPS location to match you with nearby jobs, calculate distance, and ensure site safety. Your location is logged only when active.';
+
+  @override
+  String get allowLocationAccess => 'Allow Location Access';
+
+  @override
+  String get locationPermissionDenied =>
+      'Location permission denied. Please grant permission in settings or pick on map.';
+
+  @override
+  String get addressLabel => 'Home Address / Locality';
+
+  @override
+  String serviceRadiusLabel(Object radius) {
+    return 'Service Radius: $radius km';
+  }
+
+  @override
+  String get collegeNameLabel => 'College / University Name';
+
+  @override
+  String get courseNameLabel => 'Course / Degree';
+
+  @override
+  String get regNoLabel => 'Registration / USN No. (Stored Masked)';
+
+  @override
+  String get doYouDriveToggle => 'Do you drive a vehicle?';
+
+  @override
+  String get drivingLicenceExplanation =>
+      'Note: A valid driving licence will be required for driving and delivery jobs in Phase 3.';
+
+  @override
+  String get reviewSummaryTitle => 'Profile Summary';
+
+  @override
+  String get finishProfileButton => 'Finish Profile & Go to Home';
+
+  @override
+  String get verifyIdentityPrompt =>
+      'Please complete identity verification to unlock high-pay jobs!';
+
+  @override
+  String get quitAndResumeNotice =>
+      'Draft saved automatically. You can resume anytime.';
 }

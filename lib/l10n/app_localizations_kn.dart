@@ -527,4 +527,195 @@ class AppLocalizationsKn extends AppLocalizations {
   @override
   String get googlePlayServicesMissing =>
       'ಈ ಸಾಧನದಲ್ಲಿ Google Play ಸೇವೆಗಳು ಲಭ್ಯವಿಲ್ಲ.';
+
+  @override
+  String wizardStepProgress(Object current, Object total) {
+    return 'ಹಂತ $current / $total';
+  }
+
+  @override
+  String get wizardStep1Title => 'ಮೂಲ ವಿವರಗಳು';
+
+  @override
+  String get wizardStep1Subtitle =>
+      'ನಿಮ್ಮ ಹೆಸರು, ಫೋಟೋ, ಲಿಂಗ ಮತ್ತು ಭಾಷೆಗಳನ್ನು ನಮೂದಿಸಿ.';
+
+  @override
+  String get wizardStep2Title => 'ಕೌಶಲ್ಯಗಳು ಮತ್ತು ಆಸಕ್ತಿಗಳು';
+
+  @override
+  String get wizardStep2Subtitle =>
+      'ನಿಮ್ಮ ಕೌಶಲ್ಯಗಳು ಅಥವಾ ಶೈಕ್ಷಣಿಕ ಆಸಕ್ತಿಗಳನ್ನು ಆಯ್ಕೆಮಾಡಿ.';
+
+  @override
+  String get wizardStep3Title => 'ಅನುಭವ ಮತ್ತು ದರ';
+
+  @override
+  String get wizardStep3Subtitle =>
+      'ನಿಮ್ಮ ಅನುಭವದ ವರ್ಷಗಳು ಮತ್ತು ನಿರೀಕ್ಷಿತ ದರವನ್ನು ನಿಗದಿಪಡಿಸಿ.';
+
+  @override
+  String get wizardStep4Title => 'ಲಭ್ಯತೆ';
+
+  @override
+  String get wizardStep4Subtitle =>
+      'ನಿಮ್ಮ ಸ್ಥಿತಿ, ಕೆಲಸದ ದಿನಗಳು ಮತ್ತು ಸಮಯವನ್ನು ನಿಗದಿಪಡಿಸಿ.';
+
+  @override
+  String get wizardStep5Title => 'ಸ್ಥಳ';
+
+  @override
+  String get wizardStep5Subtitle =>
+      'ಸ್ಥಳದ ಅನುಮತಿಯನ್ನು ನೀಡಿ ಮತ್ತು ಸೇವಾ ತ್ರಿಜ್ಯವನ್ನು ನಿಗದಿಪಡಿಸಿ.';
+
+  @override
+  String get wizardStep6Title => 'ವಿಶೇಷ ವಿವರಗಳು';
+
+  @override
+  String get wizardStep6Subtitle =>
+      'ನಿಮ್ಮ ಕೆಲಸದ ಪ್ರೊಫೈಲ್ ಪ್ರಕಾರದ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ.';
+
+  @override
+  String get wizardStep7Title => 'ಪರಿಶೀಲಿಸಿ ಮತ್ತು ಪೂರ್ಣಗೊಳಿಸಿ';
+
+  @override
+  String get wizardStep7Subtitle =>
+      'ಪೂರ್ಣಗೊಳಿಸುವ ಮೊದಲು ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ವಿವರಗಳನ್ನು ಪರಿಶೀಲಿಸಿ.';
+
+  @override
+  String get takePhotoCamera => 'ಫೋಟೋ ತೆಗೆಯಿರಿ (ಕ್ಯಾಮೆರಾ)';
+
+  @override
+  String get chooseGallery => 'ಗ್ಯಾಲರಿಯಿಂದ ಆಯ್ಕೆಮಾಡಿ';
+
+  @override
+  String get changePhoto => 'ಫೋಟೋ ಬದಲಾಯಿಸಿ';
+
+  @override
+  String get uploadingPhoto => 'ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ...';
+
+  @override
+  String get uploadPhotoError =>
+      'ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ವಿಫಲವಾಗಿದೆ. ಮರುಪ್ರಯತ್ನಿಸಲು ಟ್ಯಾಪ್ ಮಾಡಿ.';
+
+  @override
+  String get genderLabel => 'ಲಿಂಗ (ಐಚ್ಛಿಕ)';
+
+  @override
+  String get genderMale => 'ಪುರುಷ';
+
+  @override
+  String get genderFemale => 'ಮಹಿಳೆ';
+
+  @override
+  String get genderOther => 'ಇತರೆ';
+
+  @override
+  String get genderPreferNot => 'ಹೇಳಲು ಇಷ್ಟವಿಲ್ಲ';
+
+  @override
+  String get languagesLabel => 'ಮಾತನಾಡುವ ಭಾಷೆಗಳು';
+
+  @override
+  String get selectCategories => 'ವರ್ಗಗಳನ್ನು ಆಯ್ಕೆಮಾಡಿ';
+
+  @override
+  String get selectSkills => 'ಕೌಶಲ್ಯಗಳನ್ನು ಆಯ್ಕೆಮಾಡಿ';
+
+  @override
+  String get informalSkillRequired =>
+      'ಅಸಂಘಟಿತ ಕಾರ್ಮಿಕರು ಕನಿಷ್ಠ 1 ಕೌಶಲ್ಯವನ್ನು ಆಯ್ಕೆಮಾಡಬೇಕು.';
+
+  @override
+  String get addSubjectOrInterest => 'ವಿಷಯ ಅಥವಾ ಆಸಕ್ತಿ ಸೇರಿಸಿ';
+
+  @override
+  String get subjectsInterestsLabel => 'ವಿಷಯಗಳು ಅಥವಾ ಆಸಕ್ತಿಗಳು';
+
+  @override
+  String get experienceYearsLabel => 'ಅನುಭವದ ವರ್ಷಗಳು';
+
+  @override
+  String get dailyRateLabel => 'ನಿರೀಕ್ಷಿತ ದಿನಗೂಲಿ (₹)';
+
+  @override
+  String get hourlyRateLabel => 'ನಿರೀಕ್ಷಿತ ಗಂಟೆಗೂಲಿ (₹)';
+
+  @override
+  String wageBandHint(Object max, Object min, Object unit) {
+    return 'ಸೂಚಿಸಿದ ನ್ಯಾಯಯುತ ವೇತನ ಶ್ರೇಣಿ: ₹$min - ₹$max / $unit';
+  }
+
+  @override
+  String get workingDaysLabel => 'ಕೆಲಸದ ದಿನಗಳು';
+
+  @override
+  String get workHoursLabel => 'ಕೆಲಸದ ಸಮಯ';
+
+  @override
+  String get studentWeeklyHoursLabel => 'ಆದ್ಯತೆಯ ಸಾಪ್ತಾಹಿಕ ಗಂಟೆಗಳು';
+
+  @override
+  String get partTimeShiftLabel => 'ಆದ್ಯತೆಯ ಶಿಫ್ಟ್ ಸಮಯ';
+
+  @override
+  String get shiftMorning => 'ಬೆಳಗಿನ ಶಿಫ್ಟ್ (ಬೆಳಿಗ್ಗೆ 6 - ಮಧ್ಯಾಹ್ನ 2)';
+
+  @override
+  String get shiftEvening => 'ಸಂಜೆಯ ಶಿಫ್ಟ್ (ಮಧ್ಯಾಹ್ನ 2 - ರಾತ್ರಿ 10)';
+
+  @override
+  String get shiftFlexible => 'ಫ್ಲೆಕ್ಸಿಬಲ್ ಶಿಫ್ಟ್';
+
+  @override
+  String get locationConsentTitle => 'ಅಗತ್ಯವಿದ್ದಾಗ ಮಾತ್ರ ಸ್ಥಳ ಪ್ರವೇಶ';
+
+  @override
+  String get locationConsentText =>
+      'ಉದ್ಯೋಗಸೇತು ನಿಮ್ಮ ಜಿಪಿಎಸ್ ಸ್ಥಳವನ್ನು ಹತ್ತಿರದ ಉದ್ಯೋಗಗಳೊಂದಿಗೆ ಹೊಂದಿಸಲು ಮತ್ತು ಸುರಕ್ಷತೆಗಾಗಿ ಬಳಸುತ್ತದೆ.';
+
+  @override
+  String get allowLocationAccess => 'ಸ್ಥಳ ಪ್ರವೇಶಕ್ಕೆ ಅನುಮತಿ ನೀಡಿ';
+
+  @override
+  String get locationPermissionDenied => 'ಸ್ಥಳ ಅನುಮತಿಯನ್ನು ನಿರಾಕರಿಸಲಾಗಿದೆ.';
+
+  @override
+  String get addressLabel => 'ಮನೆಯ ವಿಳಾಸ / ಪ್ರದೇಶ';
+
+  @override
+  String serviceRadiusLabel(Object radius) {
+    return 'ಸೇವಾ ತ್ರಿಜ್ಯ: $radius ಕಿ.ಮೀ';
+  }
+
+  @override
+  String get collegeNameLabel => 'ಕಾಲೇಜು / ವಿಶ್ವವಿದ್ಯಾಲಯದ ಹೆಸರು';
+
+  @override
+  String get courseNameLabel => 'ಕೋರ್ಸ್ / ಡಿಗ್ರಿ';
+
+  @override
+  String get regNoLabel => 'ನೋಂದಣಿ / USN ಸಂಖ್ಯೆ';
+
+  @override
+  String get doYouDriveToggle => 'ನೀವು ವಾಹನ ಚಲಾಯಿಸುತ್ತೀರಾ?';
+
+  @override
+  String get drivingLicenceExplanation =>
+      'ಗಮನಿಸಿ: ಡ್ರೈವಿಂಗ್ ಮತ್ತು ಡೆಲಿವರಿ ಕೆಲಸಗಳಿಗೆ ಮಾನ್ಯ ಚಾಲನಾ ಪರವಾನಗಿ ಅಗತ್ಯವಿರುತ್ತದೆ.';
+
+  @override
+  String get reviewSummaryTitle => 'ಪ್ರೊಫೈಲ್ ಸಾರಾಂಶ';
+
+  @override
+  String get finishProfileButton =>
+      'ಪ್ರೊಫೈಲ್ ಪೂರ್ಣಗೊಳಿಸಿ ಮತ್ತು ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ';
+
+  @override
+  String get verifyIdentityPrompt =>
+      'ಹೆಚ್ಚಿನ ವೇತನದ ಕೆಲಸಗಳನ್ನು ಪಡೆಯಲು ಗುರುತಿನ ಪರಿಶೀಲನೆಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಿ!';
+
+  @override
+  String get quitAndResumeNotice =>
+      'ಕರಡು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಉಳಿಸಲಾಗಿದೆ. ನೀವು ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ಮುಂದುವರಿಸಬಹುದು.';
 }

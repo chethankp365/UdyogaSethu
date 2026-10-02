@@ -1009,6 +1009,348 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Google Play Services is unavailable on this device.'**
   String get googlePlayServicesMissing;
+
+  /// No description provided for @wizardStepProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {current} of {total}'**
+  String wizardStepProgress(Object current, Object total);
+
+  /// No description provided for @wizardStep1Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Basics'**
+  String get wizardStep1Title;
+
+  /// No description provided for @wizardStep1Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your name, photo, gender, and languages.'**
+  String get wizardStep1Subtitle;
+
+  /// No description provided for @wizardStep2Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Skills & Interests'**
+  String get wizardStep2Title;
+
+  /// No description provided for @wizardStep2Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select your skills or academic interests.'**
+  String get wizardStep2Subtitle;
+
+  /// No description provided for @wizardStep3Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Experience & Rate'**
+  String get wizardStep3Title;
+
+  /// No description provided for @wizardStep3Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set your experience years and expected rates.'**
+  String get wizardStep3Subtitle;
+
+  /// No description provided for @wizardStep4Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Availability'**
+  String get wizardStep4Title;
+
+  /// No description provided for @wizardStep4Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set your status, working days, and hours.'**
+  String get wizardStep4Subtitle;
+
+  /// No description provided for @wizardStep5Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get wizardStep5Title;
+
+  /// No description provided for @wizardStep5Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant location access and set your service radius.'**
+  String get wizardStep5Subtitle;
+
+  /// No description provided for @wizardStep6Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Type Specific Details'**
+  String get wizardStep6Title;
+
+  /// No description provided for @wizardStep6Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter details for your worker profile type.'**
+  String get wizardStep6Subtitle;
+
+  /// No description provided for @wizardStep7Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Review & Finish'**
+  String get wizardStep7Title;
+
+  /// No description provided for @wizardStep7Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review your profile details before finishing.'**
+  String get wizardStep7Subtitle;
+
+  /// No description provided for @takePhotoCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo (Camera)'**
+  String get takePhotoCamera;
+
+  /// No description provided for @chooseGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Gallery'**
+  String get chooseGallery;
+
+  /// No description provided for @changePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Photo'**
+  String get changePhoto;
+
+  /// No description provided for @uploadingPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading photo...'**
+  String get uploadingPhoto;
+
+  /// No description provided for @uploadPhotoError.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo upload failed. Tap to retry.'**
+  String get uploadPhotoError;
+
+  /// No description provided for @genderLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender (Optional)'**
+  String get genderLabel;
+
+  /// No description provided for @genderMale.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get genderMale;
+
+  /// No description provided for @genderFemale.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get genderFemale;
+
+  /// No description provided for @genderOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get genderOther;
+
+  /// No description provided for @genderPreferNot.
+  ///
+  /// In en, this message translates to:
+  /// **'Prefer not to say'**
+  String get genderPreferNot;
+
+  /// No description provided for @languagesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Languages Spoken'**
+  String get languagesLabel;
+
+  /// No description provided for @selectCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Categories'**
+  String get selectCategories;
+
+  /// No description provided for @selectSkills.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Skills'**
+  String get selectSkills;
+
+  /// No description provided for @informalSkillRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Informal workers must select at least 1 skill.'**
+  String get informalSkillRequired;
+
+  /// No description provided for @addSubjectOrInterest.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Subject / Interest'**
+  String get addSubjectOrInterest;
+
+  /// No description provided for @subjectsInterestsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Subjects or Interests'**
+  String get subjectsInterestsLabel;
+
+  /// No description provided for @experienceYearsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Years of Experience'**
+  String get experienceYearsLabel;
+
+  /// No description provided for @dailyRateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Expected Daily Rate (₹)'**
+  String get dailyRateLabel;
+
+  /// No description provided for @hourlyRateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Expected Hourly Rate (₹)'**
+  String get hourlyRateLabel;
+
+  /// No description provided for @wageBandHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested fair wage band: ₹{min} - ₹{max} / {unit}'**
+  String wageBandHint(Object max, Object min, Object unit);
+
+  /// No description provided for @workingDaysLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Working Days'**
+  String get workingDaysLabel;
+
+  /// No description provided for @workHoursLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Working Hours'**
+  String get workHoursLabel;
+
+  /// No description provided for @studentWeeklyHoursLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferred Weekly Hours'**
+  String get studentWeeklyHoursLabel;
+
+  /// No description provided for @partTimeShiftLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferred Shift Slot'**
+  String get partTimeShiftLabel;
+
+  /// No description provided for @shiftMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning Shift (6 AM - 2 PM)'**
+  String get shiftMorning;
+
+  /// No description provided for @shiftEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening Shift (2 PM - 10 PM)'**
+  String get shiftEvening;
+
+  /// No description provided for @shiftFlexible.
+  ///
+  /// In en, this message translates to:
+  /// **'Flexible Shift'**
+  String get shiftFlexible;
+
+  /// No description provided for @locationConsentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Just-in-Time Location Access'**
+  String get locationConsentTitle;
+
+  /// No description provided for @locationConsentText.
+  ///
+  /// In en, this message translates to:
+  /// **'UdyogaSethu uses your GPS location to match you with nearby jobs, calculate distance, and ensure site safety. Your location is logged only when active.'**
+  String get locationConsentText;
+
+  /// No description provided for @allowLocationAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow Location Access'**
+  String get allowLocationAccess;
+
+  /// No description provided for @locationPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission denied. Please grant permission in settings or pick on map.'**
+  String get locationPermissionDenied;
+
+  /// No description provided for @addressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Address / Locality'**
+  String get addressLabel;
+
+  /// No description provided for @serviceRadiusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Radius: {radius} km'**
+  String serviceRadiusLabel(Object radius);
+
+  /// No description provided for @collegeNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'College / University Name'**
+  String get collegeNameLabel;
+
+  /// No description provided for @courseNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Course / Degree'**
+  String get courseNameLabel;
+
+  /// No description provided for @regNoLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration / USN No. (Stored Masked)'**
+  String get regNoLabel;
+
+  /// No description provided for @doYouDriveToggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you drive a vehicle?'**
+  String get doYouDriveToggle;
+
+  /// No description provided for @drivingLicenceExplanation.
+  ///
+  /// In en, this message translates to:
+  /// **'Note: A valid driving licence will be required for driving and delivery jobs in Phase 3.'**
+  String get drivingLicenceExplanation;
+
+  /// No description provided for @reviewSummaryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Summary'**
+  String get reviewSummaryTitle;
+
+  /// No description provided for @finishProfileButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish Profile & Go to Home'**
+  String get finishProfileButton;
+
+  /// No description provided for @verifyIdentityPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Please complete identity verification to unlock high-pay jobs!'**
+  String get verifyIdentityPrompt;
+
+  /// No description provided for @quitAndResumeNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft saved automatically. You can resume anytime.'**
+  String get quitAndResumeNotice;
 }
 
 class _AppLocalizationsDelegate

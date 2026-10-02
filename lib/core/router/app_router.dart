@@ -20,6 +20,7 @@ import 'package:udyogasethu/features/onboarding/presentation/intro_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/language_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/role_tree_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/splash_screen.dart';
+import 'package:udyogasethu/features/seeker/presentation/seeker_wizard_screen.dart';
 
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -158,11 +159,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
       GoRoute(
         path: AppRoutes.profileSetupSeeker,
-        builder: (context, state) => const PlaceholderScreen(
-          title: 'Job Seeker Profile Wizard',
-          roleName: 'Profile Setup',
-          icon: Icons.person_add_rounded,
-        ),
+        builder: (context, state) => const SeekerWizardScreen(),
       ),
       GoRoute(
         path: AppRoutes.profileSetupProvider,

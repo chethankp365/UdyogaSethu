@@ -522,4 +522,195 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get googlePlayServicesMissing =>
       'இந்தச் சாதனத்தில் Google Play சேவைகள் இல்லை.';
+
+  @override
+  String wizardStepProgress(Object current, Object total) {
+    return 'படி $current / $total';
+  }
+
+  @override
+  String get wizardStep1Title => 'அடிப்படை விவரங்கள்';
+
+  @override
+  String get wizardStep1Subtitle =>
+      'உங்கள் பெயர், புகைப்படம், பாலினம் மற்றும் மொழிகளை உள்ளிடவும்.';
+
+  @override
+  String get wizardStep2Title => 'திறன்கள் மற்றும் ஆர்வங்கள்';
+
+  @override
+  String get wizardStep2Subtitle =>
+      'உங்கள் திறன்கள் அல்லது கல்வி ஆர்வங்களைத் தேர்ந்தெடுக்கவும்.';
+
+  @override
+  String get wizardStep3Title => 'அனுபவம் மற்றும் கட்டணம்';
+
+  @override
+  String get wizardStep3Subtitle =>
+      'உங்கள் அனுபவ ஆண்டுகள் மற்றும் எதிர்பார்க்கும் கட்டணத்தை அமைக்கவும்.';
+
+  @override
+  String get wizardStep4Title => 'கிடைக்கும் தன்மை';
+
+  @override
+  String get wizardStep4Subtitle =>
+      'உங்கள் நிலை, வேலை நாட்கள் மற்றும் நேரங்களை அமைக்கவும்.';
+
+  @override
+  String get wizardStep5Title => 'இருப்பிடம்';
+
+  @override
+  String get wizardStep5Subtitle =>
+      'இருப்பிட அனுமதியை வழங்கி உங்கள் சேவை ஆரையை அமைக்கவும்.';
+
+  @override
+  String get wizardStep6Title => 'சிறப்பு விவரங்கள்';
+
+  @override
+  String get wizardStep6Subtitle =>
+      'உங்கள் தொழிலாளி சுயவிவர வகை விவரங்களை உள்ளிடவும்.';
+
+  @override
+  String get wizardStep7Title => 'சரிபார்த்து முடிக்கவும்';
+
+  @override
+  String get wizardStep7Subtitle =>
+      'முடிக்கும் முன் உங்கள் சுயவிவர விவரங்களை சரிபார்க்கவும்.';
+
+  @override
+  String get takePhotoCamera => 'புகைப்படம் எடுக்கவும் (கேமரா)';
+
+  @override
+  String get chooseGallery => 'கேலரியில் இருந்து தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get changePhoto => 'புகைப்படத்தை மாற்றவும்';
+
+  @override
+  String get uploadingPhoto => 'புகைப்படம் பதிவேற்றப்படுகிறது...';
+
+  @override
+  String get uploadPhotoError =>
+      'புகைப்படப் பதிவேற்றம் தோல்வியடைந்தது. மீண்டும் முயற்சிக்க தட்டவும்.';
+
+  @override
+  String get genderLabel => 'பாலினம் (விருப்பத்தேர்வு)';
+
+  @override
+  String get genderMale => 'ஆண்';
+
+  @override
+  String get genderFemale => 'பெண்';
+
+  @override
+  String get genderOther => 'இதர';
+
+  @override
+  String get genderPreferNot => 'கூற விரும்பவில்லை';
+
+  @override
+  String get languagesLabel => 'பேசும் மொழிகள்';
+
+  @override
+  String get selectCategories => 'வகைகளைத் தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get selectSkills => 'திறன்களைத் தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get informalSkillRequired =>
+      'முறைசாரா தொழிலாளர்கள் குறைந்தபட்சம் 1 திறனையாவது தேர்ந்தெடுக்க வேண்டும்.';
+
+  @override
+  String get addSubjectOrInterest => 'பாடம் அல்லது ஆர்வத்தைச் சேர்க்கவும்';
+
+  @override
+  String get subjectsInterestsLabel => 'பாடங்கள் அல்லது ஆர்வங்கள்';
+
+  @override
+  String get experienceYearsLabel => 'அனுபவ ஆண்டுகள்';
+
+  @override
+  String get dailyRateLabel => 'எதிர்பார்க்கும் நாள் கட்டணம் (₹)';
+
+  @override
+  String get hourlyRateLabel => 'எதிர்பார்க்கும் மணி நேரக் கட்டணம் (₹)';
+
+  @override
+  String wageBandHint(Object max, Object min, Object unit) {
+    return 'பரிந்துரைக்கப்பட்ட நியாயமான கூலி வரம்பு: ₹$min - ₹$max / $unit';
+  }
+
+  @override
+  String get workingDaysLabel => 'வேலை நாட்கள்';
+
+  @override
+  String get workHoursLabel => 'வேலை நேரம்';
+
+  @override
+  String get studentWeeklyHoursLabel => 'விரும்பும் வாராந்திர மணிநேரம்';
+
+  @override
+  String get partTimeShiftLabel => 'விரும்பும் ஷிஃப்ட் நேரம்';
+
+  @override
+  String get shiftMorning => 'காலை ஷிஃப்ட் (காலை 6 - மதியம் 2)';
+
+  @override
+  String get shiftEvening => 'மாலை ஷிஃப்ட் (மதியம் 2 - இரவு 10)';
+
+  @override
+  String get shiftFlexible => 'நெகிழ்வான ஷிஃப்ட்';
+
+  @override
+  String get locationConsentTitle => 'தேவைப்படும்போது மட்டும் இருப்பிட அணுகல்';
+
+  @override
+  String get locationConsentText =>
+      'உத்யோகசேது உங்கள் இருப்பிடத்தை அருகிலுள்ள வேலைகளுடன் பொருத்தவும் பாதுகாப்பிற்காகவும் பயன்படுத்துகிறது.';
+
+  @override
+  String get allowLocationAccess => 'இருப்பிட அணுகலை அனுமதிக்கவும்';
+
+  @override
+  String get locationPermissionDenied => 'இருப்பிட அனுமதி மறுக்கப்பட்டது.';
+
+  @override
+  String get addressLabel => 'வீட்டு முகவரி / பகுதி';
+
+  @override
+  String serviceRadiusLabel(Object radius) {
+    return 'சேவை ஆரை: $radius கி.மீ';
+  }
+
+  @override
+  String get collegeNameLabel => 'கல்லூரி / பல்கலைக்கழக பெயர்';
+
+  @override
+  String get courseNameLabel => 'பாடநெறி / பட்டம்';
+
+  @override
+  String get regNoLabel => 'பதிவு / USN எண்';
+
+  @override
+  String get doYouDriveToggle => 'நீங்கள் வாகனம் ஓட்டுகிறீர்களா?';
+
+  @override
+  String get drivingLicenceExplanation =>
+      'குறிப்பு: ஓட்டுநர் மற்றும் விநியோக வேலைகளுக்கு செல்லுபடியாகும் ஓட்டுநர் உரிமம் தேவைப்படும்.';
+
+  @override
+  String get reviewSummaryTitle => 'சுயவிவர சுருக்கம்';
+
+  @override
+  String get finishProfileButton =>
+      'சுயவிவரத்தை முடித்து முகப்பிற்குச் செல்லவும்';
+
+  @override
+  String get verifyIdentityPrompt =>
+      'அதிக சம்பள வேலைகளைப் பெற அடையாளச் சரிபார்ப்பை முடிக்கவும்!';
+
+  @override
+  String get quitAndResumeNotice =>
+      'வரைவு தானாகவே சேமிக்கப்பட்டது. நீங்கள் எப்போது வேண்டுமானாலும் தொடரலாம்.';
 }
