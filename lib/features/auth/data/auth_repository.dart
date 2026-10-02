@@ -115,6 +115,13 @@ class SupabaseAuthRepository implements AuthRepository {
   Future<AuthResponse?> signInWithGoogle() async {
     try {
       AppLogger.i('Initiating Google sign-in with serverClientId');
+      try {
+        await _googleSignIn.signOut();
+        await _googleSignIn.disconnect();
+      } catch (_) {
+        // Ignore disconnect/signOut errors if user was not previously signed in
+      }
+
       final googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         AppLogger.i('Google sign-in cancelled by user');
@@ -249,6 +256,11 @@ class SupabaseAuthRepository implements AuthRepository {
   Future<void> linkGoogleAccount() async {
     try {
       AppLogger.i('Initiating Google account linking');
+      try {
+        await _googleSignIn.signOut();
+        await _googleSignIn.disconnect();
+      } catch (_) {}
+
       final googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         AppLogger.i('Google link cancelled by user');
@@ -295,19 +307,19 @@ class SupabaseAuthRepository implements AuthRepository {
     try {
       final existingProfile = await _supabase
           .from('profiles')
-          .select('full_name, avatar_url')
+          .select('full_name, avatar_path')
           .eq('id', user.id)
           .maybeSingle();
 
       final updates = <String, dynamic>{};
       final existingName = existingProfile?['full_name'] as String?;
-      final existingPhoto = existingProfile?['avatar_url'] as String?;
+      final existingPhoto = existingProfile?['avatar_path'] as String?;
 
       if (googleName != null && (existingName == null || existingName.trim().isEmpty)) {
         updates['full_name'] = googleName;
       }
       if (googlePhoto != null && (existingPhoto == null || existingPhoto.trim().isEmpty)) {
-        updates['avatar_url'] = googlePhoto;
+        updates['avatar_path'] = googlePhoto;
       }
 
       if (updates.isNotEmpty) {
@@ -335,8 +347,9 @@ class SupabaseAuthRepository implements AuthRepository {
   Future<void> signOut() async {
     try {
       await _googleSignIn.signOut();
+      await _googleSignIn.disconnect();
     } catch (e) {
-      AppLogger.w('Google sign-out error (handled): $e');
+      AppLogger.w('Google sign-out/disconnect error (handled): $e');
     }
     await _supabase.auth.signOut();
   }
