@@ -714,4 +714,140 @@ class AppLocalizationsTe extends AppLocalizations {
   @override
   String get quitAndResumeNotice =>
       'డ్రాఫ్ట్ స్వయంచాలకంగా సేవ్ చేయబడింది. మీరు ఎప్పుడైనా కొనసాగించవచ్చు.';
+
+  @override
+  String get farmerWizardTitle => 'రైతు ప్రొఫైల్ సెటప్';
+
+  @override
+  String get farmerStep1Title => 'ప్రాథమిక వివరాలు';
+
+  @override
+  String get farmerStep1Subtitle =>
+      'మీ పేరు, ఫోటో మరియు మాట్లాడే భాషలను నమోదు చేయండి.';
+
+  @override
+  String get farmerStep2Title => 'పొలం వివరాలు';
+
+  @override
+  String get farmerStep2Subtitle =>
+      'పొలం పేరు, ప్రదేశం, ఎకరాలు, నేల రకం మరియు పంటలను ఎంచుకోండి.';
+
+  @override
+  String get farmerStep3Title => 'రిజిస్ట్రేషన్లు & బ్యాడ్జీలు';
+
+  @override
+  String get farmerStep3Subtitle =>
+      'ప్రభుత్వ రిజిస్ట్రేషన్లు మరియు సర్టిఫికెట్లు జోడించి బ్యాడ్జీలు పొందండి.';
+
+  @override
+  String get farmerStep4Title => 'అమ్మకం ఎంపికలు';
+
+  @override
+  String get farmerStep4Subtitle =>
+      'పికప్ అందుబాటు, డెలివరీ పరిధి మరియు సమయం నమోదు చేయండి.';
+
+  @override
+  String get farmerStep5Title => 'సమీక్ష & పూర్తి చేయండి';
+
+  @override
+  String get farmerStep5Subtitle =>
+      'మీ రైతు ప్రొఫైల్ వివరాలను సమీక్షించి సెటప్ పూర్తి చేయండి.';
+
+  @override
+  String get farmNameLabel => 'పొలం / తోట పేరు';
+
+  @override
+  String get farmNameHint => 'ఉదా. గ్రీన్ వ్యాలీ ఆర్గానిక్ ఫార్మ్';
+
+  @override
+  String get villageClusterLabel => 'గ్రామం / క్లస్టర్ పేరు';
+
+  @override
+  String get villageClusterHint => 'ఉదా. దేవానహళ్ళి, బెంగళూరు గ్రామీణ';
+
+  @override
+  String get farmLocationLabel => 'మ్యాప్‌లో పొలం ప్రదేశం';
+
+  @override
+  String get acresLabel => 'పొలం విస్తీర్ణం (ఎకరాలు)';
+
+  @override
+  String get soilTypeLabel => 'నేల రకం';
+
+  @override
+  String get soilPhLabel => 'నేల pH (ఐచ్ఛికం)';
+
+  @override
+  String get primaryCropsLabel => 'ప్రధాన పంటలు';
+
+  @override
+  String get farmingMethodLabel => 'వ్యవసాయ పద్ధతి';
+
+  @override
+  String get methodOrganic => 'సేంద్రీయ (Organic)';
+
+  @override
+  String get methodNatural => 'సహజ (Natural)';
+
+  @override
+  String get methodConventional => 'సాంప్రదాయ (Conventional)';
+
+  @override
+  String get apmcRegLabel => 'APMC రిజిస్ట్రేషన్ నంబర్ (ఐచ్ఛికం)';
+
+  @override
+  String get apmcRegHint => 'ఉదా. APMC-KA-2024-889';
+
+  @override
+  String get kccStatusLabel => 'కిసాన్ క్రెడిట్ కార్డ్ (KCC) స్థితి';
+
+  @override
+  String get kccNone => 'దరఖాస్తు చేయలేదు';
+
+  @override
+  String get kccApplied => 'దరఖాస్తు చేశారు';
+
+  @override
+  String get kccApproved => 'ఆమోదించబడింది / క్రియాశీల';
+
+  @override
+  String get organicCertLabel => 'సేంద్రీయ సర్టిఫికెట్ అప్‌లోడ్ (ఐచ్ఛికం)';
+
+  @override
+  String get organicCertHelper =>
+      'అప్‌లోడ్ చేసిన ఫైళ్ళు సురక్షితమైన ప్రైవేట్ స్టోరేజ్‌లో సేవ్ చేయబడతాయి.';
+
+  @override
+  String get farmBadgesTitle => 'పొలం ప్రొఫైల్ బ్యాడ్జీలు';
+
+  @override
+  String get deliveryAvailableLabel => 'డెలివరీ అందుబాటులో ఉంది';
+
+  @override
+  String get pickupAvailableLabel => 'పికప్ అందుబాటులో ఉంది';
+
+  @override
+  String deliveryRadiusLabel(Object radius) {
+    return 'డెలివరీ పరిధి: $radius కి.మీ';
+  }
+
+  @override
+  String get leadTimeLabel => 'సాధారణ పంపిణీ సమయం';
+
+  @override
+  String get apmcBadgeTitle => 'APMC నమోదిత';
+
+  @override
+  String get kccBadgeTitle => 'కిసాన్ క్రెడిట్ కార్డ్';
+
+  @override
+  String get organicBadgeTitle => 'సేంద్రీయ సర్టిఫికెట్ (పరిశీలనలో ఉంది)';
+
+  @override
+  String get uploadCertButton =>
+      'సేంద్రీయ సర్టిఫికెట్ అప్‌లోడ్ చేయండి (PDF / Photo)';
+
+  @override
+  String get certUploadedPending =>
+      'సర్టిఫికెట్ అప్‌లోడ్ అయింది (పరిశీలనలో ఉంది)';
 }

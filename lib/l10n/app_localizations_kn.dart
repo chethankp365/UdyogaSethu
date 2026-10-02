@@ -718,4 +718,139 @@ class AppLocalizationsKn extends AppLocalizations {
   @override
   String get quitAndResumeNotice =>
       'ಕರಡು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಉಳಿಸಲಾಗಿದೆ. ನೀವು ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ಮುಂದುವರಿಸಬಹುದು.';
+
+  @override
+  String get farmerWizardTitle => 'ರೈತ ಪ್ರೊಫೈಲ್ ಹೊಂದಣೆ';
+
+  @override
+  String get farmerStep1Title => 'ಮೂಲಭೂತ ವಿವರಗಳು';
+
+  @override
+  String get farmerStep1Subtitle =>
+      'ನಿಮ್ಮ ಹೆಸರು, ಫೋಟೋ ಮತ್ತು ಮಾತನಾಡುವ ಭಾಷೆಗಳನ್ನು ನಮೂದಿಸಿ.';
+
+  @override
+  String get farmerStep2Title => 'ತೋಟ / ಜಮೀನಿನ ವಿವರ';
+
+  @override
+  String get farmerStep2Subtitle =>
+      'ಜಮೀನಿನ ಹೆಸರು, ಸ್ಥಳ, ಎಕರೆ, ಮಣ್ಣಿನ ಮಾದರಿ ಮತ್ತು ಬೆಳೆಗಳನ್ನು ಆಯ್ಕೆಮಾಡಿ.';
+
+  @override
+  String get farmerStep3Title => 'ನಂದಾವಣೆಗಳು ಮತ್ತು ಬ್ಯಾಡ್ಜ್‌ಗಳು';
+
+  @override
+  String get farmerStep3Subtitle =>
+      'ಸರ್ಕಾರಿ ನೊಂದಣಿ ಮತ್ತು ಪ್ರಮಾಣಪತ್ರಗಳನ್ನು ಸೇರಿಸಿ ಬ್ಯಾಡ್ಜ್ ಪಡೆಯಿರಿ.';
+
+  @override
+  String get farmerStep4Title => 'ಮಾರಾಟದ ಆಯ್ಕೆಗಳು';
+
+  @override
+  String get farmerStep4Subtitle =>
+      'ಪಿಕಪ್, ಡೆಲಿವರಿ ವ್ಯಾಪ್ತಿ ಮತ್ತು ಸಮಯವನ್ನು ನಿಗದಿಪಡಿಸಿ.';
+
+  @override
+  String get farmerStep5Title => 'ಪರಿಶೀಲನೆ ಮತ್ತು ಪೂರ್ಣಗೊಳಿಕೆ';
+
+  @override
+  String get farmerStep5Subtitle =>
+      'ನಿಮ್ಮ ರೈತ ಪ್ರೊಫೈಲ್ ವಿವರಗಳನ್ನು ಪರಿಶೀಲಿಸಿ ಪೂರ್ಣಗೊಳಿಸಿ.';
+
+  @override
+  String get farmNameLabel => 'ಜಮೀನಿನ / ತೋಟದ ಹೆಸರು';
+
+  @override
+  String get farmNameHint => 'ಉದಾ: ಗ್ರೀನ್ ವ್ಯಾಲಿ ಆರ್ಗ್ಯಾನಿಕ್ ಫಾರ್ಮ್';
+
+  @override
+  String get villageClusterLabel => 'ಗ್ರಾಮ / ಕ್ಲಸ್ಟರ್ ಹೆಸರು';
+
+  @override
+  String get villageClusterHint => 'ಉದಾ: ದೇವನಹಳ್ಳಿ, ಬೆಂಗಳೂರು ಗ್ರಾಮಾಂತರ';
+
+  @override
+  String get farmLocationLabel => 'ಮ್ಯಾಪ್‌ನಲ್ಲಿ ಜಮೀನಿನ ಸ್ಥಳ';
+
+  @override
+  String get acresLabel => 'ಜಮೀನಿನ ವಿಸ್ತೀರ್ಣ (ಎಕರೆ)';
+
+  @override
+  String get soilTypeLabel => 'ಮಣ್ಣಿನ ಮಾದರಿ';
+
+  @override
+  String get soilPhLabel => 'ಮಣ್ಣಿನ pH (ಐಚ್ಛಿಕ)';
+
+  @override
+  String get primaryCropsLabel => 'ಮುಖ್ಯ ಬೆಳೆಗಳು';
+
+  @override
+  String get farmingMethodLabel => 'ಕೃಷಿ ಪದ್ಧತಿ';
+
+  @override
+  String get methodOrganic => 'ಸಾವಯವ (Organic)';
+
+  @override
+  String get methodNatural => 'ನೈಸರ್ಗಿಕ (Natural)';
+
+  @override
+  String get methodConventional => 'ಸಾಂಪ್ರದಾಯಿಕ (Conventional)';
+
+  @override
+  String get apmcRegLabel => 'APMC ನಂದಾವಣೆ ಸಂಖ್ಯೆ (ಐಚ್ಛಿಕ)';
+
+  @override
+  String get apmcRegHint => 'ಉದಾ: APMC-KA-2024-889';
+
+  @override
+  String get kccStatusLabel => 'ಕಿಸಾನ್ ಕ್ರೆಡಿಟ್ ಕಾರ್ಡ್ (KCC) ಸ್ಥಿತಿ';
+
+  @override
+  String get kccNone => 'ಅರ್ಜಿ ಸಲ್ಲಿಸಿಲ್ಲ';
+
+  @override
+  String get kccApplied => 'ಅರ್ಜಿ ಸಲ್ಲಿಸಲಾಗಿದೆ';
+
+  @override
+  String get kccApproved => 'ಅನುಮೋದಿಸಲಾಗಿದೆ / ಸಕ್ರಿಯ';
+
+  @override
+  String get organicCertLabel => 'ಸಾವಯವ ಪ್ರಮಾಣಪತ್ರ ಅಪ್‌ಲೋಡ್ (ಐಚ್ಛಿಕ)';
+
+  @override
+  String get organicCertHelper =>
+      'ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ ಫೈಲ್‌ಗಳು ಖಾಸಗಿ ಸುರಕ್ಷಿತ ಸಂಗ್ರಹಣೆಯಲ್ಲಿ ಉಳಿಯುತ್ತವೆ.';
+
+  @override
+  String get farmBadgesTitle => 'ಜಮೀನಿನ ಪ್ರೊಫೈಲ್ ಬ್ಯಾಡ್ಜ್‌ಗಳು';
+
+  @override
+  String get deliveryAvailableLabel => 'ಡೆಲಿವರಿ ಲಭ್ಯವಿದೆ';
+
+  @override
+  String get pickupAvailableLabel => 'ಪಿಕಪ್ ಲಭ್ಯವಿದೆ';
+
+  @override
+  String deliveryRadiusLabel(Object radius) {
+    return 'ಡೆಲಿವರಿ ವ್ಯಾಪ್ತಿ: $radius ಕಿ.ಮೀ';
+  }
+
+  @override
+  String get leadTimeLabel => 'ಸಾಮಾನ್ಯ ಪೂರೈಕೆ ಸಮಯ';
+
+  @override
+  String get apmcBadgeTitle => 'APMC ನೊಂದಾಯಿತ';
+
+  @override
+  String get kccBadgeTitle => 'ಕಿಸಾನ್ ಕ್ರೆಡಿಟ್ ಕಾರ್ಡ್';
+
+  @override
+  String get organicBadgeTitle => 'ಸಾವಯವ ಪ್ರಮಾಣಪತ್ರ (ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ)';
+
+  @override
+  String get uploadCertButton => 'ಸಾವಯವ ಪ್ರಮಾಣಪತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ (PDF / Photo)';
+
+  @override
+  String get certUploadedPending =>
+      'ಪ್ರಮಾಣಪತ್ರ ಅಪ್‌ಲೋಡ್ ಆಗಿದೆ (ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ)';
 }

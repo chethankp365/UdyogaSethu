@@ -20,6 +20,8 @@ import 'package:udyogasethu/features/onboarding/presentation/intro_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/language_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/role_tree_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/splash_screen.dart';
+import 'package:udyogasethu/features/farmer/presentation/farmer_home_screen.dart';
+import 'package:udyogasethu/features/farmer/presentation/farmer_wizard_screen.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_wizard_screen.dart';
 
 
@@ -171,11 +173,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: AppRoutes.profileSetupFarmer,
-        builder: (context, state) => const PlaceholderScreen(
-          title: 'Farmer Profile Wizard',
-          roleName: 'Profile Setup',
-          icon: Icons.agriculture_rounded,
-        ),
+        builder: (context, state) => const FarmerWizardScreen(),
       ),
 
       // 1. Job Seeker Shell (StatefulShellRoute with 4 tabs)
@@ -302,11 +300,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: AppRoutes.farmerHome,
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Farmer Dashboard & Mandi Prices',
-                  roleName: 'Farmer',
-                  icon: Icons.home_rounded,
-                ),
+                builder: (context, state) => const FarmerHomeScreen(),
               ),
             ],
           ),

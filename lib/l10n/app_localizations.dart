@@ -1351,6 +1351,258 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Draft saved automatically. You can resume anytime.'**
   String get quitAndResumeNotice;
+
+  /// No description provided for @farmerWizardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Farmer Profile Setup'**
+  String get farmerWizardTitle;
+
+  /// No description provided for @farmerStep1Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Basics'**
+  String get farmerStep1Title;
+
+  /// No description provided for @farmerStep1Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your full name, photo, and spoken languages.'**
+  String get farmerStep1Subtitle;
+
+  /// No description provided for @farmerStep2Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm Details'**
+  String get farmerStep2Title;
+
+  /// No description provided for @farmerStep2Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set your farm name, location, acres, soil type, and primary crops.'**
+  String get farmerStep2Subtitle;
+
+  /// No description provided for @farmerStep3Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Registrations & Badges'**
+  String get farmerStep3Title;
+
+  /// No description provided for @farmerStep3Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add optional government registrations and certificates for profile badges.'**
+  String get farmerStep3Subtitle;
+
+  /// No description provided for @farmerStep4Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Selling Options'**
+  String get farmerStep4Title;
+
+  /// No description provided for @farmerStep4Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set your produce pickup availability, delivery radius, and lead time.'**
+  String get farmerStep4Subtitle;
+
+  /// No description provided for @farmerStep5Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Review & Finish'**
+  String get farmerStep5Title;
+
+  /// No description provided for @farmerStep5Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify your farm profile details before completing setup.'**
+  String get farmerStep5Subtitle;
+
+  /// No description provided for @farmNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm Name'**
+  String get farmNameLabel;
+
+  /// No description provided for @farmNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Green Valley Organic Farm'**
+  String get farmNameHint;
+
+  /// No description provided for @villageClusterLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Village / Cluster Name'**
+  String get villageClusterLabel;
+
+  /// No description provided for @villageClusterHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Devanahalli, Bengaluru Rural'**
+  String get villageClusterHint;
+
+  /// No description provided for @farmLocationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm Location on Map'**
+  String get farmLocationLabel;
+
+  /// No description provided for @acresLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm Area (Acres)'**
+  String get acresLabel;
+
+  /// No description provided for @soilTypeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Soil Type'**
+  String get soilTypeLabel;
+
+  /// No description provided for @soilPhLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Soil pH (Optional)'**
+  String get soilPhLabel;
+
+  /// No description provided for @primaryCropsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Primary Crops'**
+  String get primaryCropsLabel;
+
+  /// No description provided for @farmingMethodLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Farming Method'**
+  String get farmingMethodLabel;
+
+  /// No description provided for @methodOrganic.
+  ///
+  /// In en, this message translates to:
+  /// **'Organic'**
+  String get methodOrganic;
+
+  /// No description provided for @methodNatural.
+  ///
+  /// In en, this message translates to:
+  /// **'Natural / Zero Budget'**
+  String get methodNatural;
+
+  /// No description provided for @methodConventional.
+  ///
+  /// In en, this message translates to:
+  /// **'Conventional'**
+  String get methodConventional;
+
+  /// No description provided for @apmcRegLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'APMC Registration Number (Optional)'**
+  String get apmcRegLabel;
+
+  /// No description provided for @apmcRegHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. APMC-KA-2024-889'**
+  String get apmcRegHint;
+
+  /// No description provided for @kccStatusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Kisan Credit Card (KCC) Status'**
+  String get kccStatusLabel;
+
+  /// No description provided for @kccNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Applied'**
+  String get kccNone;
+
+  /// No description provided for @kccApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'Applied'**
+  String get kccApplied;
+
+  /// No description provided for @kccApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved / Active'**
+  String get kccApproved;
+
+  /// No description provided for @organicCertLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Organic Certificate Upload (Optional)'**
+  String get organicCertLabel;
+
+  /// No description provided for @organicCertHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploaded files are saved in private secure storage and marked as pending review.'**
+  String get organicCertHelper;
+
+  /// No description provided for @farmBadgesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm Profile Badges'**
+  String get farmBadgesTitle;
+
+  /// No description provided for @deliveryAvailableLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery Available'**
+  String get deliveryAvailableLabel;
+
+  /// No description provided for @pickupAvailableLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup Available'**
+  String get pickupAvailableLabel;
+
+  /// No description provided for @deliveryRadiusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery Radius: {radius} km'**
+  String deliveryRadiusLabel(Object radius);
+
+  /// No description provided for @leadTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Typical Lead Time'**
+  String get leadTimeLabel;
+
+  /// No description provided for @apmcBadgeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'APMC Registered'**
+  String get apmcBadgeTitle;
+
+  /// No description provided for @kccBadgeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Kisan Credit Card'**
+  String get kccBadgeTitle;
+
+  /// No description provided for @organicBadgeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Organic Certificate (Pending Review)'**
+  String get organicBadgeTitle;
+
+  /// No description provided for @uploadCertButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload Organic Certificate (PDF / Image)'**
+  String get uploadCertButton;
+
+  /// No description provided for @certUploadedPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Certificate uploaded (Pending Review)'**
+  String get certUploadedPending;
 }
 
 class _AppLocalizationsDelegate

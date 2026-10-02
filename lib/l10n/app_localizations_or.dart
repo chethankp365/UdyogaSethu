@@ -709,4 +709,138 @@ class AppLocalizationsOr extends AppLocalizations {
   @override
   String get quitAndResumeNotice =>
       'Draft saved automatically. You can resume anytime.';
+
+  @override
+  String get farmerWizardTitle => 'Farmer Profile Setup';
+
+  @override
+  String get farmerStep1Title => 'Basics';
+
+  @override
+  String get farmerStep1Subtitle =>
+      'Enter your full name, photo, and spoken languages.';
+
+  @override
+  String get farmerStep2Title => 'Farm Details';
+
+  @override
+  String get farmerStep2Subtitle =>
+      'Set your farm name, location, acres, soil type, and primary crops.';
+
+  @override
+  String get farmerStep3Title => 'Registrations & Badges';
+
+  @override
+  String get farmerStep3Subtitle =>
+      'Add optional government registrations and certificates for profile badges.';
+
+  @override
+  String get farmerStep4Title => 'Selling Options';
+
+  @override
+  String get farmerStep4Subtitle =>
+      'Set your produce pickup availability, delivery radius, and lead time.';
+
+  @override
+  String get farmerStep5Title => 'Review & Finish';
+
+  @override
+  String get farmerStep5Subtitle =>
+      'Verify your farm profile details before completing setup.';
+
+  @override
+  String get farmNameLabel => 'Farm Name';
+
+  @override
+  String get farmNameHint => 'e.g. Green Valley Organic Farm';
+
+  @override
+  String get villageClusterLabel => 'Village / Cluster Name';
+
+  @override
+  String get villageClusterHint => 'e.g. Devanahalli, Bengaluru Rural';
+
+  @override
+  String get farmLocationLabel => 'Farm Location on Map';
+
+  @override
+  String get acresLabel => 'Farm Area (Acres)';
+
+  @override
+  String get soilTypeLabel => 'Soil Type';
+
+  @override
+  String get soilPhLabel => 'Soil pH (Optional)';
+
+  @override
+  String get primaryCropsLabel => 'Primary Crops';
+
+  @override
+  String get farmingMethodLabel => 'Farming Method';
+
+  @override
+  String get methodOrganic => 'Organic';
+
+  @override
+  String get methodNatural => 'Natural / Zero Budget';
+
+  @override
+  String get methodConventional => 'Conventional';
+
+  @override
+  String get apmcRegLabel => 'APMC Registration Number (Optional)';
+
+  @override
+  String get apmcRegHint => 'e.g. APMC-KA-2024-889';
+
+  @override
+  String get kccStatusLabel => 'Kisan Credit Card (KCC) Status';
+
+  @override
+  String get kccNone => 'Not Applied';
+
+  @override
+  String get kccApplied => 'Applied';
+
+  @override
+  String get kccApproved => 'Approved / Active';
+
+  @override
+  String get organicCertLabel => 'Organic Certificate Upload (Optional)';
+
+  @override
+  String get organicCertHelper =>
+      'Uploaded files are saved in private secure storage and marked as pending review.';
+
+  @override
+  String get farmBadgesTitle => 'Farm Profile Badges';
+
+  @override
+  String get deliveryAvailableLabel => 'Delivery Available';
+
+  @override
+  String get pickupAvailableLabel => 'Pickup Available';
+
+  @override
+  String deliveryRadiusLabel(Object radius) {
+    return 'Delivery Radius: $radius km';
+  }
+
+  @override
+  String get leadTimeLabel => 'Typical Lead Time';
+
+  @override
+  String get apmcBadgeTitle => 'APMC Registered';
+
+  @override
+  String get kccBadgeTitle => 'Kisan Credit Card';
+
+  @override
+  String get organicBadgeTitle => 'Organic Certificate (Pending Review)';
+
+  @override
+  String get uploadCertButton => 'Upload Organic Certificate (PDF / Image)';
+
+  @override
+  String get certUploadedPending => 'Certificate uploaded (Pending Review)';
 }

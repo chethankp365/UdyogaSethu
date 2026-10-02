@@ -713,4 +713,141 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get quitAndResumeNotice =>
       'வரைவு தானாகவே சேமிக்கப்பட்டது. நீங்கள் எப்போது வேண்டுமானாலும் தொடரலாம்.';
+
+  @override
+  String get farmerWizardTitle => 'விவசாயி சுயவிவர அமைப்பு';
+
+  @override
+  String get farmerStep1Title => 'அடிப்படை விவரங்கள்';
+
+  @override
+  String get farmerStep1Subtitle =>
+      'உங்கள் பெயர், புகைப்படம் மற்றும் பேசும் மொழிகளை உள்ளிடவும்.';
+
+  @override
+  String get farmerStep2Title => 'பண்ணை விவரங்கள்';
+
+  @override
+  String get farmerStep2Subtitle =>
+      'பண்ணை பெயர், இடம், ஏக்கர், மண் வகை மற்றும் பயிர்களைத் தேர்ந்தெடுக்கவும்.';
+
+  @override
+  String get farmerStep3Title => 'பதிவுகள் மற்றும் பேட்ஜ்கள்';
+
+  @override
+  String get farmerStep3Subtitle =>
+      'பேட்ஜ்களைப் பெற அரசு பதிவுகள் மற்றும் சான்றிதழ்களைச் சேர்க்கவும்.';
+
+  @override
+  String get farmerStep4Title => 'விற்பனை விருப்பங்கள்';
+
+  @override
+  String get farmerStep4Subtitle =>
+      'பிக்கப் கிடைக்கும் தன்மை, டெலிவரி ஆரம் மற்றும் நேரத்தை அமைக்கவும்.';
+
+  @override
+  String get farmerStep5Title => 'மதிப்பாய்வு செய்து முடிக்கவும்';
+
+  @override
+  String get farmerStep5Subtitle =>
+      'முடிப்பதற்கு முன் உங்கள் விவசாயி சுயவிவர விவரங்களைச் சரிபார்க்கவும்.';
+
+  @override
+  String get farmNameLabel => 'பண்ணை பெயர்';
+
+  @override
+  String get farmNameHint => 'எ.கா. கிரீன் வேலி ஆர்கானிக் ஃபார்ம்';
+
+  @override
+  String get villageClusterLabel => 'கிராமம் / கிளஸ்டர் பெயர்';
+
+  @override
+  String get villageClusterHint => 'எ.கா. தேவநஹள்ளி, பெங்களூரு கிராமப்புறம்';
+
+  @override
+  String get farmLocationLabel => 'வரைபடத்தில் பண்ணை இடம்';
+
+  @override
+  String get acresLabel => 'பண்ணை பரப்பு (ஏக்கர்)';
+
+  @override
+  String get soilTypeLabel => 'மண் வகை';
+
+  @override
+  String get soilPhLabel => 'மண் pH (விருப்பத்தேர்வு)';
+
+  @override
+  String get primaryCropsLabel => 'முதன்மை பயிர்கள்';
+
+  @override
+  String get farmingMethodLabel => 'விவசாய முறை';
+
+  @override
+  String get methodOrganic => 'இயற்கை வழி (Organic)';
+
+  @override
+  String get methodNatural => 'இயற்கை (Natural)';
+
+  @override
+  String get methodConventional => 'பாரம்பரிய (Conventional)';
+
+  @override
+  String get apmcRegLabel => 'APMC பதிவு எண் (விருப்பத்தேர்வு)';
+
+  @override
+  String get apmcRegHint => 'எ.கா. APMC-KA-2024-889';
+
+  @override
+  String get kccStatusLabel => 'கிசான் கிரெடிட் கார்டு (KCC) நிலை';
+
+  @override
+  String get kccNone => 'விண்ணப்பிக்கவில்லை';
+
+  @override
+  String get kccApplied => 'விண்ணப்பிக்கப்பட்டது';
+
+  @override
+  String get kccApproved => 'அனுமதிக்கப்பட்டது / செயலில் உள்ளது';
+
+  @override
+  String get organicCertLabel =>
+      'இயற்கைச் சான்றிதழ் பதிவேற்றம் (விருப்பத்தேர்வு)';
+
+  @override
+  String get organicCertHelper =>
+      'பதிவேற்றப்பட்ட கோப்புகள் பாதுகாப்பான தனியார் சேமிப்பகத்தில் சேமிக்கப்படும்.';
+
+  @override
+  String get farmBadgesTitle => 'பண்ணை சுயவிவர பேட்ஜ்கள்';
+
+  @override
+  String get deliveryAvailableLabel => 'டெலிவரி வசதி உள்ளது';
+
+  @override
+  String get pickupAvailableLabel => 'பிக்கப் வசதி உள்ளது';
+
+  @override
+  String deliveryRadiusLabel(Object radius) {
+    return 'டெலிவரி ஆரம்: $radius கி.மீ';
+  }
+
+  @override
+  String get leadTimeLabel => 'வழக்கமான விநியோக நேரம்';
+
+  @override
+  String get apmcBadgeTitle => 'APMC பதிவு செய்யப்பட்டது';
+
+  @override
+  String get kccBadgeTitle => 'கிசான் கிரெடிட் கார்டு';
+
+  @override
+  String get organicBadgeTitle => 'இயற்கைச் சான்றிதழ் (பரிசீலனையில் உள்ளுது)';
+
+  @override
+  String get uploadCertButton =>
+      'இயற்கைச் சான்றிதழைப் பதிவேற்றவும் (PDF / Photo)';
+
+  @override
+  String get certUploadedPending =>
+      'சான்றிதழ் பதிவேற்றப்பட்டது (பரிசீலனையில் உள்ளது)';
 }

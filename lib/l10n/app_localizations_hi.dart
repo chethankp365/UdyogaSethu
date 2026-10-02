@@ -708,4 +708,138 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get quitAndResumeNotice =>
       'ड्राफ्ट स्वचालित रूप से सहेजा गया है। आप कभी भी जारी रख सकते हैं।';
+
+  @override
+  String get farmerWizardTitle => 'किसान प्रोफाइल सेटअप';
+
+  @override
+  String get farmerStep1Title => 'मूल बातें';
+
+  @override
+  String get farmerStep1Subtitle =>
+      'अपना नाम, फोटो और बोली जाने वाली भाषाएं दर्ज करें।';
+
+  @override
+  String get farmerStep2Title => 'खेत का विवरण';
+
+  @override
+  String get farmerStep2Subtitle =>
+      'खेत का नाम, स्थान, एकड़, मिट्टी का प्रकार और फसलें चुनें।';
+
+  @override
+  String get farmerStep3Title => 'पंजीकरण और बैज';
+
+  @override
+  String get farmerStep3Subtitle =>
+      'बैज प्राप्त करने के लिए सरकारी पंजीकरण और प्रमाण पत्र जोड़ें।';
+
+  @override
+  String get farmerStep4Title => 'बिक्री विकल्प';
+
+  @override
+  String get farmerStep4Subtitle =>
+      'पिकअप उपलब्धता, डिलीवरी दायरा और समय निर्धारित करें।';
+
+  @override
+  String get farmerStep5Title => 'समीक्षा और समाप्त';
+
+  @override
+  String get farmerStep5Subtitle =>
+      'समाप्त करने से पहले अपने किसान प्रोफाइल विवरण की जांच करें।';
+
+  @override
+  String get farmNameLabel => 'खेत का नाम';
+
+  @override
+  String get farmNameHint => 'उदा. ग्रीन वैली ऑर्गेनिक फार्म';
+
+  @override
+  String get villageClusterLabel => 'गांव / क्लस्टर का नाम';
+
+  @override
+  String get villageClusterHint => 'उदा. देवनाहल्ली, बेंगलुरु देहात';
+
+  @override
+  String get farmLocationLabel => 'मानचित्र पर खेत का स्थान';
+
+  @override
+  String get acresLabel => 'खेत का क्षेत्रफल (एकड़)';
+
+  @override
+  String get soilTypeLabel => 'मिट्टी का प्रकार';
+
+  @override
+  String get soilPhLabel => 'मिट्टी का pH (वैकल्पिक)';
+
+  @override
+  String get primaryCropsLabel => 'मुख्य फसलें';
+
+  @override
+  String get farmingMethodLabel => 'खेती की पद्धति';
+
+  @override
+  String get methodOrganic => 'जैविक (Organic)';
+
+  @override
+  String get methodNatural => 'प्राकृतिक (Natural)';
+
+  @override
+  String get methodConventional => 'पारंपरिक (Conventional)';
+
+  @override
+  String get apmcRegLabel => 'APMC पंजीकरण संख्या (वैकल्पिक)';
+
+  @override
+  String get apmcRegHint => 'उदा. APMC-KA-2024-889';
+
+  @override
+  String get kccStatusLabel => 'किसान क्रेडिट कार्ड (KCC) स्थिति';
+
+  @override
+  String get kccNone => 'आवेदन नहीं किया';
+
+  @override
+  String get kccApplied => 'आवेदन किया गया';
+
+  @override
+  String get kccApproved => 'स्वीकृत / सक्रिय';
+
+  @override
+  String get organicCertLabel => 'जैविक प्रमाण पत्र अपलोड (वैकल्पिक)';
+
+  @override
+  String get organicCertHelper =>
+      'अपलोड की गई फ़ाइलें सुरक्षित निजी स्टोरेज में रखी जाती हैं।';
+
+  @override
+  String get farmBadgesTitle => 'फार्म प्रोफाइल बैज';
+
+  @override
+  String get deliveryAvailableLabel => 'डिलीवरी उपलब्ध है';
+
+  @override
+  String get pickupAvailableLabel => 'पिकअप उपलब्ध है';
+
+  @override
+  String deliveryRadiusLabel(Object radius) {
+    return 'डिलीवरी दायरा: $radius किमी';
+  }
+
+  @override
+  String get leadTimeLabel => 'सामान्य आपूर्ति समय';
+
+  @override
+  String get apmcBadgeTitle => 'APMC पंजीकृत';
+
+  @override
+  String get kccBadgeTitle => 'किसान क्रेडिट कार्ड';
+
+  @override
+  String get organicBadgeTitle => 'जैविक प्रमाण पत्र (समीक्षाधीन)';
+
+  @override
+  String get uploadCertButton => 'जैविक प्रमाण पत्र अपलोड करें (PDF / Photo)';
+
+  @override
+  String get certUploadedPending => 'प्रमाण पत्र अपलोड हुआ (समीक्षाधीन)';
 }
