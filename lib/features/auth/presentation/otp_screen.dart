@@ -69,7 +69,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
 
   Future<void> _handleVerify(String code) async {
     final notifier = ref.read(phoneAuthProvider.notifier);
-    final success = await notifier.verifyOtp(code);
+    final success = await notifier.verifyCurrentOtp(code);
     if (success && mounted) {
       context.go(AppRoutes.splash); // Triggers Bootstrap (P2.6)
     }

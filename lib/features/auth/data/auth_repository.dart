@@ -179,7 +179,7 @@ class SupabaseAuthRepository implements AuthRepository {
 
   @override
   Future<void> sendPhoneChangeOtp(String rawPhone) async {
-    final cleanPhone = rawPhone.trim();
+    final cleanPhone = rawPhone.trim().replaceAll(RegExp(r'^\+91'), '');
     if (cleanPhone.length != 10 || !RegExp(r'^[6-9]\d{9}$').hasMatch(cleanPhone)) {
       throw const AppException.validation(
         'Please enter a valid 10-digit mobile number starting with 6-9',
@@ -194,13 +194,16 @@ class SupabaseAuthRepository implements AuthRepository {
         UserAttributes(phone: formattedPhone),
       );
     } on AuthException catch (e) {
-      AppLogger.e('AuthException during updateUser phone: code=${e.code}, msg=${e.message}');
+      AppLogger.e('AuthException during updateUser phone: status=${e.statusCode}, code=${e.code}');
+      final debugDetail = kDebugMode
+          ? ' (${e.code != null ? 'Code: ${e.code}, ' : ''}${e.message})'
+          : '';
       if (e.code == 'phone_exists' ||
           e.message.toLowerCase().contains('already registered') ||
           e.message.toLowerCase().contains('already exists')) {
-        throw const AppException.auth('This mobile number is already linked to another account.');
+        throw AppException.auth('This mobile number is already linked to another account.$debugDetail');
       }
-      throw AppException.auth('Failed to send verification code: ${e.message}', code: e.code);
+      throw AppException.auth('Failed to send verification code: ${e.message}$debugDetail', code: e.code);
     } on SocketException catch (e) {
       AppLogger.w('SocketException during updateUser phone: $e');
       throw const AppException.network('No internet connection. Please check your network.');
@@ -213,26 +216,16 @@ class SupabaseAuthRepository implements AuthRepository {
 
   @override
   Future<AuthResponse> verifyPhoneChangeOtp(String rawPhone, String otpToken) async {
-    final cleanPhone = rawPhone.trim();
+    final cleanPhone = rawPhone.trim().replaceAll(RegExp(r'^\+91'), '');
     final formattedPhone = '+91$cleanPhone';
 
     try {
       AppLogger.i('Verifying phone change OTP');
-      AuthResponse response;
-      try {
-        response = await _supabase.auth.verifyOTP(
-          phone: formattedPhone,
-          token: otpToken.trim(),
-          type: OtpType.phoneChange,
-        );
-      } on AuthException catch (e) {
-        AppLogger.w('phoneChange verifyOTP failed, retrying with sms type: ${e.message}');
-        response = await _supabase.auth.verifyOTP(
-          phone: formattedPhone,
-          token: otpToken.trim(),
-          type: OtpType.sms,
-        );
-      }
+      final response = await _supabase.auth.verifyOTP(
+        phone: formattedPhone,
+        token: otpToken.trim(),
+        type: OtpType.phoneChange,
+      );
 
       if (response.session != null) {
         _recordConsent();
@@ -240,8 +233,11 @@ class SupabaseAuthRepository implements AuthRepository {
 
       return response;
     } on AuthException catch (e) {
-      AppLogger.e('AuthException during verifyPhoneChangeOtp: code=${e.code}, msg=${e.message}');
-      throw AppException.auth('Invalid or expired verification code. Please try again.', code: e.code);
+      AppLogger.e('AuthException during verifyPhoneChangeOtp: status=${e.statusCode}, code=${e.code}');
+      final debugDetail = kDebugMode
+          ? ' (${e.code != null ? 'Code: ${e.code}, ' : ''}${e.message})'
+          : '';
+      throw AppException.auth('Invalid or expired verification code.$debugDetail', code: e.code);
     } on SocketException catch (e) {
       AppLogger.w('SocketException during verifyPhoneChangeOtp: $e');
       throw const AppException.network('No internet connection. Please check your network.');

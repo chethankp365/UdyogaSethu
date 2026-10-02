@@ -35,11 +35,17 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       case AuthSessionStatus.signedOut:
         context.go(AppRoutes.login);
         break;
+      case AuthSessionStatus.needsRole:
+        context.go(AppRoutes.roleTree);
+        break;
       case AuthSessionStatus.needsProfile:
         context.go('/profile-setup/${role.name}');
         break;
       case AuthSessionStatus.ready:
         context.go(AppSessionNotifier.getHomeForRole(role));
+        break;
+      case AuthSessionStatus.suspended:
+        context.go(AppRoutes.suspended);
         break;
       case AuthSessionStatus.booting:
         break;

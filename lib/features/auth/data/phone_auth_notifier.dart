@@ -222,6 +222,7 @@ class PhoneAuthNotifier extends Notifier<PhoneAuthState> {
     state = state.copyWith(
       isLoading: true,
       clearErrorMessage: true,
+      isPhoneChangeFlow: true,
     );
 
     try {
@@ -232,6 +233,7 @@ class PhoneAuthNotifier extends Notifier<PhoneAuthState> {
         step: PhoneAuthStep.otpSent,
         isLoading: false,
         resendCountdown: 30,
+        isPhoneChangeFlow: true,
       );
       _startResendTimer();
       return true;
@@ -247,6 +249,14 @@ class PhoneAuthNotifier extends Notifier<PhoneAuthState> {
         errorMessage: 'Failed to send verification code to mobile number.',
       );
       return false;
+    }
+  }
+
+  Future<bool> verifyCurrentOtp(String otpToken) async {
+    if (state.isPhoneChangeFlow) {
+      return verifyPhoneChangeOtp(otpToken);
+    } else {
+      return verifyOtp(otpToken);
     }
   }
 
@@ -309,6 +319,7 @@ class PhoneAuthNotifier extends Notifier<PhoneAuthState> {
       step: PhoneAuthStep.inputPhone,
       clearErrorMessage: true,
       isLoading: false,
+      isPhoneChangeFlow: false,
     );
   }
 

@@ -13,6 +13,7 @@ import 'package:udyogasethu/core/widgets/dev_assets_screen.dart';
 import 'package:udyogasethu/core/widgets/not_found_screen.dart';
 import 'package:udyogasethu/features/auth/presentation/login_screen.dart';
 import 'package:udyogasethu/features/auth/presentation/otp_screen.dart';
+import 'package:udyogasethu/features/auth/presentation/suspended_screen.dart';
 import 'package:udyogasethu/features/auth/presentation/verify_phone_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/intro_screen.dart';
 
@@ -37,24 +38,83 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
       final status = sessionData.status;
 
-      // Booting state stays on splash
-      if (status == AuthSessionStatus.booting && loc != AppRoutes.splash) {
-        return AppRoutes.splash;
+      // 1. Booting state stays on splash
+      if (status == AuthSessionStatus.booting) {
+        return loc == AppRoutes.splash ? null : AppRoutes.splash;
       }
 
-      // If user is on root '/' or '/splash' after bootstrap complete
-      if (loc == '/' || (loc == AppRoutes.splash && status != AuthSessionStatus.booting)) {
-        switch (status) {
-          case AuthSessionStatus.needsOnboarding:
-            return AppRoutes.intro;
-          case AuthSessionStatus.signedOut:
-            return AppRoutes.login;
-          case AuthSessionStatus.needsProfile:
-            return '/profile-setup/${sessionData.activeRole.name}';
-          case AuthSessionStatus.ready:
-            return AppSessionNotifier.getHomeForRole(sessionData.activeRole);
-          case AuthSessionStatus.booting:
-            return AppRoutes.splash;
+      // 2. Suspended state
+      if (status == AuthSessionStatus.suspended) {
+        return loc == AppRoutes.suspended ? null : AppRoutes.suspended;
+      }
+
+      // 3. Signed out state
+      if (status == AuthSessionStatus.signedOut) {
+        const allowedUnauth = [
+          AppRoutes.splash,
+          AppRoutes.intro,
+          AppRoutes.language,
+          AppRoutes.roleTree,
+          AppRoutes.login,
+          AppRoutes.otp,
+          AppRoutes.verifyPhone,
+        ];
+        if (!allowedUnauth.contains(loc) && !loc.startsWith('/dev/')) {
+          // Capture deep link for replay after login
+          ref.read(appSessionProvider.notifier).setDeepLinkPending(loc);
+          return AppRoutes.login;
+        }
+        return null;
+      }
+
+      // 4. Needs Onboarding (intro)
+      if (status == AuthSessionStatus.needsOnboarding) {
+        if (loc == AppRoutes.splash || loc == AppRoutes.intro || loc == AppRoutes.language) {
+          return null;
+        }
+        return AppRoutes.intro;
+      }
+
+      // 5. Needs Role Assignment
+      if (status == AuthSessionStatus.needsRole) {
+        if (loc == AppRoutes.roleTree || loc == AppRoutes.language) {
+          return null;
+        }
+        return AppRoutes.roleTree;
+      }
+
+      // 6. Needs Profile Wizard
+      if (status == AuthSessionStatus.needsProfile) {
+        final profilePath = '/profile-setup/${sessionData.activeRole.name}';
+        if (loc == profilePath || loc == AppRoutes.language) {
+          return null;
+        }
+        return profilePath;
+      }
+
+      // 7. Ready state (Signed in & Onboarded)
+      if (status == AuthSessionStatus.ready) {
+        // Replay pending deep link if present
+        if (sessionData.deepLinkPending != null) {
+          final target = sessionData.deepLinkPending!;
+          ref.read(appSessionProvider.notifier).setDeepLinkPending(null);
+          if (target != loc && target != AppRoutes.login && target != AppRoutes.splash) {
+            return target;
+          }
+        }
+
+        // Redirect from root or onboarding/login screens to role home
+        const onboardingOrLogin = [
+          '/',
+          AppRoutes.splash,
+          AppRoutes.intro,
+          AppRoutes.roleTree,
+          AppRoutes.login,
+          AppRoutes.otp,
+          AppRoutes.verifyPhone,
+        ];
+        if (onboardingOrLogin.contains(loc)) {
+          return AppSessionNotifier.getHomeForRole(sessionData.activeRole);
         }
       }
 
@@ -90,6 +150,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.verifyPhone,
         builder: (context, state) => const VerifyPhoneScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.suspended,
+        builder: (context, state) => const SuspendedScreen(),
       ),
 
       GoRoute(

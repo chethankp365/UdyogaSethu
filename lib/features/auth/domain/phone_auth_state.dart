@@ -16,6 +16,7 @@ class PhoneAuthState {
   final int resendCountdown; // seconds remaining before resend enabled
   final int resendsCount; // total resends performed in session
   final bool isRateLimited;
+  final bool isPhoneChangeFlow;
 
   const PhoneAuthState({
     this.step = PhoneAuthStep.inputPhone,
@@ -26,6 +27,7 @@ class PhoneAuthState {
     this.resendCountdown = 30,
     this.resendsCount = 0,
     this.isRateLimited = false,
+    this.isPhoneChangeFlow = false,
   });
 
   bool get isPhoneValid {
@@ -55,6 +57,7 @@ class PhoneAuthState {
     int? resendCountdown,
     int? resendsCount,
     bool? isRateLimited,
+    bool? isPhoneChangeFlow,
   }) {
     return PhoneAuthState(
       step: step ?? this.step,
@@ -66,6 +69,7 @@ class PhoneAuthState {
       resendCountdown: resendCountdown ?? this.resendCountdown,
       resendsCount: resendsCount ?? this.resendsCount,
       isRateLimited: isRateLimited ?? this.isRateLimited,
+      isPhoneChangeFlow: isPhoneChangeFlow ?? this.isPhoneChangeFlow,
     );
   }
 }

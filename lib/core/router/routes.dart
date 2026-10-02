@@ -10,6 +10,7 @@ class AppRoutes {
   static const String login = '/login';
   static const String otp = '/otp';
   static const String verifyPhone = '/auth/verify-phone';
+  static const String suspended = '/suspended';
   static const String profileSetupSeeker = '/profile-setup/seeker';
   static const String profileSetupFarmer = '/profile-setup/farmer';
   static const String profileSetupProvider = '/profile-setup/provider';

@@ -6,8 +6,10 @@ enum AuthSessionStatus {
   booting,
   needsOnboarding,
   signedOut,
+  needsRole,
   needsProfile,
   ready,
+  suspended,
 }
 
 /// Enum representing the active user role shell.
@@ -21,19 +23,32 @@ enum UserRole {
 class AppSessionData {
   final AuthSessionStatus status;
   final UserRole activeRole;
+  final List<UserRole> assignedRoles;
+  final String? seekerType;
+  final String? deepLinkPending;
 
   const AppSessionData({
     this.status = AuthSessionStatus.ready,
     this.activeRole = UserRole.seeker,
+    this.assignedRoles = const [UserRole.seeker],
+    this.seekerType,
+    this.deepLinkPending,
   });
 
   AppSessionData copyWith({
     AuthSessionStatus? status,
     UserRole? activeRole,
+    List<UserRole>? assignedRoles,
+    String? seekerType,
+    String? deepLinkPending,
+    bool clearDeepLink = false,
   }) {
     return AppSessionData(
       status: status ?? this.status,
       activeRole: activeRole ?? this.activeRole,
+      assignedRoles: assignedRoles ?? this.assignedRoles,
+      seekerType: seekerType ?? this.seekerType,
+      deepLinkPending: clearDeepLink ? null : (deepLinkPending ?? this.deepLinkPending),
     );
   }
 }
@@ -59,8 +74,22 @@ class AppSessionNotifier extends Notifier<AppSessionData> {
     state = state.copyWith(activeRole: role);
   }
 
-  void updateSession({AuthSessionStatus? status, UserRole? role}) {
-    state = state.copyWith(status: status, activeRole: role);
+  void setDeepLinkPending(String? uri) {
+    state = state.copyWith(deepLinkPending: uri, clearDeepLink: uri == null);
+  }
+
+  void updateSession({
+    AuthSessionStatus? status,
+    UserRole? role,
+    List<UserRole>? assignedRoles,
+    String? seekerType,
+  }) {
+    state = state.copyWith(
+      status: status,
+      activeRole: role,
+      assignedRoles: assignedRoles,
+      seekerType: seekerType,
+    );
   }
 
   /// Calculates the default home route for a given user role.

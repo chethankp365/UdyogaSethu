@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -89,28 +90,78 @@ class BootstrapNotifier extends Notifier<BootstrapState> {
       final currentUser = currentSession?.user;
 
       AuthSessionStatus finalStatus = AuthSessionStatus.needsOnboarding;
+      List<UserRole> assignedRoles = [UserRole.seeker];
+      String? seekerTypeStr;
 
       if (currentUser != null) {
-        // User is signed in, check profile completeness
+        // 1. Check for local pending role selection and apply via RPC apply_role_selection
+        final pendingJson = prefs.getString('pending_role_selection');
+        if (pendingJson != null && pendingJson.isNotEmpty) {
+          try {
+            final Map<String, dynamic> data = json.decode(pendingJson);
+            final pendingRoleStr = data['role'] as String?;
+            final pendingSeekerTypeStr = data['seekerType'] as String?;
+
+            String? apiRole;
+            if (pendingRoleStr == 'seeker' || pendingRoleStr == 'UserRole.seeker') apiRole = 'seeker';
+            if (pendingRoleStr == 'provider' || pendingRoleStr == 'UserRole.provider') apiRole = 'provider';
+            if (pendingRoleStr == 'farmer' || pendingRoleStr == 'UserRole.farmer') apiRole = 'farmer';
+
+            if (apiRole != null) {
+              AppLogger.i('Applying pending role selection: $apiRole (seekerType: $pendingSeekerTypeStr)');
+              await supabaseClient.rpc('apply_role_selection', params: {
+                'p_role': apiRole,
+                'p_seeker_type': pendingSeekerTypeStr,
+              });
+              await prefs.remove('pending_role_selection');
+            }
+          } catch (e) {
+            AppLogger.w('Failed to apply pending role selection via RPC: $e');
+          }
+        }
+
+        // 2. Sync user profile language & last_active_at
+        final selectedLang = prefs.getString(SharedPrefKeys.selectedLanguage) ?? 'en';
         try {
-          final profileRow = await supabaseClient
-              .from('profiles')
-              .select('onboarding_complete, active_role')
-              .eq('id', currentUser.id)
-              .maybeSingle();
+          await supabaseClient.from('profiles').update({
+            'language': selectedLang,
+            'last_active_at': DateTime.now().toIso8601String(),
+          }).eq('id', currentUser.id);
+        } catch (e) {
+          AppLogger.w('Could not update profile language/last_active_at: $e');
+        }
 
-          if (profileRow != null) {
-            final isComplete = profileRow['onboarding_complete'] as bool? ?? false;
-            final dbRole = profileRow['active_role'] as String?;
-            if (dbRole == 'provider') activeRole = UserRole.provider;
-            if (dbRole == 'farmer') activeRole = UserRole.farmer;
+        // 3. Fetch full bootstrap state via RPC get_bootstrap_state
+        try {
+          final bootstrapRes = await supabaseClient.rpc('get_bootstrap_state');
+          final Map<String, dynamic> data = (bootstrapRes is String) ? json.decode(bootstrapRes) : (bootstrapRes as Map<String, dynamic>);
+          
+          final isSuspended = data['is_suspended'] as bool? ?? false;
+          final isComplete = data['onboarding_complete'] as bool? ?? false;
+          final dbRoleStr = data['active_role'] as String? ?? 'seeker';
+          final rolesList = (data['roles'] as List?)?.map((e) => e.toString()).toList() ?? [];
 
-            finalStatus = isComplete ? AuthSessionStatus.ready : AuthSessionStatus.needsProfile;
+          if (dbRoleStr == 'provider') activeRole = UserRole.provider;
+          if (dbRoleStr == 'farmer') activeRole = UserRole.farmer;
+
+          assignedRoles = rolesList.map((r) {
+            if (r == 'provider') return UserRole.provider;
+            if (r == 'farmer') return UserRole.farmer;
+            return UserRole.seeker;
+          }).toList();
+
+          if (isSuspended) {
+            finalStatus = AuthSessionStatus.suspended;
+          } else if (rolesList.isEmpty) {
+            // Signed-in user with no assigned role (e.g. Google-first user)
+            finalStatus = AuthSessionStatus.needsRole;
+          } else if (isComplete) {
+            finalStatus = AuthSessionStatus.ready;
           } else {
             finalStatus = AuthSessionStatus.needsProfile;
           }
         } catch (e, st) {
-          AppLogger.e('Failed to fetch profile during bootstrap', e, st);
+          AppLogger.e('Failed to fetch get_bootstrap_state RPC', e, st);
           finalStatus = AuthSessionStatus.needsProfile;
         }
       } else {
@@ -135,6 +186,8 @@ class BootstrapNotifier extends Notifier<BootstrapState> {
       ref.read(appSessionProvider.notifier).updateSession(
             status: finalStatus,
             role: activeRole,
+            assignedRoles: assignedRoles,
+            seekerType: seekerTypeStr,
           );
     } catch (err, stack) {
       AppLogger.e('Bootstrapping error', err, stack);

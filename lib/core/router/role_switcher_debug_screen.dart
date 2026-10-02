@@ -173,10 +173,14 @@ class RoleSwitcherDebugScreen extends ConsumerWidget {
         return 'Language & intro onboarding flow.';
       case AuthSessionStatus.signedOut:
         return 'Signed out, requires OTP / Google login.';
+      case AuthSessionStatus.needsRole:
+        return 'Authenticated but needs role selection from role tree.';
       case AuthSessionStatus.needsProfile:
         return 'Authenticated but needs role wizard setup.';
       case AuthSessionStatus.ready:
         return 'Fully ready, active role shell unlocked.';
+      case AuthSessionStatus.suspended:
+        return 'Account suspended, shows appeal page.';
     }
   }
 }
