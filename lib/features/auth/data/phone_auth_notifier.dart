@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:udyogasethu/core/errors/app_exception.dart';
-import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/features/auth/data/auth_repository.dart';
 import 'package:udyogasethu/features/auth/domain/phone_auth_state.dart';
+import 'package:udyogasethu/features/onboarding/data/bootstrap_service.dart';
 
 class PhoneAuthNotifier extends Notifier<PhoneAuthState> {
   Timer? _countdownTimer;
@@ -118,10 +118,8 @@ class PhoneAuthNotifier extends Notifier<PhoneAuthState> {
           step: PhoneAuthStep.success,
         );
 
-        // Update global AppSessionNotifier to ready or needsProfile
-        ref.read(appSessionProvider.notifier).updateSession(
-          status: AuthSessionStatus.ready,
-        );
+        // Run bootstrap to process pending role selection and profile status
+        await ref.read(bootstrapProvider.notifier).runBootstrap();
 
         return true;
       } else {
@@ -185,9 +183,7 @@ class PhoneAuthNotifier extends Notifier<PhoneAuthState> {
           step: PhoneAuthStep.success,
         );
 
-        ref.read(appSessionProvider.notifier).updateSession(
-          status: AuthSessionStatus.ready,
-        );
+        await ref.read(bootstrapProvider.notifier).runBootstrap();
         return true;
       }
 
@@ -284,9 +280,7 @@ class PhoneAuthNotifier extends Notifier<PhoneAuthState> {
           step: PhoneAuthStep.success,
         );
 
-        ref.read(appSessionProvider.notifier).updateSession(
-          status: AuthSessionStatus.ready,
-        );
+        await ref.read(bootstrapProvider.notifier).runBootstrap();
         return true;
       }
 

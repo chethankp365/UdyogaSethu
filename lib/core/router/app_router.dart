@@ -20,6 +20,8 @@ import 'package:udyogasethu/features/onboarding/presentation/intro_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/language_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/role_tree_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/splash_screen.dart';
+import 'package:udyogasethu/features/account/presentation/linked_accounts_screen.dart';
+import 'package:udyogasethu/features/account/presentation/settings_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_home_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_wizard_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_home_screen.dart';
@@ -335,6 +337,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             ],
           ),
         ],
+      ),
+
+      GoRoute(
+        path: AppRoutes.settings,
+        builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: '/account/linked',
+        builder: (context, state) => const LinkedAccountsScreen(),
       ),
 
       // Debug Routes
