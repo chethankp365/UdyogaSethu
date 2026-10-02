@@ -1603,6 +1603,210 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Certificate uploaded (Pending Review)'**
   String get certUploadedPending;
+
+  /// No description provided for @providerWizardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Provider Setup'**
+  String get providerWizardTitle;
+
+  /// No description provided for @providerStep1Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Basics'**
+  String get providerStep1Title;
+
+  /// No description provided for @providerStep1Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your full name, photo, and spoken languages.'**
+  String get providerStep1Subtitle;
+
+  /// No description provided for @providerStep2Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider Category'**
+  String get providerStep2Title;
+
+  /// No description provided for @providerStep2Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select whether you hire as a Household or Employer/Contractor.'**
+  String get providerStep2Subtitle;
+
+  /// No description provided for @providerStep3HouseholdTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Doorstep Address & Delivery'**
+  String get providerStep3HouseholdTitle;
+
+  /// No description provided for @providerStep3HouseholdSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set default doorstep delivery address and delivery preferences.'**
+  String get providerStep3HouseholdSubtitle;
+
+  /// No description provided for @providerStep3EmployerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Organisation & Site Details'**
+  String get providerStep3EmployerTitle;
+
+  /// No description provided for @providerStep3EmployerSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set organisation name, primary site address, hiring categories, and crew size.'**
+  String get providerStep3EmployerSubtitle;
+
+  /// No description provided for @providerStep4Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Permissions & Consents'**
+  String get providerStep4Title;
+
+  /// No description provided for @providerStep4Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review location and notification permissions with just-in-time explanations.'**
+  String get providerStep4Subtitle;
+
+  /// No description provided for @providerStep5Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Review & Finish'**
+  String get providerStep5Title;
+
+  /// No description provided for @providerStep5Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify your job provider profile details before completing setup.'**
+  String get providerStep5Subtitle;
+
+  /// No description provided for @doorstepAddressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Flat / Door No. & Street'**
+  String get doorstepAddressLabel;
+
+  /// No description provided for @doorstepAddressHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. #402, Sunshine Apartments, 5th Cross'**
+  String get doorstepAddressHint;
+
+  /// No description provided for @landmarkLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Landmark'**
+  String get landmarkLabel;
+
+  /// No description provided for @landmarkHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Near Metro Station'**
+  String get landmarkHint;
+
+  /// No description provided for @deliveryInstructionsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery Preferences & Instructions'**
+  String get deliveryInstructionsLabel;
+
+  /// No description provided for @deliveryInstructionsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Leave with security at gate'**
+  String get deliveryInstructionsHint;
+
+  /// No description provided for @gateCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Gate Code / Intercom (Optional)'**
+  String get gateCodeLabel;
+
+  /// No description provided for @gateCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 1234'**
+  String get gateCodeHint;
+
+  /// No description provided for @orgNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Organisation / Business Name'**
+  String get orgNameLabel;
+
+  /// No description provided for @orgNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Sethu Construction & Infra Ltd'**
+  String get orgNameHint;
+
+  /// No description provided for @primarySiteAddressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Primary Site Address'**
+  String get primarySiteAddressLabel;
+
+  /// No description provided for @primarySiteAddressHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Site 45, Peripheral Ring Road, Electronics City'**
+  String get primarySiteAddressHint;
+
+  /// No description provided for @categoriesHiringLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories Usually Hired For'**
+  String get categoriesHiringLabel;
+
+  /// No description provided for @typicalCrewSizeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Typical Crew Size Needed'**
+  String get typicalCrewSizeLabel;
+
+  /// No description provided for @crewSizeWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} workers'**
+  String crewSizeWorkers(Object count);
+
+  /// No description provided for @gpsConsentExplanation.
+  ///
+  /// In en, this message translates to:
+  /// **'UdyogaSethu needs GPS location to locate site delivery addresses and display local worker availability.'**
+  String get gpsConsentExplanation;
+
+  /// No description provided for @notificationsConsentExplanation.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable push notifications to receive real-time updates on job applicants, worker arrivals, and delivery tracking.'**
+  String get notificationsConsentExplanation;
+
+  /// No description provided for @grantGpsPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant Location Permission'**
+  String get grantGpsPermission;
+
+  /// No description provided for @grantNotificationsPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant Notifications Permission'**
+  String get grantNotificationsPermission;
+
+  /// No description provided for @permissionGranted.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Granted'**
+  String get permissionGranted;
+
+  /// No description provided for @providerHomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider Home'**
+  String get providerHomeTitle;
 }
 
 class _AppLocalizationsDelegate

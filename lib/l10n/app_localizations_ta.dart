@@ -850,4 +850,117 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get certUploadedPending =>
       'சான்றிதழ் பதிவேற்றப்பட்டது (பரிசீலனையில் உள்ளது)';
+
+  @override
+  String get providerWizardTitle => 'வேலை வழங்குநர் அமைவு';
+
+  @override
+  String get providerStep1Title => 'அடிப்படை விவரங்கள்';
+
+  @override
+  String get providerStep1Subtitle =>
+      'உங்கள் முழு பெயர், புகைப்படம் மற்றும் மொழிகளை உள்ளிடவும்.';
+
+  @override
+  String get providerStep2Title => 'வழங்குநர் வகை';
+
+  @override
+  String get providerStep2Subtitle =>
+      'நீங்கள் வீட்டு உபயோகம் அல்லது முதலாளி/ஒப்பந்தக்காரராக தேர்வு செய்யவும்.';
+
+  @override
+  String get providerStep3HouseholdTitle => 'வீட்டு முகவரி & டெலிவரி';
+
+  @override
+  String get providerStep3HouseholdSubtitle =>
+      'வீட்டு முகவரி மற்றும் டெலிவரி விருப்பங்களை அமைக்கவும்.';
+
+  @override
+  String get providerStep3EmployerTitle => 'நிறுவனம் & தள விவரங்கள்';
+
+  @override
+  String get providerStep3EmployerSubtitle =>
+      'நிறுவனத்தின் பெயர், முதன்மை தள முகவரி மற்றும் பணியாளர் எண்ணிக்கையை உள்ளிடவும்.';
+
+  @override
+  String get providerStep4Title => 'அனுமதிகள் & சம்மதம்';
+
+  @override
+  String get providerStep4Subtitle =>
+      'இருப்பிடம் மற்றும் அறிவிப்பு அனுமதிகளை மதிப்பாய்வு செய்யவும்.';
+
+  @override
+  String get providerStep5Title => 'மதிப்பாய்வு செய்து முடிக்கவும்';
+
+  @override
+  String get providerStep5Subtitle =>
+      'முடிப்பதற்கு முன் சுயவிவர விவரங்களைச் சரிபார்க்கவும்.';
+
+  @override
+  String get doorstepAddressLabel => 'பிளாட் / கதவு எண் & தெரு';
+
+  @override
+  String get doorstepAddressHint => 'எ.கா. #402, சன்ஷைன் அபார்ட்மெண்ட்ஸ்';
+
+  @override
+  String get landmarkLabel => 'அடையாளம் (Landmark)';
+
+  @override
+  String get landmarkHint => 'எ.கா. மெட்ரோ நிலையம் அருகில்';
+
+  @override
+  String get deliveryInstructionsLabel => 'டெலிவரி விருப்பங்கள் & வழிமுறைகள்';
+
+  @override
+  String get deliveryInstructionsHint =>
+      'எ.கா. கேட்டில் உள்ள செக்யூரிட்டியிடம் கொடுக்கவும்';
+
+  @override
+  String get gateCodeLabel => 'கேட் கோட் (விருப்பத்தேர்வு)';
+
+  @override
+  String get gateCodeHint => 'எ.கா. 1234';
+
+  @override
+  String get orgNameLabel => 'நிறுவனம் / வணிகப் பெயர்';
+
+  @override
+  String get orgNameHint => 'எ.கா. சேது கன்ஸ்ட்ரக்ஷன்';
+
+  @override
+  String get primarySiteAddressLabel => 'முதன்மை தள முகவரி';
+
+  @override
+  String get primarySiteAddressHint => 'எ.கா. சைட் 45, எலக்ட்ரானிக்ஸ் சிட்டி';
+
+  @override
+  String get categoriesHiringLabel => 'பணியமர்த்தும் வகைகள்';
+
+  @override
+  String get typicalCrewSizeLabel => 'தேவைப்படும் பணியாளர் எண்ணிக்கை';
+
+  @override
+  String crewSizeWorkers(Object count) {
+    return '$count தொழிலாளர்கள்';
+  }
+
+  @override
+  String get gpsConsentExplanation =>
+      'தள முகவரி மற்றும் தொழிலாளர் இருப்பைக் காட்ட GPS இருப்பிடம் தேவை.';
+
+  @override
+  String get notificationsConsentExplanation =>
+      'தொழிலாளர் விண்ணப்பங்கள் மற்றும் டெலிவரி தகவல்களைப் பெற அறிவிப்புகளை இயக்கவும்.';
+
+  @override
+  String get grantGpsPermission => 'இருப்பிட அனுமதி அளிக்கவும்';
+
+  @override
+  String get grantNotificationsPermission => 'அறிவிப்பு அனுமதி அளிக்கவும்';
+
+  @override
+  String get permissionGranted => 'அனுமதி அளிக்கப்பட்டது';
+
+  @override
+  String get providerHomeTitle => 'வழங்குநர் முகப்பு';
 }

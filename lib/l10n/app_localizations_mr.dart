@@ -843,4 +843,115 @@ class AppLocalizationsMr extends AppLocalizations {
 
   @override
   String get certUploadedPending => 'Certificate uploaded (Pending Review)';
+
+  @override
+  String get providerWizardTitle => 'जॉब प्रदाता सेटअप';
+
+  @override
+  String get providerStep1Title => 'मूलभूत माहिती';
+
+  @override
+  String get providerStep1Subtitle =>
+      'तुमचे पूर्ण नाव, फोटो आणि भाषा प्रविष्ट करा.';
+
+  @override
+  String get providerStep2Title => 'प्रदाता वर्ग';
+
+  @override
+  String get providerStep2Subtitle =>
+      'तुम्ही घरगुती की व्यावसायिक म्हणून काम देता ते निवडा.';
+
+  @override
+  String get providerStep3HouseholdTitle => 'घरचा पत्ता आणि डिलिव्हरी';
+
+  @override
+  String get providerStep3HouseholdSubtitle =>
+      'मुख्य डिलिव्हरी पत्ता आणि प्राधान्ये सेट करा.';
+
+  @override
+  String get providerStep3EmployerTitle => 'संस्था आणि साइट तपशील';
+
+  @override
+  String get providerStep3EmployerSubtitle =>
+      'संस्थेचे नाव, मुख्य साइट पत्ता आणि टीमची संख्या प्रविष्ट करा.';
+
+  @override
+  String get providerStep4Title => 'परवानग्या आणि संमती';
+
+  @override
+  String get providerStep4Subtitle => 'स्थान आणि सूचना परवानग्या तपासा.';
+
+  @override
+  String get providerStep5Title => 'तपासा आणि पूर्ण करा';
+
+  @override
+  String get providerStep5Subtitle =>
+      'पूर्ण करण्यापूर्वी प्रोफाइल तपशील तपासा.';
+
+  @override
+  String get doorstepAddressLabel => 'फ्लॅट / घर क्र. आणि रस्ता';
+
+  @override
+  String get doorstepAddressHint => 'उदा. #402, सनशाईन अपार्टमेंट्स';
+
+  @override
+  String get landmarkLabel => 'लँडमार्क';
+
+  @override
+  String get landmarkHint => 'उदा. मेट्रो स्टेशन जवळ';
+
+  @override
+  String get deliveryInstructionsLabel => 'डिलिव्हरी प्राधान्ये आणि सूचना';
+
+  @override
+  String get deliveryInstructionsHint => 'उदा. गेटवर सुरक्षा रक्षकाकडे द्या';
+
+  @override
+  String get gateCodeLabel => 'गेट कोड (पर्यायी)';
+
+  @override
+  String get gateCodeHint => 'उदा. 1234';
+
+  @override
+  String get orgNameLabel => 'संस्था / व्यवसायाचे नाव';
+
+  @override
+  String get orgNameHint => 'उदा. सेतू कन्स्ट्रक्शन';
+
+  @override
+  String get primarySiteAddressLabel => 'मुख्य साइट पत्ता';
+
+  @override
+  String get primarySiteAddressHint => 'उदा. साइट 45, इलेक्ट्रॉनिक्स सिटी';
+
+  @override
+  String get categoriesHiringLabel => 'कामाचे वर्ग';
+
+  @override
+  String get typicalCrewSizeLabel => 'आवश्यक कामगारांची संख्या';
+
+  @override
+  String crewSizeWorkers(Object count) {
+    return '$count कामगार';
+  }
+
+  @override
+  String get gpsConsentExplanation =>
+      'साइट पत्ता आणि कामगारांची उपलब्धता दाखवण्यासाठी GPS आवश्यक आहे.';
+
+  @override
+  String get notificationsConsentExplanation =>
+      'कामगारांचे अर्ज आणि अपडेट्स मिळवण्यासाठी सूचना सक्षम करा.';
+
+  @override
+  String get grantGpsPermission => 'स्थान परवानगी द्या';
+
+  @override
+  String get grantNotificationsPermission => 'सूचना परवानगी द्या';
+
+  @override
+  String get permissionGranted => 'परवानगी दिली';
+
+  @override
+  String get providerHomeTitle => 'प्रदाता होम';
 }

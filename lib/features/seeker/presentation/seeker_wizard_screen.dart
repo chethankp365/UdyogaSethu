@@ -315,7 +315,7 @@ class _SeekerWizardScreenState extends ConsumerState<SeekerWizardScreen> {
             _buildChoiceChip('other', l10n.genderOther, draft.gender, (val) {
               notifier.updateDraft((d) => d.copyWith(gender: val));
             }),
-            _buildChoiceChip('prefer_not', l10n.genderPreferNot, draft.gender, (val) {
+            _buildChoiceChip('prefer_not_to_say', l10n.genderPreferNot, draft.gender, (val) {
               notifier.updateDraft((d) => d.copyWith(gender: val));
             }),
           ],

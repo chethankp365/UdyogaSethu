@@ -22,6 +22,8 @@ import 'package:udyogasethu/features/onboarding/presentation/role_tree_screen.da
 import 'package:udyogasethu/features/onboarding/presentation/splash_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_home_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_wizard_screen.dart';
+import 'package:udyogasethu/features/provider/presentation/provider_home_screen.dart';
+import 'package:udyogasethu/features/provider/presentation/provider_wizard_screen.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_wizard_screen.dart';
 
 
@@ -165,11 +167,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: AppRoutes.profileSetupProvider,
-        builder: (context, state) => const PlaceholderScreen(
-          title: 'Job Provider Profile Wizard',
-          roleName: 'Profile Setup',
-          icon: Icons.business_center_rounded,
-        ),
+        builder: (context, state) => const ProviderWizardScreen(),
       ),
       GoRoute(
         path: AppRoutes.profileSetupFarmer,
@@ -243,11 +241,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: AppRoutes.providerHome,
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Employer Dashboard & Active Jobs',
-                  roleName: 'Job Provider',
-                  icon: Icons.home_rounded,
-                ),
+                builder: (context, state) => const ProviderHomeScreen(),
               ),
             ],
           ),

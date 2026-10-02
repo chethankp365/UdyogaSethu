@@ -850,4 +850,116 @@ class AppLocalizationsTe extends AppLocalizations {
   @override
   String get certUploadedPending =>
       'సర్టిఫికెట్ అప్‌లోడ్ అయింది (పరిశీలనలో ఉంది)';
+
+  @override
+  String get providerWizardTitle => 'ఉద్యోగ ప్రదాత సెటప్';
+
+  @override
+  String get providerStep1Title => 'ప్రాథమిక వివరాలు';
+
+  @override
+  String get providerStep1Subtitle =>
+      'మీ పూర్తి పేరు, ఫోటో మరియు భాషలను నమోదు చేయండి.';
+
+  @override
+  String get providerStep2Title => 'ప్రదాత వర్గం';
+
+  @override
+  String get providerStep2Subtitle =>
+      'మీరు గృహ అవసరాలకు లేదా యజమానిగా పనిచేయిస్తారో ఎంచుకోండి.';
+
+  @override
+  String get providerStep3HouseholdTitle => 'ఇంటి చిరునామా మరియు డెలివరీ';
+
+  @override
+  String get providerStep3HouseholdSubtitle =>
+      'డిఫాల్ట్ ఇంటి చిరునామా మరియు డెలివరీ ప్రాధాన్యతలను అమర్చండి.';
+
+  @override
+  String get providerStep3EmployerTitle => 'సంస్థ మరియు సైట్ వివరాలు';
+
+  @override
+  String get providerStep3EmployerSubtitle =>
+      'సంస్థ పేరు, ప్రాథమిక సైట్ చిరునామా మరియు సిబ్బంది సంఖ్యను నమోదు చేయండి.';
+
+  @override
+  String get providerStep4Title => 'అనుమతులు మరియు సమ్మతి';
+
+  @override
+  String get providerStep4Subtitle =>
+      'లొకేషన్ మరియు నోటిఫికేషన్ అనుమతులను సమీక్షించండి.';
+
+  @override
+  String get providerStep5Title => 'సమీక్షించండి మరియు ముగించండి';
+
+  @override
+  String get providerStep5Subtitle =>
+      'పూర్తి చేసే ముందు ప్రొఫైల్ వివరాలను తనిఖీ చేయండి.';
+
+  @override
+  String get doorstepAddressLabel => 'ఫ్లాట్ / ఇంటి నంబర్ మరియు వీధి';
+
+  @override
+  String get doorstepAddressHint => 'ఉదా: #402, సన్‌శైన్ అపార్ట్‌మెంట్స్';
+
+  @override
+  String get landmarkLabel => 'గుర్తు (Landmark)';
+
+  @override
+  String get landmarkHint => 'ఉదా: మెట్రో స్టేషన్ దగ్గర';
+
+  @override
+  String get deliveryInstructionsLabel => 'డెలివరీ ప్రాధాన్యతలు మరియు సూచనలు';
+
+  @override
+  String get deliveryInstructionsHint => 'ఉదా: గేట్ దగ్గర సెక్యూరిటీకి ఇవ్వండి';
+
+  @override
+  String get gateCodeLabel => 'గేట్ కోడ్ (ఐచ్ఛికం)';
+
+  @override
+  String get gateCodeHint => 'ఉదా: 1234';
+
+  @override
+  String get orgNameLabel => 'సంస్థ / వ్యాపార పేరు';
+
+  @override
+  String get orgNameHint => 'ఉదా: సేతు కన్‌స్ట్రక్షన్';
+
+  @override
+  String get primarySiteAddressLabel => 'ప్రాథమిక సైట్ చిరునామా';
+
+  @override
+  String get primarySiteAddressHint => 'ఉదా: సైట్ 45, ఎలక్ట్రానిక్స్ సిటీ';
+
+  @override
+  String get categoriesHiringLabel => 'పని వర్గాలు';
+
+  @override
+  String get typicalCrewSizeLabel => 'అవసరమైన సిబ్బంది సంఖ్య';
+
+  @override
+  String crewSizeWorkers(Object count) {
+    return '$count మంది పనివారు';
+  }
+
+  @override
+  String get gpsConsentExplanation =>
+      'సైట్ డెలివరీ చిరునామా మరియు పనివారి లభ్యతను చూపడానికి GPS అవసరం.';
+
+  @override
+  String get notificationsConsentExplanation =>
+      'పనివారి దరఖాస్తులు మరియు డెలివరీ నవీకరణలను పొందడానికి నోటిఫికేషన్లను ప్రారంభించండి.';
+
+  @override
+  String get grantGpsPermission => 'లొకేషన్ అనుమతి ఇవ్వండి';
+
+  @override
+  String get grantNotificationsPermission => 'నోటిఫికేషన్ అనుమతి ఇవ్వండి';
+
+  @override
+  String get permissionGranted => 'అనుమతి ఇవ్వబడింది';
+
+  @override
+  String get providerHomeTitle => 'ప్రదాత హోమ్';
 }

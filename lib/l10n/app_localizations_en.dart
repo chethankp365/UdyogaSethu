@@ -843,4 +843,117 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get certUploadedPending => 'Certificate uploaded (Pending Review)';
+
+  @override
+  String get providerWizardTitle => 'Job Provider Setup';
+
+  @override
+  String get providerStep1Title => 'Basics';
+
+  @override
+  String get providerStep1Subtitle =>
+      'Enter your full name, photo, and spoken languages.';
+
+  @override
+  String get providerStep2Title => 'Provider Category';
+
+  @override
+  String get providerStep2Subtitle =>
+      'Select whether you hire as a Household or Employer/Contractor.';
+
+  @override
+  String get providerStep3HouseholdTitle => 'Doorstep Address & Delivery';
+
+  @override
+  String get providerStep3HouseholdSubtitle =>
+      'Set default doorstep delivery address and delivery preferences.';
+
+  @override
+  String get providerStep3EmployerTitle => 'Organisation & Site Details';
+
+  @override
+  String get providerStep3EmployerSubtitle =>
+      'Set organisation name, primary site address, hiring categories, and crew size.';
+
+  @override
+  String get providerStep4Title => 'Permissions & Consents';
+
+  @override
+  String get providerStep4Subtitle =>
+      'Review location and notification permissions with just-in-time explanations.';
+
+  @override
+  String get providerStep5Title => 'Review & Finish';
+
+  @override
+  String get providerStep5Subtitle =>
+      'Verify your job provider profile details before completing setup.';
+
+  @override
+  String get doorstepAddressLabel => 'Flat / Door No. & Street';
+
+  @override
+  String get doorstepAddressHint => 'e.g. #402, Sunshine Apartments, 5th Cross';
+
+  @override
+  String get landmarkLabel => 'Landmark';
+
+  @override
+  String get landmarkHint => 'e.g. Near Metro Station';
+
+  @override
+  String get deliveryInstructionsLabel => 'Delivery Preferences & Instructions';
+
+  @override
+  String get deliveryInstructionsHint => 'e.g. Leave with security at gate';
+
+  @override
+  String get gateCodeLabel => 'Gate Code / Intercom (Optional)';
+
+  @override
+  String get gateCodeHint => 'e.g. 1234';
+
+  @override
+  String get orgNameLabel => 'Organisation / Business Name';
+
+  @override
+  String get orgNameHint => 'e.g. Sethu Construction & Infra Ltd';
+
+  @override
+  String get primarySiteAddressLabel => 'Primary Site Address';
+
+  @override
+  String get primarySiteAddressHint =>
+      'e.g. Site 45, Peripheral Ring Road, Electronics City';
+
+  @override
+  String get categoriesHiringLabel => 'Categories Usually Hired For';
+
+  @override
+  String get typicalCrewSizeLabel => 'Typical Crew Size Needed';
+
+  @override
+  String crewSizeWorkers(Object count) {
+    return '$count workers';
+  }
+
+  @override
+  String get gpsConsentExplanation =>
+      'UdyogaSethu needs GPS location to locate site delivery addresses and display local worker availability.';
+
+  @override
+  String get notificationsConsentExplanation =>
+      'Enable push notifications to receive real-time updates on job applicants, worker arrivals, and delivery tracking.';
+
+  @override
+  String get grantGpsPermission => 'Grant Location Permission';
+
+  @override
+  String get grantNotificationsPermission => 'Grant Notifications Permission';
+
+  @override
+  String get permissionGranted => 'Permission Granted';
+
+  @override
+  String get providerHomeTitle => 'Provider Home';
 }
