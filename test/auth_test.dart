@@ -7,6 +7,9 @@ import 'package:udyogasethu/features/auth/data/phone_auth_notifier.dart';
 import 'package:udyogasethu/features/auth/domain/phone_auth_state.dart';
 
 class MockAuthRepository implements AuthRepository {
+  bool mockGoogleUserHasPhone = true;
+  bool mockGoogleEmailAlreadyLinked = false;
+
   @override
   Future<void> sendSmsOtp(String rawPhone) async {
     if (rawPhone == '9999999999') {
@@ -45,6 +48,54 @@ class MockAuthRepository implements AuthRepository {
       ),
     );
   }
+
+  @override
+  Future<AuthResponse?> signInWithGoogle() async {
+    if (mockGoogleEmailAlreadyLinked) {
+      throw const AppException.auth('This email is already linked to another number.');
+    }
+    return AuthResponse(
+      session: Session(
+        accessToken: 'mock_google_token',
+        tokenType: 'bearer',
+        user: User(
+          id: 'mock_google_user_id',
+          phone: mockGoogleUserHasPhone ? '+919876543210' : null,
+          appMetadata: {},
+          userMetadata: const {
+            'full_name': 'Demo Google User',
+            'avatar_url': 'https://example.com/avatar.png',
+          },
+          aud: 'authenticated',
+          createdAt: '2026-10-02T00:00:00Z',
+        ),
+      ),
+    );
+  }
+
+  @override
+  Future<void> sendPhoneChangeOtp(String rawPhone) async {
+    if (rawPhone == '0000000000') {
+      throw const AppException.validation(
+        'Please enter a valid 10-digit mobile number starting with 6-9',
+      );
+    }
+  }
+
+  @override
+  Future<AuthResponse> verifyPhoneChangeOtp(String rawPhone, String otpToken) async {
+    return verifySmsOtp(rawPhone, otpToken);
+  }
+
+  @override
+  Future<void> linkGoogleAccount() async {
+    if (mockGoogleEmailAlreadyLinked) {
+      throw const AppException.auth('This email is already linked to another number.');
+    }
+  }
+
+  @override
+  Future<void> copyGoogleProfileDetails() async {}
 
   @override
   Future<void> signOut() async {}
@@ -170,6 +221,39 @@ void main() {
       final resend4 = await notifier.resendOtp();
       expect(resend4, false);
       expect(container.read(phoneAuthProvider).errorMessage, contains('Maximum 3 resends'));
+    });
+
+    test('Google Sign-In with verified phone number transitions step to success', () async {
+      mockRepo.mockGoogleUserHasPhone = true;
+      final notifier = container.read(phoneAuthProvider.notifier);
+
+      final result = await notifier.signInWithGoogle();
+      expect(result, true);
+
+      final state = container.read(phoneAuthProvider);
+      expect(state.step, PhoneAuthStep.success);
+    });
+
+    test('Google Sign-In without phone number forces step to needsPhoneVerification', () async {
+      mockRepo.mockGoogleUserHasPhone = false;
+      final notifier = container.read(phoneAuthProvider.notifier);
+
+      final result = await notifier.signInWithGoogle();
+      expect(result, true);
+
+      final state = container.read(phoneAuthProvider);
+      expect(state.step, PhoneAuthStep.needsPhoneVerification);
+    });
+
+    test('Google Sign-In with already linked email displays friendly error message', () async {
+      mockRepo.mockGoogleEmailAlreadyLinked = true;
+      final notifier = container.read(phoneAuthProvider.notifier);
+
+      final result = await notifier.signInWithGoogle();
+      expect(result, false);
+
+      final state = container.read(phoneAuthProvider);
+      expect(state.errorMessage, contains('This email is already linked to another number'));
     });
   });
 }

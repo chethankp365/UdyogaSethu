@@ -142,7 +142,14 @@
   "changeNumber": "எண்ணை மாற்றவும்",
   "invalidOtpError": "தவறான அல்லது காலாவதியான OTP. 6 இலக்க குறியீட்டை சரிபார்க்கவும்.",
   "rateLimitError": "அதிகமான OTP கோரிக்கைகள். சிறிது நேரம் கழித்து முயற்சிக்கவும்.",
-  "termsRequiredError": "தொடர சேவை விதிமுறைகளை ஏற்கவும்."
+  "termsRequiredError": "தொடர சேவை விதிமுறைகளை ஏற்கவும்.",
+  "googleSignInFailed": "Google உள்நுழைவு தோல்வியடைந்தது. மீண்டும் முயற்சிக்கவும்.",
+  "googleEmailAlreadyLinked": "இந்த மின்னஞ்சல் ஏற்கனவே வேறொரு கைபேசி எண்ணுடன் இணைக்கப்பட்டுள்ளது.",
+  "verifyPhoneTitle": "உங்கள் கைபேசி எண்ணை உறுதிப்படுத்தவும்",
+  "verifyPhoneSubtitle": "பதிவை முடிக்க சரிபார்க்கப்பட்ட கைபேசி எண்ணைச் சேர்க்கவும்.",
+  "linkGoogleAccount": "Google கணக்கை இணைக்கவும்",
+  "googleAccountLinked": "Google கணக்கு வெற்றிகரமாக இணைக்கப்பட்டது.",
+  "googlePlayServicesMissing": "இந்தச் சாதனத்தில் Google Play சேவைகள் இல்லை."
 }
 
 

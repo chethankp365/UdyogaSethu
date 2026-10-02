@@ -149,6 +149,160 @@ class PhoneAuthNotifier extends Notifier<PhoneAuthState> {
     }
   }
 
+  Future<bool> signInWithGoogle() async {
+    state = state.copyWith(
+      isLoading: true,
+      clearErrorMessage: true,
+    );
+
+    try {
+      final repo = ref.read(authRepositoryProvider);
+      final response = await repo.signInWithGoogle();
+
+      if (response == null) {
+        // User cancelled sign in
+        state = state.copyWith(isLoading: false);
+        return false;
+      }
+
+      if (response.user != null) {
+        final user = response.user!;
+        final phone = user.phone;
+
+        if (phone == null || phone.trim().isEmpty) {
+          // Google-first user must verify phone number
+          state = state.copyWith(
+            isLoading: false,
+            step: PhoneAuthStep.needsPhoneVerification,
+            clearErrorMessage: true,
+          );
+          return true;
+        }
+
+        // Account has both Google and Phone verified
+        state = state.copyWith(
+          isLoading: false,
+          step: PhoneAuthStep.success,
+        );
+
+        ref.read(appSessionProvider.notifier).updateSession(
+          status: AuthSessionStatus.ready,
+        );
+        return true;
+      }
+
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: 'Google sign-in failed. Session could not be created.',
+      );
+      return false;
+    } on AppException catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: e.message,
+      );
+      return false;
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: 'An error occurred during Google sign-in. Please try again.',
+      );
+      return false;
+    }
+  }
+
+  Future<bool> sendPhoneChangeOtp() async {
+    if (!state.isPhoneValid) {
+      state = state.copyWith(
+        errorMessage: 'Please enter a valid 10-digit mobile number starting with 6-9',
+      );
+      return false;
+    }
+
+    state = state.copyWith(
+      isLoading: true,
+      clearErrorMessage: true,
+    );
+
+    try {
+      final repo = ref.read(authRepositoryProvider);
+      await repo.sendPhoneChangeOtp(state.phone);
+
+      state = state.copyWith(
+        step: PhoneAuthStep.otpSent,
+        isLoading: false,
+        resendCountdown: 30,
+      );
+      _startResendTimer();
+      return true;
+    } on AppException catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: e.message,
+      );
+      return false;
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: 'Failed to send verification code to mobile number.',
+      );
+      return false;
+    }
+  }
+
+  Future<bool> verifyPhoneChangeOtp(String otpToken) async {
+    if (otpToken.trim().length != 6) {
+      state = state.copyWith(
+        errorMessage: 'Please enter a valid 6-digit verification code.',
+      );
+      return false;
+    }
+
+    state = state.copyWith(
+      isLoading: true,
+      step: PhoneAuthStep.verifying,
+      clearErrorMessage: true,
+    );
+
+    try {
+      final repo = ref.read(authRepositoryProvider);
+      final response = await repo.verifyPhoneChangeOtp(state.phone, otpToken);
+
+      if (response.session != null || response.user != null) {
+        state = state.copyWith(
+          isLoading: false,
+          step: PhoneAuthStep.success,
+        );
+
+        ref.read(appSessionProvider.notifier).updateSession(
+          status: AuthSessionStatus.ready,
+        );
+        return true;
+      }
+
+      state = state.copyWith(
+        isLoading: false,
+        step: PhoneAuthStep.otpSent,
+        errorMessage: 'Phone verification failed.',
+      );
+      return false;
+    } on AppException catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        step: PhoneAuthStep.otpSent,
+        errorMessage: e.message,
+      );
+      return false;
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        step: PhoneAuthStep.otpSent,
+        errorMessage: 'Verification error occurred. Please try again.',
+      );
+      return false;
+    }
+  }
+
   void changeNumber() {
     _countdownTimer?.cancel();
     state = state.copyWith(
@@ -166,3 +320,4 @@ class PhoneAuthNotifier extends Notifier<PhoneAuthState> {
 
 final phoneAuthProvider =
     NotifierProvider<PhoneAuthNotifier, PhoneAuthState>(PhoneAuthNotifier.new);
+

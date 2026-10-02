@@ -13,6 +13,7 @@ import 'package:udyogasethu/core/widgets/dev_assets_screen.dart';
 import 'package:udyogasethu/core/widgets/not_found_screen.dart';
 import 'package:udyogasethu/features/auth/presentation/login_screen.dart';
 import 'package:udyogasethu/features/auth/presentation/otp_screen.dart';
+import 'package:udyogasethu/features/auth/presentation/verify_phone_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/intro_screen.dart';
 
 import 'package:udyogasethu/features/onboarding/presentation/language_screen.dart';
@@ -85,6 +86,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.otp,
         builder: (context, state) => const OtpScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.verifyPhone,
+        builder: (context, state) => const VerifyPhoneScreen(),
       ),
 
       GoRoute(

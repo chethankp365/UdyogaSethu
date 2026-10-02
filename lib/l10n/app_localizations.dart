@@ -967,6 +967,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please accept the Terms of Service to proceed.'**
   String get termsRequiredError;
+
+  /// No description provided for @googleSignInFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Google sign-in failed. Please try again.'**
+  String get googleSignInFailed;
+
+  /// No description provided for @googleEmailAlreadyLinked.
+  ///
+  /// In en, this message translates to:
+  /// **'This email is already linked to another number.'**
+  String get googleEmailAlreadyLinked;
+
+  /// No description provided for @verifyPhoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify your mobile number'**
+  String get verifyPhoneTitle;
+
+  /// No description provided for @verifyPhoneSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a verified mobile number to complete your registration.'**
+  String get verifyPhoneSubtitle;
+
+  /// No description provided for @linkGoogleAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Link Google Account'**
+  String get linkGoogleAccount;
+
+  /// No description provided for @googleAccountLinked.
+  ///
+  /// In en, this message translates to:
+  /// **'Google account linked successfully.'**
+  String get googleAccountLinked;
+
+  /// No description provided for @googlePlayServicesMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Play Services is unavailable on this device.'**
+  String get googlePlayServicesMissing;
 }
 
 class _AppLocalizationsDelegate

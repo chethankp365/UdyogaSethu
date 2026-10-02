@@ -142,7 +142,14 @@
   "changeNumber": "నంబర్ మార్చండి",
   "invalidOtpError": "చెల్లని లేదా గడువు ముగిసిన OTP. దయచేసి 6-అంకెల కోడ్‌ను సరిచూసుకోండి.",
   "rateLimitError": "చాలా ఎక్కువ OTP అభ్యర్థనలు. దయచేసి కాసేపు ఆగి ప్రయత్నించండి.",
-  "termsRequiredError": "కొనసాగడానికి దయచేసి సేవా నిబంధనలను అంగీకరించండి."
+  "termsRequiredError": "కొనసాగడానికి దయచేసి సేవా నిబంధనలను అంగీకరించండి.",
+  "googleSignInFailed": "Google సైన్-ఇన్ విఫలమైంది. దయచేసి మళ్లీ ప్రయత్నించండి.",
+  "googleEmailAlreadyLinked": "ఈ ఇమెయిల్ ఇప్పటికే వేరే మొబైల్ నంబర్‌కు లింక్ చేయబడింది.",
+  "verifyPhoneTitle": "మీ మొబైల్ నంబర్‌ను నిర్ధారించండి",
+  "verifyPhoneSubtitle": "మీ నమోదును పూర్తి చేయడానికి నిర్ధారించిన మొబైల్ నంబర్‌ను జోడించండి.",
+  "linkGoogleAccount": "Google ఖాతాను లింక్ చేయండి",
+  "googleAccountLinked": "Google ఖాతా విజయవంతంగా లింక్ చేయబడింది.",
+  "googlePlayServicesMissing": "ఈ పరికరంలో Google Play సేవలు అందుబాటులో లేవు."
 }
 
 

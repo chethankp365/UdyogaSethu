@@ -497,4 +497,28 @@ class AppLocalizationsMr extends AppLocalizations {
   @override
   String get termsRequiredError =>
       'Please accept the Terms of Service to proceed.';
+
+  @override
+  String get googleSignInFailed => 'Google sign-in failed. Please try again.';
+
+  @override
+  String get googleEmailAlreadyLinked =>
+      'This email is already linked to another number.';
+
+  @override
+  String get verifyPhoneTitle => 'Verify your mobile number';
+
+  @override
+  String get verifyPhoneSubtitle =>
+      'Add a verified mobile number to complete your registration.';
+
+  @override
+  String get linkGoogleAccount => 'Link Google Account';
+
+  @override
+  String get googleAccountLinked => 'Google account linked successfully.';
+
+  @override
+  String get googlePlayServicesMissing =>
+      'Google Play Services is unavailable on this device.';
 }

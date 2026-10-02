@@ -142,7 +142,14 @@
   "changeNumber": "ಸಂಖ್ಯೆ ಬದಲಾಯಿಸಿ",
   "invalidOtpError": "ಅಮಾನ್ಯ ಅಥವಾ ಅವಧಿ ಮೀರಿದ OTP. ದಯವಿಟ್ಟು 6 ಆಂಕಿಗಳ ಕೋಡ್ ಪರಿಶೀಲಿಸಿ.",
   "rateLimitError": "ಹೆಚ್ಚಿನ OTP ವಿನಂತಿಗಳು ಬಂದಿವೆ. ದಯವಿಟ್ಟು ಸ್ವಲ್ಪ ಸಮಯ ಕಾದು ಪ್ರಯತ್ನಿಸಿ.",
-  "termsRequiredError": "ಮುಂದುವರಿಯಲು ದಯವಿಟ್ಟು ಸೇವಾ ನಿಯಮಗಳನ್ನು ಒಪ್ಪಿಕೊಳ್ಳಿ."
+  "termsRequiredError": "ಮುಂದುವರಿಯಲು ದಯವಿಟ್ಟು ಸೇವಾ ನಿಯಮಗಳನ್ನು ಒಪ್ಪಿಕೊಳ್ಳಿ.",
+  "googleSignInFailed": "Google ಲಾಗಿನ್ ವಿಫಲವಾಗಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+  "googleEmailAlreadyLinked": "ಈ ಇಮೇಲ್ ಅನ್ನು ಈಗಾಗಲೇ ಮತ್ತೊಂದು ಮೊಬೈಲ್ ಸಂಖ್ಯೆಗೆ ಲಿಂಕ್ ಮಾಡಲಾಗಿದೆ.",
+  "verifyPhoneTitle": "ನಿಮ್ಮ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ದೃಢೀಕರಿಸಿ",
+  "verifyPhoneSubtitle": "ನಿಮ್ಮ ನೋಂದಣಿಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಲು ದೃಢೀಕರಿಸಿದ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ಸೇರಿಸಿ.",
+  "linkGoogleAccount": "Google ಖಾತೆಯನ್ನು ಲಿಂಕ್ ಮಾಡಿ",
+  "googleAccountLinked": "Google ಖಾತೆಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಲಿಂಕ್ ಮಾಡಲಾಗಿದೆ.",
+  "googlePlayServicesMissing": "ಈ ಸಾಧನದಲ್ಲಿ Google Play ಸೇವೆಗಳು ಲಭ್ಯವಿಲ್ಲ."
 }
 
 

@@ -2,6 +2,7 @@ enum PhoneAuthStep {
   inputPhone,
   otpSent,
   verifying,
+  needsPhoneVerification,
   success,
 }
 

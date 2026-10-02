@@ -13,6 +13,7 @@ This document records key design, architectural, role model, and implementation 
 | D7 | Riverpod without codegen, go_router, supabase_flutter | Adopted | State & Navigation Stack |
 | D8 | AI = Gemini API via ai-assist | Adopted | AI Assistant Backend |
 | D9 | Temporarily removed permission_handler during P0.2 scaffold to avoid Android compileSdk 37 conflict with AGP 9.1.0; will be re-added in the specific prompt/phase that needs it (e.g. Phase 3/4) | Adopted | Build Compatibility |
+| D10 | Account Linking Rules: Worker or farmer accounts must always have a verified phone number. Google-first auth forces phone verification via updateUser(phone) & OTP. Phone-first auth allows linking Google in Settings via manual identity linking; duplicate Google emails across different phone numbers are blocked. | Adopted | Auth & Identity Linking |
 
 ## Technical & Simulation Decisions
 

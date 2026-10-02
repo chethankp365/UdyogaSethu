@@ -499,4 +499,29 @@ class AppLocalizationsTe extends AppLocalizations {
   @override
   String get termsRequiredError =>
       'కొనసాగడానికి దయచేసి సేవా నిబంధనలను అంగీకరించండి.';
+
+  @override
+  String get googleSignInFailed =>
+      'Google సైన్-ఇన్ విఫలమైంది. దయచేసి మళ్లీ ప్రయత్నించండి.';
+
+  @override
+  String get googleEmailAlreadyLinked =>
+      'ఈ ఇమెయిల్ ఇప్పటికే వేరే మొబైల్ నంబర్‌కు లింక్ చేయబడింది.';
+
+  @override
+  String get verifyPhoneTitle => 'మీ మొబైల్ నంబర్‌ను నిర్ధారించండి';
+
+  @override
+  String get verifyPhoneSubtitle =>
+      'మీ నమోదును పూర్తి చేయడానికి నిర్ధారించిన మొబైల్ నంబర్‌ను జోడించండి.';
+
+  @override
+  String get linkGoogleAccount => 'Google ఖాతాను లింక్ చేయండి';
+
+  @override
+  String get googleAccountLinked => 'Google ఖాతా విజయవంతంగా లింక్ చేయబడింది.';
+
+  @override
+  String get googlePlayServicesMissing =>
+      'ఈ పరికరంలో Google Play సేవలు అందుబాటులో లేవు.';
 }

@@ -497,4 +497,29 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get termsRequiredError => 'தொடர சேவை விதிமுறைகளை ஏற்கவும்.';
+
+  @override
+  String get googleSignInFailed =>
+      'Google உள்நுழைவு தோல்வியடைந்தது. மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get googleEmailAlreadyLinked =>
+      'இந்த மின்னஞ்சல் ஏற்கனவே வேறொரு கைபேசி எண்ணுடன் இணைக்கப்பட்டுள்ளது.';
+
+  @override
+  String get verifyPhoneTitle => 'உங்கள் கைபேசி எண்ணை உறுதிப்படுத்தவும்';
+
+  @override
+  String get verifyPhoneSubtitle =>
+      'பதிவை முடிக்க சரிபார்க்கப்பட்ட கைபேசி எண்ணைச் சேர்க்கவும்.';
+
+  @override
+  String get linkGoogleAccount => 'Google கணக்கை இணைக்கவும்';
+
+  @override
+  String get googleAccountLinked => 'Google கணக்கு வெற்றிகரமாக இணைக்கப்பட்டது.';
+
+  @override
+  String get googlePlayServicesMissing =>
+      'இந்தச் சாதனத்தில் Google Play சேவைகள் இல்லை.';
 }

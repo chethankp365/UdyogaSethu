@@ -17,6 +17,13 @@ class Env {
     return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1temJwZXFrZm9tbnl3dXpvcWlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA4NDUyNTMsImV4cCI6MjEwNjQyMTI1M30.rT_c9tN4QNukP_fewnMC7kzkI6KPXO4UxNAIqXvEHoc';
   }
 
+  static const String _envGoogleWebClientId = String.fromEnvironment('GOOGLE_WEB_CLIENT_ID');
+
+  static String get googleWebClientId {
+    if (_envGoogleWebClientId.trim().isNotEmpty) return _envGoogleWebClientId;
+    return '147218087454-84onmnof89drjjktvenajia8qp3p0g3l.apps.googleusercontent.com';
+  }
+
   /// Returns true if valid Supabase configuration is available.
   static bool get isConfigured =>
       supabaseUrl.trim().isNotEmpty && supabaseAnonKey.trim().isNotEmpty;

@@ -142,7 +142,14 @@
   "changeNumber": "Change number",
   "invalidOtpError": "Invalid or expired verification code. Please check the 6-digit code and try again.",
   "rateLimitError": "Too many OTP requests. Please wait a moment before trying again.",
-  "termsRequiredError": "Please accept the Terms of Service to proceed."
+  "termsRequiredError": "Please accept the Terms of Service to proceed.",
+  "googleSignInFailed": "Google sign-in failed. Please try again.",
+  "googleEmailAlreadyLinked": "This email is already linked to another number.",
+  "verifyPhoneTitle": "Verify your mobile number",
+  "verifyPhoneSubtitle": "Add a verified mobile number to complete your registration.",
+  "linkGoogleAccount": "Link Google Account",
+  "googleAccountLinked": "Google account linked successfully.",
+  "googlePlayServicesMissing": "Google Play Services is unavailable on this device."
 }
 
 

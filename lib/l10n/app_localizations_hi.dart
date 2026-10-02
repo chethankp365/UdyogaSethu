@@ -494,4 +494,29 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get termsRequiredError =>
       'आगे बढ़ने के लिए कृपया सेवा की शर्तों को स्वीकार करें।';
+
+  @override
+  String get googleSignInFailed =>
+      'Google साइन-इन विफल रहा। कृपया पुनः प्रयास करें।';
+
+  @override
+  String get googleEmailAlreadyLinked =>
+      'यह ईमेल पहले से ही किसी अन्य मोबाइल नंबर से जुड़ा हुआ है।';
+
+  @override
+  String get verifyPhoneTitle => 'अपना मोबाइल नंबर सत्यापित करें';
+
+  @override
+  String get verifyPhoneSubtitle =>
+      'अपना पंजीकरण पूरा करने के लिए एक सत्यापित मोबाइल नंबर जोड़ें।';
+
+  @override
+  String get linkGoogleAccount => 'Google खाता लिंक करें';
+
+  @override
+  String get googleAccountLinked => 'Google खाता सफलतापूर्वक लिंक हो गया।';
+
+  @override
+  String get googlePlayServicesMissing =>
+      'इस डिवाइस पर Google Play सेवाएं उपलब्ध नहीं हैं।';
 }

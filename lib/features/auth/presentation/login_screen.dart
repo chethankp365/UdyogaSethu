@@ -7,7 +7,9 @@ import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/theme/app_typography.dart';
 import 'package:udyogasethu/core/widgets/app_button.dart';
 import 'package:udyogasethu/core/widgets/compact_language_selector.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:udyogasethu/features/auth/data/phone_auth_notifier.dart';
+import 'package:udyogasethu/features/auth/domain/phone_auth_state.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 /// Mobile Number Login Screen matching Screen 4 in UI_REFERENCE.md.
@@ -281,18 +283,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
               const SizedBox(height: 20),
 
-              // 6. Continue with Google Button Reserved Area (Phase 2.5 Preview)
+              // 6. Continue with Google Button
               OutlinedButton.icon(
                 key: const Key('googleLoginButton'),
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(l10n.googleSignInNotice),
-                      behavior: SnackBarBehavior.floating,
-                      duration: const Duration(seconds: 2),
-                    ),
-                  );
-                },
+                onPressed: authState.isLoading
+                    ? null
+                    : () async {
+                        final router = GoRouter.of(context);
+                        final success = await notifier.signInWithGoogle();
+                        if (!mounted || !success) return;
+                        final currentStep = ref.read(phoneAuthProvider).step;
+                        if (currentStep == PhoneAuthStep.needsPhoneVerification) {
+                          router.push(AppRoutes.verifyPhone);
+                        } else if (currentStep == PhoneAuthStep.success) {
+                          router.go(AppRoutes.splash);
+                        }
+                      },
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 48),
                   side: const BorderSide(color: AppColors.borderLight, width: 1.5),
@@ -301,15 +307,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   backgroundColor: Colors.white,
                 ),
-                icon: Image.asset(
-                  'assets/images/logo_small.png', // Temporary placeholder icon until P2.5 Google SVG
+                icon: SvgPicture.asset(
+                  'assets/images/google_logo.svg',
                   height: 20,
                   width: 20,
                 ),
-                label: Text(
-                  l10n.continueWithGoogle,
-                  style: AppTypography.button(AppColors.textDark).copyWith(fontSize: 14),
-                ),
+                label: authState.isLoading && authState.step == PhoneAuthStep.inputPhone
+                    ? const SizedBox(
+                        height: 18,
+                        width: 18,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.primaryTeal,
+                        ),
+                      )
+                    : Text(
+                        l10n.continueWithGoogle,
+                        style: AppTypography.button(AppColors.textDark).copyWith(fontSize: 14),
+                      ),
               ),
 
               const SizedBox(height: 16),
