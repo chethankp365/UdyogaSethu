@@ -18,12 +18,16 @@ This document records key design, architectural, role model, and implementation 
 
 ## Known Issues & Planned Fixes (Pre-P5.1)
 
-- **Auth User Cascade & Profile Foreign Key Cascade vs D11 Legal Financial Retention**:
-  - **Issue**: In the live database, `profiles.id` references `auth.users(id)` with `ON DELETE CASCADE`. Additionally, child tables (`wallets`, `payouts`, `orders` (`customer_id`, `farmer_id`), `group_orders` (`organizer_id`), `group_order_members`, `disputes` (`against`, `raised_by`), `dispute_evidence` (`uploader`), `job_assignments`, `job_evidence` (`uploader`), and `ratings_reviews` (`rater_id`, `target_id`)) reference `profiles(id)` with `ON DELETE CASCADE`. Because of this double cascade, calling `auth.admin.deleteUser(userId)` automatically deletes the `profiles` row, which in turn cascades and deletes all financial, order, payment, and dispute records, breaking Decision D11. Therefore, a tombstone profile plan alone is insufficient without modifying the foreign key constraints.
+- **Profile & Auth Foreign Key Cascade vs D11 Legal Financial Retention**:
+  - **Issue**: In the live database schema (`0010`, `0020`, `0030`), `profiles.id` references `auth.users(id)` with `ON DELETE CASCADE`, and child tables (`wallets`, `payouts`, `orders` (`customer_id`, `farmer_id`), `group_orders` (`organizer_id`), `group_order_members`, `disputes` (`against`, `raised_by`), `dispute_evidence` (`uploader`), `job_assignments`, `job_evidence` (`uploader`), and `ratings_reviews` (`rater_id`, `target_id`)) reference `profiles(id)` with `ON DELETE CASCADE`.
+  - **Crucial Limitation**: The tombstone profile plan alone (updating `profiles` instead of deleting it) does **not** work by itself, because calling `auth.admin.deleteUser` deletes the row in `auth.users`, which cascades to delete the `profiles` row, which in turn cascades to delete all child financial and order records.
   - **Planned Migration Fix (Before P5.1 Wallet & Payments)**:
-    1. **Modify `profiles -> auth.users` Foreign Key**: Alter the `profiles.id` FK constraint referencing `auth.users(id)` to remove `ON DELETE CASCADE` (or set to `ON DELETE SET NULL`), so deleting the `auth.users` row via `auth.admin.deleteUser` does not cascade into `profiles` and child records.
-    2. **Tombstone Profile or FK Nullability**: Keep the scrubbed tombstone profile row in `profiles` (`full_name = 'Deleted User'`, `phone = NULL`, `email = NULL`, `avatar_path = NULL`, `is_suspended = true`), OR change child foreign key constraints on `wallets`, `payouts`, `orders`, `disputes`, `job_assignments`, and `ratings_reviews` to `ON DELETE SET NULL` with nullable user fields plus snapshot columns (`customer_name_snapshot`).
-    3. **Verification Testing Requirement**: Before completing P5.1, re-verify that account deletion via Edge Function never fails, financial audit trails are retained without orphaned errors, and re-registering a new account with the same phone number works cleanly.
+    1. **Modify `profiles.id` Foreign Key**: Remove `ON DELETE CASCADE` from `profiles.id -> auth.users(id)` (or change to `ON DELETE SET NULL` / `RESTRICT`), so that when `auth.admin.deleteUser` deletes the auth user, the scrubbed tombstone profile row in `profiles` survives.
+    2. **Or Child FK Alteration & Snapshots**: Alter foreign key constraints on `wallets`, `payouts`, `orders`, `disputes`, `job_assignments`, and `ratings_reviews` from `ON DELETE CASCADE` to `ON DELETE SET NULL` with nullable columns plus snapshot columns (`customer_name_snapshot`), ensuring financial audit records are detached from the deleted auth ID and retained in scrubbed format.
+    3. **Mandatory Test Verification**: In P5.1, re-verify that account deletion RPC/Edge Function never fails, financial audit trails survive in anonymized format, and re-registering a new account with the same phone number succeeds cleanly.
+
+- **Settings & Delete Account Navigation (Phase 3.1)**:
+  - Settings and the "Delete my account" dialog exist and are tested in code (`lib/features/account/`), but are not reachable via app navigation because the Profile tab is currently a placeholder shell. Phase 3.1 will add a minimal Profile screen that links to Settings and Account Control.
 
 ## Technical & Simulation Decisions
 
