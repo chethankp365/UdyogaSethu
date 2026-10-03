@@ -31,6 +31,9 @@ This document records key design, architectural, role model, and implementation 
 
 ## Technical & Simulation Decisions
 
-*No simulation decisions recorded yet.*
+* **D12 — eKYC Adapter Simulation (MockProvider & Masking)**:
+  * **Simulation Details**: When `KYC_PROVIDER=mock` (default), eKYC identity verification is handled by `MockProvider` in Deno Edge Functions (`kyc-start`, `kyc-callback`) and `SupabaseKycRepository` in Flutter.
+  * **Masking & Redaction Guarantee**: Raw 12-digit Aadhaar numbers are never logged or stored. A redaction utility in Deno scrubs any 12-digit number pattern (`\b\d{12}\b`), and only masked IDs (`XXXX-XXXX-4321`), masked names (`R***** S****`), document type, and verification timestamps are saved to `kyc_records`.
+  * **Honesty Rule**: A visible amber "Demo mode — Simulated eKYC Provider" banner is rendered on `KycScreen`.
 
 

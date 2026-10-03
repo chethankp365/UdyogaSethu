@@ -96,8 +96,10 @@ class EdgeApiClient {
   /// P1.8 Functions
 
   /// Initiate KYC verification process for Aadhaar, PAN, DL, or Voter ID.
-  Future<Map<String, dynamic>> kycStart({required String docType}) async {
-    return _invoke('kyc-start', body: {'doc_type': docType});
+  Future<Map<String, dynamic>> kycStart({required String docType, String? redirectUrl}) async {
+    final body = <String, dynamic>{'doc_type': docType};
+    if (redirectUrl != null) body['redirect_url'] = redirectUrl;
+    return _invoke('kyc-start', body: body);
   }
 
   /// Receive partner KYC status callback updates.

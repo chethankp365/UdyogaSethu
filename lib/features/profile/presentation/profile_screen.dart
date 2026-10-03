@@ -5,6 +5,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
+import 'package:udyogasethu/features/trust/data/kyc_repository.dart';
+import 'package:udyogasethu/features/trust/domain/kyc_record.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
@@ -27,10 +29,24 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     _loadProfileData();
   }
 
+  String _getUserId() {
+    try {
+      if (Supabase.instance.isInitialized) {
+        return Supabase.instance.client.auth.currentUser?.id ?? 'demo_user_123';
+      }
+    } catch (_) {}
+    return 'demo_user_123';
+  }
+
   Future<void> _loadProfileData() async {
     try {
-      if (!Supabase.instance.isInitialized) return;
-      final client = Supabase.instance.client;
+      SupabaseClient? client;
+      try {
+        if (Supabase.instance.isInitialized) {
+          client = Supabase.instance.client;
+        }
+      } catch (_) {}
+      if (client == null) return;
       final user = client.auth.currentUser;
       if (user != null) {
         _phone = user.phone;
@@ -142,6 +158,124 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     ),
                   ),
                 ],
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Identity Verification Status List
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Card(
+                elevation: 0.5,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Row(
+                        children: [
+                          Icon(Icons.verified_rounded, color: AppColors.headerGreenDark, size: 20),
+                          SizedBox(width: 8),
+                          Text(
+                            'Identity Verification Badges',
+                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      StreamBuilder<KycRecord?>(
+                        stream: ref.watch(kycRepositoryProvider).watchKycRecord(
+                          _getUserId(),
+                          docType: 'aadhaar',
+                        ),
+                        builder: (context, snapshot) {
+                          final kycRecord = snapshot.data;
+                          final isVerified = kycRecord?.isVerified ?? false;
+
+                          return ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: isVerified ? Colors.green.shade50 : Colors.amber.shade50,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                isVerified ? Icons.badge_rounded : Icons.fingerprint_rounded,
+                                color: isVerified ? Colors.green : Colors.amber.shade700,
+                                size: 20,
+                              ),
+                            ),
+                            title: const Text('Aadhaar eKYC Verification', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                            subtitle: Text(
+                              isVerified ? 'Verified • ${kycRecord?.maskedId ?? "XXXX-XXXX-4321"}' : 'Not Verified (Tap to start)',
+                              style: TextStyle(fontSize: 12, color: isVerified ? Colors.green : AppColors.textMuted),
+                            ),
+                            trailing: isVerified
+                                ? const Icon(Icons.check_circle_rounded, color: Colors.green, size: 20)
+                                : OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                    ),
+                                    onPressed: () => context.push(AppRoutes.kyc),
+                                    child: const Text('Verify', style: TextStyle(fontSize: 12)),
+                                  ),
+                            onTap: () => context.push(AppRoutes.kyc),
+                          );
+                        },
+                      ),
+                      const Divider(height: 1, indent: 40),
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.green.shade50,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.person_outline_rounded, color: Colors.green, size: 20),
+                        ),
+                        title: const Text('Profile Setup', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                        subtitle: const Text('Completed ✓', style: TextStyle(fontSize: 12, color: Colors.green)),
+                        trailing: const Icon(Icons.check_circle_rounded, color: Colors.green, size: 20),
+                      ),
+                      const Divider(height: 1, indent: 40),
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.green.shade50,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.phone_android_rounded, color: Colors.green, size: 20),
+                        ),
+                        title: const Text('Mobile Phone Verification', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                        subtitle: Text(
+                          _phone != null && _phone!.isNotEmpty ? 'Verified • $_phone' : 'Verified (+91)',
+                          style: const TextStyle(fontSize: 12, color: Colors.green),
+                        ),
+                        trailing: const Icon(Icons.check_circle_rounded, color: Colors.green, size: 20),
+                      ),
+                      const Divider(height: 1, indent: 40),
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.account_balance_wallet_rounded, color: AppColors.textMuted, size: 20),
+                        ),
+                        title: const Text('Bank / UPI Account', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                        subtitle: const Text('Optional for direct payouts', style: TextStyle(fontSize: 12, color: AppColors.textMuted)),
+                        trailing: const Text('Pending', style: TextStyle(fontSize: 12, color: AppColors.textMuted)),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 16),

@@ -29,6 +29,7 @@ import 'package:udyogasethu/features/onboarding/presentation/splash_screen.dart'
 import 'package:udyogasethu/features/privacy/presentation/privacy_centre_screen.dart';
 import 'package:udyogasethu/features/privacy/presentation/terms_privacy_screen.dart';
 import 'package:udyogasethu/features/profile/presentation/profile_screen.dart';
+import 'package:udyogasethu/features/trust/presentation/kyc_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_home_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_wizard_screen.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_home_screen.dart';
@@ -397,6 +398,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.settings,
         builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.kyc,
+        builder: (context, state) => const KycScreen(),
       ),
       GoRoute(
         path: AppRoutes.privacyCentre,

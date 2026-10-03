@@ -37,6 +37,7 @@ class AppRoutes {
 
   // Shared Feature Screens
   static const String settings = '/settings';
+  static const String kyc = '/kyc';
   static const String privacyCentre = '/privacy-centre';
   static const String termsAndPrivacy = '/terms-privacy';
   static const String safetyHub = '/safety';

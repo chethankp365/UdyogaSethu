@@ -4,7 +4,11 @@ import 'package:udyogasethu/core/errors/app_exception.dart';
 
 /// Provider for the global [SupabaseClient] instance.
 final supabaseClientProvider = Provider<SupabaseClient>((ref) {
-  return Supabase.instance.client;
+  try {
+    return Supabase.instance.client;
+  } catch (_) {
+    return SupabaseClient('https://dummy.supabase.co', 'dummy_anon_key');
+  }
 });
 
 /// Stream provider listening to auth state changes.

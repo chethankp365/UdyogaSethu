@@ -9,6 +9,8 @@ import 'package:udyogasethu/features/privacy/presentation/consent_sheet.dart';
 import 'package:udyogasethu/features/privacy/presentation/privacy_centre_screen.dart';
 import 'package:udyogasethu/features/privacy/presentation/terms_privacy_screen.dart';
 import 'package:udyogasethu/features/profile/presentation/profile_screen.dart';
+import 'package:udyogasethu/features/trust/data/kyc_repository.dart';
+import 'package:udyogasethu/features/trust/domain/kyc_record.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class FakeConsentRepository implements ConsentRepository {
@@ -52,10 +54,30 @@ class FakeConsentRepository implements ConsentRepository {
   }
 }
 
-Widget _makeTestableWidget(Widget child, {ConsentRepository? repo}) {
+class FakeKycRepository implements KycRepository {
+  @override
+  Future<List<KycRecord>> getKycRecords(String userId) async => [];
+
+  @override
+  Future<KycRecord?> getLatestKycRecord(String userId, {String docType = 'aadhaar'}) async => null;
+
+  @override
+  Stream<KycRecord?> watchKycRecord(String userId, {String docType = 'aadhaar'}) {
+    return Stream.value(null);
+  }
+
+  @override
+  Future<Map<String, dynamic>> startKycSession({required String docType, String? redirectUrl}) async => {};
+
+  @override
+  Future<Map<String, dynamic>> simulateCallback({required String providerRef, required String docType}) async => {};
+}
+
+Widget _makeTestableWidget(Widget child, {ConsentRepository? repo, KycRepository? kycRepo}) {
   return ProviderScope(
     overrides: [
       consentRepositoryProvider.overrideWithValue(repo ?? FakeConsentRepository()),
+      kycRepositoryProvider.overrideWithValue(kycRepo ?? FakeKycRepository()),
     ],
     child: MaterialApp(
       localizationsDelegates: const [
