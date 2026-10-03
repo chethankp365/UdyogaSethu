@@ -286,7 +286,30 @@
   "roleConflictTitle": "खाता भूमिका संघर्ष",
   "roleConflictMessage": "यह नंबर पहले से ही {existingRole} के रूप में पंजीकृत है। आप इसे {chosenRole} के रूप में उपयोग नहीं कर सकते। किसी अन्य भूमिका का उपयोग करने के लिए, {existingRole} के रूप में लॉग इन करें, प्रोफ़ाइल > सेटिंग्स > खाता हटाएं पर जाएं, और फिर नया खाता बनाएं।",
   "roleConflictLoginAs": "{existingRole} के रूप में लॉग इन करें",
-  "roleConflictBack": "पीछे जाएं"
+  "roleConflictBack": "पीछे जाएं",
+  "privacyCentreTitle": "गोपनीयता केंद्र",
+  "privacyCentreSubtitle": "अपनी डेटा सहमति, गोपनीयता अधिकारों और सिस्टम अनुमति को प्रबंधित करें।",
+  "consentSheetTitle": "डेटा प्रसंस्करण सहमति",
+  "consentWhatCollected": "क्या एकत्र किया जाता है",
+  "consentWhyCollected": "यह क्यों एकत्र किया जाता है",
+  "consentHowLongKept": "इसे कब तक रखा जाता है",
+  "consentWhoCanSee": "इसे कौन देख सकता है",
+  "consentHowToWithdraw": "सहमति कैसे वापस लें",
+  "consentAgreeButton": "मैं सहमत हूं और सहमति देता हूं",
+  "consentNotNowButton": "अभी नहीं",
+  "consentGrantedStatus": "सहमति दी गई",
+  "consentRevokedStatus": "सहमति नहीं दी गई / वापस ली गई",
+  "withdrawConsentButton": "सहमति वापस लें",
+  "withdrawFaceConsentTitle": "चेहरा सत्यापन सहमति वापस लें?",
+  "withdrawFaceConsentMessage": "चेहरा सहमति वापस लेने से आपका चेहरा संदर्भ डेटा स्थायी रूप से हटा दिया जाएगा।",
+  "confirmWithdrawButton": "वापस लें और डेटा हटाएं",
+  "cancelButton": "रद्द करें",
+  "profileTitle": "मेरी प्रोफ़ाइल",
+  "termsAndPrivacyTitle": "नियम एवं गोपनीयता नीति",
+  "termsDraftNotice": "ड्राफ्ट - वास्तविक लॉन्च से पहले इसकी समीक्षा कराएं",
+  "systemPermissionsTitle": "सिस्टम अनुमतियां",
+  "openSystemSettings": "ऐप सेटिंग्स खोलें",
+  "settingsTitle": "सेटिंग्स"
 }
 
 

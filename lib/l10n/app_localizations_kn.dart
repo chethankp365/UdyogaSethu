@@ -981,4 +981,76 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get roleConflictBack => 'ಹಿಂತಿರುಗಿ';
+
+  @override
+  String get privacyCentreTitle => 'ಗೌಪ್ಯತೆ ಕೇಂದ್ರ';
+
+  @override
+  String get privacyCentreSubtitle =>
+      'ನಿಮ್ಮ ಡೇಟಾ ಸಮ್ಮತಿಗಳು, ಗೌಪ್ಯತೆ ಹಕ್ಕುಗಳು ಮತ್ತು ಸಿಸ್ಟಮ್ ಅನುಮತಿಗಳನ್ನು ನಿರ್ವಹಿಸಿ.';
+
+  @override
+  String get consentSheetTitle => 'ಡೇಟಾ ಸಂಸ್ಕರಣೆಯ ಸಮ್ಮತಿ';
+
+  @override
+  String get consentWhatCollected => 'ಏನನ್ನು ಸಂಗ್ರಹಿಸಲಾಗುತ್ತದೆ';
+
+  @override
+  String get consentWhyCollected => 'ಏಕೆ ಸಂಗ್ರಹಿಸಲಾಗುತ್ತದೆ';
+
+  @override
+  String get consentHowLongKept => 'ಎಷ್ಟು ಸಮಯ ಇಡಲಾಗುತ್ತದೆ';
+
+  @override
+  String get consentWhoCanSee => 'ಯಾರು ನೋಡಬಹುದು';
+
+  @override
+  String get consentHowToWithdraw => 'ವಾಪಸ್ ಪಡೆಯುವುದು ಹೇಗೆ';
+
+  @override
+  String get consentAgreeButton => 'ನಾನು ಒಪ್ಪುತ್ತೇನೆ ಮತ್ತು ಸಮ್ಮತಿಸುತ್ತೇನೆ';
+
+  @override
+  String get consentNotNowButton => 'ಈಗ ಬೇಡ';
+
+  @override
+  String get consentGrantedStatus => 'ಸಮ್ಮತಿ ನೀಡಲಾಗಿದೆ';
+
+  @override
+  String get consentRevokedStatus => 'ಸಮ್ಮತಿ ನೀಡಿಲ್ಲ / ಹಿಂಪಡೆಯಲಾಗಿದೆ';
+
+  @override
+  String get withdrawConsentButton => 'ಸಮ್ಮತಿಯನ್ನು ಹಿಂಪಡೆಯಿರಿ';
+
+  @override
+  String get withdrawFaceConsentTitle =>
+      'ಮುಖ ಪರಿಶೀಲನೆ ಸಮ್ಮತಿಯನ್ನು ಹಿಂಪಡೆಯಬೇಕೆ?';
+
+  @override
+  String get withdrawFaceConsentMessage =>
+      'ಮುಖದ ಸಮ್ಮತಿಯನ್ನು ಹಿಂಪಡೆಯುವುದರಿಂದ ನಿಮ್ಮ ಮುಖದ ಉಲ್ಲೇಖ ಡೇಟಾವನ್ನು ಕಾಯಂ ಆಗಿ ಅಳಿಸಲಾಗುತ್ತದೆ.';
+
+  @override
+  String get confirmWithdrawButton => 'ಹಿಂಪಡೆಯಿರಿ ಮತ್ತು ಡೇಟಾ ಅಳಿಸಿ';
+
+  @override
+  String get cancelButton => 'ರದ್ದುಮಾಡಿ';
+
+  @override
+  String get profileTitle => 'ನನ್ನ ಪ್ರೊಫೈಲ್';
+
+  @override
+  String get termsAndPrivacyTitle => 'ನಿಯಮಗಳು ಮತ್ತು ಗೌಪ್ಯತೆ ನೀತಿ';
+
+  @override
+  String get termsDraftNotice => 'ಕರಡು - ನೈಜ ಬಿಡುಗಡೆಗೆ ಮುನ್ನ ಇದನ್ನು ಪರಿಶೀಲಿಸಿ';
+
+  @override
+  String get systemPermissionsTitle => 'ಸಿಸ್ಟಮ್ ಅನುಮತಿಗಳು';
+
+  @override
+  String get openSystemSettings => 'ಆ್ಯಪ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ತೆರೆಯಿರಿ';
+
+  @override
+  String get settingsTitle => 'ಸೆಟ್ಟಿಂಗ್‌ಗಳು';
 }

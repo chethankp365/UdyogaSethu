@@ -286,7 +286,30 @@
   "roleConflictTitle": "கணக்கு பங்கு முரண்பாடு",
   "roleConflictMessage": "இந்த எண் ஏற்கனவே {existingRole} ஆக பதிவு செய்யப்பட்டுள்ளது. இதை நீங்கள் {chosenRole} ஆக பயன்படுத்த முடியாது. வேறு பங்கைப் பயன்படுத்த, {existingRole} ஆக உள்நுழைந்து, சுயவிவரம் > அமைப்புகள் > கணக்கை நீக்கு பகுதிக்குச் சென்று, புதிய கணக்கை உருவாக்கவும்.",
   "roleConflictLoginAs": "{existingRole} ஆக உள்நுழைக",
-  "roleConflictBack": "பின்செல்க"
+  "roleConflictBack": "பின்செல்க",
+  "privacyCentreTitle": "தனியுரிமை மையம்",
+  "privacyCentreSubtitle": "உங்கள் தரவு சம்மதங்கள் மற்றும் அனுமதிகளை நிர்வகிக்கவும்.",
+  "consentSheetTitle": "தரவு செயலாக்க சம்மதம்",
+  "consentWhatCollected": "என்ன சேகரிக்கப்படுகிறது",
+  "consentWhyCollected": "ஏன் சேகரிக்கப்படுகிறது",
+  "consentHowLongKept": "எவ்வளவு காலம் வைக்கப்படும்",
+  "consentWhoCanSee": "யார் பார்க்கலாம்",
+  "consentHowToWithdraw": "திரும்பப் பெறுவது எப்படி",
+  "consentAgreeButton": "நான் ஒப்புக்கொள்கிறேன்",
+  "consentNotNowButton": "இப்போது வேண்டாம்",
+  "consentGrantedStatus": "சம்மதம் அளிக்கப்பட்டது",
+  "consentRevokedStatus": "சம்மதம் அளிக்கப்படவில்லை / திரும்பப் பெறப்பட்டது",
+  "withdrawConsentButton": "சம்மதத்தை திரும்பப் பெறுக",
+  "withdrawFaceConsentTitle": "முக சரிபார்ப்பு சம்மதத்தை திரும்பப் பெறவா?",
+  "withdrawFaceConsentMessage": "முக சம்மதத்தை திரும்பப் பெறுவது உங்கள் முக குறிப்பு தரவை நிரந்தரமாக நீக்கும்.",
+  "confirmWithdrawButton": "திரும்பப் பெற்று தரவை நீக்கு",
+  "cancelButton": "ரத்து செய்",
+  "profileTitle": "என் சுயவிவரம்",
+  "termsAndPrivacyTitle": "விதிகள் மற்றும் தனியுரிமைக் கொள்கை",
+  "termsDraftNotice": "வரைவு - உண்மையான வெளியீட்டிற்கு முன் இதை சரிபார்க்கவும்",
+  "systemPermissionsTitle": "அமைப்பின் அனுமதிகள்",
+  "openSystemSettings": "ஆப் அமைப்புகளைத் திறக்கவும்",
+  "settingsTitle": "அமைப்புகள்"
 }
 
 

@@ -979,4 +979,78 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get roleConflictBack => 'பின்செல்க';
+
+  @override
+  String get privacyCentreTitle => 'தனியுரிமை மையம்';
+
+  @override
+  String get privacyCentreSubtitle =>
+      'உங்கள் தரவு சம்மதங்கள் மற்றும் அனுமதிகளை நிர்வகிக்கவும்.';
+
+  @override
+  String get consentSheetTitle => 'தரவு செயலாக்க சம்மதம்';
+
+  @override
+  String get consentWhatCollected => 'என்ன சேகரிக்கப்படுகிறது';
+
+  @override
+  String get consentWhyCollected => 'ஏன் சேகரிக்கப்படுகிறது';
+
+  @override
+  String get consentHowLongKept => 'எவ்வளவு காலம் வைக்கப்படும்';
+
+  @override
+  String get consentWhoCanSee => 'யார் பார்க்கலாம்';
+
+  @override
+  String get consentHowToWithdraw => 'திரும்பப் பெறுவது எப்படி';
+
+  @override
+  String get consentAgreeButton => 'நான் ஒப்புக்கொள்கிறேன்';
+
+  @override
+  String get consentNotNowButton => 'இப்போது வேண்டாம்';
+
+  @override
+  String get consentGrantedStatus => 'சம்மதம் அளிக்கப்பட்டது';
+
+  @override
+  String get consentRevokedStatus =>
+      'சம்மதம் அளிக்கப்படவில்லை / திரும்பப் பெறப்பட்டது';
+
+  @override
+  String get withdrawConsentButton => 'சம்மதத்தை திரும்பப் பெறுக';
+
+  @override
+  String get withdrawFaceConsentTitle =>
+      'முக சரிபார்ப்பு சம்மதத்தை திரும்பப் பெறவா?';
+
+  @override
+  String get withdrawFaceConsentMessage =>
+      'முக சம்மதத்தை திரும்பப் பெறுவது உங்கள் முக குறிப்பு தரவை நிரந்தரமாக நீக்கும்.';
+
+  @override
+  String get confirmWithdrawButton => 'திரும்பப் பெற்று தரவை நீக்கு';
+
+  @override
+  String get cancelButton => 'ரத்து செய்';
+
+  @override
+  String get profileTitle => 'என் சுயவிவரம்';
+
+  @override
+  String get termsAndPrivacyTitle => 'விதிகள் மற்றும் தனியுரிமைக் கொள்கை';
+
+  @override
+  String get termsDraftNotice =>
+      'வரைவு - உண்மையான வெளியீட்டிற்கு முன் இதை சரிபார்க்கவும்';
+
+  @override
+  String get systemPermissionsTitle => 'அமைப்பின் அனுமதிகள்';
+
+  @override
+  String get openSystemSettings => 'ஆப் அமைப்புகளைத் திறக்கவும்';
+
+  @override
+  String get settingsTitle => 'அமைப்புகள்';
 }

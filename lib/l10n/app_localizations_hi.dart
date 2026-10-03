@@ -970,4 +970,76 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get roleConflictBack => 'पीछे जाएं';
+
+  @override
+  String get privacyCentreTitle => 'गोपनीयता केंद्र';
+
+  @override
+  String get privacyCentreSubtitle =>
+      'अपनी डेटा सहमति, गोपनीयता अधिकारों और सिस्टम अनुमति को प्रबंधित करें।';
+
+  @override
+  String get consentSheetTitle => 'डेटा प्रसंस्करण सहमति';
+
+  @override
+  String get consentWhatCollected => 'क्या एकत्र किया जाता है';
+
+  @override
+  String get consentWhyCollected => 'यह क्यों एकत्र किया जाता है';
+
+  @override
+  String get consentHowLongKept => 'इसे कब तक रखा जाता है';
+
+  @override
+  String get consentWhoCanSee => 'इसे कौन देख सकता है';
+
+  @override
+  String get consentHowToWithdraw => 'सहमति कैसे वापस लें';
+
+  @override
+  String get consentAgreeButton => 'मैं सहमत हूं और सहमति देता हूं';
+
+  @override
+  String get consentNotNowButton => 'अभी नहीं';
+
+  @override
+  String get consentGrantedStatus => 'सहमति दी गई';
+
+  @override
+  String get consentRevokedStatus => 'सहमति नहीं दी गई / वापस ली गई';
+
+  @override
+  String get withdrawConsentButton => 'सहमति वापस लें';
+
+  @override
+  String get withdrawFaceConsentTitle => 'चेहरा सत्यापन सहमति वापस लें?';
+
+  @override
+  String get withdrawFaceConsentMessage =>
+      'चेहरा सहमति वापस लेने से आपका चेहरा संदर्भ डेटा स्थायी रूप से हटा दिया जाएगा।';
+
+  @override
+  String get confirmWithdrawButton => 'वापस लें और डेटा हटाएं';
+
+  @override
+  String get cancelButton => 'रद्द करें';
+
+  @override
+  String get profileTitle => 'मेरी प्रोफ़ाइल';
+
+  @override
+  String get termsAndPrivacyTitle => 'नियम एवं गोपनीयता नीति';
+
+  @override
+  String get termsDraftNotice =>
+      'ड्राफ्ट - वास्तविक लॉन्च से पहले इसकी समीक्षा कराएं';
+
+  @override
+  String get systemPermissionsTitle => 'सिस्टम अनुमतियां';
+
+  @override
+  String get openSystemSettings => 'ऐप सेटिंग्स खोलें';
+
+  @override
+  String get settingsTitle => 'सेटिंग्स';
 }

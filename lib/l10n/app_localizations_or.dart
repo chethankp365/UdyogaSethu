@@ -972,4 +972,76 @@ class AppLocalizationsOr extends AppLocalizations {
 
   @override
   String get roleConflictBack => 'Back';
+
+  @override
+  String get privacyCentreTitle => 'Privacy Centre';
+
+  @override
+  String get privacyCentreSubtitle =>
+      'Manage your data consents, privacy rights, and system permissions.';
+
+  @override
+  String get consentSheetTitle => 'Data Processing Consent';
+
+  @override
+  String get consentWhatCollected => 'What is collected';
+
+  @override
+  String get consentWhyCollected => 'Why it is collected';
+
+  @override
+  String get consentHowLongKept => 'How long it is kept';
+
+  @override
+  String get consentWhoCanSee => 'Who can see it';
+
+  @override
+  String get consentHowToWithdraw => 'How to withdraw';
+
+  @override
+  String get consentAgreeButton => 'I Agree & Consent';
+
+  @override
+  String get consentNotNowButton => 'Not Now';
+
+  @override
+  String get consentGrantedStatus => 'Consent Granted';
+
+  @override
+  String get consentRevokedStatus => 'Not Granted / Withdrawn';
+
+  @override
+  String get withdrawConsentButton => 'Withdraw Consent';
+
+  @override
+  String get withdrawFaceConsentTitle => 'Withdraw Face Verification Consent?';
+
+  @override
+  String get withdrawFaceConsentMessage =>
+      'Withdrawing face consent will permanently erase your face reference vector and matcher records. You will need to re-enroll to use face-verified login.';
+
+  @override
+  String get confirmWithdrawButton => 'Withdraw & Erase Data';
+
+  @override
+  String get cancelButton => 'Cancel';
+
+  @override
+  String get profileTitle => 'My Profile';
+
+  @override
+  String get termsAndPrivacyTitle => 'Terms & Privacy Policy';
+
+  @override
+  String get termsDraftNotice =>
+      'Draft - Have this reviewed before real launch';
+
+  @override
+  String get systemPermissionsTitle => 'System Permissions';
+
+  @override
+  String get openSystemSettings => 'Open App Settings';
+
+  @override
+  String get settingsTitle => 'Settings';
 }

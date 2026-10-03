@@ -286,7 +286,30 @@
   "roleConflictTitle": "Account Role Conflict",
   "roleConflictMessage": "This number is already registered as {existingRole}. You cannot use it as {chosenRole}. To use a different role, log in as {existingRole}, go to Profile > Settings > Delete account, and then create a new account.",
   "roleConflictLoginAs": "Log in as {existingRole}",
-  "roleConflictBack": "Back"
+  "roleConflictBack": "Back",
+  "privacyCentreTitle": "Privacy Centre",
+  "privacyCentreSubtitle": "Manage your data consents, privacy rights, and system permissions.",
+  "consentSheetTitle": "Data Processing Consent",
+  "consentWhatCollected": "What is collected",
+  "consentWhyCollected": "Why it is collected",
+  "consentHowLongKept": "How long it is kept",
+  "consentWhoCanSee": "Who can see it",
+  "consentHowToWithdraw": "How to withdraw",
+  "consentAgreeButton": "I Agree & Consent",
+  "consentNotNowButton": "Not Now",
+  "consentGrantedStatus": "Consent Granted",
+  "consentRevokedStatus": "Not Granted / Withdrawn",
+  "withdrawConsentButton": "Withdraw Consent",
+  "withdrawFaceConsentTitle": "Withdraw Face Verification Consent?",
+  "withdrawFaceConsentMessage": "Withdrawing face consent will permanently erase your face reference vector and matcher records. You will need to re-enroll to use face-verified login.",
+  "confirmWithdrawButton": "Withdraw & Erase Data",
+  "cancelButton": "Cancel",
+  "profileTitle": "My Profile",
+  "termsAndPrivacyTitle": "Terms & Privacy Policy",
+  "termsDraftNotice": "Draft - Have this reviewed before real launch",
+  "systemPermissionsTitle": "System Permissions",
+  "openSystemSettings": "Open App Settings",
+  "settingsTitle": "Settings"
 }
 
 

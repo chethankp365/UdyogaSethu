@@ -978,4 +978,77 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get roleConflictBack => 'వెనుకకు';
+
+  @override
+  String get privacyCentreTitle => 'గోప్యతా కేంద్రం';
+
+  @override
+  String get privacyCentreSubtitle =>
+      'మీ డేటా సమ్మతులు మరియు అనుమతులను నిర్వహించండి.';
+
+  @override
+  String get consentSheetTitle => 'డేటా ప్రాసెసింగ్ సమ్మతి';
+
+  @override
+  String get consentWhatCollected => 'ఏమి సేకరించబడుతుంది';
+
+  @override
+  String get consentWhyCollected => 'ఎందుకు సేకరించబడుతుంది';
+
+  @override
+  String get consentHowLongKept => 'ఎంత కాలం ఉంచబడుతుంది';
+
+  @override
+  String get consentWhoCanSee => 'ఎవరు చూడగలరు';
+
+  @override
+  String get consentHowToWithdraw => 'ఉపసంహరించుకోవడం ఎలా';
+
+  @override
+  String get consentAgreeButton => 'నేను అంగీకరిస్తున్నాను';
+
+  @override
+  String get consentNotNowButton => 'ఇప్పుడు వద్దు';
+
+  @override
+  String get consentGrantedStatus => 'సమ్మతి ఇవ్వబడింది';
+
+  @override
+  String get consentRevokedStatus => 'సమ్మతి ఇవ్వబడలేదు / ఉపసంహరించబడింది';
+
+  @override
+  String get withdrawConsentButton => 'సమ్మతిని ఉపసంహరించుకోండి';
+
+  @override
+  String get withdrawFaceConsentTitle =>
+      'ముఖ ధృవీకరణ సమ్మతిని ఉపసంహరించుకోవాలా?';
+
+  @override
+  String get withdrawFaceConsentMessage =>
+      'ముఖ సమ్మతిని ఉపసంహరించుకోవడం వలన మీ ముఖ సూచన డేటా శాశ్వతంగా తొలగించబడుతుంది.';
+
+  @override
+  String get confirmWithdrawButton => 'ఉపసంహరించుకోండి & డేటాను తొలగించండి';
+
+  @override
+  String get cancelButton => 'రద్దు చేయి';
+
+  @override
+  String get profileTitle => 'నా ప్రొఫైల్';
+
+  @override
+  String get termsAndPrivacyTitle => 'నిబంధనలు మరియు గోప్యతా విధానం';
+
+  @override
+  String get termsDraftNotice =>
+      'డ్రాఫ్ట్ - నిజమైన విడుదల కంటే ముందు దీనిని సమీక్షించండి';
+
+  @override
+  String get systemPermissionsTitle => 'సిస్టమ్ అనుమతులు';
+
+  @override
+  String get openSystemSettings => 'యాప్ సెట్టింగ్‌లను తెరవండి';
+
+  @override
+  String get settingsTitle => 'సెట్టింగ్‌లు';
 }

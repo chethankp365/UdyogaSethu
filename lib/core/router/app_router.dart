@@ -26,6 +26,9 @@ import 'package:udyogasethu/features/onboarding/presentation/language_screen.dar
 import 'package:udyogasethu/features/onboarding/presentation/role_conflict_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/role_tree_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/splash_screen.dart';
+import 'package:udyogasethu/features/privacy/presentation/privacy_centre_screen.dart';
+import 'package:udyogasethu/features/privacy/presentation/terms_privacy_screen.dart';
+import 'package:udyogasethu/features/profile/presentation/profile_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_home_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_wizard_screen.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_home_screen.dart';
@@ -286,11 +289,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: AppRoutes.seekerProfile,
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Seeker Profile & Trust Kit',
-                  roleName: 'Job Seeker',
-                  icon: Icons.person_rounded,
-                ),
+                builder: (context, state) => const ProfileScreen(role: UserRole.seeker),
               ),
             ],
           ),
@@ -339,11 +338,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: AppRoutes.providerProfile,
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Employer Profile & Billing',
-                  roleName: 'Job Provider',
-                  icon: Icons.person_rounded,
-                ),
+                builder: (context, state) => const ProfileScreen(role: UserRole.provider),
               ),
             ],
           ),
@@ -392,11 +387,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: AppRoutes.farmerProfile,
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Farm Profile & Certificates',
-                  roleName: 'Farmer',
-                  icon: Icons.person_rounded,
-                ),
+                builder: (context, state) => const ProfileScreen(role: UserRole.farmer),
               ),
             ],
           ),
@@ -406,6 +397,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.settings,
         builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.privacyCentre,
+        builder: (context, state) => const PrivacyCentreScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.termsAndPrivacy,
+        builder: (context, state) => const TermsPrivacyScreen(),
       ),
       GoRoute(
         path: '/account/linked',

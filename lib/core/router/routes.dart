@@ -37,6 +37,8 @@ class AppRoutes {
 
   // Shared Feature Screens
   static const String settings = '/settings';
+  static const String privacyCentre = '/privacy-centre';
+  static const String termsAndPrivacy = '/terms-privacy';
   static const String safetyHub = '/safety';
   static const String wallet = '/wallet';
   static const String jobDetail = '/job/:id';

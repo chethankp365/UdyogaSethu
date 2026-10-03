@@ -1831,6 +1831,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Back'**
   String get roleConflictBack;
+
+  /// No description provided for @privacyCentreTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Centre'**
+  String get privacyCentreTitle;
+
+  /// No description provided for @privacyCentreSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your data consents, privacy rights, and system permissions.'**
+  String get privacyCentreSubtitle;
+
+  /// No description provided for @consentSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Processing Consent'**
+  String get consentSheetTitle;
+
+  /// No description provided for @consentWhatCollected.
+  ///
+  /// In en, this message translates to:
+  /// **'What is collected'**
+  String get consentWhatCollected;
+
+  /// No description provided for @consentWhyCollected.
+  ///
+  /// In en, this message translates to:
+  /// **'Why it is collected'**
+  String get consentWhyCollected;
+
+  /// No description provided for @consentHowLongKept.
+  ///
+  /// In en, this message translates to:
+  /// **'How long it is kept'**
+  String get consentHowLongKept;
+
+  /// No description provided for @consentWhoCanSee.
+  ///
+  /// In en, this message translates to:
+  /// **'Who can see it'**
+  String get consentWhoCanSee;
+
+  /// No description provided for @consentHowToWithdraw.
+  ///
+  /// In en, this message translates to:
+  /// **'How to withdraw'**
+  String get consentHowToWithdraw;
+
+  /// No description provided for @consentAgreeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'I Agree & Consent'**
+  String get consentAgreeButton;
+
+  /// No description provided for @consentNotNowButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Now'**
+  String get consentNotNowButton;
+
+  /// No description provided for @consentGrantedStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Consent Granted'**
+  String get consentGrantedStatus;
+
+  /// No description provided for @consentRevokedStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Granted / Withdrawn'**
+  String get consentRevokedStatus;
+
+  /// No description provided for @withdrawConsentButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw Consent'**
+  String get withdrawConsentButton;
+
+  /// No description provided for @withdrawFaceConsentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw Face Verification Consent?'**
+  String get withdrawFaceConsentTitle;
+
+  /// No description provided for @withdrawFaceConsentMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawing face consent will permanently erase your face reference vector and matcher records. You will need to re-enroll to use face-verified login.'**
+  String get withdrawFaceConsentMessage;
+
+  /// No description provided for @confirmWithdrawButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw & Erase Data'**
+  String get confirmWithdrawButton;
+
+  /// No description provided for @cancelButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancelButton;
+
+  /// No description provided for @profileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Profile'**
+  String get profileTitle;
+
+  /// No description provided for @termsAndPrivacyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms & Privacy Policy'**
+  String get termsAndPrivacyTitle;
+
+  /// No description provided for @termsDraftNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft - Have this reviewed before real launch'**
+  String get termsDraftNotice;
+
+  /// No description provided for @systemPermissionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'System Permissions'**
+  String get systemPermissionsTitle;
+
+  /// No description provided for @openSystemSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open App Settings'**
+  String get openSystemSettings;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
 }
 
 class _AppLocalizationsDelegate
