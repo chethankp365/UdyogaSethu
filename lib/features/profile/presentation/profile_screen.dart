@@ -370,6 +370,36 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           );
                         },
                       ),
+                      const Divider(height: 1, indent: 40),
+                      // Face Enrolment Stream
+                      StreamBuilder<KycRecord?>(
+                        stream: ref.watch(kycRepositoryProvider).watchKycRecord(_getUserId(), docType: 'face'),
+                        builder: (context, snapshot) {
+                          final record = snapshot.data;
+                          final isVerified = record?.isVerified ?? false;
+
+                          return ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: isVerified ? Colors.green.shade50 : Colors.teal.shade50,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(Icons.face_retouching_natural, color: isVerified ? Colors.green : Colors.teal, size: 20),
+                            ),
+                            title: const Text('Face Enrolment & Liveness', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                            subtitle: Text(
+                              isVerified ? 'Verified • ${record?.maskedId ?? "FACE-REF"}' : 'On-Device Liveness Template',
+                              style: TextStyle(fontSize: 12, color: isVerified ? Colors.green : AppColors.textMuted),
+                            ),
+                            trailing: isVerified
+                                ? const Icon(Icons.check_circle_rounded, color: Colors.green, size: 20)
+                                : const Icon(Icons.chevron_right_rounded, color: AppColors.textMuted),
+                            onTap: () => context.push(AppRoutes.kycFace),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),

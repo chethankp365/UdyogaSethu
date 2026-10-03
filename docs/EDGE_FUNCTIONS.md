@@ -18,7 +18,7 @@ All Edge Functions are located in `supabase/functions/` and use common helpers f
 | :--- | :--- | :--- | :--- | :--- |
 | `kyc-start` | Initiates Aadhaar/PAN/DL verification flow with external provider | User JWT (`Bearer <token>`) | `KYC_PROVIDER_KEY`, `KYC_PROVIDER_SECRET` | Phase 4 (Trust & Verification) |
 | `kyc-callback` | Webhook handler receiving status updates from KYC partner | Webhook Signature (`x-webhook-signature`) | `KYC_WEBHOOK_SECRET` | Phase 4 (Trust & Verification) |
-| `face-enroll` | Enrolls baseline face embedding for worker identity verification | User JWT (`Bearer <token>`) | `FACE_API_KEY` | Phase 4 (Trust & Verification) |
+| `face-enroll` | Enrolls baseline face 128d float32 embedding vector and verifies liveness challenges | User JWT (`Bearer <token>`) | `FACE_MATCHER` (`ondevice` default, `mock`) | Phase 3.4 (Done) |
 | `face-verify` | Verifies selfie image against enrolled face embedding during check-in | User JWT (`Bearer <token>`) | `FACE_API_KEY` | Phase 4 (Trust & Verification) |
 | `qr-issue` | Issues signed QR token for ticket check-in and arrival verification | User JWT (`Bearer <token>`) | `QR_SIGNING_SECRET` | Phase 2 (Marketplace Core) |
 | `qr-verify` | Verifies signed QR token and triggers arrival / completion RPCs | User JWT (`Bearer <token>`) | `QR_SIGNING_SECRET` | Phase 2 (Marketplace Core) |

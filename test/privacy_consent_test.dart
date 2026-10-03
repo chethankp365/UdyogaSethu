@@ -91,6 +91,14 @@ class FakeKycRepository implements KycRepository {
   Future<KycRecord> requestBackgroundCheck() async {
     return KycRecord(id: 'bgc', userId: 'user', docType: 'background_check', provider: 'mock', status: 'pending', createdAt: DateTime.now());
   }
+
+  @override
+  Future<KycRecord> enrollFace({
+    required List<double> embedding,
+    required bool livenessPassed,
+    required List<String> challenges,
+    List<int>? photoBytes,
+  }) async => throw UnimplementedError();
 }
 
 Widget _makeTestableWidget(Widget child, {ConsentRepository? repo, KycRepository? kycRepo}) {

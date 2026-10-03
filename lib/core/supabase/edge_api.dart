@@ -121,6 +121,19 @@ class EdgeApiClient {
     return _invoke('face-enroll', body: {'image_base64': imageBase64});
   }
 
+  /// Enroll user 128-float32 face embedding vector with liveness verification.
+  Future<Map<String, dynamic>> faceEnrollVector({
+    required List<double> embedding,
+    required bool livenessPassed,
+    List<String>? livenessChallenges,
+  }) async {
+    return _invoke('face-enroll', body: {
+      'embedding': embedding,
+      'liveness_passed': livenessPassed,
+      'liveness_challenges': livenessChallenges ?? [],
+    });
+  }
+
   /// Verify user selfie against registered face embedding.
   Future<Map<String, dynamic>> faceVerify({
     required String imageBase64,

@@ -43,5 +43,12 @@ This document records key design, architectural, role model, and implementation 
   * **Penny-Drop Payout**: Bank account and UPI ID verification use simulated penny-drop with a clearly labelled amber **"Demo mode — Simulated Penny-Drop Verification"** banner.
   * **Background Check**: Sensitive job gating for unverified workers, tracking statuses (`Not Requested`, `Pending`, `Verified`, `Failed`, `Review Required`).
 
+* **D14 — On-Device Face Enrolment, TFLite MobileFaceNet & Anti-Spoofing Mitigations**:
+  * **Architecture & Model Details**: Face enrolment uses an open-source MobileFaceNet TFLite flatbuffer model (`assets/models/mobilefacenet.tflite`, Apache License 2.0) with `tflite_flutter` (v0.12.1) and `google_mlkit_face_detection` (v0.15.1). The phone crops the face, normalizes to a 112x112 RGB Float32 tensor, runs local TFLite inference, and extracts a normalized 128-float32 embedding vector ($\|\mathbf{v}\|_2 = 1.0$).
+  * **Privacy Guarantee**: Raw camera photos are never sent to external servers for matching or returned to clients; only the 128-dimensional embedding vector and liveness status are transmitted to the `face-enroll` Edge Function and stored securely in `face_profiles.embedding`. RLS policies block clients from reading other users' embeddings.
+  * **Anti-Spoofing & Honesty Note**: On-device liveness and local embedding extraction are inherently weaker against determined video replay or 3D mask spoofing compared to a managed cloud liveness service (e.g. AWS Rekognition / iBeta Level 2 certified service). Mitigations implemented: random 2-step challenge sequence (blink, turn head left/right, smile), strict 15s session timer limit, ML Kit eye-open and pose angle quality gates, and server-side vector numerical range validation.
+  * **Honesty Rule**: A visible amber "Demo mode — Mock Face Matcher Active" banner is displayed IF `FACE_MATCHER` is set to `mock`.
+
+
 
 

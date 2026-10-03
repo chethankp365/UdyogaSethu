@@ -32,6 +32,7 @@ import 'package:udyogasethu/features/profile/presentation/profile_screen.dart';
 import 'package:udyogasethu/features/trust/presentation/background_check_screen.dart';
 import 'package:udyogasethu/features/trust/presentation/bank_upi_screen.dart';
 import 'package:udyogasethu/features/trust/presentation/driving_licence_screen.dart';
+import 'package:udyogasethu/features/trust/presentation/face_enrollment_screen.dart';
 import 'package:udyogasethu/features/trust/presentation/kyc_screen.dart';
 import 'package:udyogasethu/features/trust/presentation/student_verification_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_home_screen.dart';
@@ -422,6 +423,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.kycBackground,
         builder: (context, state) => const BackgroundCheckScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.kycFace,
+        builder: (context, state) => const FaceEnrollmentScreen(),
       ),
       GoRoute(
         path: AppRoutes.privacyCentre,
