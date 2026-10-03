@@ -954,4 +954,20 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get providerHomeTitle => 'प्रदाता होम';
+
+  @override
+  String get roleConflictTitle => 'खाता भूमिका संघर्ष';
+
+  @override
+  String roleConflictMessage(Object chosenRole, Object existingRole) {
+    return 'यह नंबर पहले से ही $existingRole के रूप में पंजीकृत है। आप इसे $chosenRole के रूप में उपयोग नहीं कर सकते। किसी अन्य भूमिका का उपयोग करने के लिए, $existingRole के रूप में लॉग इन करें, प्रोफ़ाइल > सेटिंग्स > खाता हटाएं पर जाएं, और फिर नया खाता बनाएं।';
+  }
+
+  @override
+  String roleConflictLoginAs(Object existingRole) {
+    return '$existingRole के रूप में लॉग इन करें';
+  }
+
+  @override
+  String get roleConflictBack => 'पीछे जाएं';
 }

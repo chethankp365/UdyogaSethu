@@ -212,6 +212,12 @@ class AppLogger {
     return result;
   }
 
+  static void d(String message) {
+    if (kDebugMode) {
+      debugPrint('[DEBUG] ${sanitize(message)}');
+    }
+  }
+
   static void i(String message) {
     if (kDebugMode) {
       debugPrint('[INFO] ${sanitize(message)}');

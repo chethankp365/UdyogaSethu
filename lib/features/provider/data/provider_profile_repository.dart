@@ -216,7 +216,12 @@ class SupabaseProviderProfileRepository implements ProviderProfileRepository {
   @override
   Future<void> completeWizard(ProviderProfileDraft draft) async {
     try {
-      await saveStep(draft, 6);
+      await saveStep(draft, 5);
+
+      await _client.from('provider_profiles').update({
+        'is_wizard_complete': true,
+        'updated_at': DateTime.now().toIso8601String(),
+      }).eq('user_id', draft.userId);
 
       await _client.from('profiles').update({
         'onboarding_complete': true,

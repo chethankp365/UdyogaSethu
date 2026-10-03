@@ -114,20 +114,23 @@ class _PlaceholderScreenState extends State<PlaceholderScreen> {
                   padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                   child: AppCard(
                     padding: const EdgeInsets.all(AppSpacing.md),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: AppColors.paleMint,
-                        child: Text(
-                          '${index + 1}',
-                          style: const TextStyle(
-                            color: AppColors.primaryTeal,
-                            fontWeight: FontWeight.bold,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: AppColors.paleMint,
+                          child: Text(
+                            '${index + 1}',
+                            style: const TextStyle(
+                              color: AppColors.primaryTeal,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
+                        title: Text('Item #${index + 1} on ${widget.title}'),
+                        subtitle: const Text('Tab state stays preserved during navigation'),
+                        trailing: const Icon(Icons.chevron_right, size: 20),
                       ),
-                      title: Text('Item #${index + 1} on ${widget.title}'),
-                      subtitle: const Text('Tab state stays preserved during navigation'),
-                      trailing: const Icon(Icons.chevron_right, size: 20),
                     ),
                   ),
                 );

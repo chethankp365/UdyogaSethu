@@ -13,6 +13,7 @@ import 'package:udyogasethu/core/widgets/app_button.dart';
 import 'package:udyogasethu/core/widgets/compact_language_selector.dart';
 import 'package:udyogasethu/core/widgets/info_banner.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_wizard_controller.dart';
+import 'package:udyogasethu/features/seeker/presentation/seeker_wizard_controller.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class ProviderWizardScreen extends ConsumerStatefulWidget {
@@ -174,6 +175,13 @@ class _ProviderWizardScreenState extends ConsumerState<ProviderWizardScreen> {
                           icon: step == 5 ? Icons.check_circle_rounded : Icons.arrow_forward_rounded,
                           isLoading: state.isSaving,
                           onPressed: () async {
+                            if (step == 1 && state.draft.fullName.trim().isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Please enter your full name.')),
+                              );
+                              return;
+                            }
+
                             final success = await ref.read(providerWizardProvider.notifier).nextStep();
                             if (success && step == 5 && context.mounted) {
                               context.go(AppRoutes.providerHome);
@@ -304,8 +312,12 @@ class _ProviderWizardScreenState extends ConsumerState<ProviderWizardScreen> {
             return FilterChip(
               selected: isSelected,
               label: Text(item['label']!),
-              selectedColor: AppColors.headerGreenDark.withValues(alpha: 0.2),
+              selectedColor: AppColors.paleMint,
               checkmarkColor: AppColors.headerGreenDark,
+              labelStyle: TextStyle(
+                color: isSelected ? AppColors.headerGreenDark : AppColors.textDark,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              ),
               onSelected: (selected) {
                 final list = List<String>.from(draft.languages);
                 if (selected) {
@@ -552,15 +564,19 @@ class _ProviderWizardScreenState extends ConsumerState<ProviderWizardScreen> {
     final l10n = AppLocalizations.of(context)!;
     final draft = state.draft;
 
-    final hiringCategoryOptions = [
-      'Construction & Labour',
-      'Housekeeping & Maid',
-      'Agriculture & Farm Labour',
-      'Catering & Kitchen Staff',
-      'Logistics & Delivery Drivers',
-      'Maintenance & Electrician',
-      'Security Guards'
-    ];
+    final categoriesAsync = ref.watch(categoriesProvider);
+    final dbCategoryNames = categoriesAsync.asData?.value.map((c) => c.getLocalizedName(langCode)).toList();
+    final hiringCategoryOptions = (dbCategoryNames != null && dbCategoryNames.isNotEmpty)
+        ? dbCategoryNames
+        : [
+            'Construction & Labour',
+            'Housekeeping & Maid',
+            'Agriculture & Farm Labour',
+            'Catering & Kitchen Staff',
+            'Logistics & Delivery Drivers',
+            'Maintenance & Electrician',
+            'Security Guards'
+          ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -631,8 +647,14 @@ class _ProviderWizardScreenState extends ConsumerState<ProviderWizardScreen> {
             final isSelected = draft.categoriesHiring.contains(cat);
             return FilterChip(
               selected: isSelected,
-              label: Text(cat),
-              selectedColor: AppColors.headerGreenDark.withValues(alpha: 0.2),
+              label: Text(
+                cat,
+                style: TextStyle(
+                  color: isSelected ? AppColors.headerGreenDark : AppColors.textDark,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                ),
+              ),
+              selectedColor: AppColors.paleMint,
               checkmarkColor: AppColors.headerGreenDark,
               onSelected: (selected) {
                 final list = List<String>.from(draft.categoriesHiring);

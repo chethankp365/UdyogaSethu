@@ -48,7 +48,8 @@ void main() {
     expect(find.text('Text Scale Size'), findsOneWidget);
     expect(find.text('Voice Hints & TTS'), findsOneWidget);
     expect(find.text('Low-Data Mode'), findsOneWidget);
-    expect(find.text('Role Switcher & Add Role'), findsOneWidget);
+    expect(find.text('Role Switcher & Add Role'), findsNothing);
+    expect(find.text('Change Seeker Category'), findsOneWidget);
     expect(find.text('Export My Data'), findsOneWidget);
     expect(find.text('Delete My Account'), findsOneWidget);
   });
@@ -57,13 +58,28 @@ void main() {
     final fakeRepo = FakeAccountRepository();
     fakeRepo.assignedRoles = [UserRole.seeker];
 
+    final container = ProviderContainer(
+      overrides: [
+        accountRepositoryProvider.overrideWithValue(fakeRepo),
+      ],
+    );
+    addTearDown(container.dispose);
+    container.read(appSessionProvider.notifier).updateSession(assignedRoles: [UserRole.seeker]);
+
     await tester.pumpWidget(
-      createTestApp(
-        const RoleSwitcherBottomSheet(),
-        overrides: [
-          accountRepositoryProvider.overrideWithValue(fakeRepo),
-          appSessionProvider.overrideWith(AppSessionNotifier.new),
-        ],
+      UncontrolledProviderScope(
+        container: container,
+        child: const MaterialApp(
+          locale: Locale('en'),
+          localizationsDelegates: [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: RoleSwitcherBottomSheet(),
+        ),
       ),
     );
 

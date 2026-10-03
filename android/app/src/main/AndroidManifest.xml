@@ -4,6 +4,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- CAMERA: Face enrollment/liveness, document KYC, QR ticket scanning, completion evidence photo upload -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <!-- GALLERY & MEDIA: Profile photo upload, certificate upload -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <!-- ACCESS_FINE_LOCATION: GPS job map, nearby job/worker/produce matching, geofenced job start check -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!-- ACCESS_COARSE_LOCATION: Proximity search, nearby mandi prices, district weather advisory -->

@@ -963,4 +963,20 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get providerHomeTitle => 'வழங்குநர் முகப்பு';
+
+  @override
+  String get roleConflictTitle => 'கணக்கு பங்கு முரண்பாடு';
+
+  @override
+  String roleConflictMessage(Object chosenRole, Object existingRole) {
+    return 'இந்த எண் ஏற்கனவே $existingRole ஆக பதிவு செய்யப்பட்டுள்ளது. இதை நீங்கள் $chosenRole ஆக பயன்படுத்த முடியாது. வேறு பங்கைப் பயன்படுத்த, $existingRole ஆக உள்நுழைந்து, சுயவிவரம் > அமைப்புகள் > கணக்கை நீக்கு பகுதிக்குச் சென்று, புதிய கணக்கை உருவாக்கவும்.';
+  }
+
+  @override
+  String roleConflictLoginAs(Object existingRole) {
+    return '$existingRole ஆக உள்நுழைக';
+  }
+
+  @override
+  String get roleConflictBack => 'பின்செல்க';
 }

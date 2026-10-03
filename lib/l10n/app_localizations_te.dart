@@ -962,4 +962,20 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get providerHomeTitle => 'ప్రదాత హోమ్';
+
+  @override
+  String get roleConflictTitle => 'ఖాతా పాత్ర సంఘర్షణ';
+
+  @override
+  String roleConflictMessage(Object chosenRole, Object existingRole) {
+    return 'ఈ నంబర్ ఇప్పటికే $existingRoleగా నమోదు చేయబడింది. మీరు దీనిని $chosenRoleగా ఉపయోగించలేరు. వేరే పాత్రను ఉపయోగించడానికి, $existingRoleగా లాగిన్ చేయండి, ప్రొఫైల్ > సెట్టింగ్‌లు > ఖాతా తొలగించు కి వెళ్లండి, ఆపై కొత్త ఖాతాను సృష్టించండి.';
+  }
+
+  @override
+  String roleConflictLoginAs(Object existingRole) {
+    return '$existingRoleగా లాగిన్ చేయండి';
+  }
+
+  @override
+  String get roleConflictBack => 'వెనుకకు';
 }

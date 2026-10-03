@@ -3,6 +3,7 @@ class AppRoutes {
   AppRoutes._();
 
   // Root & Auth / Onboarding
+  static const String brandIntro = '/brand-intro';
   static const String splash = '/splash';
   static const String intro = '/intro';
   static const String language = '/language';
@@ -11,6 +12,7 @@ class AppRoutes {
   static const String otp = '/otp';
   static const String verifyPhone = '/auth/verify-phone';
   static const String suspended = '/suspended';
+  static const String roleConflict = '/role-conflict';
   static const String profileSetupSeeker = '/profile-setup/seeker';
   static const String profileSetupFarmer = '/profile-setup/farmer';
   static const String profileSetupProvider = '/profile-setup/provider';

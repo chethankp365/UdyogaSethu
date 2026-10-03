@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,21 +11,56 @@ import 'package:udyogasethu/core/theme/app_typography.dart';
 import 'package:udyogasethu/features/onboarding/data/bootstrap_service.dart';
 
 /// Splash Screen matching Screen 1 in UI_REFERENCE.md.
+/// Guarantees at least 1.8 seconds of splash screen visibility ("Initializing UdyogaSethu...")
+/// before transitioning to onboarding or home screens.
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
+
+  /// Static flag indicating whether Boot Splash has completed its minimum 1.8s display time.
+  static bool isSplashReadyToNavigate = false;
 
   @override
   ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends ConsumerState<SplashScreen> {
+  late final DateTime _mountTime;
+  Timer? _minDisplayTimer;
+  bool _hasNavigated = false;
+
   @override
   void initState() {
     super.initState();
-    // Trigger real bootstrapping after first frame
+    _mountTime = DateTime.now();
+    SplashScreen.isSplashReadyToNavigate = false;
+
+    // Trigger bootstrapping post frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(bootstrapProvider.notifier).runBootstrap();
+      _scheduleMinimumSplashCheck();
     });
+  }
+
+  void _scheduleMinimumSplashCheck() {
+    final elapsed = DateTime.now().difference(_mountTime);
+    final remainingMs = (1800 - elapsed.inMilliseconds).clamp(0, 1800);
+
+    _minDisplayTimer?.cancel();
+    _minDisplayTimer = Timer(Duration(milliseconds: remainingMs), () {
+      _checkAndNavigate();
+    });
+  }
+
+  void _checkAndNavigate() {
+    if (!mounted || _hasNavigated) return;
+    final bootstrapState = ref.read(bootstrapProvider);
+
+    if (bootstrapState.isDone) {
+      _hasNavigated = true;
+      SplashScreen.isSplashReadyToNavigate = true;
+      final session = ref.read(appSessionProvider);
+      _navigateAfterBootstrap(session.status, session.activeRole);
+    }
   }
 
   void _navigateAfterBootstrap(AuthSessionStatus status, UserRole role) {
@@ -33,7 +70,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         context.go(AppRoutes.intro);
         break;
       case AuthSessionStatus.signedOut:
-        context.go(AppRoutes.login);
+        context.go(AppRoutes.language);
         break;
       case AuthSessionStatus.needsRole:
         context.go(AppRoutes.roleTree);
@@ -47,20 +84,28 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       case AuthSessionStatus.suspended:
         context.go(AppRoutes.suspended);
         break;
+      case AuthSessionStatus.roleConflict:
+        context.go(AppRoutes.roleConflict);
+        break;
       case AuthSessionStatus.booting:
         break;
     }
   }
 
   @override
+  void dispose() {
+    _minDisplayTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final bootstrapState = ref.watch(bootstrapProvider);
 
-    // Listen for bootstrap completion and navigate smoothly
+    // Listen for bootstrap state updates
     ref.listen<BootstrapState>(bootstrapProvider, (previous, next) {
-      if (next.isDone && (previous == null || !previous.isDone)) {
-        final session = ref.read(appSessionProvider);
-        _navigateAfterBootstrap(session.status, session.activeRole);
+      if (next.isDone) {
+        _checkAndNavigate();
       }
     });
 
@@ -120,49 +165,87 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
               const Spacer(),
 
-              // 4. Progress Bar Track & Fill
-              Container(
-                height: 10,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: AppColors.paleMint,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    return Align(
-                      alignment: Alignment.centerLeft,
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        width: constraints.maxWidth * bootstrapState.progress,
-                        decoration: BoxDecoration(
-                          color: AppColors.warningOrange,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
+              // 4. Progress Bar / Error View
+              if (bootstrapState.error != null) ...[
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: AppColors.sosRed.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.sosRed),
+                  ),
+                  child: Column(
+                    children: [
+                      const Icon(Icons.error_outline_rounded, color: AppColors.sosRed, size: 36),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Failed to initialize app',
+                        style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.sosRed, fontSize: 16),
                       ),
-                    );
-                  },
+                      if (kDebugMode) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          bootstrapState.error!,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(color: Colors.black87, fontSize: 12, fontFamily: 'monospace'),
+                        ),
+                      ],
+                      const SizedBox(height: 12),
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.headerGreenDark,
+                          foregroundColor: Colors.white,
+                        ),
+                        onPressed: () {
+                          ref.read(bootstrapProvider.notifier).runBootstrap();
+                        },
+                        icon: const Icon(Icons.refresh),
+                        label: const Text('Retry Bootstrapping'),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-
-              const SizedBox(height: 8),
-
-              // 5. Progress Label & Percentage
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Initializing UdyogaSethu...',
-                    style: AppTypography.bodySmall(AppColors.textMuted),
+              ] else ...[
+                Container(
+                  height: 10,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: AppColors.paleMint,
+                    borderRadius: BorderRadius.circular(5),
                   ),
-                  Text(
-                    '$pctInt%',
-                    style: AppTypography.bodySmall(AppColors.textDark).copyWith(
-                      fontWeight: FontWeight.bold,
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return Align(
+                        alignment: Alignment.centerLeft,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          width: constraints.maxWidth * bootstrapState.progress,
+                          decoration: BoxDecoration(
+                            color: AppColors.warningOrange,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      bootstrapState.statusText.isEmpty ? 'Initializing UdyogaSethu...' : bootstrapState.statusText,
+                      style: AppTypography.bodySmall(AppColors.textMuted),
                     ),
-                  ),
-                ],
-              ),
+                    Text(
+                      '$pctInt%',
+                      style: AppTypography.bodySmall(AppColors.textDark).copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
 
               const SizedBox(height: 20),
 
@@ -178,12 +261,63 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                 ],
               ),
 
-              const SizedBox(height: 20),
-
-              // 7. Version Footer
-              Text(
-                'Version ${bootstrapState.versionString}',
-                style: AppTypography.bodySmall(AppColors.textMuted),
+              // 7. Version Footer (Long press in debug mode opens Dev Menu)
+              GestureDetector(
+                onLongPress: kDebugMode
+                    ? () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (ctx) => SafeArea(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const ListTile(
+                                  leading: Icon(Icons.bug_report_rounded, color: AppColors.headerGreenDark),
+                                  title: Text('Developer Menu (Debug Only)', style: TextStyle(fontWeight: FontWeight.bold)),
+                                ),
+                                const Divider(height: 1),
+                                ListTile(
+                                  leading: const Icon(Icons.swap_horiz_rounded),
+                                  title: const Text('Dev Role & Shell Switcher'),
+                                  onTap: () {
+                                    Navigator.pop(ctx);
+                                    context.push(AppRoutes.devRole);
+                                  },
+                                ),
+                                ListTile(
+                                  leading: const Icon(Icons.palette_rounded),
+                                  title: const Text('Component Gallery'),
+                                  onTap: () {
+                                    Navigator.pop(ctx);
+                                    context.push(AppRoutes.devGallery);
+                                  },
+                                ),
+                                ListTile(
+                                  leading: const Icon(Icons.cloud_sync_rounded),
+                                  title: const Text('Supabase Connection Debug'),
+                                  onTap: () {
+                                    Navigator.pop(ctx);
+                                    context.push(AppRoutes.devConnection);
+                                  },
+                                ),
+                                ListTile(
+                                  leading: const Icon(Icons.collections_rounded),
+                                  title: const Text('Dev Assets Screen'),
+                                  onTap: () {
+                                    Navigator.pop(ctx);
+                                    context.push(AppRoutes.devAssets);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+                    : null,
+                child: Text(
+                  'Version ${bootstrapState.versionString}${kDebugMode ? " (Debug Mode - Long Press for Dev Menu)" : ""}',
+                  style: AppTypography.bodySmall(AppColors.textMuted),
+                ),
               ),
 
               const SizedBox(height: 8),

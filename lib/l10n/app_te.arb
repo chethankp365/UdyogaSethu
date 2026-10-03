@@ -282,7 +282,11 @@
   "grantGpsPermission": "లొకేషన్ అనుమతి ఇవ్వండి",
   "grantNotificationsPermission": "నోటిఫికేషన్ అనుమతి ఇవ్వండి",
   "permissionGranted": "అనుమతి ఇవ్వబడింది",
-  "providerHomeTitle": "ప్రదాత హోమ్"
+  "providerHomeTitle": "ప్రదాత హోమ్",
+  "roleConflictTitle": "ఖాతా పాత్ర సంఘర్షణ",
+  "roleConflictMessage": "ఈ నంబర్ ఇప్పటికే {existingRole}గా నమోదు చేయబడింది. మీరు దీనిని {chosenRole}గా ఉపయోగించలేరు. వేరే పాత్రను ఉపయోగించడానికి, {existingRole}గా లాగిన్ చేయండి, ప్రొఫైల్ > సెట్టింగ్‌లు > ఖాతా తొలగించు కి వెళ్లండి, ఆపై కొత్త ఖాతాను సృష్టించండి.",
+  "roleConflictLoginAs": "{existingRole}గా లాగిన్ చేయండి",
+  "roleConflictBack": "వెనుకకు"
 }
 
 

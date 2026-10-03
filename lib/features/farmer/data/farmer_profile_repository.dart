@@ -216,6 +216,11 @@ class SupabaseFarmerProfileRepository implements FarmerProfileRepository {
     try {
       await saveStep(draft, 5);
 
+      await _client.from('farmer_profiles').update({
+        'is_wizard_complete': true,
+        'updated_at': DateTime.now().toIso8601String(),
+      }).eq('user_id', draft.userId);
+
       await _client.from('profiles').update({
         'onboarding_complete': true,
         'updated_at': DateTime.now().toIso8601String(),

@@ -20,49 +20,52 @@ class CompactLanguageSelector extends ConsumerWidget {
       AppLanguages.tamil,
     ];
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: const BouncingScrollPhysics(),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: topLanguages.map((lang) {
-          final isSelected = currentLocale.languageCode == lang.code;
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 190),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: topLanguages.map((lang) {
+            final isSelected = currentLocale.languageCode == lang.code;
 
-          return Padding(
-            padding: const EdgeInsets.only(right: 6.0),
-            child: ChoiceChip(
-              avatar: Text(
-                lang.countryCode,
-                style: AppTypography.label(
-                  isSelected ? Colors.white : AppColors.headerGreenDark,
-                ).copyWith(fontSize: 10),
-              ),
-              label: Text(
-                lang.code == 'en' ? lang.englishName : lang.nativeName,
-                style: AppTypography.bodySmall(
-                  isSelected ? Colors.white : AppColors.textDark,
-                ).copyWith(
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                  fontSize: 12,
+            return Padding(
+              padding: const EdgeInsets.only(right: 6.0),
+              child: ChoiceChip(
+                avatar: Text(
+                  lang.countryCode,
+                  style: AppTypography.label(
+                    isSelected ? Colors.white : AppColors.headerGreenDark,
+                  ).copyWith(fontSize: 10),
                 ),
-              ),
-              selected: isSelected,
-              selectedColor: AppColors.headerGreenDark,
-              backgroundColor: AppColors.paleMint,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-                side: BorderSide(
-                  color: isSelected ? AppColors.headerGreenDark : AppColors.cardBorderGreen,
+                label: Text(
+                  lang.code == 'en' ? lang.englishName : lang.nativeName,
+                  style: AppTypography.bodySmall(
+                    isSelected ? Colors.white : AppColors.textDark,
+                  ).copyWith(
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                    fontSize: 12,
+                  ),
                 ),
+                selected: isSelected,
+                selectedColor: AppColors.headerGreenDark,
+                backgroundColor: AppColors.paleMint,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  side: BorderSide(
+                    color: isSelected ? AppColors.headerGreenDark : AppColors.cardBorderGreen,
+                  ),
+                ),
+                onSelected: (selected) {
+                  if (selected) {
+                    ref.read(localeProvider.notifier).setLocale(lang.code);
+                  }
+                },
               ),
-              onSelected: (selected) {
-                if (selected) {
-                  ref.read(localeProvider.notifier).setLocale(lang.code);
-                }
-              },
-            ),
-          );
-        }).toList(),
+            );
+          }).toList(),
+        ),
       ),
     );
   }

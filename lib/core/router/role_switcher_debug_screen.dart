@@ -124,22 +124,25 @@ class RoleSwitcherDebugScreen extends ConsumerWidget {
                 child: Column(
                   children: AuthSessionStatus.values.map((status) {
                     final isSelected = sessionData.status == status;
-                    return ListTile(
-                      leading: Icon(
-                        isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
-                        color: isSelected ? AppColors.primaryTeal : AppColors.textMuted,
-                      ),
-                      title: Text(
-                        status.name.toUpperCase(),
-                        style: TextStyle(
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                          color: isSelected ? AppColors.primaryTeal : textColor,
+                    return Material(
+                      color: Colors.transparent,
+                      child: ListTile(
+                        leading: Icon(
+                          isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
+                          color: isSelected ? AppColors.primaryTeal : AppColors.textMuted,
                         ),
+                        title: Text(
+                          status.name.toUpperCase(),
+                          style: TextStyle(
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            color: isSelected ? AppColors.primaryTeal : textColor,
+                          ),
+                        ),
+                        subtitle: Text(_getStatusDescription(status)),
+                        onTap: () {
+                          ref.read(appSessionProvider.notifier).setSessionStatus(status);
+                        },
                       ),
-                      subtitle: Text(_getStatusDescription(status)),
-                      onTap: () {
-                        ref.read(appSessionProvider.notifier).setSessionStatus(status);
-                      },
                     );
                   }).toList(),
                 ),
@@ -181,6 +184,8 @@ class RoleSwitcherDebugScreen extends ConsumerWidget {
         return 'Fully ready, active role shell unlocked.';
       case AuthSessionStatus.suspended:
         return 'Account suspended, shows appeal page.';
+      case AuthSessionStatus.roleConflict:
+        return 'Role conflict: account registered as a different role.';
     }
   }
 }

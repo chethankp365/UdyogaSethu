@@ -91,11 +91,14 @@ class AppButton extends StatelessWidget {
             const SizedBox(width: AppSpacing.sm),
           ],
           Flexible(
-            child: Text(
-              label,
-              style: AppTypography.button(foregroundColor),
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.center,
+              child: Text(
+                label,
+                style: AppTypography.button(foregroundColor),
+                maxLines: 1,
+              ),
             ),
           ),
         ],

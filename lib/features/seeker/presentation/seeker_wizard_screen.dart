@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -243,35 +244,53 @@ class _SeekerWizardScreenState extends ConsumerState<SeekerWizardScreen> {
                     backgroundImage: (draft.avatarUrl != null && draft.avatarUrl!.isNotEmpty)
                         ? NetworkImage(draft.avatarUrl!)
                         : null,
-                    child: (draft.avatarUrl == null || draft.avatarUrl!.isEmpty)
-                        ? const Icon(Icons.person, size: 60, color: AppColors.headerGreenDark)
-                        : null,
+                    child: state.isSaving
+                        ? const CircularProgressIndicator()
+                        : (draft.avatarUrl == null || draft.avatarUrl!.isEmpty)
+                            ? const Icon(Icons.person, size: 60, color: AppColors.headerGreenDark)
+                            : null,
                   ),
-                  CircleAvatar(
-                    radius: 18,
-                    backgroundColor: AppColors.headerGreenDark,
-                    child: IconButton(
-                      icon: const Icon(Icons.camera_alt, size: 18, color: Colors.white),
-                      onPressed: () => _showPhotoPickerBottomSheet(context, ref, l10n),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  OutlinedButton.icon(
+                    onPressed: () => _pickAndUploadPhoto(ref, ImageSource.camera),
+                    icon: const Icon(Icons.camera_alt, size: 18, color: AppColors.headerGreenDark),
+                    label: Text(l10n.takePhotoCamera, style: const TextStyle(fontSize: 13, color: AppColors.headerGreenDark)),
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: AppColors.headerGreenDark),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  OutlinedButton.icon(
+                    onPressed: () => _pickAndUploadPhoto(ref, ImageSource.gallery),
+                    icon: const Icon(Icons.photo_library, size: 18, color: AppColors.headerGreenDark),
+                    label: Text(l10n.chooseGallery, style: const TextStyle(fontSize: 13, color: AppColors.headerGreenDark)),
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: AppColors.headerGreenDark),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
-              TextButton.icon(
-                onPressed: () => _showPhotoPickerBottomSheet(context, ref, l10n),
-                icon: const Icon(Icons.upload_file, size: 18),
-                label: Text(
-                  draft.avatarUrl != null ? l10n.changePhoto : l10n.takePhotoCamera,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
               if (state.uploadError != null) ...[
-                const SizedBox(height: 4),
+                const SizedBox(height: 8),
                 Text(
                   l10n.uploadPhotoError,
-                  style: const TextStyle(color: AppColors.sosRed, fontSize: 13),
+                  style: const TextStyle(color: AppColors.sosRed, fontSize: 13, fontWeight: FontWeight.bold),
                 ),
+                if (kDebugMode) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    state.uploadError!,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: AppColors.sosRed, fontSize: 11, fontFamily: 'monospace'),
+                  ),
+                ],
               ],
             ],
           ),
@@ -343,66 +362,23 @@ class _SeekerWizardScreenState extends ConsumerState<SeekerWizardScreen> {
     );
   }
 
-  void _showPhotoPickerBottomSheet(
-    BuildContext context,
-    WidgetRef ref,
-    AppLocalizations l10n,
-  ) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (ctx) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Wrap(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.camera_alt, color: AppColors.headerGreenDark),
-                  title: Text(l10n.takePhotoCamera),
-                  onTap: () async {
-                    Navigator.pop(ctx);
-                    final file = await _picker.pickImage(
-                      source: ImageSource.camera,
-                      imageQuality: 70,
-                      maxWidth: 800,
-                    );
-                    if (file != null) {
-                      final bytes = await file.readAsBytes();
-                      final filename = 'avatar_${DateTime.now().millisecondsSinceEpoch}.jpg';
-                      await ref
-                          .read(seekerWizardProvider.notifier)
-                          .uploadAvatarPhoto(bytes, filename);
-                    }
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.photo_library, color: AppColors.headerGreenDark),
-                  title: Text(l10n.chooseGallery),
-                  onTap: () async {
-                    Navigator.pop(ctx);
-                    final file = await _picker.pickImage(
-                      source: ImageSource.gallery,
-                      imageQuality: 70,
-                      maxWidth: 800,
-                    );
-                    if (file != null) {
-                      final bytes = await file.readAsBytes();
-                      final filename = 'avatar_${DateTime.now().millisecondsSinceEpoch}.jpg';
-                      await ref
-                          .read(seekerWizardProvider.notifier)
-                          .uploadAvatarPhoto(bytes, filename);
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+  Future<void> _pickAndUploadPhoto(WidgetRef ref, ImageSource source) async {
+    try {
+      final file = await _picker.pickImage(
+        source: source,
+        imageQuality: 70,
+        maxWidth: 800,
+      );
+      if (file != null) {
+        final bytes = await file.readAsBytes();
+        final filename = 'avatar_${DateTime.now().millisecondsSinceEpoch}.jpg';
+        await ref
+            .read(seekerWizardProvider.notifier)
+            .uploadAvatarPhoto(bytes, filename);
+      }
+    } catch (e) {
+      ref.read(seekerWizardProvider.notifier).setUploadError(e.toString());
+    }
   }
 
   Widget _buildChoiceChip(
@@ -498,16 +474,23 @@ class _SeekerWizardScreenState extends ConsumerState<SeekerWizardScreen> {
           loading: () => const LinearProgressIndicator(),
           error: (e, s) => Text('Error loading categories: $e'),
           data: (categories) {
+            final visibleCategories = categories.where((cat) => cat.matchesSeekerType(draft.seekerType)).toList();
+            final catsToDisplay = visibleCategories.isNotEmpty ? visibleCategories : categories;
+
             return Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: categories.map((cat) {
+              children: catsToDisplay.map((cat) {
                 final isSelected = draft.selectedCategoryIds.contains(cat.id);
                 return FilterChip(
                   label: Text(cat.getLocalizedName(locale.languageCode)),
                   selected: isSelected,
                   selectedColor: AppColors.paleMint,
                   checkmarkColor: AppColors.headerGreenDark,
+                  labelStyle: TextStyle(
+                    color: isSelected ? AppColors.headerGreenDark : AppColors.textDark,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  ),
                   onSelected: (selected) {
                     final updatedCats = List<String>.from(draft.selectedCategoryIds);
                     if (selected) {
@@ -534,34 +517,158 @@ class _SeekerWizardScreenState extends ConsumerState<SeekerWizardScreen> {
           loading: () => const LinearProgressIndicator(),
           error: (e, s) => Text('Error loading skills: $e'),
           data: (allSkills) {
-            final filteredSkills = draft.selectedCategoryIds.isEmpty
-                ? allSkills
-                : allSkills.where((sk) => draft.selectedCategoryIds.contains(sk.categoryId)).toList();
+            final allSkillIdsFromDb = allSkills.map((s) => s.id).toSet();
+            final customSkills = draft.selectedSkillIds.where((sId) => !allSkillIdsFromDb.contains(sId)).toList();
 
-            return Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: filteredSkills.map((sk) {
-                final isSelected = draft.selectedSkillIds.contains(sk.id);
-                return FilterChip(
-                  label: Text(sk.getLocalizedName(locale.languageCode)),
-                  selected: isSelected,
-                  selectedColor: AppColors.headerGreenDark,
-                  labelStyle: TextStyle(
-                    color: isSelected ? Colors.white : AppColors.textDark,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            if (draft.selectedCategoryIds.isEmpty) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.paleMint.withValues(alpha: 0.5),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: AppColors.primaryTeal.withValues(alpha: 0.3)),
+                    ),
+                    child: const Row(
+                      children: [
+                        Icon(Icons.info_outline, color: AppColors.headerGreenDark, size: 20),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Please select at least one category above to view available skills.',
+                            style: TextStyle(fontSize: 13, color: AppColors.textDark, fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  onSelected: (selected) {
-                    final updatedSkills = List<String>.from(draft.selectedSkillIds);
-                    if (selected) {
-                      updatedSkills.add(sk.id);
-                    } else {
-                      updatedSkills.remove(sk.id);
+                  if (customSkills.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: customSkills.map((customSkill) {
+                        return FilterChip(
+                          label: Text(customSkill),
+                          selected: true,
+                          selectedColor: AppColors.headerGreenDark,
+                          checkmarkColor: Colors.white,
+                          labelStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                          onSelected: (_) {
+                            final updatedSkills = List<String>.from(draft.selectedSkillIds)..remove(customSkill);
+                            notifier.updateDraft((d) => d.copyWith(selectedSkillIds: updatedSkills));
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                  const SizedBox(height: 16),
+                  _CustomSkillInput(
+                    onAddSkill: (customSkillText) {
+                      final text = customSkillText.trim();
+                      if (text.isNotEmpty && !draft.selectedSkillIds.contains(text)) {
+                        final updatedSkills = List<String>.from(draft.selectedSkillIds)..add(text);
+                        notifier.updateDraft((d) => d.copyWith(selectedSkillIds: updatedSkills));
+                      }
+                    },
+                  ),
+                ],
+              );
+            }
+
+            final categoriesList = categoriesAsync.value ?? [];
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ...draft.selectedCategoryIds.map((catId) {
+                  final category = categoriesList.firstWhere(
+                    (c) => c.id == catId,
+                    orElse: () => ServiceCategoryItem(id: catId, slug: catId, names: {'en': catId}),
+                  );
+                  final categorySkills = allSkills.where((sk) => sk.categoryId == catId).toList();
+
+                  if (categorySkills.isEmpty) return const SizedBox.shrink();
+
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          category.getLocalizedName(locale.languageCode),
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.headerGreenDark),
+                        ),
+                        const SizedBox(height: 6),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: categorySkills.map((sk) {
+                            final isSelected = draft.selectedSkillIds.contains(sk.id);
+                            return FilterChip(
+                              label: Text(sk.getLocalizedName(locale.languageCode)),
+                              selected: isSelected,
+                              selectedColor: AppColors.headerGreenDark,
+                              checkmarkColor: Colors.white,
+                              labelStyle: TextStyle(
+                                color: isSelected ? Colors.white : AppColors.textDark,
+                                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                              ),
+                              onSelected: (selected) {
+                                final updatedSkills = List<String>.from(draft.selectedSkillIds);
+                                if (selected) {
+                                  updatedSkills.add(sk.id);
+                                } else {
+                                  updatedSkills.remove(sk.id);
+                                }
+                                notifier.updateDraft((d) => d.copyWith(selectedSkillIds: updatedSkills));
+                              },
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+                if (customSkills.isNotEmpty) ...[
+                  const Text(
+                    'Custom Skills',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.headerGreenDark),
+                  ),
+                  const SizedBox(height: 6),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: customSkills.map((customSkill) {
+                      return FilterChip(
+                        label: Text(customSkill),
+                        selected: true,
+                        selectedColor: AppColors.headerGreenDark,
+                        checkmarkColor: Colors.white,
+                        labelStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                        onSelected: (_) {
+                          final updatedSkills = List<String>.from(draft.selectedSkillIds)..remove(customSkill);
+                          notifier.updateDraft((d) => d.copyWith(selectedSkillIds: updatedSkills));
+                        },
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 12),
+                ],
+                const SizedBox(height: 8),
+                _CustomSkillInput(
+                  onAddSkill: (customSkillText) {
+                    final text = customSkillText.trim();
+                    if (text.isNotEmpty && !draft.selectedSkillIds.contains(text)) {
+                      final updatedSkills = List<String>.from(draft.selectedSkillIds)..add(text);
+                      notifier.updateDraft((d) => d.copyWith(selectedSkillIds: updatedSkills));
                     }
-                    notifier.updateDraft((d) => d.copyWith(selectedSkillIds: updatedSkills));
                   },
-                );
-              }).toList(),
+                ),
+              ],
             );
           },
         ),
@@ -1363,6 +1470,14 @@ class _SeekerWizardScreenState extends ConsumerState<SeekerWizardScreen> {
               label: step == 7 ? l10n.finishProfileButton : l10n.continueButton,
               isLoading: state.isSaving,
               onPressed: () async {
+                // Validation check for Step 1 Full Name
+                if (step == 1 && state.draft.fullName.trim().isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Please enter your full name.')),
+                  );
+                  return;
+                }
+
                 // Validation check for Informal workers on Step 2
                 if (step == 2 &&
                     state.draft.seekerType == 'informal' &&
@@ -1461,6 +1576,65 @@ class _SubjectsInterestsInputState extends State<_SubjectsInterestsInput> {
               onDeleted: () => _removeItem(item),
             );
           }).toList(),
+        ),
+      ],
+    );
+  }
+}
+
+class _CustomSkillInput extends StatefulWidget {
+  final ValueChanged<String> onAddSkill;
+  const _CustomSkillInput({required this.onAddSkill});
+
+  @override
+  State<_CustomSkillInput> createState() => _CustomSkillInputState();
+}
+
+class _CustomSkillInputState extends State<_CustomSkillInput> {
+  final _controller = TextEditingController();
+
+  void _submit() {
+    final text = _controller.text.trim();
+    if (text.isNotEmpty) {
+      widget.onAddSkill(text);
+      _controller.clear();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+            controller: _controller,
+            decoration: InputDecoration(
+              hintText: 'Add your own skill (e.g. Putty Work, Plumbing)',
+              hintStyle: const TextStyle(fontSize: 13, color: AppColors.textMuted),
+              isDense: true,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            onSubmitted: (_) => _submit(),
+          ),
+        ),
+        const SizedBox(width: 8),
+        ElevatedButton.icon(
+          onPressed: _submit,
+          icon: const Icon(Icons.add, size: 18),
+          label: const Text('Add Skill', style: TextStyle(fontSize: 13)),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.headerGreenDark,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
         ),
       ],
     );

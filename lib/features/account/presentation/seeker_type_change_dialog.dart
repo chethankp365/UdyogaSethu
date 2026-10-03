@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:udyogasethu/core/errors/app_exception.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/account/presentation/role_switcher_bottom_sheet.dart';
 import 'package:udyogasethu/features/onboarding/domain/pending_role_selection.dart';
@@ -34,13 +35,12 @@ class _SeekerTypeChangeDialogState extends ConsumerState<SeekerTypeChangeDialog>
   Future<void> _saveTypeChange() async {
     setState(() => _isSaving = true);
     try {
-      String userId = 'demo-user-id';
-      try {
-        final user = Supabase.instance.client.auth.currentUser;
-        if (user != null) userId = user.id;
-      } catch (_) {}
+      final user = Supabase.instance.client.auth.currentUser;
+      if (user == null || user.id.isEmpty) {
+        throw const AppException.auth('User not authenticated');
+      }
 
-      await ref.read(accountRepositoryProvider).updateSeekerType(userId: userId, newType: _selectedType);
+      await ref.read(accountRepositoryProvider).updateSeekerType(userId: user.id, newType: _selectedType);
       if (mounted) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(

@@ -1807,6 +1807,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Provider Home'**
   String get providerHomeTitle;
+
+  /// No description provided for @roleConflictTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Role Conflict'**
+  String get roleConflictTitle;
+
+  /// No description provided for @roleConflictMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This number is already registered as {existingRole}. You cannot use it as {chosenRole}. To use a different role, log in as {existingRole}, go to Profile > Settings > Delete account, and then create a new account.'**
+  String roleConflictMessage(Object chosenRole, Object existingRole);
+
+  /// No description provided for @roleConflictLoginAs.
+  ///
+  /// In en, this message translates to:
+  /// **'Log in as {existingRole}'**
+  String roleConflictLoginAs(Object existingRole);
+
+  /// No description provided for @roleConflictBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get roleConflictBack;
 }
 
 class _AppLocalizationsDelegate

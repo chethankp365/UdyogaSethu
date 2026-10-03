@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:udyogasethu/core/errors/app_exception.dart';
 import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/core/router/app_shells.dart';
 import 'package:udyogasethu/core/router/placeholder_screen.dart';
@@ -11,127 +12,184 @@ import 'package:udyogasethu/core/widgets/component_gallery_screen.dart';
 import 'package:udyogasethu/core/widgets/connection_debug_screen.dart';
 import 'package:udyogasethu/core/widgets/dev_assets_screen.dart';
 import 'package:udyogasethu/core/widgets/not_found_screen.dart';
+import 'package:udyogasethu/features/account/presentation/linked_accounts_screen.dart';
+import 'package:udyogasethu/features/account/presentation/settings_screen.dart';
 import 'package:udyogasethu/features/auth/presentation/login_screen.dart';
 import 'package:udyogasethu/features/auth/presentation/otp_screen.dart';
 import 'package:udyogasethu/features/auth/presentation/suspended_screen.dart';
 import 'package:udyogasethu/features/auth/presentation/verify_phone_screen.dart';
-import 'package:udyogasethu/features/onboarding/presentation/intro_screen.dart';
-
-import 'package:udyogasethu/features/onboarding/presentation/language_screen.dart';
-import 'package:udyogasethu/features/onboarding/presentation/role_tree_screen.dart';
-import 'package:udyogasethu/features/onboarding/presentation/splash_screen.dart';
-import 'package:udyogasethu/features/account/presentation/linked_accounts_screen.dart';
-import 'package:udyogasethu/features/account/presentation/settings_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_home_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_wizard_screen.dart';
+import 'package:udyogasethu/features/onboarding/presentation/brand_intro_screen.dart';
+import 'package:udyogasethu/features/onboarding/presentation/intro_screen.dart';
+import 'package:udyogasethu/features/onboarding/presentation/language_screen.dart';
+import 'package:udyogasethu/features/onboarding/presentation/role_conflict_screen.dart';
+import 'package:udyogasethu/features/onboarding/presentation/role_tree_screen.dart';
+import 'package:udyogasethu/features/onboarding/presentation/splash_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_home_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_wizard_screen.dart';
+import 'package:udyogasethu/features/seeker/presentation/seeker_home_screen.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_wizard_screen.dart';
 
+/// RouterNotifier notifies [GoRouter] when session state changes without recreating the router.
+class RouterNotifier extends ChangeNotifier {
+  final Ref _ref;
+
+  RouterNotifier(this._ref) {
+    _ref.listen<AppSessionData>(
+      appSessionProvider,
+      (previous, next) => notifyListeners(),
+    );
+  }
+}
+
+final routerNotifierProvider = Provider<RouterNotifier>((ref) {
+  return RouterNotifier(ref);
+});
 
 final appRouterProvider = Provider<GoRouter>((ref) {
-  final sessionData = ref.watch(appSessionProvider);
+  final notifier = ref.read(routerNotifierProvider);
 
   return GoRouter(
-    initialLocation: AppRoutes.splash,
+    initialLocation: AppRoutes.brandIntro,
+    refreshListenable: notifier,
     errorBuilder: (context, state) => NotFoundScreen(state: state),
     redirect: (context, state) {
       final loc = state.uri.toString();
 
-      // Allow all /dev/ routes without session redirects in debug mode
+      // Allow all /dev/ routes without session redirects in debug mode ONLY
       if (kDebugMode && loc.startsWith('/dev/')) {
         return null;
       }
+      if (!kDebugMode && loc.startsWith('/dev/')) {
+        return AppRoutes.splash;
+      }
 
+      // 1. Allow BrandIntro screen to play uninterrupted
+      if (loc == AppRoutes.brandIntro) {
+        if (!BrandIntroScreen.isCompleted) {
+          return null;
+        }
+      }
+
+      // 2. Allow Splash screen to show for its minimum display time
+      if (loc == AppRoutes.splash) {
+        if (!SplashScreen.isSplashReadyToNavigate) {
+          return null;
+        }
+      }
+
+      final sessionData = ref.read(appSessionProvider);
       final status = sessionData.status;
+
+      String? target;
 
       // 1. Booting state stays on splash
       if (status == AuthSessionStatus.booting) {
-        return loc == AppRoutes.splash ? null : AppRoutes.splash;
+        target = (loc == AppRoutes.splash || loc == AppRoutes.brandIntro) ? null : AppRoutes.splash;
       }
-
       // 2. Suspended state
-      if (status == AuthSessionStatus.suspended) {
-        return loc == AppRoutes.suspended ? null : AppRoutes.suspended;
+      else if (status == AuthSessionStatus.suspended) {
+        target = loc == AppRoutes.suspended ? null : AppRoutes.suspended;
       }
-
-      // 3. Signed out state
-      if (status == AuthSessionStatus.signedOut) {
-        const allowedUnauth = [
-          AppRoutes.splash,
+      // 2b. Role Conflict state
+      else if (status == AuthSessionStatus.roleConflict) {
+        target = loc == AppRoutes.roleConflict ? null : AppRoutes.roleConflict;
+      }
+      // 3. Needs Onboarding (First launch for signed-out user)
+      else if (status == AuthSessionStatus.needsOnboarding) {
+        const allowedOnboarding = [
           AppRoutes.intro,
+          AppRoutes.language,
+        ];
+        if (!allowedOnboarding.contains(loc)) {
+          target = AppRoutes.intro;
+        }
+      }
+      // 4. Signed out state (Intro seen, returning user)
+      else if (status == AuthSessionStatus.signedOut) {
+        const allowedUnauth = [
           AppRoutes.language,
           AppRoutes.roleTree,
           AppRoutes.login,
           AppRoutes.otp,
           AppRoutes.verifyPhone,
         ];
-        if (!allowedUnauth.contains(loc) && !loc.startsWith('/dev/')) {
-          // Capture deep link for replay after login
-          ref.read(appSessionProvider.notifier).setDeepLinkPending(loc);
-          return AppRoutes.login;
+        if (!allowedUnauth.contains(loc)) {
+          if (loc == AppRoutes.splash || loc == '/') {
+            target = AppRoutes.language;
+          } else {
+            target = AppRoutes.login;
+          }
         }
-        return null;
       }
-
-      // 4. Needs Onboarding (intro)
-      if (status == AuthSessionStatus.needsOnboarding) {
-        if (loc == AppRoutes.splash || loc == AppRoutes.intro || loc == AppRoutes.language) {
-          return null;
+      // 5. Needs Role Assignment (Signed in, no role selected yet)
+      else if (status == AuthSessionStatus.needsRole) {
+        const allowedRoleSetup = [
+          AppRoutes.roleTree,
+          AppRoutes.language,
+        ];
+        if (!allowedRoleSetup.contains(loc)) {
+          target = AppRoutes.roleTree;
         }
-        return AppRoutes.intro;
       }
-
-      // 5. Needs Role Assignment
-      if (status == AuthSessionStatus.needsRole) {
-        if (loc == AppRoutes.roleTree || loc == AppRoutes.language) {
-          return null;
-        }
-        return AppRoutes.roleTree;
-      }
-
-      // 6. Needs Profile Wizard
-      if (status == AuthSessionStatus.needsProfile) {
+      // 6. Needs Profile Wizard (Signed in, role chosen, wizard incomplete)
+      else if (status == AuthSessionStatus.needsProfile) {
         final profilePath = '/profile-setup/${sessionData.activeRole.name}';
-        if (loc == profilePath || loc == AppRoutes.language) {
-          return null;
+        if (loc != profilePath && loc != AppRoutes.language) {
+          target = profilePath;
         }
-        return profilePath;
       }
-
       // 7. Ready state (Signed in & Onboarded)
-      if (status == AuthSessionStatus.ready) {
+      else if (status == AuthSessionStatus.ready) {
         // Replay pending deep link if present
         if (sessionData.deepLinkPending != null) {
-          final target = sessionData.deepLinkPending!;
+          final pending = sessionData.deepLinkPending!;
           ref.read(appSessionProvider.notifier).setDeepLinkPending(null);
-          if (target != loc && target != AppRoutes.login && target != AppRoutes.splash) {
-            return target;
+          if (pending != loc && pending != AppRoutes.login && pending != AppRoutes.splash) {
+            target = pending;
           }
         }
 
-        // Redirect from root or onboarding/login screens to role home
-        const onboardingOrLogin = [
-          '/',
-          AppRoutes.splash,
-          AppRoutes.intro,
-          AppRoutes.roleTree,
-          AppRoutes.login,
-          AppRoutes.otp,
-          AppRoutes.verifyPhone,
-        ];
-        if (onboardingOrLogin.contains(loc)) {
-          return AppSessionNotifier.getHomeForRole(sessionData.activeRole);
+        if (target == null) {
+          // Redirect from onboarding/login screens to active role home
+          const onboardingOrLogin = [
+            '/',
+            AppRoutes.brandIntro,
+            AppRoutes.splash,
+            AppRoutes.intro,
+            AppRoutes.roleTree,
+            AppRoutes.login,
+            AppRoutes.otp,
+            AppRoutes.verifyPhone,
+          ];
+          if (onboardingOrLogin.contains(loc)) {
+            target = AppSessionNotifier.getHomeForRole(sessionData.activeRole);
+          }
         }
       }
 
-      return null;
+      if (kDebugMode && target != null) {
+        AppLogger.i('Router redirect: loc="$loc" -> target="$target" (status=${status.name}, role=${sessionData.activeRole.name})');
+      }
+
+      return target;
     },
     routes: [
       // 0. Onboarding & Auth Standalone Routes
       GoRoute(
+        path: AppRoutes.brandIntro,
+        pageBuilder: (context, state) => const MaterialPage(
+          key: ValueKey('brand_intro_page'),
+          child: BrandIntroScreen(),
+        ),
+      ),
+      GoRoute(
         path: AppRoutes.splash,
-        builder: (context, state) => const SplashScreen(),
+        pageBuilder: (context, state) => const MaterialPage(
+          key: ValueKey('splash_page'),
+          child: SplashScreen(),
+        ),
       ),
       GoRoute(
         path: AppRoutes.intro,
@@ -162,6 +220,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.suspended,
         builder: (context, state) => const SuspendedScreen(),
       ),
+      GoRoute(
+        path: AppRoutes.roleConflict,
+        builder: (context, state) {
+          final session = ref.read(appSessionProvider);
+          return RoleConflictScreen(
+            existingRole: session.existingRole ?? UserRole.seeker,
+            chosenRole: session.chosenRole ?? UserRole.farmer,
+          );
+        },
+      ),
 
       GoRoute(
         path: AppRoutes.profileSetupSeeker,
@@ -186,11 +254,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: AppRoutes.seekerHome,
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Home Feed & Recommendations',
-                  roleName: 'Job Seeker',
-                  icon: Icons.home_rounded,
-                ),
+                builder: (context, state) => const SeekerHomeScreen(),
               ),
             ],
           ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:udyogasethu/core/config/env.dart';
 import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
@@ -16,12 +17,19 @@ import 'package:udyogasethu/features/onboarding/domain/pending_role_selection.da
 
 final userSettingsProvider = FutureProvider<UserSettings>((ref) async {
   final repo = ref.watch(accountRepositoryProvider);
-  String userId = 'demo-user-id';
+  String? userId;
+  bool isSupabaseInitialized = true;
   try {
     final user = Supabase.instance.client.auth.currentUser;
-    if (user != null) userId = user.id;
-  } catch (_) {}
-  return repo.loadSettings(userId);
+    if (user != null && user.id.isNotEmpty) userId = user.id;
+  } catch (_) {
+    isSupabaseInitialized = false;
+  }
+  if (isSupabaseInitialized && userId == null) {
+    return const UserSettings();
+  }
+  final targetId = userId ?? 'test-user-id';
+  return repo.loadSettings(targetId);
 });
 
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -42,13 +50,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   Future<void> _loadSettings() async {
-    String userId = 'demo-user-id';
+    String? userId;
+    bool isSupabaseInitialized = true;
     try {
       final user = Supabase.instance.client.auth.currentUser;
-      if (user != null) userId = user.id;
-    } catch (_) {}
+      if (user != null && user.id.isNotEmpty) userId = user.id;
+    } catch (_) {
+      isSupabaseInitialized = false;
+    }
 
-    final loaded = await ref.read(accountRepositoryProvider).loadSettings(userId);
+    if (isSupabaseInitialized && userId == null) {
+      if (mounted) setState(() => _isLoading = false);
+      return;
+    }
+
+    final targetId = userId ?? 'test-user-id';
+    final loaded = await ref.read(accountRepositoryProvider).loadSettings(targetId);
     if (mounted) {
       setState(() {
         _settings = loaded;
@@ -59,12 +76,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   Future<void> _saveSettings(UserSettings updated) async {
     setState(() => _settings = updated);
-    String userId = 'demo-user-id';
+    String? userId;
     try {
       final user = Supabase.instance.client.auth.currentUser;
-      if (user != null) userId = user.id;
+      if (user != null && user.id.isNotEmpty) userId = user.id;
     } catch (_) {}
 
+    if (userId == null) return;
     await ref.read(accountRepositoryProvider).saveSettings(userId: userId, settings: updated);
   }
 
@@ -178,13 +196,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     child: Column(
                       children: [
-                        ListTile(
-                          leading: const Icon(Icons.swap_horiz_rounded, color: AppColors.headerGreenDark),
-                          title: const Text('Role Switcher & Add Role'),
-                          subtitle: Text('Active: ${session.activeRole.name.toUpperCase()}'),
-                          trailing: const Icon(Icons.chevron_right_rounded),
-                          onTap: () => RoleSwitcherBottomSheet.show(context),
-                        ),
+                        if (kAllowMultiRole) ...[
+                          ListTile(
+                            leading: const Icon(Icons.swap_horiz_rounded, color: AppColors.headerGreenDark),
+                            title: const Text('Role Switcher & Add Role'),
+                            subtitle: Text('Active: ${session.activeRole.name.toUpperCase()}'),
+                            trailing: const Icon(Icons.chevron_right_rounded),
+                            onTap: () => RoleSwitcherBottomSheet.show(context),
+                          ),
+                          const Divider(height: 1),
+                        ],
                         if (session.activeRole == UserRole.seeker) ...[
                           const Divider(height: 1),
                           ListTile(

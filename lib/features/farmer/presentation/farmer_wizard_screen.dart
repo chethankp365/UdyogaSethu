@@ -174,6 +174,19 @@ class _FarmerWizardScreenState extends ConsumerState<FarmerWizardScreen> {
                           icon: step == 5 ? Icons.check_circle_rounded : Icons.arrow_forward_rounded,
                           isLoading: state.isSaving,
                           onPressed: () async {
+                            if (step == 1 && state.draft.fullName.trim().isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Please enter your full name.')),
+                              );
+                              return;
+                            }
+                            if (step == 2 && state.draft.farmName.trim().isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Please enter your farm name.')),
+                              );
+                              return;
+                            }
+
                             final success = await ref.read(farmerWizardProvider.notifier).nextStep();
                             if (success && step == 5 && context.mounted) {
                               context.go(AppRoutes.farmerHome);
@@ -302,8 +315,12 @@ class _FarmerWizardScreenState extends ConsumerState<FarmerWizardScreen> {
             return FilterChip(
               selected: isSelected,
               label: Text(item['label']!),
-              selectedColor: AppColors.headerGreenDark.withValues(alpha: 0.2),
+              selectedColor: AppColors.paleMint,
               checkmarkColor: AppColors.headerGreenDark,
+              labelStyle: TextStyle(
+                color: isSelected ? AppColors.headerGreenDark : AppColors.textDark,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              ),
               onSelected: (selected) {
                 final list = List<String>.from(draft.languages);
                 if (selected) {
@@ -456,9 +473,15 @@ class _FarmerWizardScreenState extends ConsumerState<FarmerWizardScreen> {
             final isSelected = draft.primaryCrops.contains(crop);
             return FilterChip(
               selected: isSelected,
-              label: Text(crop),
-              selectedColor: AppColors.amberOrange.withValues(alpha: 0.2),
-              checkmarkColor: AppColors.amberOrange,
+              label: Text(
+                crop,
+                style: TextStyle(
+                  color: isSelected ? AppColors.headerGreenDark : AppColors.textDark,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                ),
+              ),
+              selectedColor: AppColors.paleMint,
+              checkmarkColor: AppColors.headerGreenDark,
               onSelected: (selected) {
                 final list = List<String>.from(draft.primaryCrops);
                 if (selected) {
@@ -486,8 +509,16 @@ class _FarmerWizardScreenState extends ConsumerState<FarmerWizardScreen> {
     return Expanded(
       child: ChoiceChip(
         selected: isSelected,
-        label: Text(label, style: TextStyle(fontSize: 12, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
-        selectedColor: AppColors.headerGreenDark.withValues(alpha: 0.2),
+        label: Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            color: isSelected ? AppColors.headerGreenDark : AppColors.textDark,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+        selectedColor: AppColors.paleMint,
+        checkmarkColor: AppColors.headerGreenDark,
         onSelected: (selected) {
           if (selected) {
             ref.read(farmerWizardProvider.notifier).updateDraft((d) => d.copyWith(farmingMethod: value));
@@ -642,8 +673,16 @@ class _FarmerWizardScreenState extends ConsumerState<FarmerWizardScreen> {
     final isSelected = value == selectedValue;
     return ChoiceChip(
       selected: isSelected,
-      label: Text(label, style: TextStyle(fontSize: 12, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
-      selectedColor: AppColors.headerGreenDark.withValues(alpha: 0.2),
+      label: Text(
+        label,
+        style: TextStyle(
+          fontSize: 12,
+          color: isSelected ? AppColors.headerGreenDark : AppColors.textDark,
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      selectedColor: AppColors.paleMint,
+      checkmarkColor: AppColors.headerGreenDark,
       onSelected: (selected) {
         if (selected) {
           ref.read(farmerWizardProvider.notifier).updateDraft((d) => d.copyWith(kccStatus: value));

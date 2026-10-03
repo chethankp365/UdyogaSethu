@@ -16,9 +16,9 @@ void main() {
       container.dispose();
     });
 
-    test('Initial status defaults to ready with seeker activeRole', () {
+    test('Initial status defaults to booting with seeker activeRole', () {
       final session = container.read(appSessionProvider);
-      expect(session.status, AuthSessionStatus.ready);
+      expect(session.status, AuthSessionStatus.booting);
       expect(session.activeRole, UserRole.seeker);
     });
 

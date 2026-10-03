@@ -282,7 +282,11 @@
   "grantGpsPermission": "Grant Location Permission",
   "grantNotificationsPermission": "Grant Notifications Permission",
   "permissionGranted": "Permission Granted",
-  "providerHomeTitle": "Provider Home"
+  "providerHomeTitle": "Provider Home",
+  "roleConflictTitle": "Account Role Conflict",
+  "roleConflictMessage": "This number is already registered as {existingRole}. You cannot use it as {chosenRole}. To use a different role, log in as {existingRole}, go to Profile > Settings > Delete account, and then create a new account.",
+  "roleConflictLoginAs": "Log in as {existingRole}",
+  "roleConflictBack": "Back"
 }
 
 

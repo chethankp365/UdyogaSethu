@@ -10,6 +10,7 @@ enum AuthSessionStatus {
   needsProfile,
   ready,
   suspended,
+  roleConflict,
 }
 
 /// Enum representing the active user role shell.
@@ -26,13 +27,17 @@ class AppSessionData {
   final List<UserRole> assignedRoles;
   final String? seekerType;
   final String? deepLinkPending;
+  final UserRole? existingRole;
+  final UserRole? chosenRole;
 
   const AppSessionData({
-    this.status = AuthSessionStatus.ready,
+    this.status = AuthSessionStatus.booting,
     this.activeRole = UserRole.seeker,
-    this.assignedRoles = const [UserRole.seeker],
+    this.assignedRoles = const [],
     this.seekerType,
     this.deepLinkPending,
+    this.existingRole,
+    this.chosenRole,
   });
 
   AppSessionData copyWith({
@@ -42,6 +47,8 @@ class AppSessionData {
     String? seekerType,
     String? deepLinkPending,
     bool clearDeepLink = false,
+    UserRole? existingRole,
+    UserRole? chosenRole,
   }) {
     return AppSessionData(
       status: status ?? this.status,
@@ -49,6 +56,8 @@ class AppSessionData {
       assignedRoles: assignedRoles ?? this.assignedRoles,
       seekerType: seekerType ?? this.seekerType,
       deepLinkPending: clearDeepLink ? null : (deepLinkPending ?? this.deepLinkPending),
+      existingRole: existingRole ?? this.existingRole,
+      chosenRole: chosenRole ?? this.chosenRole,
     );
   }
 }
@@ -58,8 +67,9 @@ class AppSessionNotifier extends Notifier<AppSessionData> {
   @override
   AppSessionData build() {
     return const AppSessionData(
-      status: AuthSessionStatus.ready,
+      status: AuthSessionStatus.booting,
       activeRole: UserRole.seeker,
+      assignedRoles: [],
     );
   }
 
@@ -83,12 +93,16 @@ class AppSessionNotifier extends Notifier<AppSessionData> {
     UserRole? role,
     List<UserRole>? assignedRoles,
     String? seekerType,
+    UserRole? existingRole,
+    UserRole? chosenRole,
   }) {
     state = state.copyWith(
       status: status,
       activeRole: role,
       assignedRoles: assignedRoles,
       seekerType: seekerType,
+      existingRole: existingRole,
+      chosenRole: chosenRole,
     );
   }
 

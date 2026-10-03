@@ -211,13 +211,24 @@ class ServiceCategoryItem {
   final String slug;
   final Map<String, dynamic> names;
   final String? icon;
+  final List<String> audience;
 
   const ServiceCategoryItem({
     required this.id,
     required this.slug,
     required this.names,
     this.icon,
+    this.audience = const ['informal'],
   });
+
+  bool matchesSeekerType(String? seekerType) {
+    if (seekerType == 'student') {
+      return audience.contains('student');
+    } else if (seekerType == 'part_time') {
+      return audience.contains('part_time') || audience.contains('student');
+    }
+    return audience.contains('informal') || audience.isEmpty;
+  }
 
   String getLocalizedName(String langCode) {
     if (names.containsKey(langCode) && names[langCode].toString().isNotEmpty) {

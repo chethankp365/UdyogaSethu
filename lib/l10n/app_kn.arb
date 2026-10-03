@@ -282,7 +282,11 @@
   "grantGpsPermission": "ಸ್ಥಳ ಅನುಮತಿ ನೀಡಿ",
   "grantNotificationsPermission": "ನೋಟಿಫಿಕೇಶನ್ ಅನುಮತಿ ನೀಡಿ",
   "permissionGranted": "ಅನುಮತಿ ನೀಡಲಾಗಿದೆ",
-  "providerHomeTitle": "ಯಜಮಾನರ ಮುಖಪುಟ"
+  "providerHomeTitle": "ಯಜಮಾನರ ಮುಖಪುಟ",
+  "roleConflictTitle": "ಖಾತೆ ಪಾತ್ರದ ಸಂಘರ್ಷ",
+  "roleConflictMessage": "ಈ ಸಂಖ್ಯೆಯು ಈಗಾಗಲೇ {existingRole} ಆಗಿ ನೋಂದಾಯಿಸಲ್ಪಟ್ಟಿದೆ. ನೀವು ಇದನ್ನು {chosenRole} ಆಗಿ ಬಳಸಲಾಗುವುದಿಲ್ಲ. ಬೇರೆ ಪಾತ್ರವನ್ನು ಬಳಸಲು, {existingRole} ಆಗಿ ಲಾಗಿನ್ ಮಾಡಿ, ಪ್ರೊಫೈಲ್ > ಸೆಟ್ಟಿಂಗ್‌ಗಳು > ಖಾತೆ ಅಳಿಸಿ ಗೆ ಹೋಗಿ, ನಂತರ ಹೊಸ ಖಾತೆಯನ್ನು ರಚಿಸಿ.",
+  "roleConflictLoginAs": "{existingRole} ಆಗಿ ಲಾಗಿನ್ ಮಾಡಿ",
+  "roleConflictBack": "ಹಿಂತಿರುಗಿ"
 }
 
 

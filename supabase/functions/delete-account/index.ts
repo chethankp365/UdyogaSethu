@@ -8,15 +8,17 @@ Deno.serve(async (req: Request) => {
   if (corsRes) return corsRes;
 
   try {
+    // 1. Verify caller authentication using request JWT header
     const auth = await getUserClient(req);
     if (auth.errorResponse) return auth.errorResponse;
 
     const userId = auth.context!.user.id;
+    const userClient = auth.context!.supabase;
     logInfo('delete_account_initiated', { userId });
 
     const serviceClient = getServiceClient();
 
-    // 1. Storage Cleanup: list and remove user files in avatars and kyc-docs
+    // 2. Storage Cleanup: list and remove user files in avatars and kyc-docs using service role
     const buckets = ['avatars', 'kyc-docs'];
     for (const bucket of buckets) {
       try {
@@ -31,21 +33,21 @@ Deno.serve(async (req: Request) => {
       }
     }
 
-    // 2. Anonymize/delete database profile and role rows via RPC
-    const { error: rpcErr } = await serviceClient.rpc('anonymize_and_delete_user_data', {
+    // 3. Anonymize/delete database profile and role rows via RPC using user's client (so auth.uid() matches)
+    const { error: rpcErr } = await userClient.rpc('anonymize_and_delete_user_data', {
       p_target_user_id: userId,
     });
 
     if (rpcErr) {
       logError('anonymize_rpc_failed', rpcErr);
-      return errorResponse('db_error', `Failed to delete user profile rows: ${rpcErr.message}`, 500);
+      return errorResponse('db_error', 'Failed to delete user profile data. Please try again.', 500);
     }
 
-    // 3. Delete Auth User from Supabase Auth Admin API
+    // 4. Delete Auth User from Supabase Auth Admin API only after RPC succeeds
     const { error: authDeleteErr } = await serviceClient.auth.admin.deleteUser(userId);
     if (authDeleteErr) {
       logError('auth_admin_delete_failed', authDeleteErr);
-      // Even if admin delete fails (e.g. mock environment), database data is erased
+      return errorResponse('auth_delete_failed', 'Failed to delete user authentication account. Please try again.', 500);
     }
 
     logInfo('delete_account_completed', { userId });
@@ -56,6 +58,6 @@ Deno.serve(async (req: Request) => {
     });
   } catch (err) {
     logError('delete_account_failed', err);
-    return errorResponse('internal_error', 'Internal server error during account deletion', 500);
+    return errorResponse('internal_error', 'An internal error occurred during account deletion. Please try again.', 500);
   }
 });

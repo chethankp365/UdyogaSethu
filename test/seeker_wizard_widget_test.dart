@@ -85,4 +85,72 @@ void main() {
     expect(find.text('Step 3 of 7'), findsOneWidget);
     expect(find.text('Experience & Rate'), findsOneWidget);
   });
+
+  testWidgets('SeekerWizardScreen Step 2 allows category/skill selection and custom skill entry', (WidgetTester tester) async {
+    final fakeRepo = FakeSeekerProfileRepository();
+    fakeRepo.draft = fakeRepo.draft.copyWith(currentStep: 2, fullName: 'Skill Tester');
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          seekerProfileRepositoryProvider.overrideWithValue(fakeRepo),
+          categoriesProvider.overrideWith((ref) async => fakeRepo.fetchCategories()),
+          skillsProvider.overrideWith((ref) async => fakeRepo.fetchSkills()),
+        ],
+        child: const MaterialApp(
+          localizationsDelegates: [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SeekerWizardScreen(),
+        ),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    // Verify Step 2 rendered
+    expect(find.text('Step 2 of 7'), findsOneWidget);
+    expect(find.text('Skills & Interests'), findsOneWidget);
+
+    // Verify categories from repo are shown
+    expect(find.text('Construction'), findsOneWidget);
+
+    // Tap Construction category chip to reveal skills
+    await tester.tap(find.text('Construction'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Plumbing'), findsOneWidget);
+    expect(find.text('Masonry'), findsOneWidget);
+
+    // Tap Masonry skill chip
+    await tester.tap(find.text('Masonry'));
+    await tester.pump(const Duration(milliseconds: 100));
+
+    // Enter custom skill
+    final customSkillField = find.byType(TextField).first;
+    expect(customSkillField, findsOneWidget);
+    await tester.enterText(customSkillField, 'Custom Welding');
+    final addSkillBtn = find.text('Add Skill');
+    await tester.ensureVisible(addSkillBtn);
+    await tester.tap(addSkillBtn);
+    await tester.pump(const Duration(milliseconds: 100));
+
+    // Verify custom skill chip appears
+    expect(find.text('Custom Welding'), findsOneWidget);
+
+    // Tap Continue -> Step 3
+    final continueBtn = find.text('Continue ->');
+    await tester.ensureVisible(continueBtn);
+    await tester.tap(continueBtn);
+    await tester.pump(const Duration(milliseconds: 500));
+
+    // Verify Step 3 reached and skills saved in repository
+    expect(fakeRepo.draft.currentStep, equals(3));
+    expect(fakeRepo.draft.selectedSkillIds, contains('skill-1'));
+    expect(fakeRepo.draft.selectedSkillIds, contains('Custom Welding'));
+  });
 }

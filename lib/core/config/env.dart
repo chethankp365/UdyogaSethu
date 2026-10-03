@@ -24,10 +24,17 @@ class Env {
     return '147218087454-84onmnof89drjjktvenajia8qp3p0g3l.apps.googleusercontent.com';
   }
 
+  /// Feature Flag: ONE ACCOUNT = ONE ROLE policy (D4).
+  /// Set to false by default. Set to true to re-enable multi-role switching.
+  static const bool allowMultiRole = false;
+
   /// Returns true if valid Supabase configuration is available.
   static bool get isConfigured =>
       supabaseUrl.trim().isNotEmpty && supabaseAnonKey.trim().isNotEmpty;
 }
+
+/// Global feature flag constant matching Env.allowMultiRole
+const bool kAllowMultiRole = Env.allowMultiRole;
 
 /// A human-readable error screen shown when required environment variables are missing.
 class MissingEnvScreen extends StatelessWidget {

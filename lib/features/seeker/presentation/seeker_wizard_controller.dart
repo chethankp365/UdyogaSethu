@@ -1,8 +1,12 @@
+import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:udyogasethu/core/errors/app_exception.dart';
+import 'package:udyogasethu/core/router/app_session.dart';
+import 'package:udyogasethu/features/onboarding/data/bootstrap_service.dart';
 import 'package:udyogasethu/features/seeker/data/seeker_profile_repository.dart';
 import 'package:udyogasethu/features/seeker/domain/seeker_profile_draft.dart';
 
@@ -66,17 +70,16 @@ class SeekerWizardNotifier extends Notifier<AsyncValue<SeekerWizardState>> {
 
   Future<void> _init() async {
     try {
-      String userId = 'demo-user-id';
+      String? userId;
       try {
         final user = Supabase.instance.client.auth.currentUser;
         if (user != null && user.id.isNotEmpty) {
           userId = user.id;
         }
-      } catch (_) {
-        // Fallback for uninitialized Supabase client in unit tests
-      }
+      } catch (_) {}
 
-      final draft = await _repository.loadDraft(userId);
+      final targetId = userId ?? 'test-user-id';
+      final draft = await _repository.loadDraft(targetId);
       state = AsyncValue.data(SeekerWizardState(draft: draft));
     } catch (e, stack) {
       AppLogger.e('Failed to load seeker wizard state', e, stack);
@@ -128,18 +131,45 @@ class SeekerWizardNotifier extends Notifier<AsyncValue<SeekerWizardState>> {
         return true;
       } else {
         // Complete wizard
+        if (kDebugMode) {
+          final beforeSession = ref.read(appSessionProvider);
+          AppLogger.d('completeWizard() start: role=seeker, AppSession status before=${beforeSession.status}');
+        }
         await _repository.completeWizard(draft);
+        if (kDebugMode) {
+          AppLogger.d('completeWizard() DB update succeeded for seeker');
+        }
+
+        // Refresh bootstrap state & update global AppSession to ready
+        ref.read(appSessionProvider.notifier).updateSession(
+          status: AuthSessionStatus.ready,
+          role: UserRole.seeker,
+          seekerType: draft.seekerType,
+        );
+        unawaited(ref.read(bootstrapProvider.notifier).runBootstrap().catchError((e, s) {
+          if (kDebugMode) {
+            AppLogger.w('Background bootstrap refresh error: $e');
+          }
+        }));
+
+        if (kDebugMode) {
+          final afterSession = ref.read(appSessionProvider);
+          AppLogger.d('completeWizard() finished: AppSession status after=${afterSession.status}, activeRole=${afterSession.activeRole}');
+        }
+
         state = AsyncValue.data(currentState.copyWith(
           draft: draft.copyWith(onboardingComplete: true),
           isSaving: false,
         ));
         return true;
       }
-    } catch (e) {
-      AppLogger.e('Failed to save wizard step', e, StackTrace.current);
+    } catch (e, stack) {
+      if (kDebugMode) {
+        AppLogger.e('Failed to complete seeker wizard: $e', e, stack);
+      }
       state = AsyncValue.data(currentState.copyWith(
         isSaving: false,
-        errorMessage: e.toString(),
+        errorMessage: 'Failed to complete profile. ${e is AppException ? e.message : e.toString()}',
       ));
       return false;
     }
@@ -199,6 +229,12 @@ class SeekerWizardNotifier extends Notifier<AsyncValue<SeekerWizardState>> {
         uploadError: e.toString(),
       ));
     }
+  }
+
+  void setUploadError(String error) {
+    final currentState = state.value;
+    if (currentState == null) return;
+    state = AsyncValue.data(currentState.copyWith(isSaving: false, uploadError: error));
   }
 
   Future<void> logGpsConsent() async {

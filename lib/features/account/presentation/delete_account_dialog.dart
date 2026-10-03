@@ -160,7 +160,7 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: AppColors.errorRed, foregroundColor: Colors.white),
               onPressed: _executeDeletion,
-              child: const Text('Permanently Delete'),
+              child: Text(_errorMessage != null ? 'Retry Deletion' : 'Permanently Delete'),
             ),
         ],
       ],

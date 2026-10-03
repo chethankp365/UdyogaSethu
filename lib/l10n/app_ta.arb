@@ -282,7 +282,11 @@
   "grantGpsPermission": "இருப்பிட அனுமதி அளிக்கவும்",
   "grantNotificationsPermission": "அறிவிப்பு அனுமதி அளிக்கவும்",
   "permissionGranted": "அனுமதி அளிக்கப்பட்டது",
-  "providerHomeTitle": "வழங்குநர் முகப்பு"
+  "providerHomeTitle": "வழங்குநர் முகப்பு",
+  "roleConflictTitle": "கணக்கு பங்கு முரண்பாடு",
+  "roleConflictMessage": "இந்த எண் ஏற்கனவே {existingRole} ஆக பதிவு செய்யப்பட்டுள்ளது. இதை நீங்கள் {chosenRole} ஆக பயன்படுத்த முடியாது. வேறு பங்கைப் பயன்படுத்த, {existingRole} ஆக உள்நுழைந்து, சுயவிவரம் > அமைப்புகள் > கணக்கை நீக்கு பகுதிக்குச் சென்று, புதிய கணக்கை உருவாக்கவும்.",
+  "roleConflictLoginAs": "{existingRole} ஆக உள்நுழைக",
+  "roleConflictBack": "பின்செல்க"
 }
 
 

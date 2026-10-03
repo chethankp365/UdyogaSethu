@@ -207,15 +207,17 @@ class SupabaseSeekerProfileRepository implements SeekerProfileRepository {
     try {
       final res = await _client
           .from('service_categories')
-          .select('id, slug, names, icon')
+          .select('id, slug, names, icon, audience')
           .order('sort');
 
       return (res as List).map((row) {
+        final audList = (row['audience'] as List?)?.map((e) => e.toString()).toList() ?? const ['informal'];
         return ServiceCategoryItem(
           id: row['id'].toString(),
           slug: row['slug'].toString(),
           names: row['names'] as Map<String, dynamic>? ?? {'en': row['slug']},
           icon: row['icon'] as String?,
+          audience: audList,
         );
       }).toList();
     } catch (e, stack) {
@@ -279,6 +281,11 @@ class SupabaseSeekerProfileRepository implements SeekerProfileRepository {
   Future<void> completeWizard(SeekerProfileDraft draft) async {
     try {
       await saveStep(draft, 7);
+      await _client.from('worker_profiles').update({
+        'is_wizard_complete': true,
+        'updated_at': DateTime.now().toIso8601String(),
+      }).eq('user_id', draft.userId);
+
       await _client.from('profiles').update({
         'onboarding_complete': true,
         'updated_at': DateTime.now().toIso8601String(),

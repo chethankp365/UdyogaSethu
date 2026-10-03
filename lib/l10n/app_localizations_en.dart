@@ -956,4 +956,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get providerHomeTitle => 'Provider Home';
+
+  @override
+  String get roleConflictTitle => 'Account Role Conflict';
+
+  @override
+  String roleConflictMessage(Object chosenRole, Object existingRole) {
+    return 'This number is already registered as $existingRole. You cannot use it as $chosenRole. To use a different role, log in as $existingRole, go to Profile > Settings > Delete account, and then create a new account.';
+  }
+
+  @override
+  String roleConflictLoginAs(Object existingRole) {
+    return 'Log in as $existingRole';
+  }
+
+  @override
+  String get roleConflictBack => 'Back';
 }

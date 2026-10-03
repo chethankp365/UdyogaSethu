@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/l10n/locale_controller.dart';
 import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/core/router/routes.dart';
@@ -105,28 +107,69 @@ class _RoleTreeScreenState extends ConsumerState<RoleTreeScreen> {
     }
   }
 
-  void _handleContinue(RoleTreeState state) {
+  Future<void> _handleContinue(RoleTreeState state) async {
     final notifier = ref.read(roleTreeProvider.notifier);
+
+    UserRole? selectedRole;
+    SeekerType? selectedSeekerType;
 
     if (state.currentStep == 1) {
       if (state.selectedCategory == 'farmer') {
-        ref.read(appSessionProvider.notifier).setRole(UserRole.farmer);
-        context.go(AppRoutes.login);
+        selectedRole = UserRole.farmer;
       } else if (state.selectedCategory == 'worker') {
         notifier.confirmStep1();
+        return;
       }
     } else if (state.currentStep == 2) {
       if (state.selectedRole == UserRole.provider) {
-        ref.read(appSessionProvider.notifier).setRole(UserRole.provider);
-        context.go(AppRoutes.login);
+        selectedRole = UserRole.provider;
       } else if (state.selectedRole == UserRole.seeker) {
         notifier.confirmStep2();
+        return;
       }
     } else if (state.currentStep == 3) {
       if (state.selectedSeekerType != null) {
-        ref.read(appSessionProvider.notifier).setRole(UserRole.seeker);
-        context.go(AppRoutes.login);
+        selectedRole = UserRole.seeker;
+        selectedSeekerType = state.selectedSeekerType;
       }
+    }
+
+    if (selectedRole == null) return;
+
+    final user = Supabase.instance.client.auth.currentUser;
+
+    if (user != null) {
+      // User is SIGNED IN (e.g. Google-first user) -> Apply role selection via RPC & go to wizard
+      try {
+        await Supabase.instance.client.rpc('apply_role_selection', params: {
+          'p_role': selectedRole.name,
+          'p_seeker_type': selectedSeekerType?.name,
+        });
+
+        ref.read(appSessionProvider.notifier).updateSession(
+          status: AuthSessionStatus.needsProfile,
+          role: selectedRole,
+          assignedRoles: [selectedRole],
+          seekerType: selectedSeekerType?.name,
+        );
+
+        if (mounted) {
+          context.go('/profile-setup/${selectedRole.name}');
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(kDebugMode ? 'Failed to apply role: $e' : 'Failed to save role. Please try again.'),
+              backgroundColor: AppColors.sosRed,
+            ),
+          );
+        }
+      }
+    } else {
+      // User is SIGNED OUT -> Set role in appSession and navigate to Login
+      ref.read(appSessionProvider.notifier).setRole(selectedRole);
+      context.go(AppRoutes.login);
     }
   }
 
@@ -389,7 +432,21 @@ class _RoleTreeScreenState extends ConsumerState<RoleTreeScreen> {
                       ),
                       TextButton(
                         key: const Key('directLoginButton'),
-                        onPressed: () => context.go(AppRoutes.login),
+                        onPressed: () {
+                          final user = Supabase.instance.client.auth.currentUser;
+                          final session = ref.read(appSessionProvider);
+                          if (user != null && session.status != AuthSessionStatus.signedOut) {
+                            if (session.status == AuthSessionStatus.needsProfile) {
+                              context.go('/profile-setup/${session.activeRole.name}');
+                            } else if (session.status == AuthSessionStatus.ready) {
+                              context.go(AppSessionNotifier.getHomeForRole(session.activeRole));
+                            } else {
+                              context.go(AppRoutes.login);
+                            }
+                          } else {
+                            context.go(AppRoutes.login);
+                          }
+                        },
                         child: Text(
                           l10n.loginLink,
                           style: AppTypography.button(AppColors.headerGreenDark).copyWith(

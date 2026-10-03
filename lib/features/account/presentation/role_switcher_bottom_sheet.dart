@@ -97,13 +97,10 @@ class RoleSwitcherBottomSheet extends ConsumerWidget {
                           ? const Icon(Icons.check_circle_rounded, color: AppColors.headerGreenDark)
                           : null,
                       onTap: () async {
-                        String userId = 'demo-user-id';
-                        try {
-                          final user = Supabase.instance.client.auth.currentUser;
-                          if (user != null) userId = user.id;
-                        } catch (_) {}
+                        final user = Supabase.instance.client.auth.currentUser;
+                        if (user == null || user.id.isEmpty) return;
 
-                        await ref.read(accountRepositoryProvider).switchActiveRole(userId: userId, role: role);
+                        await ref.read(accountRepositoryProvider).switchActiveRole(userId: user.id, role: role);
                         ref.read(appSessionProvider.notifier).setRole(role);
                         if (context.mounted) {
                           Navigator.of(context).pop();
@@ -135,13 +132,10 @@ class RoleSwitcherBottomSheet extends ConsumerWidget {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   onPressed: () async {
-                    String userId = 'demo-user-id';
-                    try {
-                      final user = Supabase.instance.client.auth.currentUser;
-                      if (user != null) userId = user.id;
-                    } catch (_) {}
+                    final user = Supabase.instance.client.auth.currentUser;
+                    if (user == null || user.id.isEmpty) return;
 
-                    await ref.read(accountRepositoryProvider).addRole(userId: userId, role: role);
+                    await ref.read(accountRepositoryProvider).addRole(userId: user.id, role: role);
                     final newAssigned = [...assignedRoles, role];
                     ref.read(appSessionProvider.notifier).updateSession(
                           role: role,

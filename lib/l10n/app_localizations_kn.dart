@@ -965,4 +965,20 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get providerHomeTitle => 'ಯಜಮಾನರ ಮುಖಪುಟ';
+
+  @override
+  String get roleConflictTitle => 'ಖಾತೆ ಪಾತ್ರದ ಸಂಘರ್ಷ';
+
+  @override
+  String roleConflictMessage(Object chosenRole, Object existingRole) {
+    return 'ಈ ಸಂಖ್ಯೆಯು ಈಗಾಗಲೇ $existingRole ಆಗಿ ನೋಂದಾಯಿಸಲ್ಪಟ್ಟಿದೆ. ನೀವು ಇದನ್ನು $chosenRole ಆಗಿ ಬಳಸಲಾಗುವುದಿಲ್ಲ. ಬೇರೆ ಪಾತ್ರವನ್ನು ಬಳಸಲು, $existingRole ಆಗಿ ಲಾಗಿನ್ ಮಾಡಿ, ಪ್ರೊಫೈಲ್ > ಸೆಟ್ಟಿಂಗ್‌ಗಳು > ಖಾತೆ ಅಳಿಸಿ ಗೆ ಹೋಗಿ, ನಂತರ ಹೊಸ ಖಾತೆಯನ್ನು ರಚಿಸಿ.';
+  }
+
+  @override
+  String roleConflictLoginAs(Object existingRole) {
+    return '$existingRole ಆಗಿ ಲಾಗಿನ್ ಮಾಡಿ';
+  }
+
+  @override
+  String get roleConflictBack => 'ಹಿಂತಿರುಗಿ';
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:udyogasethu/core/config/env.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/widgets/compact_language_selector.dart';
@@ -10,14 +11,19 @@ import 'package:udyogasethu/features/farmer/presentation/farmer_wizard_controlle
 
 final farmerHomeProfileProvider = FutureProvider<FarmerProfileDraft>((ref) async {
   final repo = ref.watch(farmerProfileRepositoryProvider);
-  String userId = 'demo-user-id';
+  String? userId;
+  bool isSupabaseInitialized = true;
   try {
     final user = Supabase.instance.client.auth.currentUser;
-    if (user != null) {
-      userId = user.id;
-    }
-  } catch (_) {}
-  return repo.loadDraft(userId);
+    if (user != null && user.id.isNotEmpty) userId = user.id;
+  } catch (_) {
+    isSupabaseInitialized = false;
+  }
+  if (isSupabaseInitialized && userId == null) {
+    return const FarmerProfileDraft(userId: '');
+  }
+  final targetId = userId ?? 'test-user-id';
+  return repo.loadDraft(targetId);
 });
 
 class FarmerHomeScreen extends ConsumerWidget {
@@ -35,11 +41,12 @@ class FarmerHomeScreen extends ConsumerWidget {
         elevation: 0,
         title: const Text('Farmer Home', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.swap_horiz_rounded),
-            tooltip: 'Switch Role',
-            onPressed: () => context.push(AppRoutes.devRole),
-          ),
+          if (kAllowMultiRole)
+            IconButton(
+              icon: const Icon(Icons.swap_horiz_rounded),
+              tooltip: 'Switch Role',
+              onPressed: () => context.push(AppRoutes.devRole),
+            ),
           const CompactLanguageSelector(),
           IconButton(
             icon: const Icon(Icons.logout_rounded),
@@ -62,6 +69,7 @@ class FarmerHomeScreen extends ConsumerWidget {
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (err, stack) => Center(child: Text('Error loading farm data: $err')),
             data: (draft) {
+              final hasProfile = draft.farmName.isNotEmpty || draft.fullName.isNotEmpty;
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -74,62 +82,106 @@ class FarmerHomeScreen extends ConsumerWidget {
                   const Text('Manage your farm profile, produce listings, and mandi prices.', style: TextStyle(color: AppColors.textMuted)),
                   const SizedBox(height: 16),
 
-                  // ACTIVE FARM CARD
-                  Card(
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        gradient: LinearGradient(
-                          colors: [Colors.white, AppColors.headerGreenDark.withValues(alpha: 0.04)],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
+                  if (!hasProfile) ...[
+                    // EMPTY PROFILE CARD CTA
+                    Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      child: Container(
+                        padding: const EdgeInsets.all(20),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: AppColors.paleMint,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: AppColors.cardBorderGreen),
+                        ),
+                        child: Column(
+                          children: [
+                            const Icon(Icons.agriculture_rounded, size: 48, color: AppColors.headerGreenDark),
+                            const SizedBox(height: 12),
+                            const Text(
+                              'Set Up Your Farm Profile',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.headerGreenDark),
+                            ),
+                            const SizedBox(height: 6),
+                            const Text(
+                              'Add your farm name, location, primary crops and registrations to start listing produce.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 13, color: AppColors.textMuted),
+                            ),
+                            const SizedBox(height: 16),
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.headerGreenDark,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              ),
+                              onPressed: () => context.go(AppRoutes.profileSetupFarmer),
+                              icon: const Icon(Icons.edit_rounded, size: 18),
+                              label: const Text('Complete Farmer Profile', style: TextStyle(fontWeight: FontWeight.bold)),
+                            ),
+                          ],
                         ),
                       ),
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 32,
-                                backgroundColor: AppColors.headerGreenDark.withValues(alpha: 0.15),
-                                backgroundImage: draft.avatarUrl != null ? NetworkImage(draft.avatarUrl!) : null,
-                                child: draft.avatarUrl == null
-                                    ? const Icon(Icons.agriculture_rounded, size: 36, color: AppColors.headerGreenDark)
-                                    : null,
-                              ),
-                              const SizedBox(width: 14),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      draft.farmName.isNotEmpty ? draft.farmName : 'My Farm',
-                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                                    ),
-                                    Text(
-                                      '${draft.clusterVillage.isNotEmpty ? draft.clusterVillage : "Village"} • ${draft.acres.toStringAsFixed(1)} Acres',
-                                      style: const TextStyle(color: AppColors.headerGreenDark, fontWeight: FontWeight.bold, fontSize: 14),
-                                    ),
-                                    if (draft.farmLatitude != null && draft.farmLongitude != null)
-                                      Text(
-                                        'GPS: ${draft.farmLatitude!.toStringAsFixed(4)}, ${draft.farmLongitude!.toStringAsFixed(4)}',
-                                        style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.edit_rounded, color: AppColors.headerGreenDark),
-                                tooltip: 'Edit Farm Profile',
-                                onPressed: () => context.go(AppRoutes.profileSetupFarmer),
-                              ),
-                            ],
+                    ),
+                  ] else ...[
+                    // ACTIVE FARM CARD
+                    Card(
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          gradient: LinearGradient(
+                            colors: [Colors.white, AppColors.headerGreenDark.withValues(alpha: 0.04)],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
                           ),
-                          const Divider(height: 24),
+                        ),
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 32,
+                                  backgroundColor: AppColors.headerGreenDark.withValues(alpha: 0.15),
+                                  backgroundImage: draft.avatarUrl != null ? NetworkImage(draft.avatarUrl!) : null,
+                                  child: draft.avatarUrl == null
+                                      ? const Icon(Icons.agriculture_rounded, size: 36, color: AppColors.headerGreenDark)
+                                      : null,
+                                ),
+                                const SizedBox(width: 14),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        draft.farmName,
+                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                                      ),
+                                      Text(
+                                        '${draft.clusterVillage.isNotEmpty ? draft.clusterVillage : "No village added"} • ${draft.acres > 0 ? "${draft.acres.toStringAsFixed(1)} Acres" : "Area unspecified"}',
+                                        style: const TextStyle(color: AppColors.headerGreenDark, fontWeight: FontWeight.bold, fontSize: 14),
+                                      ),
+                                      if (draft.farmLatitude != null && draft.farmLongitude != null)
+                                        Text(
+                                          'GPS: ${draft.farmLatitude!.toStringAsFixed(4)}, ${draft.farmLongitude!.toStringAsFixed(4)}',
+                                          style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.edit_rounded, color: AppColors.headerGreenDark),
+                                  tooltip: 'Edit Farm Profile',
+                                  onPressed: () => context.go(AppRoutes.profileSetupFarmer),
+                                ),
+                              ],
+                            ),
+                            const Divider(height: 24),
 
                           // Badges Row
                           const Text('Farm Badges:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.textDark)),
@@ -138,12 +190,13 @@ class FarmerHomeScreen extends ConsumerWidget {
                             spacing: 6,
                             runSpacing: 6,
                             children: [
-                              Chip(
-                                avatar: const Icon(Icons.eco_rounded, size: 14, color: Colors.white),
-                                label: Text(draft.farmingMethod.toUpperCase()),
-                                backgroundColor: AppColors.headerGreenDark,
-                                labelStyle: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
-                              ),
+                              if (draft.farmingMethod.isNotEmpty)
+                                Chip(
+                                  avatar: const Icon(Icons.eco_rounded, size: 14, color: Colors.white),
+                                  label: Text(draft.farmingMethod.toUpperCase()),
+                                  backgroundColor: AppColors.headerGreenDark,
+                                  labelStyle: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+                                ),
                               if (draft.hasApmcBadge)
                                 const Chip(
                                   avatar: Icon(Icons.verified_rounded, size: 14, color: Colors.white),
@@ -165,6 +218,8 @@ class FarmerHomeScreen extends ConsumerWidget {
                                   backgroundColor: AppColors.amberOrange,
                                   labelStyle: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
                                 ),
+                              if (draft.farmingMethod.isEmpty && !draft.hasApmcBadge && !draft.hasKccBadge && !draft.hasOrganicBadge)
+                                const Text('No badges added', style: TextStyle(fontSize: 12, color: AppColors.textMuted)),
                             ],
                           ),
                           const SizedBox(height: 14),
@@ -172,21 +227,24 @@ class FarmerHomeScreen extends ConsumerWidget {
                           // Primary Crops
                           const Text('Primary Crops:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                           const SizedBox(height: 6),
-                          Wrap(
-                            spacing: 6,
-                            runSpacing: 6,
-                            children: draft.primaryCrops.map((crop) {
-                              return Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: AppColors.amberOrange.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: AppColors.amberOrange.withValues(alpha: 0.3)),
-                                ),
-                                child: Text(crop, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.amberOrange)),
-                              );
-                            }).toList(),
-                          ),
+                          if (draft.primaryCrops.isEmpty)
+                            const Text('No crops added', style: TextStyle(fontSize: 12, color: AppColors.textMuted))
+                          else
+                            Wrap(
+                              spacing: 6,
+                              runSpacing: 6,
+                              children: draft.primaryCrops.map((crop) {
+                                return Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.amberOrange.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(color: AppColors.amberOrange.withValues(alpha: 0.3)),
+                                  ),
+                                  child: Text(crop, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.amberOrange)),
+                                );
+                              }).toList(),
+                            ),
                           const SizedBox(height: 14),
 
                           // Delivery & Selling Info
@@ -199,9 +257,8 @@ class FarmerHomeScreen extends ConsumerWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                _buildInfoCol('Delivery', draft.deliveryAvailable ? '${draft.deliveryRadiusKm.toInt()} km' : 'No'),
-                                _buildInfoCol('Pickup', draft.pickupAvailable ? 'Yes' : 'No'),
-                                _buildInfoCol('Lead Time', draft.leadTime),
+                                _buildInfoCol('Delivery', draft.deliveryAvailable ? '${draft.deliveryRadiusKm.toInt()} km' : 'Not added'),
+                                _buildInfoCol('Pickup', draft.pickupAvailable ? 'Yes' : 'Not added'),
                               ],
                             ),
                           ),
@@ -209,7 +266,8 @@ class FarmerHomeScreen extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                ],
+                const SizedBox(height: 20),
 
                   // Quick Actions
                   const Text('Farmer Actions', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
