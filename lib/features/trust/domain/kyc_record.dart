@@ -27,7 +27,25 @@ class KycRecord {
 
   bool get isVerified => status.toLowerCase() == 'verified';
   bool get isPending => status.toLowerCase() == 'pending';
-  bool get isRejected => status.toLowerCase() == 'rejected';
+  bool get isRejected => status.toLowerCase() == 'rejected' || status.toLowerCase() == 'failed';
+  bool get isReviewRequired => status.toLowerCase() == 'review_required';
+  bool get isNotRequested => status.isEmpty || status.toLowerCase() == 'not_requested';
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'user_id': userId,
+      'doc_type': docType,
+      'provider': provider,
+      'provider_ref': providerRef,
+      'status': status,
+      'masked_id': maskedId,
+      'name_masked': nameMasked,
+      'verified_at': verifiedAt?.toIso8601String(),
+      'rejection_reason': rejectionReason,
+      'created_at': createdAt.toIso8601String(),
+    };
+  }
 
   factory KycRecord.fromJson(Map<String, dynamic> json) {
     return KycRecord(

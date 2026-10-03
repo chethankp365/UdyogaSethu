@@ -226,52 +226,149 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         },
                       ),
                       const Divider(height: 1, indent: 40),
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.green.shade50,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(Icons.person_outline_rounded, color: Colors.green, size: 20),
-                        ),
-                        title: const Text('Profile Setup', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                        subtitle: const Text('Completed ✓', style: TextStyle(fontSize: 12, color: Colors.green)),
-                        trailing: const Icon(Icons.check_circle_rounded, color: Colors.green, size: 20),
+                      // Driving Licence Stream
+                      StreamBuilder<KycRecord?>(
+                        stream: ref.watch(kycRepositoryProvider).watchKycRecord(_getUserId(), docType: 'driving_licence'),
+                        builder: (context, snapshot) {
+                          final record = snapshot.data;
+                          final isVerified = record?.isVerified ?? false;
+                          final isPending = record?.isPending ?? false;
+
+                          return ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: isVerified ? Colors.green.shade50 : (isPending ? Colors.amber.shade50 : Colors.grey.shade100),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                isVerified ? Icons.directions_car_rounded : Icons.directions_car_outlined,
+                                color: isVerified ? Colors.green : (isPending ? Colors.amber.shade700 : AppColors.textMuted),
+                                size: 20,
+                              ),
+                            ),
+                            title: const Text('Driving Licence', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                            subtitle: Text(
+                              isVerified ? 'Verified • ${record?.maskedId ?? ""}' : (isPending ? 'Pending Review' : 'Required for Driver/Delivery jobs'),
+                              style: TextStyle(fontSize: 12, color: isVerified ? Colors.green : (isPending ? Colors.amber.shade800 : AppColors.textMuted)),
+                            ),
+                            trailing: isVerified
+                                ? const Icon(Icons.check_circle_rounded, color: Colors.green, size: 20)
+                                : const Icon(Icons.chevron_right_rounded, color: AppColors.textMuted),
+                            onTap: () => context.push(AppRoutes.kycDl),
+                          );
+                        },
                       ),
                       const Divider(height: 1, indent: 40),
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.green.shade50,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(Icons.phone_android_rounded, color: Colors.green, size: 20),
-                        ),
-                        title: const Text('Mobile Phone Verification', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                        subtitle: Text(
-                          _phone != null && _phone!.isNotEmpty ? 'Verified • $_phone' : 'Verified (+91)',
-                          style: const TextStyle(fontSize: 12, color: Colors.green),
-                        ),
-                        trailing: const Icon(Icons.check_circle_rounded, color: Colors.green, size: 20),
+                      // Student ID Stream
+                      StreamBuilder<KycRecord?>(
+                        stream: ref.watch(kycRepositoryProvider).watchKycRecord(_getUserId(), docType: 'college_id'),
+                        builder: (context, snapshot) {
+                          final record = snapshot.data;
+                          final isVerified = record?.isVerified ?? false;
+                          final isPending = record?.isPending ?? false;
+
+                          String statusChipText = 'Not Student / Unverified';
+                          Color chipColor = AppColors.textMuted;
+                          if (isVerified) {
+                            statusChipText = 'Verified Student ✓';
+                            chipColor = Colors.green;
+                          } else if (isPending) {
+                            statusChipText = 'Pending Verification';
+                            chipColor = Colors.amber.shade800;
+                          }
+
+                          return ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: isVerified ? Colors.green.shade50 : (isPending ? Colors.amber.shade50 : Colors.blue.shade50),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(Icons.school_rounded, color: isVerified ? Colors.green : Colors.blue, size: 20),
+                            ),
+                            title: const Text('Student Verification', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                            subtitle: Text(statusChipText, style: TextStyle(fontSize: 12, color: chipColor)),
+                            trailing: const Icon(Icons.chevron_right_rounded, color: AppColors.textMuted),
+                            onTap: () => context.push(AppRoutes.kycStudent),
+                          );
+                        },
                       ),
                       const Divider(height: 1, indent: 40),
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(Icons.account_balance_wallet_rounded, color: AppColors.textMuted, size: 20),
-                        ),
-                        title: const Text('Bank / UPI Account', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                        subtitle: const Text('Optional for direct payouts', style: TextStyle(fontSize: 12, color: AppColors.textMuted)),
-                        trailing: const Text('Pending', style: TextStyle(fontSize: 12, color: AppColors.textMuted)),
+                      // Bank / UPI Stream
+                      StreamBuilder<KycRecord?>(
+                        stream: ref.watch(kycRepositoryProvider).watchKycRecord(_getUserId(), docType: 'bank_account'),
+                        builder: (context, snapshot) {
+                          final record = snapshot.data;
+                          final isVerified = record?.isVerified ?? false;
+
+                          return ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: isVerified ? Colors.green.shade50 : Colors.grey.shade100,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(Icons.account_balance_wallet_rounded, color: isVerified ? Colors.green : AppColors.textMuted, size: 20),
+                            ),
+                            title: const Text('Bank / UPI Account', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                            subtitle: Text(
+                              isVerified ? 'Verified • ${record?.maskedId ?? "XXXX-5678"}' : 'Direct Payout Destination',
+                              style: TextStyle(fontSize: 12, color: isVerified ? Colors.green : AppColors.textMuted),
+                            ),
+                            trailing: isVerified
+                                ? const Icon(Icons.check_circle_rounded, color: Colors.green, size: 20)
+                                : const Icon(Icons.chevron_right_rounded, color: AppColors.textMuted),
+                            onTap: () => context.push(AppRoutes.kycBank),
+                          );
+                        },
+                      ),
+                      const Divider(height: 1, indent: 40),
+                      // Background Check Stream
+                      StreamBuilder<KycRecord?>(
+                        stream: ref.watch(kycRepositoryProvider).watchKycRecord(_getUserId(), docType: 'background_check'),
+                        builder: (context, snapshot) {
+                          final record = snapshot.data;
+                          final isVerified = record?.isVerified ?? false;
+                          final isPending = record?.isPending ?? false;
+                          final isReview = record?.isReviewRequired ?? false;
+                          final isFailed = record?.isRejected ?? false;
+
+                          String statusLabel = 'Not Requested';
+                          Color statusColor = AppColors.textMuted;
+                          if (isVerified) {
+                            statusLabel = 'Verified ✓';
+                            statusColor = Colors.green;
+                          } else if (isPending) {
+                            statusLabel = 'Pending Review';
+                            statusColor = Colors.amber.shade800;
+                          } else if (isReview) {
+                            statusLabel = 'Review Required';
+                            statusColor = Colors.orange;
+                          } else if (isFailed) {
+                            statusLabel = 'Failed';
+                            statusColor = Colors.red;
+                          }
+
+                          return ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: isVerified ? Colors.green.shade50 : (isPending ? Colors.amber.shade50 : Colors.purple.shade50),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(Icons.security_rounded, color: isVerified ? Colors.green : (isPending ? Colors.amber.shade700 : Colors.purple), size: 20),
+                            ),
+                            title: const Text('Background Verification', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                            subtitle: Text('Status: $statusLabel (Sensitive Roles)', style: TextStyle(fontSize: 12, color: statusColor)),
+                            trailing: const Icon(Icons.chevron_right_rounded, color: AppColors.textMuted),
+                            onTap: () => context.push(AppRoutes.kycBackground),
+                          );
+                        },
                       ),
                     ],
                   ),

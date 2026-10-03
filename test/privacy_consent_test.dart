@@ -71,6 +71,26 @@ class FakeKycRepository implements KycRepository {
 
   @override
   Future<Map<String, dynamic>> simulateCallback({required String providerRef, required String docType}) async => {};
+
+  @override
+  Future<KycRecord> submitDrivingLicence({required String dlNumber, required String vehicleClass, required DateTime expiryDate, List<int>? frontBytes, List<int>? backBytes}) async {
+    return KycRecord(id: 'dl', userId: 'user', docType: 'driving_licence', provider: 'mock', status: 'pending', createdAt: DateTime.now());
+  }
+
+  @override
+  Future<KycRecord> submitStudentVerification({required String collegeName, required String courseName, required String regUsn, List<int>? cardBytes}) async {
+    return KycRecord(id: 'stu', userId: 'user', docType: 'college_id', provider: 'mock', status: 'pending', createdAt: DateTime.now());
+  }
+
+  @override
+  Future<KycRecord> submitBankUpi({required String type, required String value, String? ifsc}) async {
+    return KycRecord(id: 'bank', userId: 'user', docType: type, provider: 'mock', status: 'verified', createdAt: DateTime.now());
+  }
+
+  @override
+  Future<KycRecord> requestBackgroundCheck() async {
+    return KycRecord(id: 'bgc', userId: 'user', docType: 'background_check', provider: 'mock', status: 'pending', createdAt: DateTime.now());
+  }
 }
 
 Widget _makeTestableWidget(Widget child, {ConsentRepository? repo, KycRepository? kycRepo}) {

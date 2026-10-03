@@ -38,6 +38,10 @@ class AppRoutes {
   // Shared Feature Screens
   static const String settings = '/settings';
   static const String kyc = '/kyc';
+  static const String kycDl = '/kyc/dl';
+  static const String kycStudent = '/kyc/student';
+  static const String kycBank = '/kyc/bank';
+  static const String kycBackground = '/kyc/background';
   static const String privacyCentre = '/privacy-centre';
   static const String termsAndPrivacy = '/terms-privacy';
   static const String safetyHub = '/safety';

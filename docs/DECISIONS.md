@@ -36,4 +36,12 @@ This document records key design, architectural, role model, and implementation 
   * **Masking & Redaction Guarantee**: Raw 12-digit Aadhaar numbers are never logged or stored. A redaction utility in Deno scrubs any 12-digit number pattern (`\b\d{12}\b`), and only masked IDs (`XXXX-XXXX-4321`), masked names (`R***** S****`), document type, and verification timestamps are saved to `kyc_records`.
   * **Honesty Rule**: A visible amber "Demo mode — Simulated eKYC Provider" banner is rendered on `KycScreen`.
 
+* **D13 — Extra Verification Flows & Penny-Drop Simulation**:
+  * **Simulation Details**: Driving Licence, Student Verification, Bank / UPI Payout Verification, and Background Check flows are fully integrated with Supabase storage (`kyc-docs` private bucket) and `kyc_records` DB table.
+  * **DL & Category Gating**: Indian DL format validation, vehicle class selection, expiry tracking, and front/back photo upload. Database migration `0210` adds `requires_licence = true` to `driver`, `delivery`, and `delivery-gig-work` categories in `service_categories` and enforces gating in `nearby_jobs_for_worker` RPC.
+  * **Student Privacy**: Reg/USN is stored in masked format (`1MS2-***-****`). Rendered with explicit privacy notice: *"All student documents and USN records remain strictly private"*.
+  * **Penny-Drop Payout**: Bank account and UPI ID verification use simulated penny-drop with a clearly labelled amber **"Demo mode — Simulated Penny-Drop Verification"** banner.
+  * **Background Check**: Sensitive job gating for unverified workers, tracking statuses (`Not Requested`, `Pending`, `Verified`, `Failed`, `Review Required`).
+
+
 

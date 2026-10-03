@@ -11,6 +11,29 @@ abstract class KycRepository {
   Stream<KycRecord?> watchKycRecord(String userId, {String docType = 'aadhaar'});
   Future<Map<String, dynamic>> startKycSession({required String docType, String? redirectUrl});
   Future<Map<String, dynamic>> simulateCallback({required String providerRef, required String docType});
+
+  Future<KycRecord> submitDrivingLicence({
+    required String dlNumber,
+    required String vehicleClass,
+    required DateTime expiryDate,
+    List<int>? frontBytes,
+    List<int>? backBytes,
+  });
+
+  Future<KycRecord> submitStudentVerification({
+    required String collegeName,
+    required String courseName,
+    required String regUsn,
+    List<int>? cardBytes,
+  });
+
+  Future<KycRecord> submitBankUpi({
+    required String type, // 'upi' or 'bank_account'
+    required String value,
+    String? ifsc,
+  });
+
+  Future<KycRecord> requestBackgroundCheck();
 }
 
 class SupabaseKycRepository implements KycRepository {
@@ -207,6 +230,211 @@ class SupabaseKycRepository implements KycRepository {
         'verified_at': DateTime.now().toIso8601String(),
       };
     }
+  }
+
+  @override
+  Future<KycRecord> submitDrivingLicence({
+    required String dlNumber,
+    required String vehicleClass,
+    required DateTime expiryDate,
+    List<int>? frontBytes,
+    List<int>? backBytes,
+  }) async {
+    final user = _client?.auth.currentUser;
+    final userId = user?.id ?? 'demo_user_123';
+    final cleanDl = dlNumber.replaceAll(RegExp(r'[^A-Za-z0-9]'), '').toUpperCase();
+    final last4 = cleanDl.length >= 4 ? cleanDl.substring(cleanDl.length - 4) : '1234';
+    final maskedDl = 'XXXX-XXXX-XXXX-$last4';
+
+    // Upload to private bucket kyc-docs if client available
+    if (_client != null) {
+      try {
+        if (frontBytes != null) {
+          await _client.storage.from('kyc-docs').uploadBinary('$userId/dl_front.jpg', frontBytes as dynamic, fileOptions: const FileOptions(upsert: true));
+        }
+        if (backBytes != null) {
+          await _client.storage.from('kyc-docs').uploadBinary('$userId/dl_back.jpg', backBytes as dynamic, fileOptions: const FileOptions(upsert: true));
+        }
+      } catch (e, stack) {
+        AppLogger.e('Error uploading DL files to private storage bucket', e, stack);
+      }
+    }
+
+    final record = KycRecord(
+      id: 'kyc_dl_${DateTime.now().millisecondsSinceEpoch}',
+      userId: userId,
+      docType: 'driving_licence',
+      provider: 'manual_dl_review',
+      providerRef: 'dl_ref_${DateTime.now().millisecondsSinceEpoch}',
+      status: 'pending',
+      maskedId: maskedDl,
+      createdAt: DateTime.now(),
+    );
+
+    _mockStorage['${userId}_driving_licence'] = record;
+
+    if (_client != null) {
+      try {
+        await _client.from('kyc_records').upsert({
+          'user_id': userId,
+          'doc_type': 'driving_licence',
+          'provider': 'manual_dl_review',
+          'provider_ref': record.providerRef,
+          'status': 'pending',
+          'masked_id': maskedDl,
+          'created_at': DateTime.now().toIso8601String(),
+        });
+      } catch (e, stack) {
+        AppLogger.e('Error saving DL record to DB', e, stack);
+      }
+    }
+
+    return record;
+  }
+
+  @override
+  Future<KycRecord> submitStudentVerification({
+    required String collegeName,
+    required String courseName,
+    required String regUsn,
+    List<int>? cardBytes,
+  }) async {
+    final user = _client?.auth.currentUser;
+    final userId = user?.id ?? 'demo_user_123';
+    final cleanUsn = regUsn.trim().toUpperCase();
+    final prefix = cleanUsn.length >= 4 ? cleanUsn.substring(0, 4) : 'STU';
+    final maskedUsn = '$prefix-***-****';
+
+    if (_client != null && cardBytes != null) {
+      try {
+        await _client.storage.from('kyc-docs').uploadBinary('$userId/student_id.jpg', cardBytes as dynamic, fileOptions: const FileOptions(upsert: true));
+      } catch (e, stack) {
+        AppLogger.e('Error uploading student ID card', e, stack);
+      }
+    }
+
+    final record = KycRecord(
+      id: 'kyc_stu_${DateTime.now().millisecondsSinceEpoch}',
+      userId: userId,
+      docType: 'college_id',
+      provider: 'manual_student_review',
+      providerRef: 'student_ref_${DateTime.now().millisecondsSinceEpoch}',
+      status: 'pending',
+      maskedId: maskedUsn,
+      createdAt: DateTime.now(),
+    );
+
+    _mockStorage['${userId}_college_id'] = record;
+
+    if (_client != null) {
+      try {
+        await _client.from('kyc_records').upsert({
+          'user_id': userId,
+          'doc_type': 'college_id',
+          'provider': 'manual_student_review',
+          'provider_ref': record.providerRef,
+          'status': 'pending',
+          'masked_id': maskedUsn,
+          'created_at': DateTime.now().toIso8601String(),
+        });
+      } catch (e, stack) {
+        AppLogger.e('Error saving student ID record to DB', e, stack);
+      }
+    }
+
+    return record;
+  }
+
+  @override
+  Future<KycRecord> submitBankUpi({
+    required String type,
+    required String value,
+    String? ifsc,
+  }) async {
+    final user = _client?.auth.currentUser;
+    final userId = user?.id ?? 'demo_user_123';
+    String masked;
+    if (type == 'upi') {
+      final parts = value.trim().split('@');
+      final handle = parts.first;
+      final domain = parts.length > 1 ? parts.last : 'upi';
+      final maskedHandle = handle.length > 2 ? '****${handle.substring(handle.length - 2)}' : '****';
+      masked = '$maskedHandle@$domain';
+    } else {
+      final cleanAcc = value.replaceAll(RegExp(r'\D'), '');
+      final last4 = cleanAcc.length >= 4 ? cleanAcc.substring(cleanAcc.length - 4) : '5678';
+      masked = 'XXXX-XXXX-$last4';
+    }
+
+    final record = KycRecord(
+      id: 'kyc_bank_${DateTime.now().millisecondsSinceEpoch}',
+      userId: userId,
+      docType: type == 'upi' ? 'upi' : 'bank_account',
+      provider: 'penny_drop_demo',
+      providerRef: 'penny_${DateTime.now().millisecondsSinceEpoch}',
+      status: 'verified',
+      maskedId: masked,
+      verifiedAt: DateTime.now(),
+      createdAt: DateTime.now(),
+    );
+
+    _mockStorage['${userId}_${type == "upi" ? "upi" : "bank_account"}'] = record;
+
+    if (_client != null) {
+      try {
+        await _client.from('kyc_records').upsert({
+          'user_id': userId,
+          'doc_type': type == 'upi' ? 'upi' : 'bank_account',
+          'provider': 'penny_drop_demo',
+          'provider_ref': record.providerRef,
+          'status': 'verified',
+          'masked_id': masked,
+          'verified_at': DateTime.now().toIso8601String(),
+          'created_at': DateTime.now().toIso8601String(),
+        });
+      } catch (e, stack) {
+        AppLogger.e('Error saving bank/UPI record to DB', e, stack);
+      }
+    }
+
+    return record;
+  }
+
+  @override
+  Future<KycRecord> requestBackgroundCheck() async {
+    final user = _client?.auth.currentUser;
+    final userId = user?.id ?? 'demo_user_123';
+
+    final record = KycRecord(
+      id: 'kyc_bgc_${DateTime.now().millisecondsSinceEpoch}',
+      userId: userId,
+      docType: 'background_check',
+      provider: 'agency_review_mock',
+      providerRef: 'bgc_${DateTime.now().millisecondsSinceEpoch}',
+      status: 'pending',
+      maskedId: 'BGC-REQ-2026',
+      createdAt: DateTime.now(),
+    );
+
+    _mockStorage['${userId}_background_check'] = record;
+
+    if (_client != null) {
+      try {
+        await _client.from('kyc_records').upsert({
+          'user_id': userId,
+          'doc_type': 'background_check',
+          'provider': 'agency_review_mock',
+          'provider_ref': record.providerRef,
+          'status': 'pending',
+          'masked_id': 'BGC-REQ-2026',
+          'created_at': DateTime.now().toIso8601String(),
+        });
+      } catch (e, stack) {
+        AppLogger.e('Error saving background check record to DB', e, stack);
+      }
+    }
+
+    return record;
   }
 }
 

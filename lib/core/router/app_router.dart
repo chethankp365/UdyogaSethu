@@ -29,7 +29,11 @@ import 'package:udyogasethu/features/onboarding/presentation/splash_screen.dart'
 import 'package:udyogasethu/features/privacy/presentation/privacy_centre_screen.dart';
 import 'package:udyogasethu/features/privacy/presentation/terms_privacy_screen.dart';
 import 'package:udyogasethu/features/profile/presentation/profile_screen.dart';
+import 'package:udyogasethu/features/trust/presentation/background_check_screen.dart';
+import 'package:udyogasethu/features/trust/presentation/bank_upi_screen.dart';
+import 'package:udyogasethu/features/trust/presentation/driving_licence_screen.dart';
 import 'package:udyogasethu/features/trust/presentation/kyc_screen.dart';
+import 'package:udyogasethu/features/trust/presentation/student_verification_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_home_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_wizard_screen.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_home_screen.dart';
@@ -402,6 +406,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.kyc,
         builder: (context, state) => const KycScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.kycDl,
+        builder: (context, state) => const DrivingLicenceScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.kycStudent,
+        builder: (context, state) => const StudentVerificationScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.kycBank,
+        builder: (context, state) => const BankUpiScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.kycBackground,
+        builder: (context, state) => const BackgroundCheckScreen(),
       ),
       GoRoute(
         path: AppRoutes.privacyCentre,
