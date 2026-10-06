@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart' hide Path;
+import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/features/seeker/domain/job_pin.dart';
 import 'package:udyogasethu/features/seeker/presentation/map/nearby_jobs_map_controller.dart';
 import 'package:udyogasethu/features/seeker/presentation/map/tile_config.dart';
@@ -21,6 +22,7 @@ class _NearbyJobsMapScreenState extends ConsumerState<NearbyJobsMapScreen> {
   final MapController _mapController = MapController();
   final ScrollController _listScrollController = ScrollController();
   final DraggableScrollableController _sheetController = DraggableScrollableController();
+  bool _hasInitialFitted = false;
 
   static const Color kHeaderColor = Color(0xFF0D6548);
   static const Color kPinColor = Color(0xFF00875A);
@@ -34,6 +36,33 @@ class _NearbyJobsMapScreenState extends ConsumerState<NearbyJobsMapScreen> {
     _listScrollController.dispose();
     _sheetController.dispose();
     super.dispose();
+  }
+
+  void _fitMapBounds(NearbyJobsMapState state) {
+    final points = <LatLng>[];
+    if (state.userLocation != null) {
+      points.add(state.userLocation!);
+    }
+    for (final pin in state.jobPins) {
+      points.add(pin.latLng);
+    }
+
+    if (points.isEmpty) return;
+
+    if (points.length == 1) {
+      _mapController.move(points.first, 14.5);
+      return;
+    }
+
+    try {
+      final bounds = LatLngBounds.fromPoints(points);
+      _mapController.fitCamera(
+        CameraFit.bounds(
+          bounds: bounds,
+          padding: const EdgeInsets.only(top: 80, bottom: 220, left: 40, right: 40),
+        ),
+      );
+    } catch (_) {}
   }
 
   void _scrollToJob(String jobId, List<JobPin> pins) {
@@ -69,6 +98,15 @@ class _NearbyJobsMapScreenState extends ConsumerState<NearbyJobsMapScreen> {
     final notifier = ref.read(nearbyJobsMapNotifierProvider.notifier);
     final tileConfig = ref.watch(tileConfigProvider);
     final currentLang = Localizations.localeOf(context).languageCode;
+
+    ref.listen<NearbyJobsMapState>(nearbyJobsMapNotifierProvider, (prev, next) {
+      if (!_hasInitialFitted && (next.jobPins.isNotEmpty || next.userLocation != null)) {
+        _hasInitialFitted = true;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _fitMapBounds(next);
+        });
+      }
+    });
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -112,6 +150,18 @@ class _NearbyJobsMapScreenState extends ConsumerState<NearbyJobsMapScreen> {
   }
 
   Widget _buildTopHeader(AppLocalizations l10n, NearbyJobsMapState state) {
+    final session = ref.watch(appSessionProvider);
+    final seekerType = session.seekerType;
+
+    String headerTitle;
+    if (seekerType == 'student') {
+      headerTitle = 'NEARBY STUDENT & FLEXIBLE GIGS';
+    } else if (seekerType == 'part_time') {
+      headerTitle = 'NEARBY PART-TIME & FLEXIBLE GIGS';
+    } else {
+      headerTitle = l10n.nearbyJobsMapTitle;
+    }
+
     return Container(
       padding: EdgeInsets.only(
         top: MediaQuery.of(context).padding.top + 8,
@@ -133,7 +183,7 @@ class _NearbyJobsMapScreenState extends ConsumerState<NearbyJobsMapScreen> {
         children: [
           Expanded(
             child: Text(
-              l10n.nearbyJobsMapTitle,
+              headerTitle,
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
@@ -301,8 +351,8 @@ class _NearbyJobsMapScreenState extends ConsumerState<NearbyJobsMapScreen> {
             markers: [
               Marker(
                 point: state.userLocation!,
-                width: 32,
-                height: 32,
+                width: 40,
+                height: 40,
                 child: _buildUserLocationMarker(),
               ),
             ],
@@ -341,29 +391,36 @@ class _NearbyJobsMapScreenState extends ConsumerState<NearbyJobsMapScreen> {
   }
 
   Widget _buildUserLocationMarker() {
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: const Color(0xFF2563EB).withValues(alpha: 0.25),
-      ),
-      child: Center(
-        child: Container(
-          width: 16,
-          height: 16,
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        // Pulsing GPS Halo
+        Container(
+          width: 38,
+          height: 38,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: const Color(0xFF2563EB).withValues(alpha: 0.22),
+          ),
+        ),
+        // Core White Ring & Blue GPS Dot
+        Container(
+          width: 18,
+          height: 18,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: const Color(0xFF2563EB),
-            border: Border.all(color: Colors.white, width: 2.5),
+            border: Border.all(color: Colors.white, width: 3),
             boxShadow: const [
               BoxShadow(
-                color: Colors.black26,
+                color: Colors.black38,
                 blurRadius: 4,
                 offset: Offset(0, 2),
               ),
             ],
           ),
         ),
-      ),
+      ],
     );
   }
 
@@ -465,7 +522,13 @@ class _NearbyJobsMapScreenState extends ConsumerState<NearbyJobsMapScreen> {
         _buildCircleControlButton(
           icon: Icons.my_location_rounded,
           tooltip: l10n.recenterMap,
-          onPressed: () => notifier.recenterOnUser(),
+          onPressed: () async {
+            await notifier.recenterOnUser();
+            final loc = ref.read(nearbyJobsMapNotifierProvider).userLocation;
+            if (loc != null) {
+              _mapController.move(loc, 14.5);
+            }
+          },
         ),
         const SizedBox(height: 10),
         // Zoom In

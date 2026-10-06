@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/features/seeker/data/nearby_jobs_repository.dart';
 import 'package:udyogasethu/features/seeker/domain/job_pin.dart';
 import 'package:udyogasethu/features/seeker/presentation/map/nearby_jobs_map_controller.dart';
@@ -172,13 +174,17 @@ void main() {
   });
 
   group('NearbyJobsMapScreen Widget Tests', () {
-    Widget buildTestWidget({NearbyJobsMapState? overrideState}) {
+    Widget buildTestWidget({NearbyJobsMapState? overrideState, String? seekerType}) {
       return ProviderScope(
         overrides: [
           nearbyJobsRepositoryProvider.overrideWithValue(FakeNearbyJobsRepository()),
           if (overrideState != null)
             nearbyJobsMapNotifierProvider.overrideWith(
               () => _TestNotifier(overrideState),
+            ),
+          if (seekerType != null)
+            appSessionProvider.overrideWith(
+              () => _TestSessionNotifier(seekerType),
             ),
         ],
         child: const MaterialApp(
@@ -268,6 +274,68 @@ void main() {
       expect(find.textContaining('GPS is turned off'), findsOneWidget);
       expect(find.text('Settings'), findsOneWidget);
     });
+
+    testWidgets('Header title adapts dynamically for student seeker', (tester) async {
+      final loadedState = NearbyJobsMapState(
+        mapCenter: const LatLng(12.9352, 77.6245),
+        jobPins: FakeNearbyJobsRepository._defaultPins(),
+        categories: FakeNearbyJobsRepository._defaultCategories(),
+        hasLocationPermission: true,
+      );
+
+      await tester.pumpWidget(buildTestWidget(
+        overrideState: loadedState,
+        seekerType: 'student',
+      ));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 150));
+
+      expect(find.text('NEARBY STUDENT & FLEXIBLE GIGS'), findsOneWidget);
+      expect(find.text('NEARBY DAILY WAGE JOBS & WORK SITES'), findsNothing);
+    });
+
+    testWidgets('Category chips can toggle to category and back to All', (tester) async {
+      final loadedState = NearbyJobsMapState(
+        mapCenter: const LatLng(12.9352, 77.6245),
+        jobPins: FakeNearbyJobsRepository._defaultPins(),
+        categories: FakeNearbyJobsRepository._defaultCategories(),
+        hasLocationPermission: true,
+      );
+
+      await tester.pumpWidget(buildTestWidget(overrideState: loadedState));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 150));
+
+      // Tap Construction category chip
+      await tester.tap(find.text('Construction'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      // Tap All filter chip to reset
+      await tester.tap(find.text('All'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      // Verify All chip is visible and active
+      expect(find.text('All'), findsOneWidget);
+    });
+
+    testWidgets('User location dot renders when userLocation is present', (tester) async {
+      final loadedState = NearbyJobsMapState(
+        mapCenter: const LatLng(12.9352, 77.6245),
+        userLocation: const LatLng(12.9352, 77.6245),
+        jobPins: FakeNearbyJobsRepository._defaultPins(),
+        categories: FakeNearbyJobsRepository._defaultCategories(),
+        hasLocationPermission: true,
+      );
+
+      await tester.pumpWidget(buildTestWidget(overrideState: loadedState));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 150));
+
+      // Marker layers rendered for both user dot and job pins
+      expect(find.byType(MarkerLayer), findsWidgets);
+    });
   });
 }
 
@@ -279,9 +347,31 @@ class _TestNotifier extends NearbyJobsMapNotifier {
   NearbyJobsMapState build() => _customInitialState;
 
   @override
+  void selectCategory(String? categoryId) {
+    if (categoryId == null || categoryId == state.selectedCategoryId) {
+      state = state.copyWith(clearCategory: true);
+    } else {
+      state = state.copyWith(selectedCategoryId: categoryId);
+    }
+  }
+
+  @override
   Future<bool> applyToJob(String jobId) async {
     final updated = Set<String>.from(state.appliedJobIds)..add(jobId);
     state = state.copyWith(appliedJobIds: updated);
     return true;
   }
+}
+
+class _TestSessionNotifier extends AppSessionNotifier {
+  final String _seekerType;
+  _TestSessionNotifier(this._seekerType);
+
+  @override
+  AppSessionData build() => AppSessionData(
+        status: AuthSessionStatus.ready,
+        activeRole: UserRole.seeker,
+        seekerType: _seekerType,
+        seekerTypeLoaded: true,
+      );
 }

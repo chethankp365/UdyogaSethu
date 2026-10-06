@@ -142,8 +142,24 @@ class NearbyJobsMapNotifier extends Notifier<NearbyJobsMapState> {
       }
 
       state = state.copyWith(hasLocationPermission: true);
+
+      // Try last known position for instant responsiveness
+      try {
+        final last = await Geolocator.getLastKnownPosition();
+        if (last != null) {
+          final lastLatLng = LatLng(last.latitude, last.longitude);
+          state = state.copyWith(
+            userLocation: lastLatLng,
+            mapCenter: lastLatLng,
+          );
+        }
+      } catch (_) {}
+
       final pos = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(accuracy: LocationAccuracy.medium),
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.medium,
+          timeLimit: Duration(seconds: 8),
+        ),
       );
       final userLatLng = LatLng(pos.latitude, pos.longitude);
       state = state.copyWith(
@@ -214,8 +230,8 @@ class NearbyJobsMapNotifier extends Notifier<NearbyJobsMapState> {
   }
 
   void selectCategory(String? categoryId) {
-    if (categoryId == state.selectedCategoryId) {
-      // Toggle off to "All"
+    if (categoryId == null || categoryId == state.selectedCategoryId) {
+      // Toggle off / select "All"
       state = state.copyWith(clearCategory: true);
     } else {
       state = state.copyWith(selectedCategoryId: categoryId);
