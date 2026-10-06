@@ -96,14 +96,35 @@
 - [ ] **P10.5**: Release build, documentation and final handover (Status: Todo)
 
 - [x] **P2 Polish & Bug-Fix Pass (Part 1, 2, 3, 4)**: Wizard Finish Navigation, Student/Part-time Skills, UI Overflow Fix, Brand Intro Redesign (Status: Done | Fixed wizard finish navigation across Seeker/Farmer/Provider by setting AppSession to ready & unawaiting bootstrap refresh. Created migration `0170_student_parttime_skills.sql` with `audience text[]` column, 6 student/part-time categories, and 20 skills in 5 languages (`en`, `kn`, `hi`, `te`, `ta`) passing 100-string script scanner with 0 mixed-script errors. Filtered Seeker Step 2 categories/skills by seekerType and grouped skills under selected category headings. Bounded `CompactLanguageSelector` with `ConstrainedBox(maxWidth: 190)` to eliminate right overflow stripe. Redesigned `BrandIntroScreen` on clean white background with "The Bridge Connects" 5-phase animation system, single-execution TTS, tap skip, and reduced motion. Clean `flutter analyze` with 0 issues and 108/108 passing `flutter test` unit/widget tests)
+- [x] **P3.7, P4.1 & P4.2 Fix-and-Polish Pass (Parts 1-6)**: QR Verification, Edge Functions Uptime, Audience Gating, Map Fixes, Seeker Home Redesign & Privacy Centre (Status: Done |
+  - **Part 1 (QR, Edge Functions & Visibility)**: Standardized `{ "health": true }` probes on 7 Edge Functions (`qr-issue`, `qr-verify`, `face-enroll`, `face-verify`, `kyc-start`, `kyc-callback`, `ai-assist`). Implemented strict D-VISIBILITY route guards in `app_router.dart` for `/trust/digital-id` (seekers only) and `/trust/scan-verify` (providers only), plus seekerType student/DL gating. Added single-phone QR test panel. 29 automated tests.
+  - **Part 2 (Audience Rule for Jobs)**: Authored migration `0350_audience_and_jobs_rules.sql` establishing `job_audience` enum, target audiences, and server-side informal worker student gating in `apply_to_job`, `recommended_jobs`, and `nearby_jobs`. Provided sample test seed and teardown scripts.
+  - **Part 3 (Jobs Map)**: Category filter chip toggle back to "All", glowing user location GPS halo and dot, and automatic map camera bounding box fit.
+  - **Part 4 (Seeker Home Redesign)**: Fixed 102px header overflow across text scales via flexible header layout and modal sheet language selector. Implemented live reverse geocoding via `geocoding` package with GPS fallback and manual location bottom sheet. Replaced garbled worker row with polished "Verification in Progress: 2 of 4 steps complete" progress card and editable daily earnings goal.
+  - **Part 5 (Privacy Centre That Reflects Reality)**: Aligned `ConsentLog` and `SupabaseConsentRepository` with real database schema `(id, user_id, purpose, granted, version, created_at)` and aligned RPCs (`get_user_consents`, `record_user_consent_v2`, `revoke_consent`, `withdraw_face_consent`). Implemented live OS permission checks (`Permission.camera`, `Permission.location`, `Permission.notification`, `Geolocator.isLocationServiceEnabled()`), lifecycle resumed auto-refresh, pull-to-refresh, and purpose-specific withdrawal dialogs with server data erasure.
+  - **Part 6 (Documentation & Handover)**: Documented D-QR, D-VISIBILITY, and D-AUDIENCE in `docs/DECISIONS.md`. Updated `docs/PROGRESS.md`. 214 tests passing, 0 analysis issues).
 
 ---
 
 ## Manual steps pending
-1. Open Supabase SQL Editor and execute the contents of `supabase/migrations/0170_student_parttime_skills.sql`.
+1. **Apply Audience and Consent RPCs Migration**:
+   - Open Supabase SQL Editor and execute `supabase/migrations/0350_audience_and_jobs_rules.sql`.
+   - *(Optional for testing)*: Execute `supabase/migrations/0350_sample_seed.sql` to populate sample student-only and informal jobs (and `0350_sample_teardown.sql` when ready to remove).
+2. **Deploy Updated Edge Functions**:
+   Run the following commands using Supabase CLI:
+   ```bash
+   npx supabase functions deploy qr-issue
+   npx supabase functions deploy qr-verify
+   npx supabase functions deploy face-enroll
+   npx supabase functions deploy face-verify
+   npx supabase functions deploy kyc-start
+   npx supabase functions deploy kyc-callback
+   npx supabase functions deploy ai-assist
+   ```
 
 ## Known issues
 - **Profile & Auth Foreign Key Cascade vs D11 Retention (To be fixed in P5.1 migration)**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`, and financial/order tables (`wallets`, `payouts`, `orders`, `group_orders`, `group_order_members`, `disputes`, `dispute_evidence`, `job_assignments`, `job_evidence`, `ratings_reviews`) referencing `profiles(id)` with `ON DELETE CASCADE`. Calling `auth.admin.deleteUser` cascades through `auth.users -> profiles -> child tables`, erasing financial audit trails and breaking D11. The P5.1 migration must alter these foreign key constraints (e.g., remove cascade on `profiles.id` so scrubbed tombstone profiles survive, or move records to snapshot columns with `ON DELETE SET NULL`) and re-verify that account deletion never fails and re-registration with the same phone number works cleanly.
-- **Settings & Delete Account UI Reachability**: Settings and Delete Account dialog exist in code (`lib/features/account/`) but are not currently reachable from navigation because the Profile tab is still a placeholder shell. Phase 3.1 will add a minimal Profile screen linking to Settings.
 - **P3.5 face check at login**: liveness challenges (blink and head turn) are not detected reliably on my phone and the timer restarts without counting a failed attempt. Login face check is switched off (admin_settings.face_required_at_login = false). To be fixed later.
+- **Phase 4.3**: Job detail, applying, and job requests remains untouched and is the planned next step.
+- **Phase 9 (Admin Console)**: Admin console is built in a separate web/desktop project and is out of scope for this Flutter app.
 

@@ -16,6 +16,9 @@ This document records key design, architectural, role model, and implementation 
 | D10 | Account Linking Rules: Worker or farmer accounts must always have a verified phone number. Google-first auth forces phone verification via updateUser(phone) & OTP. Phone-first auth allows linking Google in Settings via manual identity linking; duplicate Google emails across different phone numbers are blocked. | Adopted | Auth & Identity Linking |
 | D11 | Account Deletion & Legal Data Retention: Account deletion permanently erases personal profile data (`profiles`, `worker_profiles`, `provider_profiles`, `farmer_profiles`, `user_roles`, `addresses`, `consent_logs`, `emergency_contacts`, `kyc_records`), storage bucket objects (`avatars/{uid}`, `kyc-docs/{uid}`), and the auth user record. To comply with Indian financial and tax audit laws (RBI/GST regulations), financial ledger entries (`ledger_entries`), payment transactions (`payments`), and dispute logs are retained in anonymized format with personal identifiers scrubbed (`review_text = '[Account Deleted]'`). | Adopted | Account Deletion & Compliance |
 | D15 | Role & Seeker Type Verification Visibility Matrix: Single source of truth (`verification_visibility.dart`). Aadhaar & Face: All roles. Driving Licence: Seekers only. Student Verification: Student seekers ONLY. Bank/UPI Payout: Seekers & Farmers. Background Check: Seekers & Providers. Enforced in UI, router guards, and database trigger (0230). | Adopted | Verification Visibility Matrix |
+| D-QR | QR Verification Contract, Non-PII HMAC Payload, and Role Separation (`digitalId` for Seekers, `scanVerify` for Providers with single-phone demo testing) | Adopted | QR Verification Architecture |
+| D-VISIBILITY | Strict Multi-Layer Role & Seeker Type Feature Gating: UI, Route Guards (`app_router.dart`), Edge Function health checks, and Server-Side RPC/Trigger boundaries | Adopted | Role Gating & Security |
+| D-AUDIENCE | Job Audience Enforcement: Server-side PostgreSQL RPC filtering (`apply_to_job`, `recommended_jobs`, `nearby_jobs`) with informal seeker gating | Adopted | Job Matching & Audience Rules |
 
 ## Known Issues & Planned Fixes (Pre-P5.1)
 
@@ -72,6 +75,23 @@ This document records key design, architectural, role model, and implementation 
   * **Non-PII Token Payload**: Profile QR codes encode a compact JSON payload signed with HMAC-SHA256 using `QR_SIGNING_SECRET`. The payload contains ONLY `{ "tid": "<uuid>", "pur": "profile", "iat": <epoch>, "exp": <epoch> }`. Raw user IDs, phone numbers, names, or emails are NEVER included in the QR token.
   * **Server-Side Token Hash & Revocation**: The server records the SHA-256 hash of `tid` in `public.qr_tokens` along with the issuing `user_id`. When verifying, the hash is looked up to ensure the token exists and is not revoked.
   * **Public-Only Verification Policy**: `qr-verify` executes signature verification in constant-time, checks expiry (default 300s configurable in `admin_settings.qr_expiry_seconds`), verifies revocation, enforces scanner rate-limiting (30 requests/minute per caller/IP), and invokes `get_public_verification` RPC. It strictly returns ONLY public fields: `name_initial`, `display_id` (`UDY{YYYY}{XXXX}`), `is_verified_badge`, `level`, `level_name`, `kyc_verified_at`, `face_verified_at`, and `training_verified_at`.
+
+* **D-QR — QR Verification Contract, Role Separation & Single-Phone Testing**:
+  * **Role Separation**: `DigitalIdScreen` (`/trust/digital-id`) is exclusively available to workers/job seekers (`role == UserRole.seeker`) to present their digital trust badge. `ScanVerifyScreen` (`/trust/scan-verify`) is exclusively available to employers/job providers (`role == UserRole.provider`) to inspect worker identity cards on site. Route guards in `app_router.dart` strictly redirect unauthorized roles back to their respective home dashboards.
+  * **Edge Function Contract**: `qr-issue` and `qr-verify` Edge Functions implement standardized `{ "health": true }` probes and support both GET and POST requests for continuous uptime monitoring without client session dependencies.
+  * **Single-Phone Test Ergonomics**: Because developers and evaluators often test on a single physical phone without a second camera device, `ScanVerifyScreen` provides a single-phone verification debugging panel (in `kDebugMode`) allowing instant one-tap simulated scanning of the active user's generated QR token.
+
+* **D-VISIBILITY — Multi-Layer Role & Seeker-Type Verification Gating**:
+  * **Multi-Layer Enforcement**: Verification flows are enforced across 3 distinct boundaries: (1) UI visibility logic (`verification_visibility.dart`), (2) declarative GoRouter route guards (`app_router.dart`), and (3) PostgreSQL triggers and RLS policies (`0230_verification_visibility_guard.sql`).
+  * **Student Gating**: `/kyc/student` is accessible ONLY when `role == UserRole.seeker` AND `seekerType == 'student'`. If an informal worker, part-time worker, provider, or farmer attempts to navigate directly to `/kyc/student`, the route guard halts navigation and redirects to their dashboard.
+  * **Driving Licence Gating**: `/kyc/dl` is accessible ONLY to seekers. Providers and farmers are redirected away.
+  * **Payout Gating**: `/kyc/bank` is accessible to seekers and farmers only (parties that receive wages and crop payouts).
+  * **Edge Functions Uptime Integration**: 7 primary Edge Functions (`qr-issue`, `qr-verify`, `face-enroll`, `face-verify`, `kyc-start`, `kyc-callback`, `ai-assist`) support standardized health checks to enable automated integration testing without requiring valid third-party API keys.
+
+* **D-AUDIENCE — Database Job Audience Rules & Informal Seeker Gating**:
+  * **Database-Driven Gating**: Migration `0350_audience_and_jobs_rules.sql` establishes `public.job_audience` enum (`all_workers`, `informal_workers`, `students_only`, `part_time_only`) and `target_audiences` array column on `jobs` table.
+  * **RPC Protection**: Gating is strictly enforced server-side inside `public.apply_to_job` RPC. An informal worker attempting to apply to a `students_only` job is rejected with an explicit database exception: `'Informal job seekers cannot apply to jobs restricted exclusively to students.'`.
+  * **Recommendation & Map Alignment**: `recommended_jobs` and `nearby_jobs` RPCs automatically evaluate the caller's `seeker_type` from `worker_profiles` and filter out incompatible jobs from recommendation feeds and GPS pin clusters.
 
 ---
 
