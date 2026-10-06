@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/errors/app_exception.dart';
@@ -72,8 +73,49 @@ class SeekerLocationNotifier extends Notifier<SeekerLocationState> {
         final position = await Geolocator.getCurrentPosition(
           locationSettings: const LocationSettings(accuracy: LocationAccuracy.medium),
         );
+
+        String displayName = 'Current Location (GPS)';
+        try {
+          final placemarks = await Geocoding().placemarkFromCoordinates(position.latitude, position.longitude);
+          if (placemarks.isNotEmpty) {
+            final p = placemarks.first;
+            final subLocality = p.subLocality?.trim();
+            final locality = p.locality?.trim();
+            final subAdmin = p.subAdministrativeArea?.trim();
+            final admin = p.administrativeArea?.trim();
+
+            String? area;
+            if (subLocality != null && subLocality.isNotEmpty) {
+              area = subLocality;
+            } else if (locality != null && locality.isNotEmpty) {
+              area = locality;
+            } else if (p.name != null && p.name!.isNotEmpty) {
+              area = p.name;
+            }
+
+            String? city;
+            if (locality != null && locality.isNotEmpty && locality != area) {
+              city = locality;
+            } else if (subAdmin != null && subAdmin.isNotEmpty) {
+              city = subAdmin;
+            } else if (admin != null && admin.isNotEmpty) {
+              city = admin;
+            }
+
+            if (area != null && city != null) {
+              displayName = '$area, $city';
+            } else if (area != null) {
+              displayName = area;
+            } else if (city != null) {
+              displayName = city;
+            }
+          }
+        } catch (e) {
+          AppLogger.w('Reverse geocoding error: $e');
+        }
+
         state = SeekerLocationState(
-          displayName: 'Current Location (GPS)',
+          displayName: displayName,
           lat: position.latitude,
           lng: position.longitude,
           isGps: true,
@@ -82,6 +124,10 @@ class SeekerLocationNotifier extends Notifier<SeekerLocationState> {
     } catch (e) {
       AppLogger.w('Location initialization fallback to manual area: $e');
     }
+  }
+
+  Future<void> refreshGpsLocation() async {
+    await initLocation();
   }
 
   void setManualArea(String areaName, double lat, double lng) {
@@ -93,6 +139,18 @@ class SeekerLocationNotifier extends Notifier<SeekerLocationState> {
     );
   }
 }
+
+class SeekerDailyGoalNotifier extends Notifier<int?> {
+  @override
+  int? build() => null;
+
+  void setGoalPaise(int paise) {
+    state = paise;
+  }
+}
+
+final seekerDailyGoalProvider =
+    NotifierProvider<SeekerDailyGoalNotifier, int?>(SeekerDailyGoalNotifier.new);
 
 final seekerLocationProvider =
     NotifierProvider<SeekerLocationNotifier, SeekerLocationState>(SeekerLocationNotifier.new);

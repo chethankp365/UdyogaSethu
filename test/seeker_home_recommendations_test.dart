@@ -307,5 +307,158 @@ void main() {
       expect(find.text('🎓 Students Priority'), findsNothing);
       expect(find.text('RECOMMENDED FOR YOU'), findsOneWidget);
     });
+
+    testWidgets('Verification progress card renders 2 of 4 steps complete', (tester) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            seekerHomeProfileProvider.overrideWith((ref) async {
+              return const SeekerProfileDraft(
+                userId: 'user-verif',
+                fullName: 'Ramesh Seeker',
+                seekerType: 'informal',
+              );
+            }),
+            seekerHomeSummaryProvider.overrideWith((ref) async => const SeekerHomeSummary()),
+            seekerRecommendedJobsProvider.overrideWith((ref) async => []),
+            seekerHasGpsConsentProvider.overrideWith((ref) async => false),
+            seekerHasAdsConsentProvider.overrideWith((ref) async => false),
+          ],
+          child: const MaterialApp(
+            locale: Locale('en'),
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: SeekerHomeScreen(),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expect(find.text('Verification in Progress: 2 of 4 steps complete'), findsOneWidget);
+      expect(find.text('2/4 Done'), findsOneWidget);
+      expect(find.byType(LinearProgressIndicator), findsOneWidget);
+      expect(find.text('Find Jobs'), findsOneWidget);
+      expect(find.text('Complete Profile'), findsOneWidget);
+    });
+
+    testWidgets('Editing daily goal via dialog updates goal display and progress', (tester) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            seekerHomeProfileProvider.overrideWith((ref) async {
+              return const SeekerProfileDraft(
+                userId: 'user-goal',
+                fullName: 'Goal Seeker',
+                seekerType: 'informal',
+              );
+            }),
+            seekerHomeSummaryProvider.overrideWith((ref) async {
+              return const SeekerHomeSummary(
+                walletBalancePaise: 100000,
+                todayEarningsPaise: 80000, // ₹800
+                dailyGoalPaise: 150000, // ₹1,500
+              );
+            }),
+            seekerRecommendedJobsProvider.overrideWith((ref) async => []),
+            seekerHasGpsConsentProvider.overrideWith((ref) async => false),
+            seekerHasAdsConsentProvider.overrideWith((ref) async => false),
+          ],
+          child: const MaterialApp(
+            locale: Locale('en'),
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: SeekerHomeScreen(),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expect(find.text('₹800 / ₹1500'), findsOneWidget);
+      expect(find.text('53%'), findsOneWidget);
+
+      // Tap on Today's Goal to open the edit dialog
+      await tester.tap(find.text("Today's Goal"));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Set Daily Goal'), findsOneWidget);
+
+      // Select ₹2000 quick chip
+      await tester.tap(find.text('₹2000'));
+      await tester.pumpAndSettle();
+
+      // Tap Save Goal
+      await tester.tap(find.text('Save Goal'));
+      await tester.pumpAndSettle();
+
+      // Display should update: 800 / 2000 = 40%
+      expect(find.text('₹800 / ₹2000'), findsOneWidget);
+      expect(find.text('40%'), findsOneWidget);
+    });
+
+    testWidgets('Header renders cleanly at 1.3x text scale without overflow', (tester) async {
+      tester.view.physicalSize = const Size(360, 800);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      FlutterErrorDetails? errorDetails;
+      final originalOnError = FlutterError.onError;
+      FlutterError.onError = (details) {
+        errorDetails = details;
+      };
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            seekerHomeProfileProvider.overrideWith((ref) async {
+              return const SeekerProfileDraft(
+                userId: 'user-scale',
+                fullName: 'Chethan Kumar Long Name',
+                seekerType: 'informal',
+              );
+            }),
+            seekerHomeSummaryProvider.overrideWith((ref) async => const SeekerHomeSummary()),
+            seekerRecommendedJobsProvider.overrideWith((ref) async => []),
+            seekerHasGpsConsentProvider.overrideWith((ref) async => false),
+            seekerHasAdsConsentProvider.overrideWith((ref) async => false),
+          ],
+          child: const MaterialApp(
+            locale: Locale('en'),
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: MediaQuery(
+              data: MediaQueryData(textScaler: TextScaler.linear(1.3)),
+              child: SeekerHomeScreen(),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+      FlutterError.onError = originalOnError;
+
+      expect(errorDetails, isNull);
+      expect(find.text('Seeker Home'), findsOneWidget);
+      expect(find.text('SOS'), findsOneWidget);
+    });
   });
 }

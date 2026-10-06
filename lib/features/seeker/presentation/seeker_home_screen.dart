@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/config/env.dart';
+import 'package:udyogasethu/core/l10n/locale_controller.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
-import 'package:udyogasethu/core/widgets/compact_language_selector.dart';
 import 'package:udyogasethu/core/widgets/user_avatar.dart';
 import 'package:udyogasethu/features/seeker/data/seeker_home_repository.dart';
 import 'package:udyogasethu/features/seeker/domain/job_recommendation.dart';
@@ -102,6 +102,16 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
                   ),
                 ),
                 const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.my_location_rounded, color: Color(0xFF10B981), size: 22),
+                  title: const Text('Use Live GPS Location', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.headerGreenDark)),
+                  subtitle: const Text('Detect neighbourhood via reverse geocoding', style: TextStyle(fontSize: 11, color: AppColors.textMuted)),
+                  onTap: () {
+                    ref.read(seekerLocationProvider.notifier).refreshGpsLocation();
+                    Navigator.pop(ctx);
+                  },
+                ),
+                const Divider(height: 1),
                 Expanded(
                   child: ListView.builder(
                     itemCount: areas.length,
@@ -122,6 +132,162 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
                     },
                   ),
                 ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showEditDailyGoalDialog(BuildContext context, int currentGoalRupees) {
+    final controller = TextEditingController(text: currentGoalRupees.toString());
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Row(
+            children: [
+              Icon(Icons.flag_rounded, color: AppColors.headerGreenDark),
+              SizedBox(width: 8),
+              Text("Set Daily Goal", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Customize your target earnings per day to track work progress:',
+                style: TextStyle(fontSize: 13, color: AppColors.textDark),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: controller,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  prefixText: '₹ ',
+                  labelText: 'Target Earnings (Rupees)',
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                ),
+              ),
+              const SizedBox(height: 12),
+              const Text('Quick Select:', style: TextStyle(fontSize: 11, color: AppColors.textMuted)),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 8,
+                children: [1000, 1500, 2000, 2500].map((amount) {
+                  return ActionChip(
+                    label: Text('₹$amount', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                    backgroundColor: AppColors.paleMint,
+                    onPressed: () {
+                      controller.text = amount.toString();
+                    },
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.headerGreenDark,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () {
+                final entered = int.tryParse(controller.text.trim());
+                if (entered != null && entered > 0) {
+                  ref.read(seekerDailyGoalProvider.notifier).setGoalPaise(entered * 100);
+                }
+                Navigator.pop(ctx);
+              },
+              child: const Text('Save Goal'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showLanguageModal(BuildContext context) {
+    final currentLocale = ref.watch(localeProvider);
+    final languages = [
+      AppLanguages.english,
+      AppLanguages.kannada,
+      AppLanguages.hindi,
+      AppLanguages.telugu,
+      AppLanguages.tamil,
+    ];
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.translate_rounded, color: AppColors.headerGreenDark),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'Select Language',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.pop(ctx),
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(),
+                ...languages.map((lang) {
+                  final isSelected = currentLocale.languageCode == lang.code;
+                  return ListTile(
+                    leading: CircleAvatar(
+                      radius: 14,
+                      backgroundColor: isSelected ? AppColors.headerGreenDark : AppColors.paleMint,
+                      child: Text(
+                        lang.countryCode,
+                        style: TextStyle(
+                          color: isSelected ? Colors.white : AppColors.headerGreenDark,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    title: Text(
+                      '${lang.nativeName} (${lang.englishName})',
+                      style: TextStyle(
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                        color: isSelected ? AppColors.headerGreenDark : AppColors.textDark,
+                      ),
+                    ),
+                    trailing: isSelected
+                        ? const Icon(Icons.check_circle_rounded, color: AppColors.headerGreenDark)
+                        : null,
+                    onTap: () {
+                      ref.read(localeProvider.notifier).setLocale(lang.code);
+                      Navigator.pop(ctx);
+                    },
+                  );
+                }),
               ],
             ),
           ),
@@ -347,22 +513,34 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Top row: Brand Logo / Role Switcher + SOS pill + Bell + Profile Avatar
+          // Top row: Brand Logo + SOS pill + Language + Bell + Profile Avatar
           Row(
             children: [
-              // Logo & App Name
-              const Icon(Icons.handshake_rounded, color: Colors.white, size: 22),
-              const SizedBox(width: 8),
-              Text(
-                l10n?.seekerHomeTitle ?? 'Seeker Home',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17,
-                  letterSpacing: 0.3,
+              // Logo & App Name (Flexible to avoid overflow on any screen size / font scale)
+              Flexible(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.handshake_rounded, color: Colors.white, size: 22),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        l10n?.seekerHomeTitle ?? 'Seeker Home',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const Spacer(),
+
+              const SizedBox(width: 8),
 
               // SOS Pill Button
               InkWell(
@@ -374,10 +552,15 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
                     color: Colors.red.shade600,
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
-                      BoxShadow(color: Colors.red.withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 2)),
+                      BoxShadow(
+                        color: Colors.red.withValues(alpha: 0.3),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
                     ],
                   ),
                   child: const Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(Icons.shield_rounded, color: Colors.white, size: 14),
                       SizedBox(width: 4),
@@ -390,19 +573,42 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
               const SizedBox(width: 8),
 
               // Multi-Role Dev Switcher (if enabled)
-              if (kAllowMultiRole)
+              if (kAllowMultiRole) ...[
                 IconButton(
                   icon: const Icon(Icons.swap_horiz_rounded, color: Colors.white, size: 20),
                   tooltip: 'Switch Role',
                   onPressed: () => context.push(AppRoutes.devRole),
                   padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
+                  constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
                 ),
+                const SizedBox(width: 4),
+              ],
 
-              // Language Selector
-              const CompactLanguageSelector(),
+              // Language Selector Pill
+              InkWell(
+                onTap: () => _showLanguageModal(context),
+                borderRadius: BorderRadius.circular(16),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.translate_rounded, color: Colors.white, size: 13),
+                      const SizedBox(width: 3),
+                      Text(
+                        ref.watch(localeProvider).languageCode.toUpperCase(),
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 11),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
 
-              const SizedBox(width: 4),
+              const SizedBox(width: 6),
 
               // Notification Bell with Unread Dot
               Stack(
@@ -410,22 +616,22 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
                   IconButton(
                     icon: const Icon(Icons.notifications_none_rounded, color: Colors.white, size: 22),
                     padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
+                    constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
                     onPressed: () => context.push(AppRoutes.kycSafetyOnboarding),
                   ),
                   Positioned(
-                    right: 0,
-                    top: 0,
+                    right: 2,
+                    top: 2,
                     child: Container(
-                      width: 8,
-                      height: 8,
+                      width: 7,
+                      height: 7,
                       decoration: const BoxDecoration(color: Colors.orangeAccent, shape: BoxShape.circle),
                     ),
                   ),
                 ],
               ),
 
-              const SizedBox(width: 10),
+              const SizedBox(width: 8),
 
               // Profile Avatar
               InkWell(
@@ -434,7 +640,7 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
                 child: UserAvatar(
                   avatarPath: profileAsync.value?.avatarUrl,
                   name: userName,
-                  radius: 17,
+                  radius: 16,
                 ),
               ),
             ],
@@ -447,13 +653,15 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
             '${_getTimeGreeting(context)} • Welcome back, $userName! 👋',
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 20,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 4),
 
-          // Location Chip with Reverse Text & Area Switcher
+          // Location Chip with Reverse Geocoded Text & Area Switcher
           InkWell(
             onTap: _showManualLocationPicker,
             borderRadius: BorderRadius.circular(20),
@@ -472,9 +680,13 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
                     size: 14,
                   ),
                   const SizedBox(width: 5),
-                  Text(
-                    locationState.displayName,
-                    style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500),
+                  Flexible(
+                    child: Text(
+                      locationState.displayName,
+                      style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   const SizedBox(width: 4),
                   const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.white70, size: 16),
@@ -541,6 +753,15 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
 
   Widget _buildDashboardCard(BuildContext context, AsyncValue<SeekerHomeSummary> summaryAsync) {
     final summary = summaryAsync.value ?? const SeekerHomeSummary();
+    final customGoalPaise = ref.watch(seekerDailyGoalProvider);
+    final effectiveGoalPaise = customGoalPaise ?? summary.dailyGoalPaise;
+    final effectiveGoalRupees = effectiveGoalPaise / 100.0;
+    final goalProgress = effectiveGoalRupees <= 0
+        ? 0.0
+        : (summary.todayEarningsRupees / effectiveGoalRupees).clamp(0.0, 1.0);
+    final goalPercentage = effectiveGoalRupees <= 0
+        ? 0
+        : ((summary.todayEarningsRupees / effectiveGoalRupees) * 100).round().clamp(0, 100);
     final l10n = AppLocalizations.of(context);
 
     return Container(
@@ -566,13 +787,13 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
               alignment: Alignment.center,
               children: [
                 CircularProgressIndicator(
-                  value: summary.goalProgress,
+                  value: goalProgress,
                   strokeWidth: 8,
                   backgroundColor: Colors.white.withValues(alpha: 0.2),
                   valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF10B981)),
                 ),
                 Text(
-                  '${summary.goalPercentage}%',
+                  '$goalPercentage%',
                   style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
                 ),
               ],
@@ -586,12 +807,23 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  l10n?.todaysGoal ?? "Today's Goal",
-                  style: const TextStyle(color: Colors.white70, fontSize: 12),
+                InkWell(
+                  onTap: () => _showEditDailyGoalDialog(context, effectiveGoalRupees.round()),
+                  borderRadius: BorderRadius.circular(4),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        l10n?.todaysGoal ?? "Today's Goal",
+                        style: const TextStyle(color: Colors.white70, fontSize: 12),
+                      ),
+                      const SizedBox(width: 4),
+                      const Icon(Icons.edit_outlined, size: 13, color: Colors.white70),
+                    ],
+                  ),
                 ),
                 Text(
-                  '₹${summary.todayEarningsRupees.toStringAsFixed(0)} / ₹${summary.dailyGoalRupees.toStringAsFixed(0)}',
+                  '₹${summary.todayEarningsRupees.toStringAsFixed(0)} / ₹${effectiveGoalRupees.toStringAsFixed(0)}',
                   style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const SizedBox(height: 8),
@@ -605,29 +837,40 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
                   ),
                   child: Row(
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l10n?.walletBalance ?? 'Wallet Balance',
-                            style: const TextStyle(color: Colors.white70, fontSize: 10),
-                          ),
-                          Text(
-                            '₹${summary.walletBalanceRupees.toStringAsFixed(2)}',
-                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
-                          ),
-                        ],
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              l10n?.walletBalance ?? 'Wallet Balance',
+                              style: const TextStyle(color: Colors.white70, fontSize: 10),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              '₹${summary.walletBalanceRupees.toStringAsFixed(2)}',
+                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
                       ),
-                      const Spacer(),
-                      InkWell(
-                        onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Escrow Protected Wallet arrives in Phase 5.1')),
-                          );
-                        },
-                        child: Text(
-                          l10n?.viewWallet ?? 'View Wallet >',
-                          style: const TextStyle(color: Color(0xFFA7F3D0), fontWeight: FontWeight.bold, fontSize: 11),
+                      const SizedBox(width: 6),
+                      Flexible(
+                        child: InkWell(
+                          onTap: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Escrow Protected Wallet arrives in Phase 5.1')),
+                            );
+                          },
+                          child: Text(
+                            l10n?.viewWallet ?? 'View Wallet >',
+                            style: const TextStyle(color: Color(0xFFA7F3D0), fontWeight: FontWeight.bold, fontSize: 11),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ),
                     ],
@@ -852,27 +1095,67 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
     return Card(
       elevation: 1,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      child: Padding(
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          gradient: const LinearGradient(
+            colors: [Colors.white, Color(0xFFF0FDF4)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          border: Border.all(color: const Color(0xFFA7F3D0)),
+        ),
         padding: const EdgeInsets.all(14),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                const CircleAvatar(
-                  radius: 16,
-                  backgroundColor: AppColors.paleMint,
-                  child: Icon(Icons.verified_user_rounded, color: AppColors.headerGreenDark, size: 18),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: const BoxDecoration(
+                    color: AppColors.paleMint,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.verified_user_rounded, color: AppColors.headerGreenDark, size: 20),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Safety Onboarding & Verified Badge',
-                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.headerGreenDark),
-                      ),
                       Row(
+                        children: [
+                          const Flexible(
+                            child: Text(
+                              'Safety Onboarding & Verified Badge',
+                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.headerGreenDark),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFEF3C7),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: const Text(
+                              '2/4 Done',
+                              style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF92400E)),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 2),
+                      const Text(
+                        'Verification in Progress: 2 of 4 steps complete',
+                        style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textDark),
+                      ),
+                      const SizedBox(height: 2),
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
                           Text(
                             seekerTypeDisplay,
@@ -888,21 +1171,49 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
                     ],
                   ),
                 ),
-                const Icon(Icons.chevron_right_rounded, color: AppColors.headerGreenDark),
               ],
             ),
-            const Divider(height: 16),
+            const SizedBox(height: 10),
+            // Progress bar (2 of 4 steps done)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: const LinearProgressIndicator(
+                value: 0.5,
+                minHeight: 6,
+                backgroundColor: Color(0xFFE2E8F0),
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF10B981)),
+              ),
+            ),
+            const SizedBox(height: 12),
+            // Action buttons row (clean, un-garbled layout)
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                InkWell(
-                  onTap: () => context.push(AppRoutes.seekerJobs),
-                  child: const Text('Find Jobs', style: TextStyle(color: AppColors.headerGreenDark, fontWeight: FontWeight.bold, fontSize: 12)),
+                Expanded(
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.headerGreenDark,
+                      side: const BorderSide(color: AppColors.headerGreenDark),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      minimumSize: const Size(0, 36),
+                    ),
+                    onPressed: () => context.push(AppRoutes.seekerJobs),
+                    child: const Text('Find Jobs', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                  ),
                 ),
-                Container(width: 1, height: 14, color: Colors.grey.shade300),
-                InkWell(
-                  onTap: () => context.push(AppRoutes.kycSafetyOnboarding),
-                  child: const Text('Complete Profile', style: TextStyle(color: AppColors.headerGreenDark, fontWeight: FontWeight.bold, fontSize: 12)),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.headerGreenDark,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      minimumSize: const Size(0, 36),
+                    ),
+                    onPressed: () => context.push(AppRoutes.kycSafetyOnboarding),
+                    child: const Text('Complete Profile', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                  ),
                 ),
               ],
             ),
@@ -926,15 +1237,19 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
       children: [
         Row(
           children: [
-            Text(
-              seekerType == 'student'
-                  ? 'STUDENT & FLEXIBLE GIGS'
-                  : (seekerType == 'part_time'
-                      ? 'PART-TIME & FLEXIBLE SHIFTS'
-                      : (l10n?.recommendedForYou ?? 'RECOMMENDED FOR YOU')),
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.textMuted, letterSpacing: 0.5),
+            Flexible(
+              child: Text(
+                seekerType == 'student'
+                    ? 'STUDENT & FLEXIBLE GIGS'
+                    : (seekerType == 'part_time'
+                        ? 'PART-TIME & FLEXIBLE SHIFTS'
+                        : (l10n?.recommendedForYou ?? 'RECOMMENDED FOR YOU')),
+                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.textMuted, letterSpacing: 0.5),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-            const Spacer(),
+            const SizedBox(width: 8),
             if (seekerType == 'student')
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -1025,11 +1340,27 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
             // Top Employer row
             Row(
               children: [
-                CircleAvatar(
-                  radius: 18,
-                  backgroundColor: AppColors.paleMint,
-                  child: Icon(_getCategoryIcon(job.categoryIcon), color: AppColors.headerGreenDark, size: 20),
-                ),
+                if (job.employerAvatar != null && job.employerAvatar!.startsWith('http'))
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(18),
+                    child: Image.network(
+                      job.employerAvatar!,
+                      width: 36,
+                      height: 36,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => CircleAvatar(
+                        radius: 18,
+                        backgroundColor: AppColors.paleMint,
+                        child: Icon(_getCategoryIcon(job.categoryIcon), color: AppColors.headerGreenDark, size: 20),
+                      ),
+                    ),
+                  )
+                else
+                  CircleAvatar(
+                    radius: 18,
+                    backgroundColor: AppColors.paleMint,
+                    child: Icon(_getCategoryIcon(job.categoryIcon), color: AppColors.headerGreenDark, size: 20),
+                  ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Column(
