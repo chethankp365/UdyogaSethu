@@ -504,6 +504,45 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Widget _buildVerificationTile(VerificationItemConfig item) {
+    if (item.type == VerificationType.face) {
+      return FutureBuilder<bool>(
+        future: Supabase.instance.client
+            .from('face_profiles')
+            .select('id')
+            .eq('user_id', _getUserId())
+            .maybeSingle()
+            .then((res) => res != null)
+            .catchError((_) => false),
+        builder: (context, snapshot) {
+          final isVerified = snapshot.data ?? false;
+          return ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: isVerified ? Colors.green.shade50 : Colors.teal.shade50,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.face_retouching_natural,
+                color: isVerified ? Colors.green : Colors.teal,
+                size: 20,
+              ),
+            ),
+            title: Text(item.title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+            subtitle: Text(
+              isVerified ? 'Verified • Face Enrolled' : 'On-Device Liveness Template',
+              style: TextStyle(fontSize: 12, color: isVerified ? Colors.green : AppColors.textMuted),
+            ),
+            trailing: isVerified
+                ? const Icon(Icons.check_circle_rounded, color: Colors.green, size: 20)
+                : const Icon(Icons.chevron_right_rounded, color: AppColors.textMuted),
+            onTap: () => context.push(item.route),
+          );
+        },
+      );
+    }
+
     return StreamBuilder<KycRecord?>(
       stream: ref.watch(kycRepositoryProvider).watchKycRecord(
             _getUserId(),

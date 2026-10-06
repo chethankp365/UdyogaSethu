@@ -305,9 +305,7 @@ class AppLocalizationsTe extends AppLocalizations {
   String get wageTypeFixed => 'నిర్ణీత వేతనం';
 
   @override
-  String walletBalance(Object balance) {
-    return 'వాలెట్ నిల్వ: ₹$balance';
-  }
+  String get walletBalance => 'వాలెట్ బ్యాలెన్స్';
 
   @override
   String jobsCount(num count) {
@@ -1087,4 +1085,80 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get demoSimulateFail => 'డెమో: ధృవీకరణ విఫలమైంది';
+
+  @override
+  String get seekerHomeTitle => 'ఉద్యోగార్ధి హోమ్';
+
+  @override
+  String get searchJobsPlaceholder => 'ఉద్యోగాలు, సేవలను శోధించండి...';
+
+  @override
+  String get todaysGoal => 'నేటి లక్ష్యం';
+
+  @override
+  String get viewWallet => 'వాలెట్ చూడండి >';
+
+  @override
+  String get locationSharingActive =>
+      'భద్రతా పర్యవేక్షణ కోసం స్థాన భాగస్వామ్యం సక్రియంగా ఉంది';
+
+  @override
+  String get changeLocation => 'మార్చండి >';
+
+  @override
+  String get quickActionsHeader => 'శీఘ్ర చర్యలు';
+
+  @override
+  String get actionNearbyJobs => 'సమీప ఉద్యోగాలు';
+
+  @override
+  String get actionAiAssistant => 'AI సహాయకుడు';
+
+  @override
+  String get actionWallet => 'వాలెట్';
+
+  @override
+  String get actionSafetyHub => 'భద్రతా కేంద్రం';
+
+  @override
+  String get tagSponsored => 'ప్రాయోజితం';
+
+  @override
+  String get whyAmISeeingThis => 'నేను దీన్ని ఎందుకు చూస్తున్నాను?';
+
+  @override
+  String get recommendedForYou => 'మీ కోసం సిఫార్సు చేయబడింది';
+
+  @override
+  String get applyNow => 'ఇప్పుడే దరఖాస్తు చేసుకోండి';
+
+  @override
+  String get applied => 'దరఖాస్తు చేయబడింది ✓';
+
+  @override
+  String get noJobsNearYou => 'మీ సమీపంలో ఇంకా ఉద్యోగాలు లేవు';
+
+  @override
+  String get widenRadiusAction => 'శోధన పరిధిని విస్తరించండి';
+
+  @override
+  String get sosEmergencyPill => 'అత్యవసర SOS';
+
+  @override
+  String get selectLocationArea => 'స్థాన ప్రాంతాన్ని ఎంచుకోండి';
+
+  @override
+  String get goodMorning => 'శుభోదయం';
+
+  @override
+  String get goodAfternoon => 'శుభ మధ్యాహ్నం';
+
+  @override
+  String get goodEvening => 'శుభ సాయంత్రం';
+
+  @override
+  String get studentsWelcomeChip => 'విద్యార్థులకు స్వాగతం';
+
+  @override
+  String get flexibleShiftChip => 'ఫ్లెక్సిబుల్ షిఫ్ట్';
 }

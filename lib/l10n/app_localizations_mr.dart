@@ -304,9 +304,7 @@ class AppLocalizationsMr extends AppLocalizations {
   String get wageTypeFixed => 'Fixed Payment';
 
   @override
-  String walletBalance(Object balance) {
-    return 'Wallet Balance: ₹$balance';
-  }
+  String get walletBalance => 'वॉलेट शिल्लक';
 
   @override
   String jobsCount(num count) {
@@ -1076,4 +1074,80 @@ class AppLocalizationsMr extends AppLocalizations {
 
   @override
   String get demoSimulateFail => 'डेमो: अयशस्वी पडताळणी';
+
+  @override
+  String get seekerHomeTitle => 'रोजगार शोधक मुख्यपृष्ठ';
+
+  @override
+  String get searchJobsPlaceholder => 'नोकऱ्या, सेवा शोधा...';
+
+  @override
+  String get todaysGoal => 'आजचे ध्येय';
+
+  @override
+  String get viewWallet => 'वॉलेट पहा >';
+
+  @override
+  String get locationSharingActive =>
+      'सुरक्षा देखरेखीसाठी स्थान सामायिकरण सक्रिय आहे';
+
+  @override
+  String get changeLocation => 'बदला >';
+
+  @override
+  String get quickActionsHeader => 'द्रुत कृती';
+
+  @override
+  String get actionNearbyJobs => 'जवळपासच्या नोकऱ्या';
+
+  @override
+  String get actionAiAssistant => 'एआय सहाय्यक';
+
+  @override
+  String get actionWallet => 'वॉलेट';
+
+  @override
+  String get actionSafetyHub => 'सुरक्षा केंद्र';
+
+  @override
+  String get tagSponsored => 'प्रायोजित';
+
+  @override
+  String get whyAmISeeingThis => 'मला हे का दिसत आहे?';
+
+  @override
+  String get recommendedForYou => 'तुमच्यासाठी शिफारस केलेले';
+
+  @override
+  String get applyNow => 'आता अर्ज करा';
+
+  @override
+  String get applied => 'अर्ज केला ✓';
+
+  @override
+  String get noJobsNearYou => 'तुमच्या जवळ अजून नोकऱ्या नाहीत';
+
+  @override
+  String get widenRadiusAction => 'शोध त्रिज्या वाढवा';
+
+  @override
+  String get sosEmergencyPill => 'तातडीचे एसओएस';
+
+  @override
+  String get selectLocationArea => 'स्थान क्षेत्र निवडा';
+
+  @override
+  String get goodMorning => 'शुभ सकाळ';
+
+  @override
+  String get goodAfternoon => 'शुभ दुपार';
+
+  @override
+  String get goodEvening => 'शुभ संध्याकाळ';
+
+  @override
+  String get studentsWelcomeChip => 'विद्यार्थ्यांचे स्वागत आहे';
+
+  @override
+  String get flexibleShiftChip => 'लवचिक शिफ्ट';
 }

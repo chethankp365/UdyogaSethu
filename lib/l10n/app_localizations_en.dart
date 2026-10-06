@@ -304,9 +304,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wageTypeFixed => 'Fixed Payment';
 
   @override
-  String walletBalance(Object balance) {
-    return 'Wallet Balance: ₹$balance';
-  }
+  String get walletBalance => 'Wallet Balance';
 
   @override
   String jobsCount(num count) {
@@ -1080,4 +1078,80 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get demoSimulateFail => 'Demo: Fail Verification';
+
+  @override
+  String get seekerHomeTitle => 'Seeker Home';
+
+  @override
+  String get searchJobsPlaceholder => 'Search jobs, services...';
+
+  @override
+  String get todaysGoal => 'Today\'s Goal';
+
+  @override
+  String get viewWallet => 'View Wallet >';
+
+  @override
+  String get locationSharingActive =>
+      'Location sharing active for safety monitoring';
+
+  @override
+  String get changeLocation => 'Change >';
+
+  @override
+  String get quickActionsHeader => 'QUICK ACTIONS';
+
+  @override
+  String get actionNearbyJobs => 'Nearby Jobs';
+
+  @override
+  String get actionAiAssistant => 'AI Assistant';
+
+  @override
+  String get actionWallet => 'Wallet';
+
+  @override
+  String get actionSafetyHub => 'Safety Hub';
+
+  @override
+  String get tagSponsored => 'SPONSORED';
+
+  @override
+  String get whyAmISeeingThis => 'Why am I seeing this?';
+
+  @override
+  String get recommendedForYou => 'RECOMMENDED FOR YOU';
+
+  @override
+  String get applyNow => 'Apply Now';
+
+  @override
+  String get applied => 'Applied ✓';
+
+  @override
+  String get noJobsNearYou => 'No jobs near you yet';
+
+  @override
+  String get widenRadiusAction => 'Widen Search Radius';
+
+  @override
+  String get sosEmergencyPill => 'SOS';
+
+  @override
+  String get selectLocationArea => 'Select Location Area';
+
+  @override
+  String get goodMorning => 'Good Morning';
+
+  @override
+  String get goodAfternoon => 'Good Afternoon';
+
+  @override
+  String get goodEvening => 'Good Evening';
+
+  @override
+  String get studentsWelcomeChip => 'Students Welcome';
+
+  @override
+  String get flexibleShiftChip => 'Flexible Shift';
 }

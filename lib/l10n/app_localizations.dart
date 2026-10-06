@@ -665,8 +665,8 @@ abstract class AppLocalizations {
   /// No description provided for @walletBalance.
   ///
   /// In en, this message translates to:
-  /// **'Wallet Balance: ₹{balance}'**
-  String walletBalance(Object balance);
+  /// **'Wallet Balance'**
+  String get walletBalance;
 
   /// No description provided for @jobsCount.
   ///
@@ -2035,6 +2035,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Demo: Fail Verification'**
   String get demoSimulateFail;
+
+  /// No description provided for @seekerHomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Seeker Home'**
+  String get seekerHomeTitle;
+
+  /// No description provided for @searchJobsPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Search jobs, services...'**
+  String get searchJobsPlaceholder;
+
+  /// No description provided for @todaysGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Goal'**
+  String get todaysGoal;
+
+  /// No description provided for @viewWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'View Wallet >'**
+  String get viewWallet;
+
+  /// No description provided for @locationSharingActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Location sharing active for safety monitoring'**
+  String get locationSharingActive;
+
+  /// No description provided for @changeLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Change >'**
+  String get changeLocation;
+
+  /// No description provided for @quickActionsHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'QUICK ACTIONS'**
+  String get quickActionsHeader;
+
+  /// No description provided for @actionNearbyJobs.
+  ///
+  /// In en, this message translates to:
+  /// **'Nearby Jobs'**
+  String get actionNearbyJobs;
+
+  /// No description provided for @actionAiAssistant.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Assistant'**
+  String get actionAiAssistant;
+
+  /// No description provided for @actionWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet'**
+  String get actionWallet;
+
+  /// No description provided for @actionSafetyHub.
+  ///
+  /// In en, this message translates to:
+  /// **'Safety Hub'**
+  String get actionSafetyHub;
+
+  /// No description provided for @tagSponsored.
+  ///
+  /// In en, this message translates to:
+  /// **'SPONSORED'**
+  String get tagSponsored;
+
+  /// No description provided for @whyAmISeeingThis.
+  ///
+  /// In en, this message translates to:
+  /// **'Why am I seeing this?'**
+  String get whyAmISeeingThis;
+
+  /// No description provided for @recommendedForYou.
+  ///
+  /// In en, this message translates to:
+  /// **'RECOMMENDED FOR YOU'**
+  String get recommendedForYou;
+
+  /// No description provided for @applyNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Now'**
+  String get applyNow;
+
+  /// No description provided for @applied.
+  ///
+  /// In en, this message translates to:
+  /// **'Applied ✓'**
+  String get applied;
+
+  /// No description provided for @noJobsNearYou.
+  ///
+  /// In en, this message translates to:
+  /// **'No jobs near you yet'**
+  String get noJobsNearYou;
+
+  /// No description provided for @widenRadiusAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Widen Search Radius'**
+  String get widenRadiusAction;
+
+  /// No description provided for @sosEmergencyPill.
+  ///
+  /// In en, this message translates to:
+  /// **'SOS'**
+  String get sosEmergencyPill;
+
+  /// No description provided for @selectLocationArea.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Location Area'**
+  String get selectLocationArea;
+
+  /// No description provided for @goodMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good Morning'**
+  String get goodMorning;
+
+  /// No description provided for @goodAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Good Afternoon'**
+  String get goodAfternoon;
+
+  /// No description provided for @goodEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Good Evening'**
+  String get goodEvening;
+
+  /// No description provided for @studentsWelcomeChip.
+  ///
+  /// In en, this message translates to:
+  /// **'Students Welcome'**
+  String get studentsWelcomeChip;
+
+  /// No description provided for @flexibleShiftChip.
+  ///
+  /// In en, this message translates to:
+  /// **'Flexible Shift'**
+  String get flexibleShiftChip;
 }
 
 class _AppLocalizationsDelegate
