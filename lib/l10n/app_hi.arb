@@ -364,7 +364,16 @@
   "openLocationSettings": "सेटिंग्स",
   "loadJobsError": "निकटवर्ती कार्य लोड करने में असमर्थ। कनेक्शन जांचें और पुनः प्रयास करें।",
   "retryAction": "पुनः प्रयास करें",
-  "openStreetMapAttribution": "© OpenStreetMap contributors"
+  "openStreetMapAttribution": "© OpenStreetMap contributors",
+  "cameraPermissionTitle": "कैमरा एक्सेस",
+  "cameraPermissionSubtitle": "चेहरे के सत्यापन और आईडी स्कैनिंग के लिए उपयोग किया जाता है।",
+  "locationPermissionTitle": "डिवाइस स्थान (जीपीएस)",
+  "locationPermissionSubtitle": "पास के काम, मार्ग मानचित्र और उपस्थिति दिखाने के लिए उपयोग किया जाता है।",
+  "notificationPermissionTitle": "सूचनाएं",
+  "notificationPermissionSubtitle": "तुरंत काम की सूचना, भुगतान और सुरक्षा अपडेट के लिए उपयोग किया जाता है।",
+  "permissionAllowedStatus": "अनुमति है",
+  "permissionBlockedStatus": "अवरुद्ध / बंद",
+  "refreshConsentsTooltip": "स्थिति ताज़ा करें"
 }
 
 

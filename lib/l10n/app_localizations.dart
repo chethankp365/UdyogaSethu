@@ -2293,6 +2293,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'© OpenStreetMap contributors'**
   String get openStreetMapAttribution;
+
+  /// No description provided for @cameraPermissionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera Access'**
+  String get cameraPermissionTitle;
+
+  /// No description provided for @cameraPermissionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Used for face liveness verification and worker ID scanning.'**
+  String get cameraPermissionSubtitle;
+
+  /// No description provided for @locationPermissionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Device Location (GPS)'**
+  String get locationPermissionTitle;
+
+  /// No description provided for @locationPermissionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Used to show nearby jobs, job route map, and work site attendance.'**
+  String get locationPermissionSubtitle;
+
+  /// No description provided for @notificationPermissionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationPermissionTitle;
+
+  /// No description provided for @notificationPermissionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Used for instant job alerts, payment updates, and safety alerts.'**
+  String get notificationPermissionSubtitle;
+
+  /// No description provided for @permissionAllowedStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed'**
+  String get permissionAllowedStatus;
+
+  /// No description provided for @permissionBlockedStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocked / Off'**
+  String get permissionBlockedStatus;
+
+  /// No description provided for @refreshConsentsTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh Status'**
+  String get refreshConsentsTooltip;
 }
 
 class _AppLocalizationsDelegate

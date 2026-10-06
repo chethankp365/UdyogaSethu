@@ -1217,4 +1217,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get openStreetMapAttribution => '© OpenStreetMap contributors';
+
+  @override
+  String get cameraPermissionTitle => 'Camera Access';
+
+  @override
+  String get cameraPermissionSubtitle =>
+      'Used for face liveness verification and worker ID scanning.';
+
+  @override
+  String get locationPermissionTitle => 'Device Location (GPS)';
+
+  @override
+  String get locationPermissionSubtitle =>
+      'Used to show nearby jobs, job route map, and work site attendance.';
+
+  @override
+  String get notificationPermissionTitle => 'Notifications';
+
+  @override
+  String get notificationPermissionSubtitle =>
+      'Used for instant job alerts, payment updates, and safety alerts.';
+
+  @override
+  String get permissionAllowedStatus => 'Allowed';
+
+  @override
+  String get permissionBlockedStatus => 'Blocked / Off';
+
+  @override
+  String get refreshConsentsTooltip => 'Refresh Status';
 }

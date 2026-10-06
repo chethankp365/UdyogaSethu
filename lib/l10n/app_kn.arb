@@ -364,7 +364,16 @@
   "openLocationSettings": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
   "loadJobsError": "ಹತ್ತಿರದ ಉದ್ಯೋಗಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗುತ್ತಿಲ್ಲ. ಸಂಪರ್ಕ ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
   "retryAction": "ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ",
-  "openStreetMapAttribution": "© OpenStreetMap contributors"
+  "openStreetMapAttribution": "© OpenStreetMap contributors",
+  "cameraPermissionTitle": "ಕ್ಯಾಮೆರಾ ಪ್ರವೇಶ",
+  "cameraPermissionSubtitle": "ಮುಖದ ಪರಿಶೀಲನೆ ಮತ್ತು ಕೆಲಸಗಾರರ ಐಡಿ ಸ್ಕ್ಯಾನಿಂಗ್‌ಗೆ ಬಳಸಲಾಗುತ್ತದೆ.",
+  "locationPermissionTitle": "ಸಾಧನದ ಸ್ಥಳ (ಜಿಪಿಎಸ್)",
+  "locationPermissionSubtitle": "ಹತ್ತಿರದ ಉದ್ಯೋಗಗಳು, ಮಾರ್ಗ ನಕ್ಷೆ ಮತ್ತು ಕೆಲಸದ ಹಾಜರಾತಿಗೆ ಬಳಸಲಾಗುತ್ತದೆ.",
+  "notificationPermissionTitle": "ಅಧಿಸೂಚನೆಗಳು",
+  "notificationPermissionSubtitle": "ಉದ್ಯೋಗ ಎಚ್ಚರಿಕೆಗಳು, ಪಾವತಿ ಮತ್ತು ಸುರಕ್ಷತೆಯ ಅಧಿಸೂಚನೆಗಳಿಗಾಗಿ ಬಳಸಲಾಗುತ್ತದೆ.",
+  "permissionAllowedStatus": "ಅನುಮತಿಸಲಾಗಿದೆ",
+  "permissionBlockedStatus": "ನಿರ್ಬಂಧಿಸಲಾಗಿದೆ / ಆಫ್",
+  "refreshConsentsTooltip": "ಸ್ಥಿತಿಯನ್ನು ನವೀಕರಿಸಿ"
 }
 
 

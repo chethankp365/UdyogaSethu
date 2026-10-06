@@ -364,7 +364,16 @@
   "openLocationSettings": "ସେଟିଂସ୍",
   "loadJobsError": "ନିକଟସ୍ଥ କାର୍ଯ୍ୟ ଲୋଡ୍ କରିବାରେ ଅସମର୍ଥ। ସଂଯୋଗ ଯାଞ୍ଚ କରି ପୁନଃ ଚେଷ୍ଟା କରନ୍ତୁ।",
   "retryAction": "ପୁନଃ ଚେଷ୍ଟା କରନ୍ତୁ",
-  "openStreetMapAttribution": "© OpenStreetMap contributors"
+  "openStreetMapAttribution": "© OpenStreetMap contributors",
+  "cameraPermissionTitle": "କ୍ୟାମେରା ପ୍ରବେଶ",
+  "cameraPermissionSubtitle": "ଚେହେରା ଯାଞ୍ଚ ଏବଂ ଆଇଡି ସ୍କାନିଂ ପାଇଁ ବ୍ୟବହୃତ ହୁଏ।",
+  "locationPermissionTitle": "ଡିଭାଇସ୍ ସ୍ଥାନ (ଜିପିଏସ୍)",
+  "locationPermissionSubtitle": "ନିକଟସ୍ଥ କାମ, ମାନଚିତ୍ର ଏବଂ କାର୍ଯ୍ୟସ୍ଥଳ ଉପସ୍ଥିତି ଦେଖାଇବା ପାଇଁ ବ୍ୟବହୃତ ହୁଏ।",
+  "notificationPermissionTitle": "ବିଜ୍ଞପ୍ତି",
+  "notificationPermissionSubtitle": "ତୁରନ୍ତ କାର୍ଯ୍ୟ ସତର୍କତା, ଦେୟ ଏବଂ ସୁରକ୍ଷା ଅଦ୍ୟତନ ପାଇଁ ବ୍ୟବହୃତ ହୁଏ।",
+  "permissionAllowedStatus": "ଅନୁମୋଦିତ",
+  "permissionBlockedStatus": "ଅବରୋଧିତ / ବନ୍ଦ",
+  "refreshConsentsTooltip": "ସ୍ଥିତି ସତେଜ କରନ୍ତୁ"
 }
 
 

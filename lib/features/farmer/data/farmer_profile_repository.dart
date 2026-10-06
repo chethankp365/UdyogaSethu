@@ -197,13 +197,21 @@ class SupabaseFarmerProfileRepository implements FarmerProfileRepository {
       final user = _client.auth.currentUser;
       if (user == null) return;
 
+      try {
+        await _client.rpc('record_user_consent_v2', params: {
+          'p_purpose': 'gps',
+          'p_granted': true,
+          'p_version': '1.0',
+        });
+        return;
+      } catch (_) {}
+
       await _client.from('consent_logs').insert({
         'user_id': user.id,
-        'consent_type': 'gps',
+        'purpose': 'gps',
         'granted': true,
-        'context_action': 'farmer_wizard_farm_location',
-        'policy_version': 'v1.0',
-        'user_agent': 'UdyogaSethu Mobile App',
+        'version': '1.0',
+        'created_at': DateTime.now().toIso8601String(),
       });
     } catch (e) {
       AppLogger.w('Failed to log GPS consent: $e');

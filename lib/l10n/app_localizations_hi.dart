@@ -1215,4 +1215,34 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get openStreetMapAttribution => '© OpenStreetMap contributors';
+
+  @override
+  String get cameraPermissionTitle => 'कैमरा एक्सेस';
+
+  @override
+  String get cameraPermissionSubtitle =>
+      'चेहरे के सत्यापन और आईडी स्कैनिंग के लिए उपयोग किया जाता है।';
+
+  @override
+  String get locationPermissionTitle => 'डिवाइस स्थान (जीपीएस)';
+
+  @override
+  String get locationPermissionSubtitle =>
+      'पास के काम, मार्ग मानचित्र और उपस्थिति दिखाने के लिए उपयोग किया जाता है।';
+
+  @override
+  String get notificationPermissionTitle => 'सूचनाएं';
+
+  @override
+  String get notificationPermissionSubtitle =>
+      'तुरंत काम की सूचना, भुगतान और सुरक्षा अपडेट के लिए उपयोग किया जाता है।';
+
+  @override
+  String get permissionAllowedStatus => 'अनुमति है';
+
+  @override
+  String get permissionBlockedStatus => 'अवरुद्ध / बंद';
+
+  @override
+  String get refreshConsentsTooltip => 'स्थिति ताज़ा करें';
 }

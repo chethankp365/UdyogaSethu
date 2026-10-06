@@ -39,6 +39,8 @@ enum ConsentPurpose {
 }
 
 class ConsentLog {
+  final String? id;
+  final String? userId;
   final String purpose;
   final bool granted;
   final DateTime timestamp;
@@ -46,6 +48,8 @@ class ConsentLog {
   final Map<String, dynamic>? metadata;
 
   const ConsentLog({
+    this.id,
+    this.userId,
     required this.purpose,
     required this.granted,
     required this.timestamp,
@@ -54,14 +58,33 @@ class ConsentLog {
   });
 
   factory ConsentLog.fromJson(Map<String, dynamic> json) {
+    final purposeVal = json['purpose'] ?? json['consent_type'] ?? 'kyc';
+    final rawDate = json['created_at'] ?? json['granted_at'];
+    DateTime parsedDate = DateTime.now();
+    if (rawDate != null) {
+      parsedDate = DateTime.tryParse(rawDate.toString()) ?? DateTime.now();
+    }
+
     return ConsentLog(
-      purpose: json['consent_type'] as String? ?? 'kyc',
+      id: json['id'] as String?,
+      userId: json['user_id'] as String?,
+      purpose: purposeVal.toString(),
       granted: json['granted'] as bool? ?? false,
-      timestamp: json['granted_at'] != null
-          ? DateTime.tryParse(json['granted_at'].toString()) ?? DateTime.now()
-          : DateTime.now(),
+      timestamp: parsedDate,
       version: json['version'] as String? ?? '1.0',
       metadata: json['metadata'] as Map<String, dynamic>?,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      'purpose': purpose,
+      'granted': granted,
+      'version': version,
+      'created_at': timestamp.toIso8601String(),
+      if (metadata != null) 'metadata': metadata,
+    };
   }
 }

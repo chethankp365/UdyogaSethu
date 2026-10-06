@@ -1228,4 +1228,34 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get openStreetMapAttribution => '© OpenStreetMap contributors';
+
+  @override
+  String get cameraPermissionTitle => 'ಕ್ಯಾಮೆರಾ ಪ್ರವೇಶ';
+
+  @override
+  String get cameraPermissionSubtitle =>
+      'ಮುಖದ ಪರಿಶೀಲನೆ ಮತ್ತು ಕೆಲಸಗಾರರ ಐಡಿ ಸ್ಕ್ಯಾನಿಂಗ್‌ಗೆ ಬಳಸಲಾಗುತ್ತದೆ.';
+
+  @override
+  String get locationPermissionTitle => 'ಸಾಧನದ ಸ್ಥಳ (ಜಿಪಿಎಸ್)';
+
+  @override
+  String get locationPermissionSubtitle =>
+      'ಹತ್ತಿರದ ಉದ್ಯೋಗಗಳು, ಮಾರ್ಗ ನಕ್ಷೆ ಮತ್ತು ಕೆಲಸದ ಹಾಜರಾತಿಗೆ ಬಳಸಲಾಗುತ್ತದೆ.';
+
+  @override
+  String get notificationPermissionTitle => 'ಅಧಿಸೂಚನೆಗಳು';
+
+  @override
+  String get notificationPermissionSubtitle =>
+      'ಉದ್ಯೋಗ ಎಚ್ಚರಿಕೆಗಳು, ಪಾವತಿ ಮತ್ತು ಸುರಕ್ಷತೆಯ ಅಧಿಸೂಚನೆಗಳಿಗಾಗಿ ಬಳಸಲಾಗುತ್ತದೆ.';
+
+  @override
+  String get permissionAllowedStatus => 'ಅನುಮತಿಸಲಾಗಿದೆ';
+
+  @override
+  String get permissionBlockedStatus => 'ನಿರ್ಬಂಧಿಸಲಾಗಿದೆ / ಆಫ್';
+
+  @override
+  String get refreshConsentsTooltip => 'ಸ್ಥಿತಿಯನ್ನು ನವೀಕರಿಸಿ';
 }

@@ -1229,4 +1229,34 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get openStreetMapAttribution => '© OpenStreetMap contributors';
+
+  @override
+  String get cameraPermissionTitle => 'கேமரா அணுகல்';
+
+  @override
+  String get cameraPermissionSubtitle =>
+      'முக சரிபார்ப்பு மற்றும் அடையாள ஸ்கேனிங்கிற்கு பயன்படுத்தப்படுகிறது.';
+
+  @override
+  String get locationPermissionTitle => 'சாதன இருப்பிடம் (ஜிபிஎஸ்)';
+
+  @override
+  String get locationPermissionSubtitle =>
+      'அருகிலுள்ள வேலைகள், வரைபடம் மற்றும் வருகையைக் காட்ட பயன்படுகிறது.';
+
+  @override
+  String get notificationPermissionTitle => 'அறிவிப்புகள்';
+
+  @override
+  String get notificationPermissionSubtitle =>
+      'வேலை எச்சரிக்கைகள், கட்டண மற்றும் பாதுகாப்பு புதுப்பிப்புகளுக்கு பயன்படுகிறது.';
+
+  @override
+  String get permissionAllowedStatus => 'அனுமதிக்கப்பட்டது';
+
+  @override
+  String get permissionBlockedStatus => 'தடுக்கப்பட்டது / ஆஃப்';
+
+  @override
+  String get refreshConsentsTooltip => 'நிலையைப் புதுப்பிக்கவும்';
 }

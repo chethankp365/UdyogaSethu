@@ -268,8 +268,24 @@ class SupabaseSeekerProfileRepository implements SeekerProfileRepository {
   @override
   Future<void> logGpsConsent() async {
     try {
-      await _client.rpc('record_user_consent', params: {
-        'p_consent_type': 'gps',
+      final user = _client.auth.currentUser;
+      if (user == null) return;
+
+      try {
+        await _client.rpc('record_user_consent_v2', params: {
+          'p_purpose': 'gps',
+          'p_granted': true,
+          'p_version': '1.0',
+        });
+        return;
+      } catch (_) {}
+
+      await _client.from('consent_logs').insert({
+        'user_id': user.id,
+        'purpose': 'gps',
+        'granted': true,
+        'version': '1.0',
+        'created_at': DateTime.now().toIso8601String(),
       });
     } catch (e, stack) {
       AppLogger.e('Error logging GPS consent', e, stack);

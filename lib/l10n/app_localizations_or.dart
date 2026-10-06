@@ -1220,4 +1220,34 @@ class AppLocalizationsOr extends AppLocalizations {
 
   @override
   String get openStreetMapAttribution => '© OpenStreetMap contributors';
+
+  @override
+  String get cameraPermissionTitle => 'କ୍ୟାମେରା ପ୍ରବେଶ';
+
+  @override
+  String get cameraPermissionSubtitle =>
+      'ଚେହେରା ଯାଞ୍ଚ ଏବଂ ଆଇଡି ସ୍କାନିଂ ପାଇଁ ବ୍ୟବହୃତ ହୁଏ।';
+
+  @override
+  String get locationPermissionTitle => 'ଡିଭାଇସ୍ ସ୍ଥାନ (ଜିପିଏସ୍)';
+
+  @override
+  String get locationPermissionSubtitle =>
+      'ନିକଟସ୍ଥ କାମ, ମାନଚିତ୍ର ଏବଂ କାର୍ଯ୍ୟସ୍ଥଳ ଉପସ୍ଥିତି ଦେଖାଇବା ପାଇଁ ବ୍ୟବହୃତ ହୁଏ।';
+
+  @override
+  String get notificationPermissionTitle => 'ବିଜ୍ଞପ୍ତି';
+
+  @override
+  String get notificationPermissionSubtitle =>
+      'ତୁରନ୍ତ କାର୍ଯ୍ୟ ସତର୍କତା, ଦେୟ ଏବଂ ସୁରକ୍ଷା ଅଦ୍ୟତନ ପାଇଁ ବ୍ୟବହୃତ ହୁଏ।';
+
+  @override
+  String get permissionAllowedStatus => 'ଅନୁମୋଦିତ';
+
+  @override
+  String get permissionBlockedStatus => 'ଅବରୋଧିତ / ବନ୍ଦ';
+
+  @override
+  String get refreshConsentsTooltip => 'ସ୍ଥିତି ସତେଜ କରନ୍ତୁ';
 }

@@ -364,7 +364,16 @@
   "openLocationSettings": "Settings",
   "loadJobsError": "Unable to load nearby jobs. Check connection and tap Retry.",
   "retryAction": "Retry",
-  "openStreetMapAttribution": "© OpenStreetMap contributors"
+  "openStreetMapAttribution": "© OpenStreetMap contributors",
+  "cameraPermissionTitle": "Camera Access",
+  "cameraPermissionSubtitle": "Used for face liveness verification and worker ID scanning.",
+  "locationPermissionTitle": "Device Location (GPS)",
+  "locationPermissionSubtitle": "Used to show nearby jobs, job route map, and work site attendance.",
+  "notificationPermissionTitle": "Notifications",
+  "notificationPermissionSubtitle": "Used for instant job alerts, payment updates, and safety alerts.",
+  "permissionAllowedStatus": "Allowed",
+  "permissionBlockedStatus": "Blocked / Off",
+  "refreshConsentsTooltip": "Refresh Status"
 }
 
 

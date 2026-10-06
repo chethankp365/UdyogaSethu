@@ -364,7 +364,16 @@
   "openLocationSettings": "సెట్టింగ్‌లు",
   "loadJobsError": "సమీప పనులను లోడ్ చేయడం సాధ్యపడలేదు. నెట్‌వర్క్ తనిఖీ చేసి మళ్లీ ప్రయత్నించండి.",
   "retryAction": "మళ్ళీ ప్రయత్నించండి",
-  "openStreetMapAttribution": "© OpenStreetMap contributors"
+  "openStreetMapAttribution": "© OpenStreetMap contributors",
+  "cameraPermissionTitle": "కెమెరా యాక్సెస్",
+  "cameraPermissionSubtitle": "ముఖ ధృవీకరణ మరియు ఐడి స్కానింగ్ కోసం ఉపయోగించబడుతుంది.",
+  "locationPermissionTitle": "పరికర స్థానం (జిపిఎస్)",
+  "locationPermissionSubtitle": "సమీపంలోని ఉద్యోగాలు, మార్గం మరియు హాజరు చూపించడానికి ఉపయోగించబడుతుంది.",
+  "notificationPermissionTitle": "నోటిఫికేషన్‌లు",
+  "notificationPermissionSubtitle": "ఉద్యోగ హెచ్చరికలు, చెల్లింపు మరియు భద్రతా అప్‌డేట్‌ల కోసం ఉపయోగించబడుతుంది.",
+  "permissionAllowedStatus": "అనుమతించబడింది",
+  "permissionBlockedStatus": "బ్లాక్ చేయబడింది / ఆఫ్",
+  "refreshConsentsTooltip": "స్థితిని రిఫ్రెష్ చేయండి"
 }
 
 

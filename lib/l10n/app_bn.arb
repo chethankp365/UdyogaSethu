@@ -364,7 +364,16 @@
   "openLocationSettings": "সেটিংস",
   "loadJobsError": "কাছাকাছি কাজ লোড করা সম্ভব হচ্ছে না। সংযোগ পরীক্ষা করে পুনরায় চেষ্টা করুন।",
   "retryAction": "আবার চেষ্টা করুন",
-  "openStreetMapAttribution": "© OpenStreetMap contributors"
+  "openStreetMapAttribution": "© OpenStreetMap contributors",
+  "cameraPermissionTitle": "ক্যামেরা অ্যাক্সেস",
+  "cameraPermissionSubtitle": "ফেস যাচাইকরণ এবং আইডি স্ক্যানিংয়ের জন্য ব্যবহৃত হয়।",
+  "locationPermissionTitle": "ডিভাইসের অবস্থান (জিপিএস)",
+  "locationPermissionSubtitle": "কাছাকাছি চাকরি, মানচিত্র এবং কাজের উপস্থিতি দেখানোর জন্য ব্যবহৃত হয়।",
+  "notificationPermissionTitle": "বিজ্ঞপ্তি",
+  "notificationPermissionSubtitle": "তাত্ক্ষণিক কাজের সতর্কতা, পেমেন্ট এবং নিরাপত্তা আপডেটের জন্য ব্যবহৃত হয়।",
+  "permissionAllowedStatus": "অনুমোদিত",
+  "permissionBlockedStatus": "ব্লকড / বন্ধ",
+  "refreshConsentsTooltip": "স্ট্যাটাস রিফ্রেশ করুন"
 }
 
 

@@ -1217,4 +1217,34 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get openStreetMapAttribution => '© OpenStreetMap contributors';
+
+  @override
+  String get cameraPermissionTitle => 'ক্যামেরা অ্যাক্সেস';
+
+  @override
+  String get cameraPermissionSubtitle =>
+      'ফেস যাচাইকরণ এবং আইডি স্ক্যানিংয়ের জন্য ব্যবহৃত হয়।';
+
+  @override
+  String get locationPermissionTitle => 'ডিভাইসের অবস্থান (জিপিএস)';
+
+  @override
+  String get locationPermissionSubtitle =>
+      'কাছাকাছি চাকরি, মানচিত্র এবং কাজের উপস্থিতি দেখানোর জন্য ব্যবহৃত হয়।';
+
+  @override
+  String get notificationPermissionTitle => 'বিজ্ঞপ্তি';
+
+  @override
+  String get notificationPermissionSubtitle =>
+      'তাত্ক্ষণিক কাজের সতর্কতা, পেমেন্ট এবং নিরাপত্তা আপডেটের জন্য ব্যবহৃত হয়।';
+
+  @override
+  String get permissionAllowedStatus => 'অনুমোদিত';
+
+  @override
+  String get permissionBlockedStatus => 'ব্লকড / বন্ধ';
+
+  @override
+  String get refreshConsentsTooltip => 'স্ট্যাটাস রিফ্রেশ করুন';
 }

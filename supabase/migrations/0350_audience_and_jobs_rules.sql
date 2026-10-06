@@ -51,6 +51,66 @@ $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 GRANT EXECUTE ON FUNCTION public.record_user_consent_v2(TEXT, BOOLEAN, TEXT) TO authenticated;
 
+CREATE OR REPLACE FUNCTION public.revoke_consent(
+  p_purpose TEXT
+)
+RETURNS JSONB AS $$
+DECLARE
+  v_user_id UUID;
+  v_purpose_enum public.consent_purpose;
+BEGIN
+  v_user_id := auth.uid();
+  IF v_user_id IS NULL THEN
+    RAISE EXCEPTION 'Not authenticated' USING ERRCODE = '42501';
+  END IF;
+
+  v_purpose_enum := p_purpose::public.consent_purpose;
+
+  INSERT INTO public.consent_logs (user_id, purpose, granted, version, created_at)
+  VALUES (v_user_id, v_purpose_enum, false, '1.0', NOW());
+
+  RETURN jsonb_build_object(
+    'success', true,
+    'purpose', p_purpose,
+    'user_id', v_user_id
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+GRANT EXECUTE ON FUNCTION public.revoke_consent(TEXT) TO authenticated;
+
+CREATE OR REPLACE FUNCTION public.withdraw_face_consent()
+RETURNS JSONB AS $$
+DECLARE
+  v_user_id UUID;
+BEGIN
+  v_user_id := auth.uid();
+  IF v_user_id IS NULL THEN
+    RAISE EXCEPTION 'Not authenticated' USING ERRCODE = '42501';
+  END IF;
+
+  INSERT INTO public.consent_logs (user_id, purpose, granted, version, created_at)
+  VALUES (v_user_id, 'face'::public.consent_purpose, false, '1.0', NOW());
+
+  IF to_regclass('public.face_profiles') IS NOT NULL THEN
+    DELETE FROM public.face_profiles WHERE user_id = v_user_id;
+  END IF;
+
+  IF to_regclass('public.verification_attempts') IS NOT NULL THEN
+    DELETE FROM public.verification_attempts 
+    WHERE user_id = v_user_id AND verification_type = 'face';
+  END IF;
+
+  RETURN jsonb_build_object(
+    'success', true,
+    'message', 'Face verification consent withdrawn and matcher reference erased.',
+    'user_id', v_user_id
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+GRANT EXECUTE ON FUNCTION public.withdraw_face_consent() TO authenticated;
+
 -- 3. Strict Audience Gating in apply_to_job
 CREATE OR REPLACE FUNCTION public.apply_to_job(
   p_job_id UUID,

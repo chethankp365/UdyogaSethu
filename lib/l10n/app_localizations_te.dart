@@ -1226,4 +1226,34 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get openStreetMapAttribution => '© OpenStreetMap contributors';
+
+  @override
+  String get cameraPermissionTitle => 'కెమెరా యాక్సెస్';
+
+  @override
+  String get cameraPermissionSubtitle =>
+      'ముఖ ధృవీకరణ మరియు ఐడి స్కానింగ్ కోసం ఉపయోగించబడుతుంది.';
+
+  @override
+  String get locationPermissionTitle => 'పరికర స్థానం (జిపిఎస్)';
+
+  @override
+  String get locationPermissionSubtitle =>
+      'సమీపంలోని ఉద్యోగాలు, మార్గం మరియు హాజరు చూపించడానికి ఉపయోగించబడుతుంది.';
+
+  @override
+  String get notificationPermissionTitle => 'నోటిఫికేషన్‌లు';
+
+  @override
+  String get notificationPermissionSubtitle =>
+      'ఉద్యోగ హెచ్చరికలు, చెల్లింపు మరియు భద్రతా అప్‌డేట్‌ల కోసం ఉపయోగించబడుతుంది.';
+
+  @override
+  String get permissionAllowedStatus => 'అనుమతించబడింది';
+
+  @override
+  String get permissionBlockedStatus => 'బ్లాక్ చేయబడింది / ఆఫ్';
+
+  @override
+  String get refreshConsentsTooltip => 'స్థితిని రిఫ్రెష్ చేయండి';
 }

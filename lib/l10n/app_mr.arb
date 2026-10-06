@@ -364,7 +364,16 @@
   "openLocationSettings": "सेटिंग्ज",
   "loadJobsError": "जवळपासच्या नोकऱ्या लोड करण्यात अक्षम. कनेक्शन तपासा आणि पुन्हा प्रयत्न करा.",
   "retryAction": "पुन्हा प्रयत्न करा",
-  "openStreetMapAttribution": "© OpenStreetMap contributors"
+  "openStreetMapAttribution": "© OpenStreetMap contributors",
+  "cameraPermissionTitle": "कॅमेरा प्रवेश",
+  "cameraPermissionSubtitle": "चेहरा पडताळणी आणि आयडी स्कॅनिंगसाठी वापरले जाते.",
+  "locationPermissionTitle": "डिव्हाइस स्थान (जीपीएस)",
+  "locationPermissionSubtitle": "जवळपासच्या नोकऱ्या, मार्ग नकाशा आणि कामावरील उपस्थिती दर्शवण्यासाठी वापरले जाते.",
+  "notificationPermissionTitle": "सूचना",
+  "notificationPermissionSubtitle": "त्वरित नोकरी सूचना, देयक अद्यतने आणि सुरक्षा सूचनांसाठी वापरले जाते.",
+  "permissionAllowedStatus": "परवानगी आहे",
+  "permissionBlockedStatus": "अवरोधित / बंद",
+  "refreshConsentsTooltip": "स्थिती रीफ्रेश करा"
 }
 
 
