@@ -1051,4 +1051,40 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get settingsTitle => 'సెట్టింగ్‌లు';
+
+  @override
+  String get faceVerificationCheck => 'ముఖ గుర్తింపు తనిఖీ';
+
+  @override
+  String get faceCheckSubtext =>
+      'ఫేస్ లైవ్‌నెస్ చెక్ ద్వారా మీ గుర్తింపును ధృవీకరించండి';
+
+  @override
+  String get faceMatchSuccess => 'ముఖ గుర్తింపు ధృవీకరించబడింది';
+
+  @override
+  String get faceMatchFailedTitle => 'ముఖ పోలిక విఫలమైంది';
+
+  @override
+  String get faceMatchFailedBody =>
+      'మంచి వెలుతురులో మీ ముఖాన్ని స్పష్టంగా ఉంచి మళ్లీ ప్రయత్నించండి.';
+
+  @override
+  String get manualReviewRequiredTitle => '3 ధృవీకరణ ప్రయత్నాలు విఫలమయ్యాయి';
+
+  @override
+  String get manualReviewRequiredBody =>
+      'మీ ముఖ ధృవీకరణ మాన్యువల్ సమీక్షకు పంపబడింది. మీరు పరిమిత యాక్సెస్‌తో కొనసాగవచ్చు.';
+
+  @override
+  String get requestManualReview => 'మాన్యువల్ సమీక్షను అభ్యర్థించండి';
+
+  @override
+  String get retryVerification => 'మళ్లీ ధృవీకరించడానికి ప్రయత్నించండి';
+
+  @override
+  String get demoSimulatePass => 'డెమో: ధృవీకరణ పూర్తయింది';
+
+  @override
+  String get demoSimulateFail => 'డెమో: ధృవీకరణ విఫలమైంది';
 }

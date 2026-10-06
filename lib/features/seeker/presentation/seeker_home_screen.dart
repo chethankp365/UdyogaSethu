@@ -8,6 +8,7 @@ import 'package:udyogasethu/core/config/env.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/widgets/compact_language_selector.dart';
+import 'package:udyogasethu/core/widgets/user_avatar.dart';
 import 'package:udyogasethu/features/seeker/domain/seeker_profile_draft.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_wizard_controller.dart';
 
@@ -115,39 +116,44 @@ class SeekerHomeScreen extends ConsumerWidget {
                   Card(
                     elevation: 2,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: AppColors.paleMint,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: AppColors.cardBorderGreen),
-                      ),
-                      child: Row(
-                        children: [
-                          const CircleAvatar(
-                            backgroundColor: AppColors.headerGreenDark,
-                            foregroundColor: Colors.white,
-                            radius: 20,
-                            child: Icon(Icons.verified_user_rounded, size: 24),
-                          ),
-                          const SizedBox(width: 14),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Identity Verification',
-                                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.headerGreenDark),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  draft.onboardingComplete ? 'Profile completed & active.' : 'Complete profile & KYC to get verified trust badge.',
-                                  style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
-                                ),
-                              ],
+                    child: InkWell(
+                      onTap: () => context.push(AppRoutes.kycSafetyOnboarding),
+                      borderRadius: BorderRadius.circular(16),
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: AppColors.paleMint,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: AppColors.cardBorderGreen),
+                        ),
+                        child: const Row(
+                          children: [
+                            CircleAvatar(
+                              backgroundColor: AppColors.headerGreenDark,
+                              foregroundColor: Colors.white,
+                              radius: 20,
+                              child: Icon(Icons.verified_user_rounded, size: 24),
                             ),
-                          ),
-                        ],
+                            SizedBox(width: 14),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Safety Onboarding & Verified Badge',
+                                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.headerGreenDark),
+                                  ),
+                                  SizedBox(height: 2),
+                                  Text(
+                                    'Complete KYC, liveness and 1-day training to earn gold badge +100 XP.',
+                                    style: TextStyle(fontSize: 12, color: AppColors.textMuted),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Icon(Icons.chevron_right_rounded, color: AppColors.headerGreenDark),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -172,13 +178,12 @@ class SeekerHomeScreen extends ConsumerWidget {
                         children: [
                           Row(
                             children: [
-                              CircleAvatar(
+                              UserAvatar(
+                                avatarPath: draft.avatarPath,
+                                name: hasName ? draft.fullName : 'Unnamed Worker',
                                 radius: 32,
                                 backgroundColor: AppColors.headerGreenDark.withValues(alpha: 0.15),
-                                backgroundImage: draft.avatarUrl != null ? NetworkImage(draft.avatarUrl!) : null,
-                                child: draft.avatarUrl == null
-                                    ? const Icon(Icons.person_rounded, size: 36, color: AppColors.headerGreenDark)
-                                    : null,
+                                textColor: AppColors.headerGreenDark,
                               ),
                               const SizedBox(width: 14),
                               Expanded(

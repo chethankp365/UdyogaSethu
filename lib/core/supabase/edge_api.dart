@@ -145,9 +145,41 @@ class EdgeApiClient {
     });
   }
 
-  /// Issue signed QR token for assignment ticket check-in.
-  Future<Map<String, dynamic>> qrIssue({required String assignmentId}) async {
-    return _invoke('qr-issue', body: {'assignment_id': assignmentId});
+  /// Verify user 128-float32 face embedding vector with liveness check.
+  Future<Map<String, dynamic>> faceVerifyVector({
+    required List<double> embedding,
+    required String context,
+    String? assignmentId,
+  }) async {
+    final body = <String, dynamic>{
+      'embedding': embedding,
+      'context': context,
+    };
+    if (assignmentId != null) body['assignment_id'] = assignmentId;
+    return _invoke('face-verify', body: body);
+  }
+
+  /// Call SECURITY DEFINER RPC get_face_login_requirement to check if face login is required.
+  /// Flutter app MUST use this RPC and NEVER read admin_settings directly.
+  Future<bool> getFaceLoginRequirement() async {
+    try {
+      final response = await _client.rpc('get_face_login_requirement');
+      if (response is bool) return response;
+      if (response is String) return response.toLowerCase() == 'true';
+      return false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// Issue signed QR token for digital ID profile verification or assignment ticket check-in.
+  Future<Map<String, dynamic>> qrIssue({
+    String? assignmentId,
+    String purpose = 'profile',
+  }) async {
+    final body = <String, dynamic>{'purpose': purpose};
+    if (assignmentId != null) body['assignment_id'] = assignmentId;
+    return _invoke('qr-issue', body: body);
   }
 
   /// Verify scanned QR code for ticket check-in.

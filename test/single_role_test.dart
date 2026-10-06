@@ -112,7 +112,7 @@ void main() {
 
       expect(find.text('Seeker Home'), findsOneWidget);
       expect(find.textContaining('Welcome back, Chethan Kumar!'), findsOneWidget);
-      expect(find.text('Identity Verification'), findsOneWidget);
+      expect(find.text('Safety Onboarding & Verified Badge'), findsOneWidget);
       expect(find.text('Informal Seeker'), findsOneWidget);
       expect(find.text('₹650 / day'), findsOneWidget);
       expect(find.text('Find Jobs'), findsOneWidget);

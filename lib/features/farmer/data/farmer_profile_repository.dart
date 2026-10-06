@@ -163,8 +163,7 @@ class SupabaseFarmerProfileRepository implements FarmerProfileRepository {
             fileOptions: const FileOptions(upsert: true),
           );
 
-      final publicUrl = _client.storage.from('avatars').getPublicUrl(path);
-      return publicUrl;
+      return path;
     } catch (e, stack) {
       AppLogger.e('Error uploading avatar photo', e, stack);
       throw const AppException.unknown('Failed to upload profile photo');

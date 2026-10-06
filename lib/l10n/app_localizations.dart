@@ -1969,6 +1969,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get settingsTitle;
+
+  /// No description provided for @faceVerificationCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Face Verification Check'**
+  String get faceVerificationCheck;
+
+  /// No description provided for @faceCheckSubtext.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify your identity using face liveness check'**
+  String get faceCheckSubtext;
+
+  /// No description provided for @faceMatchSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Face Identity Verified'**
+  String get faceMatchSuccess;
+
+  /// No description provided for @faceMatchFailedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Face Match Failed'**
+  String get faceMatchFailedTitle;
+
+  /// No description provided for @faceMatchFailedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Position your face clearly in good lighting and try again.'**
+  String get faceMatchFailedBody;
+
+  /// No description provided for @manualReviewRequiredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'3 Verification Attempts Failed'**
+  String get manualReviewRequiredTitle;
+
+  /// No description provided for @manualReviewRequiredBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your face verification has been submitted for manual review. You may continue with limited access.'**
+  String get manualReviewRequiredBody;
+
+  /// No description provided for @requestManualReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Manual Review'**
+  String get requestManualReview;
+
+  /// No description provided for @retryVerification.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Verification Again'**
+  String get retryVerification;
+
+  /// No description provided for @demoSimulatePass.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo: Pass Verification'**
+  String get demoSimulatePass;
+
+  /// No description provided for @demoSimulateFail.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo: Fail Verification'**
+  String get demoSimulateFail;
 }
 
 class _AppLocalizationsDelegate

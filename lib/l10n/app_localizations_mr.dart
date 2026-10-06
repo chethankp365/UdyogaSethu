@@ -956,90 +956,124 @@ class AppLocalizationsMr extends AppLocalizations {
   String get providerHomeTitle => 'प्रदाता होम';
 
   @override
-  String get roleConflictTitle => 'Account Role Conflict';
+  String get roleConflictTitle => 'भूमिका खाते आधीच अस्तित्वात आहे';
 
   @override
   String roleConflictMessage(Object chosenRole, Object existingRole) {
-    return 'This number is already registered as $existingRole. You cannot use it as $chosenRole. To use a different role, log in as $existingRole, go to Profile > Settings > Delete account, and then create a new account.';
+    return 'तुमचे खाते आधीच $existingRole म्हणून नोंदणीकृत आहे.';
   }
 
   @override
   String roleConflictLoginAs(Object existingRole) {
-    return 'Log in as $existingRole';
+    return '$existingRole म्हणून लॉग इन करा';
   }
 
   @override
-  String get roleConflictBack => 'Back';
+  String get roleConflictBack => 'मागे जा';
 
   @override
-  String get privacyCentreTitle => 'Privacy Centre';
+  String get privacyCentreTitle => 'गोपनीयता केंद्र';
 
   @override
   String get privacyCentreSubtitle =>
-      'Manage your data consents, privacy rights, and system permissions.';
+      'तुमच्या डेटा संमती आणि परवानग्या व्यवस्थापित करा.';
 
   @override
-  String get consentSheetTitle => 'Data Processing Consent';
+  String get consentSheetTitle => 'डेटा प्रक्रिया संमती';
 
   @override
-  String get consentWhatCollected => 'What is collected';
+  String get consentWhatCollected => 'काय गोळा केले जाते';
 
   @override
-  String get consentWhyCollected => 'Why it is collected';
+  String get consentWhyCollected => 'का गोळा केले जाते';
 
   @override
-  String get consentHowLongKept => 'How long it is kept';
+  String get consentHowLongKept => 'किती वेळ ठेवले जाते';
 
   @override
-  String get consentWhoCanSee => 'Who can see it';
+  String get consentWhoCanSee => 'कोण पाहू शकते';
 
   @override
-  String get consentHowToWithdraw => 'How to withdraw';
+  String get consentHowToWithdraw => 'मागे कसे घ्यायचे';
 
   @override
-  String get consentAgreeButton => 'I Agree & Consent';
+  String get consentAgreeButton => 'मी सहमत आहे आणि संमती देतो';
 
   @override
-  String get consentNotNowButton => 'Not Now';
+  String get consentNotNowButton => 'आत्ता नाही';
 
   @override
-  String get consentGrantedStatus => 'Consent Granted';
+  String get consentGrantedStatus => 'संमती दिली';
 
   @override
-  String get consentRevokedStatus => 'Not Granted / Withdrawn';
+  String get consentRevokedStatus => 'संमती नाकारली / काढून घेतली';
 
   @override
-  String get withdrawConsentButton => 'Withdraw Consent';
+  String get withdrawConsentButton => 'संमती मागे घ्या';
 
   @override
-  String get withdrawFaceConsentTitle => 'Withdraw Face Verification Consent?';
+  String get withdrawFaceConsentTitle => 'चेहरा पडताळणी संमती मागे घ्यायची?';
 
   @override
   String get withdrawFaceConsentMessage =>
-      'Withdrawing face consent will permanently erase your face reference vector and matcher records. You will need to re-enroll to use face-verified login.';
+      'चेहरा संमती मागे घेतल्यास तुमचा संदर्भ डेटा कायमचा हटवला जाईल.';
 
   @override
-  String get confirmWithdrawButton => 'Withdraw & Erase Data';
+  String get confirmWithdrawButton => 'मागे घ्या आणि डेटा हटवा';
 
   @override
-  String get cancelButton => 'Cancel';
+  String get cancelButton => 'रद्द करा';
 
   @override
-  String get profileTitle => 'My Profile';
+  String get profileTitle => 'माझे प्रोफाईल';
 
   @override
-  String get termsAndPrivacyTitle => 'Terms & Privacy Policy';
+  String get termsAndPrivacyTitle => 'अटी आणि गोपनीयता धोरण';
 
   @override
-  String get termsDraftNotice =>
-      'Draft - Have this reviewed before real launch';
+  String get termsDraftNotice => 'मसुदा - लॉन्चपूर्वी त्याचे पुनरावलोकन करा';
 
   @override
-  String get systemPermissionsTitle => 'System Permissions';
+  String get systemPermissionsTitle => 'सिस्टम परवानग्या';
 
   @override
-  String get openSystemSettings => 'Open App Settings';
+  String get openSystemSettings => 'ॲप सेटिंग्ज उघडा';
 
   @override
-  String get settingsTitle => 'Settings';
+  String get settingsTitle => 'सेटिंग्ज';
+
+  @override
+  String get faceVerificationCheck => 'चेहरा पडताळणी तपासणी';
+
+  @override
+  String get faceCheckSubtext => 'फेस लाईव्हनेस चेक वापरून तुमची ओळख पडताळा';
+
+  @override
+  String get faceMatchSuccess => 'चेहरा ओळख पडताळली';
+
+  @override
+  String get faceMatchFailedTitle => 'चेहरा जुळणी अयशस्वी';
+
+  @override
+  String get faceMatchFailedBody =>
+      'चांगल्या प्रकाशात तुमचा चेहरा स्पष्ट ठेवा आणि पुन्हा प्रयत्न करा.';
+
+  @override
+  String get manualReviewRequiredTitle => '3 पडताळणी प्रयत्न अयशस्वी';
+
+  @override
+  String get manualReviewRequiredBody =>
+      'तुमची चेहरा पडताळणी मॅन्युअल पुनरावलोकनासाठी पाठवली गेली आहे. तुम्ही मर्यादित प्रवेशासह सुरू ठेवू शकता.';
+
+  @override
+  String get requestManualReview => 'मॅन्युअल पुनरावलोकनाची विनंती करा';
+
+  @override
+  String get retryVerification => 'पुन्हा पडताळणीचा प्रयत्न करा';
+
+  @override
+  String get demoSimulatePass => 'डेमो: यशस्वी पडताळणी';
+
+  @override
+  String get demoSimulateFail => 'डेमो: अयशस्वी पडताळणी';
 }

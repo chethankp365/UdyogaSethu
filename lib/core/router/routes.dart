@@ -43,6 +43,12 @@ class AppRoutes {
   static const String kycBank = '/kyc/bank';
   static const String kycBackground = '/kyc/background';
   static const String kycFace = '/kyc/face';
+  static const String kycFaceCheck = '/kyc/face-check';
+  static const String kycSafetyOnboarding = '/kyc/safety-onboarding';
+  static const String digitalId = '/trust/digital-id';
+  static const String scanVerify = '/trust/scan-verify';
+  static const String trustSafetyCentre = '/trust/safety-centre';
+  static const String trustGovernanceRights = '/trust/governance-rights';
   static const String privacyCentre = '/privacy-centre';
   static const String termsAndPrivacy = '/terms-privacy';
   static const String safetyHub = '/safety';

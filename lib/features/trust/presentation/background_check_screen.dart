@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/trust/data/kyc_repository.dart';
 import 'package:udyogasethu/features/trust/domain/kyc_record.dart';
+import 'package:udyogasethu/features/trust/domain/verification_visibility.dart';
 
 class BackgroundCheckScreen extends ConsumerStatefulWidget {
   const BackgroundCheckScreen({super.key});
@@ -29,6 +31,28 @@ class _BackgroundCheckScreenState extends ConsumerState<BackgroundCheckScreen> {
   Widget build(BuildContext context) {
     final userId = _getUserId();
     final repo = ref.watch(kycRepositoryProvider);
+    final session = ref.watch(appSessionProvider);
+
+    final isEligible = isVerificationItemVisible(
+      type: VerificationType.backgroundCheck,
+      role: session.activeRole,
+      seekerType: session.seekerType,
+    );
+
+    final isStillLoading = session.activeRole == UserRole.seeker &&
+        !session.seekerTypeLoaded &&
+        session.seekerType == null;
+
+    if (!isStillLoading && !isEligible) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && Navigator.canPop(context)) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Background check is not applicable for farmer accounts.')),
+          );
+          Navigator.of(context).pop();
+        }
+      });
+    }
 
     return Scaffold(
       backgroundColor: AppColors.navyBackground,

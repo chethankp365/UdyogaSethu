@@ -1053,4 +1053,40 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get settingsTitle => 'ಸೆಟ್ಟಿಂಗ್‌ಗಳು';
+
+  @override
+  String get faceVerificationCheck => 'ಮುಖ ಪರಿಶೀಲನೆ';
+
+  @override
+  String get faceCheckSubtext =>
+      'ಮುಖದ ಸಜೀವತೆ ಪರಿಶೀಲನೆಯನ್ನು ಬಳಸಿ ನಿಮ್ಮ ಗುರುತನ್ನು ದೃಢೀಕರಿಸಿ';
+
+  @override
+  String get faceMatchSuccess => 'ಮುಖದ ಗುರುತು ದೃಢೀಕರಿಸಲ್ಪಟ್ಟಿದೆ';
+
+  @override
+  String get faceMatchFailedTitle => 'ಮುಖ ಹೊಂದಾಣಿಕೆ ವಿಫಲವಾಗಿದೆ';
+
+  @override
+  String get faceMatchFailedBody =>
+      'ಉತ್ತಮ ಬೆಳಕಿನಲ್ಲಿ ನಿಮ್ಮ ಮುಖವನ್ನು ಸ್ಪಷ್ಟವಾಗಿರಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.';
+
+  @override
+  String get manualReviewRequiredTitle => '3 ಪರಿಶೀಲನಾ ಪ್ರಯತ್ನಗಳು ವಿಫಲವಾಗಿವೆ';
+
+  @override
+  String get manualReviewRequiredBody =>
+      'ನಿಮ್ಮ ಮುಖದ ಪರಿಶೀಲನೆಯನ್ನು ಹಸ್ತಚಾಲಿತ ಪರಿಶೀಲನೆಗೆ ಕಳುಹಿಸಲಾಗಿದೆ. ನೀವು ಸೀಮಿತ ಪ್ರವೇಶದೊಂದಿಗೆ ಮುಂದುವರಿಯಬಹುದು.';
+
+  @override
+  String get requestManualReview => 'ಹಸ್ತಚಾಲಿತ ಪರಿಶೀಲನೆ ವಿನಂತಿಸಿ';
+
+  @override
+  String get retryVerification => 'ಮತ್ತೆ ಪರಿಶೀಲಿಸಲು ಪ್ರಯತ್ನಿಸಿ';
+
+  @override
+  String get demoSimulatePass => 'ಡೆಮೊ: ಯಶಸ್ವಿ ಪರಿಶೀಲನೆ';
+
+  @override
+  String get demoSimulateFail => 'ಡೆಮೊ: ವಿಫಲ ಪರಿಶೀಲನೆ';
 }

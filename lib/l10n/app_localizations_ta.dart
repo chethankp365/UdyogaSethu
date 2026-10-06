@@ -1053,4 +1053,41 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get settingsTitle => 'அமைப்புகள்';
+
+  @override
+  String get faceVerificationCheck => 'முக சரிபார்ப்பு சோதனை';
+
+  @override
+  String get faceCheckSubtext =>
+      'முக நேரடி சரிபார்ப்பைப் பயன்படுத்தி உங்கள் அடையாளத்தைச் சரிபார்க்கவும்';
+
+  @override
+  String get faceMatchSuccess => 'முக அடையாளம் சரிபார்க்கப்பட்டது';
+
+  @override
+  String get faceMatchFailedTitle => 'முக பொருத்தம் தோல்வியடைந்தது';
+
+  @override
+  String get faceMatchFailedBody =>
+      'நல்ல வெளிச்சத்தில் உங்கள் முகத்தை தெளிவாக வைத்து மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get manualReviewRequiredTitle =>
+      '3 சரிபார்ப்பு முயற்சிகள் தோல்வியடைந்தன';
+
+  @override
+  String get manualReviewRequiredBody =>
+      'உங்கள் முக சரிபார்ப்பு கைமுறை ஆய்வுக்கு அனுப்பப்பட்டுள்ளது. வரையறுக்கப்பட்ட அணுகலுடன் தொடரலாம்.';
+
+  @override
+  String get requestManualReview => 'கைமுறை ஆய்வைக் கோரவும்';
+
+  @override
+  String get retryVerification => 'மீண்டும் சரிபார்க்க முயற்சிக்கவும்';
+
+  @override
+  String get demoSimulatePass => 'டெமோ: வெற்றி பெற்ற சரிபார்ப்பு';
+
+  @override
+  String get demoSimulateFail => 'டெமோ: தோல்வியடைந்த சரிபார்ப்பு';
 }

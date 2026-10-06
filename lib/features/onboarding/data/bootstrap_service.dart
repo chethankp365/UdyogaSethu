@@ -153,6 +153,21 @@ class BootstrapNotifier extends Notifier<BootstrapState> {
           AppLogger.w('Could not update profile language/last_active_at: $e');
         }
 
+        // 2b. Fetch worker profile seeker_type if exists
+        try {
+          final wp = await supabaseClient
+              .from('worker_profiles')
+              .select('seeker_type')
+              .eq('user_id', currentUser.id)
+              .maybeSingle()
+              .timeout(const Duration(seconds: 5));
+          if (wp != null) {
+            seekerTypeStr = wp['seeker_type'] as String?;
+          }
+        } catch (e) {
+          AppLogger.w('Could not fetch worker_profiles seeker_type: $e');
+        }
+
         // 3. Fetch full bootstrap state via RPC get_bootstrap_state
         try {
           final bootstrapRes = await supabaseClient.rpc('get_bootstrap_state').timeout(const Duration(seconds: 10));
@@ -162,6 +177,19 @@ class BootstrapNotifier extends Notifier<BootstrapState> {
           final dbRoleStr = data['active_role'] as String? ?? 'seeker';
           final rolesList = (data['roles'] as List?)?.map((e) => e.toString()).toList() ?? [];
           final wizardMap = data['wizard_completion'] as Map<String, dynamic>? ?? {};
+
+          bool faceRequired = data['face_required_at_login'] as bool? ?? false;
+          bool hasEnrolledFace = data['has_enrolled_face'] as bool? ?? false;
+
+          // Fallback RPC check if face_required_at_login not present in RPC payload
+          if (!data.containsKey('face_required_at_login')) {
+            try {
+              final reqRes = await supabaseClient.rpc('get_face_login_requirement').timeout(const Duration(seconds: 5));
+              faceRequired = (reqRes as bool?) ?? false;
+            } catch (e) {
+              AppLogger.w('Could not fetch get_face_login_requirement RPC: $e');
+            }
+          }
 
           if (dbRoleStr == 'provider') activeRole = UserRole.provider;
           if (dbRoleStr == 'farmer') activeRole = UserRole.farmer;
@@ -202,6 +230,8 @@ class BootstrapNotifier extends Notifier<BootstrapState> {
                 seekerType: seekerTypeStr,
                 existingRole: conflictExistingRole,
                 chosenRole: pendingChosenRole,
+                faceRequiredAtLogin: faceRequired,
+                hasEnrolledFace: hasEnrolledFace,
               );
         } catch (e, st) {
           AppLogger.e('Failed to fetch get_bootstrap_state RPC', e, st);

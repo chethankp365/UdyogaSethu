@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/privacy/domain/consent_purpose.dart';
 import 'package:udyogasethu/features/privacy/presentation/consent_sheet.dart';
@@ -210,6 +212,20 @@ class _KycScreenState extends ConsumerState<KycScreen> {
                 const Text(
                   'Your 12-digit Aadhaar number is never stored, displayed, or logged. Only a masked reference (e.g. XXXX-XXXX-4321) and verified badge status are retained on our servers.',
                   style: TextStyle(fontSize: 12, color: AppColors.textMuted, height: 1.4),
+                ),
+                const SizedBox(height: 10),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    onPressed: () => context.push(AppRoutes.trustSafetyCentre),
+                    icon: const Icon(Icons.shield_outlined, size: 16),
+                    label: const Text('Learn more in Trust & Safety Centre', style: TextStyle(fontSize: 12)),
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                  ),
                 ),
               ],
             ),

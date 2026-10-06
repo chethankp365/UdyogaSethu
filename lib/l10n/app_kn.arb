@@ -309,7 +309,18 @@
   "termsDraftNotice": "ಕರಡು - ನೈಜ ಬಿಡುಗಡೆಗೆ ಮುನ್ನ ಇದನ್ನು ಪರಿಶೀಲಿಸಿ",
   "systemPermissionsTitle": "ಸಿಸ್ಟಮ್ ಅನುಮತಿಗಳು",
   "openSystemSettings": "ಆ್ಯಪ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ತೆರೆಯಿರಿ",
-  "settingsTitle": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು"
+  "settingsTitle": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+  "faceVerificationCheck": "ಮುಖ ಪರಿಶೀಲನೆ",
+  "faceCheckSubtext": "ಮುಖದ ಸಜೀವತೆ ಪರಿಶೀಲನೆಯನ್ನು ಬಳಸಿ ನಿಮ್ಮ ಗುರುತನ್ನು ದೃಢೀಕರಿಸಿ",
+  "faceMatchSuccess": "ಮುಖದ ಗುರುತು ದೃಢೀಕರಿಸಲ್ಪಟ್ಟಿದೆ",
+  "faceMatchFailedTitle": "ಮುಖ ಹೊಂದಾಣಿಕೆ ವಿಫಲವಾಗಿದೆ",
+  "faceMatchFailedBody": "ಉತ್ತಮ ಬೆಳಕಿನಲ್ಲಿ ನಿಮ್ಮ ಮುಖವನ್ನು ಸ್ಪಷ್ಟವಾಗಿರಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+  "manualReviewRequiredTitle": "3 ಪರಿಶೀಲನಾ ಪ್ರಯತ್ನಗಳು ವಿಫಲವಾಗಿವೆ",
+  "manualReviewRequiredBody": "ನಿಮ್ಮ ಮುಖದ ಪರಿಶೀಲನೆಯನ್ನು ಹಸ್ತಚಾಲಿತ ಪರಿಶೀಲನೆಗೆ ಕಳುಹಿಸಲಾಗಿದೆ. ನೀವು ಸೀಮಿತ ಪ್ರವೇಶದೊಂದಿಗೆ ಮುಂದುವರಿಯಬಹುದು.",
+  "requestManualReview": "ಹಸ್ತಚಾಲಿತ ಪರಿಶೀಲನೆ ವಿನಂತಿಸಿ",
+  "retryVerification": "ಮತ್ತೆ ಪರಿಶೀಲಿಸಲು ಪ್ರಯತ್ನಿಸಿ",
+  "demoSimulatePass": "ಡೆಮೊ: ಯಶಸ್ವಿ ಪರಿಶೀಲನೆ",
+  "demoSimulateFail": "ಡೆಮೊ: ವಿಫಲ ಪರಿಶೀಲನೆ"
 }
 
 

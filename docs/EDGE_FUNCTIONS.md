@@ -20,8 +20,8 @@ All Edge Functions are located in `supabase/functions/` and use common helpers f
 | `kyc-callback` | Webhook handler receiving status updates from KYC partner | Webhook Signature (`x-webhook-signature`) | `KYC_WEBHOOK_SECRET` | Phase 4 (Trust & Verification) |
 | `face-enroll` | Enrolls baseline face 128d float32 embedding vector and verifies liveness challenges | User JWT (`Bearer <token>`) | `FACE_MATCHER` (`ondevice` default, `mock`) | Phase 3.4 (Done) |
 | `face-verify` | Verifies selfie image against enrolled face embedding during check-in | User JWT (`Bearer <token>`) | `FACE_API_KEY` | Phase 4 (Trust & Verification) |
-| `qr-issue` | Issues signed QR token for ticket check-in and arrival verification | User JWT (`Bearer <token>`) | `QR_SIGNING_SECRET` | Phase 2 (Marketplace Core) |
-| `qr-verify` | Verifies signed QR token and triggers arrival / completion RPCs | User JWT (`Bearer <token>`) | `QR_SIGNING_SECRET` | Phase 2 (Marketplace Core) |
+| `qr-issue` | Issues signed, expiring QR token for digital ID profile verification and ticket check-in | User JWT (`Bearer <token>`) | `QR_SIGNING_SECRET` | Phase 3.7 (Done) |
+| `qr-verify` | Verifies signed QR token, checks revocation/expiry in constant time, calls get_public_verification | User JWT (`Bearer <token>`) | `QR_SIGNING_SECRET` | Phase 3.7 (Done) |
 | `payment-create-order` | Creates Razorpay order for job escrow, produce buying, or equipment rent | User JWT (`Bearer <token>`) | `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET` | Phase 3 (Payments & Escrow) |
 | `payment-webhook` | Webhook handler receiving Razorpay payment state changes | Webhook Signature (`x-razorpay-signature`) | `RAZORPAY_WEBHOOK_SECRET` | Phase 3 (Payments & Escrow) |
 | `sos-trigger` | Triggers emergency SOS alert, broadcasts location, & notifies emergency contacts | User JWT (`Bearer <token>`) | `SMS_GATEWAY_KEY` | Phase 4 (Safety & Escalation) |

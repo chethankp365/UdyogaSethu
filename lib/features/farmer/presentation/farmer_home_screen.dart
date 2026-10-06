@@ -6,6 +6,7 @@ import 'package:udyogasethu/core/config/env.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/widgets/compact_language_selector.dart';
+import 'package:udyogasethu/core/widgets/user_avatar.dart';
 import 'package:udyogasethu/features/farmer/domain/farmer_profile_draft.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_wizard_controller.dart';
 
@@ -145,13 +146,12 @@ class FarmerHomeScreen extends ConsumerWidget {
                           children: [
                             Row(
                               children: [
-                                CircleAvatar(
+                                UserAvatar(
+                                  avatarPath: draft.avatarPath,
+                                  name: draft.fullName.isNotEmpty ? draft.fullName : draft.farmName,
                                   radius: 32,
                                   backgroundColor: AppColors.headerGreenDark.withValues(alpha: 0.15),
-                                  backgroundImage: draft.avatarUrl != null ? NetworkImage(draft.avatarUrl!) : null,
-                                  child: draft.avatarUrl == null
-                                      ? const Icon(Icons.agriculture_rounded, size: 36, color: AppColors.headerGreenDark)
-                                      : null,
+                                  textColor: AppColors.headerGreenDark,
                                 ),
                                 const SizedBox(width: 14),
                                 Expanded(

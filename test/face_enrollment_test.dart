@@ -205,19 +205,19 @@ void main() {
   });
 
   group('Phase 3.4: Face Enrolment Widget Tests', () {
-    testWidgets('FaceEnrollmentScreen renders guided camera oval, timer, and challenge buttons', (tester) async {
+    testWidgets('FaceEnrollmentScreen renders guided camera oval, timer banner, and action buttons', (tester) async {
       await tester.pumpWidget(_makeTestableWidget(const FaceEnrollmentScreen(matcherMode: 'ondevice')));
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       expect(find.text('Face Enrolment & Liveness'), findsOneWidget);
-      expect(find.textContaining('Time Remaining'), findsOneWidget);
-      expect(find.text('Capture & Verify'), findsOneWidget);
-      expect(find.text('Reset Challenges'), findsOneWidget);
+      expect(find.textContaining('Waiting for face'), findsOneWidget);
+      expect(find.text('Reset / Retry'), findsOneWidget);
+      expect(find.text('Retry Challenges'), findsOneWidget);
     });
 
     testWidgets('FaceEnrollmentScreen renders Demo Mode banner when matcherMode is mock', (tester) async {
       await tester.pumpWidget(_makeTestableWidget(const FaceEnrollmentScreen(matcherMode: 'mock')));
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       expect(find.textContaining('Demo mode — Mock Face Matcher Active'), findsOneWidget);
     });

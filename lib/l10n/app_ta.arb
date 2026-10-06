@@ -309,7 +309,18 @@
   "termsDraftNotice": "வரைவு - உண்மையான வெளியீட்டிற்கு முன் இதை சரிபார்க்கவும்",
   "systemPermissionsTitle": "அமைப்பின் அனுமதிகள்",
   "openSystemSettings": "ஆப் அமைப்புகளைத் திறக்கவும்",
-  "settingsTitle": "அமைப்புகள்"
+  "settingsTitle": "அமைப்புகள்",
+  "faceVerificationCheck": "முக சரிபார்ப்பு சோதனை",
+  "faceCheckSubtext": "முக நேரடி சரிபார்ப்பைப் பயன்படுத்தி உங்கள் அடையாளத்தைச் சரிபார்க்கவும்",
+  "faceMatchSuccess": "முக அடையாளம் சரிபார்க்கப்பட்டது",
+  "faceMatchFailedTitle": "முக பொருத்தம் தோல்வியடைந்தது",
+  "faceMatchFailedBody": "நல்ல வெளிச்சத்தில் உங்கள் முகத்தை தெளிவாக வைத்து மீண்டும் முயற்சிக்கவும்.",
+  "manualReviewRequiredTitle": "3 சரிபார்ப்பு முயற்சிகள் தோல்வியடைந்தன",
+  "manualReviewRequiredBody": "உங்கள் முக சரிபார்ப்பு கைமுறை ஆய்வுக்கு அனுப்பப்பட்டுள்ளது. வரையறுக்கப்பட்ட அணுகலுடன் தொடரலாம்.",
+  "requestManualReview": "கைமுறை ஆய்வைக் கோரவும்",
+  "retryVerification": "மீண்டும் சரிபார்க்க முயற்சிக்கவும்",
+  "demoSimulatePass": "டெமோ: வெற்றி பெற்ற சரிபார்ப்பு",
+  "demoSimulateFail": "டெமோ: தோல்வியடைந்த சரிபார்ப்பு"
 }
 
 

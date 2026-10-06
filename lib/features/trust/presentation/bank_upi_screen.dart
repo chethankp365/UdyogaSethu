@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/trust/data/kyc_repository.dart';
 import 'package:udyogasethu/features/trust/domain/kyc_record.dart';
+import 'package:udyogasethu/features/trust/domain/verification_visibility.dart';
 
 class BankUpiScreen extends ConsumerStatefulWidget {
   const BankUpiScreen({super.key});
@@ -43,7 +45,29 @@ class _BankUpiScreenState extends ConsumerState<BankUpiScreen> {
   Widget build(BuildContext context) {
     final userId = _getUserId();
     final repo = ref.watch(kycRepositoryProvider);
+    final session = ref.watch(appSessionProvider);
     final docType = _selectedTab == 0 ? 'upi' : 'bank_account';
+
+    final isEligible = isVerificationItemVisible(
+      type: VerificationType.bankUpi,
+      role: session.activeRole,
+      seekerType: session.seekerType,
+    );
+
+    final isStillLoading = session.activeRole == UserRole.seeker &&
+        !session.seekerTypeLoaded &&
+        session.seekerType == null;
+
+    if (!isStillLoading && !isEligible) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && Navigator.canPop(context)) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Bank/UPI payout is not applicable for provider accounts.')),
+          );
+          Navigator.of(context).pop();
+        }
+      });
+    }
 
     return Scaffold(
       backgroundColor: AppColors.navyBackground,

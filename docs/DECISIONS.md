@@ -15,6 +15,7 @@ This document records key design, architectural, role model, and implementation 
 | D9 | Temporarily removed permission_handler during P0.2 scaffold to avoid Android compileSdk 37 conflict with AGP 9.1.0; will be re-added in the specific prompt/phase that needs it (e.g. Phase 3/4) | Adopted | Build Compatibility |
 | D10 | Account Linking Rules: Worker or farmer accounts must always have a verified phone number. Google-first auth forces phone verification via updateUser(phone) & OTP. Phone-first auth allows linking Google in Settings via manual identity linking; duplicate Google emails across different phone numbers are blocked. | Adopted | Auth & Identity Linking |
 | D11 | Account Deletion & Legal Data Retention: Account deletion permanently erases personal profile data (`profiles`, `worker_profiles`, `provider_profiles`, `farmer_profiles`, `user_roles`, `addresses`, `consent_logs`, `emergency_contacts`, `kyc_records`), storage bucket objects (`avatars/{uid}`, `kyc-docs/{uid}`), and the auth user record. To comply with Indian financial and tax audit laws (RBI/GST regulations), financial ledger entries (`ledger_entries`), payment transactions (`payments`), and dispute logs are retained in anonymized format with personal identifiers scrubbed (`review_text = '[Account Deleted]'`). | Adopted | Account Deletion & Compliance |
+| D15 | Role & Seeker Type Verification Visibility Matrix: Single source of truth (`verification_visibility.dart`). Aadhaar & Face: All roles. Driving Licence: Seekers only. Student Verification: Student seekers ONLY. Bank/UPI Payout: Seekers & Farmers. Background Check: Seekers & Providers. Enforced in UI, router guards, and database trigger (0230). | Adopted | Verification Visibility Matrix |
 
 ## Known Issues & Planned Fixes (Pre-P5.1)
 
@@ -48,6 +49,39 @@ This document records key design, architectural, role model, and implementation 
   * **Privacy Guarantee**: Raw camera photos are never sent to external servers for matching or returned to clients; only the 128-dimensional embedding vector and liveness status are transmitted to the `face-enroll` Edge Function and stored securely in `face_profiles.embedding`. RLS policies block clients from reading other users' embeddings.
   * **Anti-Spoofing & Honesty Note**: On-device liveness and local embedding extraction are inherently weaker against determined video replay or 3D mask spoofing compared to a managed cloud liveness service (e.g. AWS Rekognition / iBeta Level 2 certified service). Mitigations implemented: random 2-step challenge sequence (blink, turn head left/right, smile), strict 15s session timer limit, ML Kit eye-open and pose angle quality gates, and server-side vector numerical range validation.
   * **Honesty Rule**: A visible amber "Demo mode — Mock Face Matcher Active" banner is displayed IF `FACE_MATCHER` is set to `mock`.
+
+* **D15 — Role & Seeker Type Verification Visibility Matrix**:
+  * **Single Source of Truth**: Centralized in `lib/features/trust/domain/verification_visibility.dart` via `verificationItemsFor(role, seekerType)` and `isVerificationItemVisible(...)`.
+  * **Visibility Matrix**:
+    * **Aadhaar eKYC**: All roles (`seeker` [informal, student, part_time], `provider`, `farmer`).
+    * **Driving Licence**: `seeker` ONLY (informal, student, part_time). Hidden for `provider` and `farmer`.
+    * **Student Verification**: `seeker_type == 'student'` ONLY. Hidden for informal, part_time, provider, and farmer.
+    * **Bank / UPI Payout**: `seeker` and `farmer` ONLY. Hidden for `provider` (providers make payments, not receive worker/produce payouts).
+    * **Background Check**: `seeker` and `provider` ONLY. Hidden for `farmer`.
+    * **Face Enrolment & Liveness**: All roles.
+  * **Student Verification States**: `Not verified (tap to start)`, `Pending`, `Verified`, `Rejected (Tap to resubmit)`. "Not Student" label eliminated.
+  * **Category Change Persistence**: Changing `seeker_type` away from `student` hides the Student Verification item in UI but retains the `kyc_records` database row. Changing back to `student` restores the saved verification status.
+  * **Server-Side Enforcement**: Migration `0230_verification_visibility_guard.sql` adds a database trigger `trg_check_kyc_record_visibility` on `kyc_records` BEFORE INSERT OR UPDATE, rejecting `college_id` for non-students and `driving_licence` for non-seekers.
+
+* **D16 — Biometric Template Privacy & Column-Level Grants on face_profiles**:
+  * **Biometric Template Protection**: Direct `SELECT` on `public.face_profiles` is revoked from `authenticated` and `anon` roles to prevent client access to the raw biometric vector (`embedding`).
+  * **Explicit Column Grants**: `GRANT SELECT (id, user_id, reference_path, matcher_ref, liveness_passed_at, consent_log_id, status, created_at, updated_at) ON public.face_profiles TO authenticated;` is applied.
+  * **Pitfall & Developer Warning**: Because `face_profiles` relies on column-level SELECT grants, any NEW column added to `face_profiles` in future migrations that the Flutter client app must read MUST have an explicit `GRANT SELECT (new_column) ON public.face_profiles TO authenticated;` included in that same migration file. Otherwise, PostgREST queries attempting to read that column will fail with `permission denied`.
+
+* **D17 — Profile QR Tokens & Public Verification Boundary**:
+  * **Non-PII Token Payload**: Profile QR codes encode a compact JSON payload signed with HMAC-SHA256 using `QR_SIGNING_SECRET`. The payload contains ONLY `{ "tid": "<uuid>", "pur": "profile", "iat": <epoch>, "exp": <epoch> }`. Raw user IDs, phone numbers, names, or emails are NEVER included in the QR token.
+  * **Server-Side Token Hash & Revocation**: The server records the SHA-256 hash of `tid` in `public.qr_tokens` along with the issuing `user_id`. When verifying, the hash is looked up to ensure the token exists and is not revoked.
+  * **Public-Only Verification Policy**: `qr-verify` executes signature verification in constant-time, checks expiry (default 300s configurable in `admin_settings.qr_expiry_seconds`), verifies revocation, enforces scanner rate-limiting (30 requests/minute per caller/IP), and invokes `get_public_verification` RPC. It strictly returns ONLY public fields: `name_initial`, `display_id` (`UDY{YYYY}{XXXX}`), `is_verified_badge`, `level`, `level_name`, `kyc_verified_at`, `face_verified_at`, and `training_verified_at`.
+
+---
+
+## Known Issues & Pre-Launch Security Requirements
+
+* **KI-01 — Mock Face Matcher (`FACE_MATCHER=mock`) Security Boundary**:
+  * **Development Only**: The mock face matcher mode (`FACE_MATCHER=mock`) automatically passes by default (returning similarity `0.92`) unless the first vector element is negative, and mock unit tests supply client-side embeddings.
+  * **Pre-Launch Requirement**: The mock matcher MUST NEVER be enabled in production environments. Before public launch, the production `face-verify` Edge Function must calculate face similarity server-side from the uploaded selfie image against the enrolled reference image (or via a certified vendor API). `face-verify` must NEVER trust client-supplied face embeddings or similarity scores.
+
+
 
 
 

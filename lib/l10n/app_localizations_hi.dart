@@ -1042,4 +1042,39 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get settingsTitle => 'सेटिंग्स';
+
+  @override
+  String get faceVerificationCheck => 'चेहरा सत्यापन जांच';
+
+  @override
+  String get faceCheckSubtext => 'फेस लाइवनेस चेक से अपनी पहचान सत्यापित करें';
+
+  @override
+  String get faceMatchSuccess => 'चेहरे की पहचान सत्यापित';
+
+  @override
+  String get faceMatchFailedTitle => 'चेहरा मिलान विफल';
+
+  @override
+  String get faceMatchFailedBody =>
+      'अच्छी रोशनी में अपने चेहरे को स्पष्ट रखें और पुनः प्रयास करें।';
+
+  @override
+  String get manualReviewRequiredTitle => '3 सत्यापन प्रयास विफल';
+
+  @override
+  String get manualReviewRequiredBody =>
+      'आपका चेहरा सत्यापन मैन्युअल समीक्षा के लिए भेजा गया है। आप सीमित पहुंच के साथ जारी रख सकते हैं।';
+
+  @override
+  String get requestManualReview => 'मैन्युअल समीक्षा का अनुरोध करें';
+
+  @override
+  String get retryVerification => 'पुनः सत्यापन का प्रयास करें';
+
+  @override
+  String get demoSimulatePass => 'डेमो: सफल सत्यापन';
+
+  @override
+  String get demoSimulateFail => 'डेमो: विफल सत्यापन';
 }

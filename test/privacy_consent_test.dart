@@ -211,7 +211,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('My Profile'), findsOneWidget);
-      expect(find.text('Job Seeker'), findsOneWidget);
+      expect(find.textContaining('Job Seeker'), findsOneWidget);
       expect(find.text('Privacy Centre'), findsOneWidget);
       expect(find.text('Settings'), findsOneWidget);
       expect(find.text('Terms & Privacy Policy'), findsOneWidget);

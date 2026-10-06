@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/trust/data/kyc_repository.dart';
 import 'package:udyogasethu/features/trust/domain/kyc_record.dart';
+import 'package:udyogasethu/features/trust/domain/verification_visibility.dart';
 
 class StudentVerificationScreen extends ConsumerStatefulWidget {
   const StudentVerificationScreen({super.key});
@@ -43,8 +45,42 @@ class _StudentVerificationScreenState extends ConsumerState<StudentVerificationS
   }
 
   Future<void> _pickCardImage() async {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.navyCard,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera_alt_rounded, color: Colors.white),
+                title: const Text('Take Photo (Camera)', style: TextStyle(color: Colors.white)),
+                onTap: () async {
+                  Navigator.pop(context);
+                  _captureImage(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library_rounded, color: Colors.white),
+                title: const Text('Choose from Gallery', style: TextStyle(color: Colors.white)),
+                onTap: () async {
+                  Navigator.pop(context);
+                  _captureImage(ImageSource.gallery);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _captureImage(ImageSource source) async {
     try {
-      final image = await _picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
+      final image = await _picker.pickImage(source: source, imageQuality: 80);
       if (image != null) {
         setState(() => _cardImage = image);
       }
@@ -57,6 +93,28 @@ class _StudentVerificationScreenState extends ConsumerState<StudentVerificationS
   Widget build(BuildContext context) {
     final userId = _getUserId();
     final repo = ref.watch(kycRepositoryProvider);
+    final session = ref.watch(appSessionProvider);
+
+    final isEligible = isVerificationItemVisible(
+      type: VerificationType.student,
+      role: session.activeRole,
+      seekerType: session.seekerType,
+    );
+
+    final isStillLoading = session.activeRole == UserRole.seeker &&
+        !session.seekerTypeLoaded &&
+        session.seekerType == null;
+
+    if (!isStillLoading && !isEligible) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && Navigator.canPop(context)) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Student verification is only available for student job seekers.')),
+          );
+          Navigator.of(context).pop();
+        }
+      });
+    }
 
     return Scaffold(
       backgroundColor: AppColors.navyBackground,
@@ -125,7 +183,7 @@ class _StudentVerificationScreenState extends ConsumerState<StudentVerificationS
   }
 
   Widget _buildStatusChipCard(KycRecord? record) {
-    String chipLabel = 'Not Student / Unverified';
+    String chipLabel = 'Not verified (tap to start)';
     Color chipColor = Colors.grey;
     IconData icon = Icons.school_outlined;
 

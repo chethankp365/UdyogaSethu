@@ -309,7 +309,18 @@
   "termsDraftNotice": "Draft - Have this reviewed before real launch",
   "systemPermissionsTitle": "System Permissions",
   "openSystemSettings": "Open App Settings",
-  "settingsTitle": "Settings"
+  "settingsTitle": "Settings",
+  "faceVerificationCheck": "Face Verification Check",
+  "faceCheckSubtext": "Verify your identity using face liveness check",
+  "faceMatchSuccess": "Face Identity Verified",
+  "faceMatchFailedTitle": "Face Match Failed",
+  "faceMatchFailedBody": "Position your face clearly in good lighting and try again.",
+  "manualReviewRequiredTitle": "3 Verification Attempts Failed",
+  "manualReviewRequiredBody": "Your face verification has been submitted for manual review. You may continue with limited access.",
+  "requestManualReview": "Request Manual Review",
+  "retryVerification": "Try Verification Again",
+  "demoSimulatePass": "Demo: Pass Verification",
+  "demoSimulateFail": "Demo: Fail Verification"
 }
 
 

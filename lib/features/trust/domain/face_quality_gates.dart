@@ -37,19 +37,20 @@ class FaceQualityGates {
 
     if (frameArea > 0) {
       final ratio = faceArea / frameArea;
-      if (ratio < 0.08) {
+      if (ratio < 0.12) {
         return const FaceQualityGateResult(isValid: false, hint: 'Move closer to the camera.');
       }
-      if (ratio > 0.75) {
+      if (ratio > 0.70) {
         return const FaceQualityGateResult(isValid: false, hint: 'Move slightly further back.');
       }
     }
 
-    if (leftEyeOpenProb != null && leftEyeOpenProb < 0.2 && rightEyeOpenProb != null && rightEyeOpenProb < 0.2) {
-      return const FaceQualityGateResult(isValid: false, hint: 'Keep your eyes open.');
+    if ((leftEyeOpenProb != null && leftEyeOpenProb < 0.30) || (rightEyeOpenProb != null && rightEyeOpenProb < 0.30)) {
+      return const FaceQualityGateResult(isValid: false, hint: 'Keep your eyes open and ensure good lighting.');
     }
 
-    if (headEulerAngleY != null && (headEulerAngleY.abs() > 30.0)) {
+    if ((headEulerAngleY != null && headEulerAngleY.abs() > 15.0) ||
+        (headEulerAngleZ != null && headEulerAngleZ.abs() > 15.0)) {
       return const FaceQualityGateResult(isValid: false, hint: 'Look straight at the camera.');
     }
 

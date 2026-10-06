@@ -1044,4 +1044,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsTitle => 'Settings';
+
+  @override
+  String get faceVerificationCheck => 'Face Verification Check';
+
+  @override
+  String get faceCheckSubtext =>
+      'Verify your identity using face liveness check';
+
+  @override
+  String get faceMatchSuccess => 'Face Identity Verified';
+
+  @override
+  String get faceMatchFailedTitle => 'Face Match Failed';
+
+  @override
+  String get faceMatchFailedBody =>
+      'Position your face clearly in good lighting and try again.';
+
+  @override
+  String get manualReviewRequiredTitle => '3 Verification Attempts Failed';
+
+  @override
+  String get manualReviewRequiredBody =>
+      'Your face verification has been submitted for manual review. You may continue with limited access.';
+
+  @override
+  String get requestManualReview => 'Request Manual Review';
+
+  @override
+  String get retryVerification => 'Try Verification Again';
+
+  @override
+  String get demoSimulatePass => 'Demo: Pass Verification';
+
+  @override
+  String get demoSimulateFail => 'Demo: Fail Verification';
 }

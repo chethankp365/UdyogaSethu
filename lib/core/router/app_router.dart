@@ -29,12 +29,19 @@ import 'package:udyogasethu/features/onboarding/presentation/splash_screen.dart'
 import 'package:udyogasethu/features/privacy/presentation/privacy_centre_screen.dart';
 import 'package:udyogasethu/features/privacy/presentation/terms_privacy_screen.dart';
 import 'package:udyogasethu/features/profile/presentation/profile_screen.dart';
+import 'package:udyogasethu/features/trust/domain/verification_visibility.dart';
 import 'package:udyogasethu/features/trust/presentation/background_check_screen.dart';
 import 'package:udyogasethu/features/trust/presentation/bank_upi_screen.dart';
+import 'package:udyogasethu/features/trust/presentation/digital_id_screen.dart';
 import 'package:udyogasethu/features/trust/presentation/driving_licence_screen.dart';
 import 'package:udyogasethu/features/trust/presentation/face_enrollment_screen.dart';
 import 'package:udyogasethu/features/trust/presentation/kyc_screen.dart';
+import 'package:udyogasethu/features/trust/presentation/safety_onboarding_screen.dart';
+import 'package:udyogasethu/features/trust/presentation/scan_verify_screen.dart';
 import 'package:udyogasethu/features/trust/presentation/student_verification_screen.dart';
+import 'package:udyogasethu/features/trust/presentation/trust_governance_rights_screen.dart';
+import 'package:udyogasethu/features/trust/presentation/trust_safety_centre_screen.dart';
+import 'package:udyogasethu/features/verification/presentation/face_check_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_home_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_wizard_screen.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_home_screen.dart';
@@ -151,8 +158,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       }
       // 7. Ready state (Signed in & Onboarded)
       else if (status == AuthSessionStatus.ready) {
-        // Replay pending deep link if present
-        if (sessionData.deepLinkPending != null) {
+        // Face Verification Login Gate for Worker (Seeker) accounts
+        final isSeeker = sessionData.activeRole == UserRole.seeker;
+        final isFaceGateActive = isSeeker && sessionData.faceRequiredAtLogin && !sessionData.faceLoginPassed;
+
+        if (isFaceGateActive) {
+          final targetGate = sessionData.hasEnrolledFace ? AppRoutes.kycFaceCheck : AppRoutes.kycFace;
+          if (loc != targetGate) {
+            target = targetGate;
+            if (kDebugMode) {
+              AppLogger.i('[FaceLoginGate] loc="$loc" -> REDIRECT to "$target" (hasEnrolledFace=${sessionData.hasEnrolledFace})');
+            }
+          }
+        }
+
+        // Replay pending deep link if present and not blocked by face gate
+        if (target == null && sessionData.deepLinkPending != null) {
           final pending = sessionData.deepLinkPending!;
           ref.read(appSessionProvider.notifier).setDeepLinkPending(null);
           if (pending != loc && pending != AppRoutes.login && pending != AppRoutes.splash) {
@@ -176,9 +197,49 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             target = AppSessionNotifier.getHomeForRole(sessionData.activeRole);
           }
         }
+
+        // Verification Route Guards based on single source matrix
+        if (target == null) {
+          final role = sessionData.activeRole;
+          final seekerType = sessionData.seekerType;
+          final isSeekerTypeLoading = role == UserRole.seeker && !sessionData.seekerTypeLoaded && seekerType == null;
+
+          const guardedRoutes = [
+            AppRoutes.kycStudent,
+            AppRoutes.kycDl,
+            AppRoutes.kycBackground,
+            AppRoutes.kycBank,
+          ];
+
+          if (guardedRoutes.contains(loc)) {
+            VerificationType? vType;
+            if (loc == AppRoutes.kycStudent) vType = VerificationType.student;
+            if (loc == AppRoutes.kycDl) vType = VerificationType.drivingLicence;
+            if (loc == AppRoutes.kycBackground) vType = VerificationType.backgroundCheck;
+            if (loc == AppRoutes.kycBank) vType = VerificationType.bankUpi;
+
+            if (vType != null) {
+              if (isSeekerTypeLoading) {
+                if (kDebugMode) {
+                  AppLogger.i('[VerificationGuard] loc="$loc", role="${role.name}", seekerType=null, loading=true -> ALLOWED (Waiting for profile loading)');
+                }
+              } else {
+                final allowed = isVerificationItemVisible(type: vType, role: role, seekerType: seekerType);
+                if (!allowed) {
+                  target = AppSessionNotifier.getHomeForRole(role);
+                  if (kDebugMode) {
+                    AppLogger.i('[VerificationGuard] loc="$loc", role="${role.name}", seekerType="$seekerType", loading=${sessionData.seekerTypeLoaded} -> REDIRECT to "$target" (Reason: Verification item ${vType.name} is not allowed for role=${role.name}, seekerType=$seekerType)');
+                  }
+                } else if (kDebugMode) {
+                  AppLogger.i('[VerificationGuard] loc="$loc", role="${role.name}", seekerType="$seekerType", loading=${sessionData.seekerTypeLoaded} -> ALLOWED');
+                }
+              }
+            }
+          }
+        }
       }
 
-      if (kDebugMode && target != null) {
+      if (kDebugMode && target != null && !loc.startsWith('/kyc')) {
         AppLogger.i('Router redirect: loc="$loc" -> target="$target" (status=${status.name}, role=${sessionData.activeRole.name})');
       }
 
@@ -427,6 +488,38 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.kycFace,
         builder: (context, state) => const FaceEnrollmentScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.kycFaceCheck,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          final contextType = extra?['context'] as String? ?? 'login';
+          final assignmentId = extra?['assignmentId'] as String?;
+          return FaceCheckScreen(
+            contextType: contextType,
+            assignmentId: assignmentId,
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.kycSafetyOnboarding,
+        builder: (context, state) => const SafetyOnboardingScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.digitalId,
+        builder: (context, state) => const DigitalIdScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.scanVerify,
+        builder: (context, state) => const ScanVerifyScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.trustSafetyCentre,
+        builder: (context, state) => const TrustSafetyCentreScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.trustGovernanceRights,
+        builder: (context, state) => const TrustGovernanceRightsScreen(),
       ),
       GoRoute(
         path: AppRoutes.privacyCentre,

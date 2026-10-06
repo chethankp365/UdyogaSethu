@@ -8,9 +8,9 @@ ALTER TABLE public.face_profiles
 ADD COLUMN IF NOT EXISTS embedding DOUBLE PRECISION[];
 
 -- 2. Seed default face_match_threshold into admin_settings if missing
-INSERT INTO public.admin_settings (setting_key, setting_value, category, description)
-VALUES ('face_match_threshold', '0.65', 'trust_safety', 'Cosine similarity threshold for face verification matching')
-ON CONFLICT (setting_key) DO NOTHING;
+INSERT INTO public.admin_settings (key, value)
+VALUES ('face_match_threshold', '0.65'::jsonb)
+ON CONFLICT (key) DO NOTHING;
 
 -- 3. Function: compare_face_embeddings (Cosine Similarity)
 CREATE OR REPLACE FUNCTION public.compare_face_embeddings(

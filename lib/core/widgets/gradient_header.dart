@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/theme/app_spacing.dart';
 import 'package:udyogasethu/core/theme/app_typography.dart';
+import 'package:udyogasethu/core/widgets/user_avatar.dart';
 
 class GradientHeader extends StatelessWidget {
   final String greeting;
@@ -99,16 +100,13 @@ class GradientHeader extends StatelessWidget {
                     ),
                   ),
                   // User Avatar
-                  GestureDetector(
+                  UserAvatar(
+                    avatarPath: avatarUrl,
+                    name: userName,
+                    radius: 18,
+                    backgroundColor: Colors.white24,
+                    textColor: Colors.white,
                     onTap: onProfileTap,
-                    child: CircleAvatar(
-                      radius: 18,
-                      backgroundColor: Colors.white24,
-                      backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl!) : null,
-                      child: avatarUrl == null
-                          ? const Icon(Icons.person, color: Colors.white, size: 20)
-                          : null,
-                    ),
                   ),
                 ],
               ),

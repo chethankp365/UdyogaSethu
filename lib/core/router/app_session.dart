@@ -26,18 +26,26 @@ class AppSessionData {
   final UserRole activeRole;
   final List<UserRole> assignedRoles;
   final String? seekerType;
+  final bool seekerTypeLoaded;
   final String? deepLinkPending;
   final UserRole? existingRole;
   final UserRole? chosenRole;
+  final bool faceLoginPassed;
+  final bool faceRequiredAtLogin;
+  final bool hasEnrolledFace;
 
   const AppSessionData({
     this.status = AuthSessionStatus.booting,
     this.activeRole = UserRole.seeker,
     this.assignedRoles = const [],
     this.seekerType,
+    this.seekerTypeLoaded = false,
     this.deepLinkPending,
     this.existingRole,
     this.chosenRole,
+    this.faceLoginPassed = false,
+    this.faceRequiredAtLogin = false,
+    this.hasEnrolledFace = false,
   });
 
   AppSessionData copyWith({
@@ -45,19 +53,27 @@ class AppSessionData {
     UserRole? activeRole,
     List<UserRole>? assignedRoles,
     String? seekerType,
+    bool? seekerTypeLoaded,
     String? deepLinkPending,
     bool clearDeepLink = false,
     UserRole? existingRole,
     UserRole? chosenRole,
+    bool? faceLoginPassed,
+    bool? faceRequiredAtLogin,
+    bool? hasEnrolledFace,
   }) {
     return AppSessionData(
       status: status ?? this.status,
       activeRole: activeRole ?? this.activeRole,
       assignedRoles: assignedRoles ?? this.assignedRoles,
       seekerType: seekerType ?? this.seekerType,
+      seekerTypeLoaded: seekerTypeLoaded ?? this.seekerTypeLoaded,
       deepLinkPending: clearDeepLink ? null : (deepLinkPending ?? this.deepLinkPending),
       existingRole: existingRole ?? this.existingRole,
       chosenRole: chosenRole ?? this.chosenRole,
+      faceLoginPassed: faceLoginPassed ?? this.faceLoginPassed,
+      faceRequiredAtLogin: faceRequiredAtLogin ?? this.faceRequiredAtLogin,
+      hasEnrolledFace: hasEnrolledFace ?? this.hasEnrolledFace,
     );
   }
 }
@@ -84,8 +100,24 @@ class AppSessionNotifier extends Notifier<AppSessionData> {
     state = state.copyWith(activeRole: role);
   }
 
+  void setSeekerType(String? seekerType) {
+    state = state.copyWith(seekerType: seekerType, seekerTypeLoaded: true);
+  }
+
   void setDeepLinkPending(String? uri) {
     state = state.copyWith(deepLinkPending: uri, clearDeepLink: uri == null);
+  }
+
+  void setFaceLoginPassed(bool passed) {
+    state = state.copyWith(faceLoginPassed: passed);
+  }
+
+  void setFaceRequiredAtLogin(bool required) {
+    state = state.copyWith(faceRequiredAtLogin: required);
+  }
+
+  void setHasEnrolledFace(bool enrolled) {
+    state = state.copyWith(hasEnrolledFace: enrolled);
   }
 
   void updateSession({
@@ -93,16 +125,22 @@ class AppSessionNotifier extends Notifier<AppSessionData> {
     UserRole? role,
     List<UserRole>? assignedRoles,
     String? seekerType,
+    bool? seekerTypeLoaded,
     UserRole? existingRole,
     UserRole? chosenRole,
+    bool? faceRequiredAtLogin,
+    bool? hasEnrolledFace,
   }) {
     state = state.copyWith(
       status: status,
       activeRole: role,
       assignedRoles: assignedRoles,
       seekerType: seekerType,
+      seekerTypeLoaded: seekerTypeLoaded ?? (seekerType != null || state.seekerTypeLoaded),
       existingRole: existingRole,
       chosenRole: chosenRole,
+      faceRequiredAtLogin: faceRequiredAtLogin,
+      hasEnrolledFace: hasEnrolledFace,
     );
   }
 
