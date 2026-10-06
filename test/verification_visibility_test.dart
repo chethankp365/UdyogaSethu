@@ -261,6 +261,30 @@ void main() {
       expect(find.text('Face Enrolment & Liveness'), findsOneWidget);
     });
 
+    testWidgets('ProfileScreen for Seeker renders My Digital ID, hides Scan & Verify', (tester) async {
+      await tester.pumpWidget(_makeTestableProfile(UserRole.seeker, 'informal'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('My Digital ID'), findsOneWidget);
+      expect(find.text('Scan & Verify'), findsNothing);
+    });
+
+    testWidgets('ProfileScreen for Provider renders Scan & Verify, hides My Digital ID', (tester) async {
+      await tester.pumpWidget(_makeTestableProfile(UserRole.provider, null));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Scan & Verify'), findsOneWidget);
+      expect(find.text('My Digital ID'), findsNothing);
+    });
+
+    testWidgets('ProfileScreen for Farmer hides both My Digital ID and Scan & Verify', (tester) async {
+      await tester.pumpWidget(_makeTestableProfile(UserRole.farmer, null));
+      await tester.pumpAndSettle();
+
+      expect(find.text('My Digital ID'), findsNothing);
+      expect(find.text('Scan & Verify'), findsNothing);
+    });
+
     testWidgets('Header phone formatting and role chip displaying seeker type', (tester) async {
       expect(formatIndianPhone('+919108914544'), equals('+91 91089 14544'));
       expect(formatIndianPhone('9108914544'), equals('+91 91089 14544'));
@@ -422,6 +446,54 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
       expect(router.state.uri.toString(), equals('/provider/home'));
       expect(find.byType(BankUpiScreen), findsNothing);
+    });
+
+    testWidgets('Farmer navigating to /trust/digital-id or /trust/scan-verify is redirected away', (tester) async {
+      final container = createTestContainer(role: UserRole.farmer, seekerType: null, seekerTypeLoaded: true);
+      addTearDown(container.dispose);
+
+      await tester.pumpWidget(buildTestApp(container));
+      await tester.pump();
+
+      final router = container.read(appRouterProvider);
+
+      router.go('/trust/digital-id');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(router.state.uri.toString(), equals('/farmer/home'));
+
+      router.go('/trust/scan-verify');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(router.state.uri.toString(), equals('/farmer/home'));
+    });
+
+    testWidgets('Seeker navigating to /trust/scan-verify is redirected away to seeker home', (tester) async {
+      final container = createTestContainer(role: UserRole.seeker, seekerType: 'informal', seekerTypeLoaded: true);
+      addTearDown(container.dispose);
+
+      await tester.pumpWidget(buildTestApp(container));
+      await tester.pump();
+
+      final router = container.read(appRouterProvider);
+      router.go('/trust/scan-verify');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(router.state.uri.toString(), equals('/seeker/home'));
+    });
+
+    testWidgets('Provider navigating to /trust/digital-id is redirected away to provider home', (tester) async {
+      final container = createTestContainer(role: UserRole.provider, seekerType: null, seekerTypeLoaded: true);
+      addTearDown(container.dispose);
+
+      await tester.pumpWidget(buildTestApp(container));
+      await tester.pump();
+
+      final router = container.read(appRouterProvider);
+      router.go('/trust/digital-id');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(router.state.uri.toString(), equals('/provider/home'));
     });
   });
 }

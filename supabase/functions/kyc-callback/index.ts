@@ -1,13 +1,14 @@
 import { handleCors } from '../_shared/cors.ts';
 import { logInfo, logError } from '../_shared/logger.ts';
 import { errorResponse, jsonResponse } from '../_shared/response.ts';
-import { getServiceClient } from '../_shared/supabase.ts';
+import { getUserClient, getServiceClient } from '../_shared/supabase.ts';
 import { getKycProvider } from '../_shared/kyc_provider.ts';
 
 export interface KycCallbackPayload {
-  provider_ref: string;
+  provider_ref?: string;
   doc_type?: string;
-  status: 'verified' | 'rejected' | 'pending';
+  status?: 'verified' | 'rejected' | 'pending';
+  health?: boolean;
 }
 
 Deno.serve(async (req: Request) => {
@@ -15,9 +16,45 @@ Deno.serve(async (req: Request) => {
   if (corsRes) return corsRes;
 
   try {
+    const url = new URL(req.url);
+    const serviceClient = getServiceClient();
+
+    // Check if this is a health check request
+    const isHealthCheck = url.searchParams.get('health') === 'true';
+    if (isHealthCheck) {
+      // Must be a signed-in user for health check
+      const auth = await getUserClient(req);
+      if (auth.errorResponse) return auth.errorResponse;
+
+      const missingSecrets: string[] = [];
+      const missingDbObjects: string[] = [];
+
+      // Check kyc_records table
+      const { error: kycErr } = await serviceClient
+        .from('kyc_records')
+        .select('id')
+        .limit(1);
+      if (kycErr) {
+        missingDbObjects.push('kyc_records');
+      }
+
+      // Check recompute_verification_badge RPC
+      const { error: rpcErr } = await serviceClient.rpc('recompute_verification_badge', {
+        p_user_id: auth.context!.user.id,
+      });
+      if (rpcErr && rpcErr.message.includes('function') && rpcErr.message.includes('does not exist')) {
+        missingDbObjects.push('recompute_verification_badge');
+      }
+
+      return jsonResponse({
+        ok: missingSecrets.length === 0 && missingDbObjects.length === 0,
+        missing_secrets: missingSecrets,
+        missing_db_objects: missingDbObjects,
+      });
+    }
+
     let payload: KycCallbackPayload;
     if (req.method === 'GET') {
-      const url = new URL(req.url);
       payload = {
         provider_ref: url.searchParams.get('provider_ref') || '',
         doc_type: url.searchParams.get('doc_type') || 'aadhaar',
@@ -39,18 +76,21 @@ Deno.serve(async (req: Request) => {
     // Ensure 12-digit number is never stored in DB or logs
     const safeMaskedId = verifiedData.masked_id.replace(/\b\d{12}\b/g, 'XXXX-XXXX-4321');
 
-    const serviceClient = getServiceClient();
-
     // 1. Fetch pending kyc_record row
-    const { data: existingRecord } = await serviceClient
+    const { data: existingRecord, error: fetchErr } = await serviceClient
       .from('kyc_records')
       .select('id, user_id, doc_type')
       .eq('provider_ref', payload.provider_ref)
       .maybeSingle();
 
+    if (fetchErr) {
+      console.error('[kyc-callback] fetch record failed:', fetchErr.message);
+      return errorResponse('db_error', 'Database lookup failed.', 500);
+    }
+
     if (!existingRecord) {
       logError('kyc_callback_record_not_found', { provider_ref: payload.provider_ref });
-      return errorResponse('not_found', 'KYC reference record not found', 404);
+      return errorResponse('not_found', 'KYC reference record not found in database.', 404);
     }
 
     // 2. Update kyc_records table with masked results ONLY
@@ -66,8 +106,8 @@ Deno.serve(async (req: Request) => {
       .eq('id', existingRecord.id);
 
     if (updateErr) {
-      logError('kyc_callback_update_failed', updateErr);
-      return errorResponse('db_error', 'Failed to update KYC verification status', 500);
+      console.error('[kyc-callback] update failed:', updateErr.message);
+      return errorResponse('db_error', 'Failed to update KYC verification status in database.', 500);
     }
 
     // 3. Trigger badge recomputation RPC if available
@@ -75,8 +115,8 @@ Deno.serve(async (req: Request) => {
       await serviceClient.rpc('recompute_verification_badge', {
         p_user_id: existingRecord.user_id,
       });
-    } catch (_) {
-      // Ignore if function not present in schema
+    } catch (e) {
+      console.error('[kyc-callback] badge recomputation warning:', e instanceof Error ? e.message : String(e));
     }
 
     logInfo('kyc_callback_completed', {
@@ -95,7 +135,7 @@ Deno.serve(async (req: Request) => {
       message: 'KYC verification status processed and updated.',
     });
   } catch (err) {
-    logError('kyc_callback_failed', err);
+    console.error('[kyc-callback] Unhandled error:', err instanceof Error ? err.message : String(err));
     return errorResponse('internal_error', 'Internal server error processing KYC callback', 500);
   }
 });

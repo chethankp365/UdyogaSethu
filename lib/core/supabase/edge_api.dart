@@ -81,16 +81,37 @@ class EdgeApiClient {
         rethrow;
       }
       if (e is FunctionException) {
+        String code = 'function_exception';
+        String message = e.reasonPhrase ?? 'Edge Function error (${e.status})';
+        dynamic details = e.details;
+
+        if (details is Map) {
+          final errObj = details['error'];
+          if (errObj is Map) {
+            code = errObj['code'] as String? ?? code;
+            message = errObj['message'] as String? ?? message;
+          }
+        }
+
         throw EdgeFunctionException(
-          code: 'function_exception',
+          code: code,
           statusCode: e.status,
-          originalMessage: e.reasonPhrase ?? e.toString(),
-          details: e.details,
+          originalMessage: message,
+          details: details,
           stackTrace: stack,
         );
       }
       throw AppException.from(e, stack);
     }
+  }
+
+  /// Run health check against a specific Edge Function (`{"health": true}`).
+  Future<Map<String, dynamic>> checkFunctionHealth(String functionName) async {
+    final res = await _invoke(functionName, body: {'health': true});
+    final rawData = res['data'];
+    if (rawData is Map<String, dynamic>) return rawData;
+    if (rawData is Map) return Map<String, dynamic>.from(rawData);
+    return res;
   }
 
   /// P1.8 Functions

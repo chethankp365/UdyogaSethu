@@ -12,6 +12,7 @@ import 'package:udyogasethu/core/widgets/component_gallery_screen.dart';
 import 'package:udyogasethu/core/widgets/connection_debug_screen.dart';
 import 'package:udyogasethu/core/widgets/dev_assets_screen.dart';
 import 'package:udyogasethu/core/widgets/not_found_screen.dart';
+import 'package:udyogasethu/features/dev/presentation/edge_health_screen.dart';
 import 'package:udyogasethu/features/account/presentation/linked_accounts_screen.dart';
 import 'package:udyogasethu/features/account/presentation/settings_screen.dart';
 import 'package:udyogasethu/features/auth/presentation/login_screen.dart';
@@ -234,6 +235,25 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 } else if (kDebugMode) {
                   AppLogger.i('[VerificationGuard] loc="$loc", role="${role.name}", seekerType="$seekerType", loading=${sessionData.seekerTypeLoaded} -> ALLOWED');
                 }
+              }
+            }
+          }
+
+          // D-VISIBILITY Route Guards for Digital ID (Seeker only) and Scan & Verify (Provider only)
+          if (loc == AppRoutes.digitalId) {
+            final isAllowed = role == UserRole.seeker;
+            if (!isAllowed) {
+              target = AppSessionNotifier.getHomeForRole(role);
+              if (kDebugMode) {
+                AppLogger.i('[D-VISIBILITY] Blocked digitalId for role=${role.name} -> Redirect to $target');
+              }
+            }
+          } else if (loc == AppRoutes.scanVerify) {
+            final isAllowed = role == UserRole.provider;
+            if (!isAllowed) {
+              target = AppSessionNotifier.getHomeForRole(role);
+              if (kDebugMode) {
+                AppLogger.i('[D-VISIBILITY] Blocked scanVerify for role=${role.name} -> Redirect to $target');
               }
             }
           }
@@ -552,6 +572,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         GoRoute(
           path: AppRoutes.devAssets,
           builder: (context, state) => const DevAssetsScreen(),
+        ),
+        GoRoute(
+          path: AppRoutes.devEdgeHealth,
+          builder: (context, state) => const EdgeFunctionHealthScreen(),
         ),
       ],
     ],

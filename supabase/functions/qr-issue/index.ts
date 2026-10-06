@@ -7,6 +7,7 @@ import { checkRateLimit } from '../_shared/rate_limiter.ts';
 export interface QrIssueRequest {
   purpose?: string;
   assignment_id?: string;
+  health?: boolean;
 }
 
 function base64UrlEncode(bytes: Uint8Array): string {
@@ -37,10 +38,7 @@ Deno.serve(async (req: Request) => {
     if (auth.errorResponse) return auth.errorResponse;
 
     const userId = auth.context!.user.id;
-
-    // Rate-limit issuance to 30 requests per minute
-    const rate = await checkRateLimit(userId, 'qr-issue', 30, 60);
-    if (rate.errorResponse) return rate.errorResponse;
+    const serviceClient = getServiceClient();
 
     let body: QrIssueRequest = {};
     try {
@@ -50,32 +48,88 @@ Deno.serve(async (req: Request) => {
       }
     } catch (_) {}
 
-    const purpose = body.purpose ?? 'profile';
-    const serviceClient = getServiceClient();
+    const url = new URL(req.url);
+    const isHealthCheck = body.health === true || url.searchParams.get('health') === 'true';
 
-    // Read default expiry from admin_settings
+    // Health check endpoint (signed-in users only)
+    if (isHealthCheck) {
+      const missingSecrets: string[] = [];
+      const missingDbObjects: string[] = [];
+
+      if (!Deno.env.get('QR_SIGNING_SECRET')) {
+        missingSecrets.push('QR_SIGNING_SECRET');
+      }
+
+      // Check admin_settings table
+      const { error: adminErr } = await serviceClient
+        .from('admin_settings')
+        .select('key')
+        .limit(1);
+      if (adminErr) {
+        missingDbObjects.push('admin_settings');
+      }
+
+      // Check qr_tokens table
+      const { error: qrTokensErr } = await serviceClient
+        .from('qr_tokens')
+        .select('id')
+        .limit(1);
+      if (qrTokensErr) {
+        missingDbObjects.push('qr_tokens');
+      }
+
+      return jsonResponse({
+        ok: missingSecrets.length === 0 && missingDbObjects.length === 0,
+        missing_secrets: missingSecrets,
+        missing_db_objects: missingDbObjects,
+      });
+    }
+
+    // Role Guard per D-VISIBILITY: Profile QR tokens are strictly for Job Seekers
+    const purpose = body.purpose ?? 'profile';
+    if (purpose === 'profile') {
+      const { data: userRoles, error: rolesErr } = await serviceClient
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId);
+
+      const hasSeekerRole = userRoles?.some((r) => r.role === 'seeker');
+      if (rolesErr || !hasSeekerRole) {
+        return errorResponse(
+          'unauthorized_role',
+          'Only registered Job Seekers are eligible to generate a Digital ID pass.',
+          403
+        );
+      }
+    }
+
+    // Rate-limit issuance to 30 requests per minute
+    const rate = await checkRateLimit(userId, 'qr-issue', 30, 60);
+    if (rate.errorResponse) return rate.errorResponse;
+
+    // Read default expiry from admin_settings using correct schema (key, value)
     let expirySeconds = 300; // 5 minutes default
     try {
       const { data: settingData } = await serviceClient
         .from('admin_settings')
-        .select('setting_value')
-        .eq('setting_key', 'qr_expiry_seconds')
+        .select('value')
+        .eq('key', 'qr_expiry_seconds')
         .maybeSingle();
 
-      if (settingData?.setting_value) {
-        const val = Number(settingData.setting_value);
+      if (settingData?.value) {
+        const val = Number(settingData.value);
         if (!isNaN(val) && val > 0) {
           expirySeconds = val;
         }
       }
     } catch (e) {
-      logError('read_qr_expiry_setting_failed', e);
+      console.error('[qr-issue] read_qr_expiry_setting_failed:', e instanceof Error ? e.message : String(e));
     }
 
     const signingSecret = Deno.env.get('QR_SIGNING_SECRET');
     if (!signingSecret) {
-      logError('qr_secret_missing', 'QR_SIGNING_SECRET is not configured in Supabase secrets');
-      return errorResponse('server_misconfiguration', 'QR signing key is not configured', 500);
+      console.error('[qr-issue] QR_SIGNING_SECRET is not configured in Supabase secrets');
+      return errorResponse('server_misconfiguration', 'QR signing key is not configured on the server.', 500);
     }
 
     // Generate random token ID
@@ -122,8 +176,8 @@ Deno.serve(async (req: Request) => {
     });
 
     if (insertErr) {
-      logError('qr_token_persist_failed', insertErr);
-      return errorResponse('db_error', 'Failed to register token for validation', 500);
+      console.error('[qr-issue] qr_tokens insert failed:', insertErr.message);
+      return errorResponse('db_error', 'Failed to register token for validation in database.', 500);
     }
 
     logInfo('qr_token_issued', {
@@ -139,7 +193,7 @@ Deno.serve(async (req: Request) => {
       token_id_hash: tokenIdHash,
     });
   } catch (err) {
-    logError('qr_issue_failed', err);
-    return errorResponse('internal_error', 'Internal server error', 500);
+    console.error('[qr-issue] Unhandled error:', err instanceof Error ? err.message : String(err));
+    return errorResponse('internal_error', 'Internal server error during QR issuance.', 500);
   }
 });

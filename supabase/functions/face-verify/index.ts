@@ -2,14 +2,14 @@ import { handleCors } from '../_shared/cors.ts';
 import { logInfo, logError } from '../_shared/logger.ts';
 import { errorResponse, jsonResponse } from '../_shared/response.ts';
 import { getUserClient, getServiceClient } from '../_shared/supabase.ts';
-import { validateBody } from '../_shared/validation.ts';
 import { checkRateLimit } from '../_shared/rate_limiter.ts';
 
 export interface FaceVerifyRequest {
-  embedding: number[];
-  context: 'login' | 'job_start' | 'mid_job' | 'completion';
+  embedding?: number[];
+  context?: 'login' | 'job_start' | 'mid_job' | 'completion';
   assignment_id?: string;
   gps_ok?: boolean;
+  health?: boolean;
 }
 
 Deno.serve(async (req: Request) => {
@@ -21,38 +21,82 @@ Deno.serve(async (req: Request) => {
     if (auth.errorResponse) return auth.errorResponse;
 
     const userId = auth.context!.user.id;
+    const serviceClient = getServiceClient();
+
+    let body: FaceVerifyRequest = {};
+    try {
+      const text = await req.text();
+      if (text && text.trim().length > 0) {
+        body = JSON.parse(text);
+      }
+    } catch (_) {}
+
+    const url = new URL(req.url);
+    const isHealthCheck = body.health === true || url.searchParams.get('health') === 'true';
+
+    // Health check endpoint (signed-in users only)
+    if (isHealthCheck) {
+      const missingSecrets: string[] = [];
+      const missingDbObjects: string[] = [];
+
+      // Check admin_settings
+      const { error: adminErr } = await serviceClient.from('admin_settings').select('key').limit(1);
+      if (adminErr) missingDbObjects.push('admin_settings');
+
+      // Check face_profiles
+      const { error: profileErr } = await serviceClient.from('face_profiles').select('id').limit(1);
+      if (profileErr) missingDbObjects.push('face_profiles');
+
+      // Check compare_face_embeddings RPC
+      const { error: rpcErr } = await serviceClient.rpc('compare_face_embeddings', {
+        v1: [0.1, 0.2],
+        v2: [0.1, 0.2],
+      });
+      if (rpcErr && rpcErr.message.includes('function') && rpcErr.message.includes('does not exist')) {
+        missingDbObjects.push('compare_face_embeddings');
+      }
+
+      // Check verification_attempts
+      const { error: attemptsErr } = await serviceClient.from('verification_attempts').select('id').limit(1);
+      if (attemptsErr) missingDbObjects.push('verification_attempts');
+
+      // Check fraud_flags
+      const { error: flagsErr } = await serviceClient.from('fraud_flags').select('id').limit(1);
+      if (flagsErr) missingDbObjects.push('fraud_flags');
+
+      return jsonResponse({
+        ok: missingSecrets.length === 0 && missingDbObjects.length === 0,
+        missing_secrets: missingSecrets,
+        missing_db_objects: missingDbObjects,
+      });
+    }
 
     // Rate limit: 10 calls per minute per user
     const rate = await checkRateLimit(userId, 'face-verify', 10, 60);
     if (rate.errorResponse) return rate.errorResponse;
 
-    const validation = await validateBody<FaceVerifyRequest>(req, ['embedding', 'context']);
-    if (validation.errorResponse) return validation.errorResponse;
-
-    const { embedding, context, assignment_id, gps_ok } = validation.data!;
+    const embedding = body.embedding;
+    const context = body.context;
+    const assignment_id = body.assignment_id;
+    const gps_ok = body.gps_ok;
 
     if (!Array.isArray(embedding) || embedding.length < 64) {
       return errorResponse('invalid_embedding', 'Embedding vector must be an array of numbers with length >= 64', 400);
     }
 
     const validContexts = ['login', 'job_start', 'mid_job', 'completion'];
-    if (!validContexts.includes(context)) {
+    if (!context || !validContexts.includes(context)) {
       return errorResponse('invalid_context', `Context must be one of: ${validContexts.join(', ')}`, 400);
     }
 
-    // Determine explicit gps_ok boolean per context:
-    // - 'login': true (documented as "not applicable" for login context since no geofence check occurs)
-    // - 'job_start', 'mid_job', 'completion': explicit gps_ok from request body (or false if missing)
     let explicitGpsOk = false;
     if (context === 'login') {
-      explicitGpsOk = true; // Not applicable for login context
+      explicitGpsOk = true;
     } else {
       explicitGpsOk = gps_ok ?? false;
     }
 
-    const serviceClient = getServiceClient();
-
-    // 1. Fetch face_match_threshold from admin_settings using real schema (key, value)
+    // 1. Fetch face_match_threshold from admin_settings
     let threshold = 0.65;
     const { data: settingRow } = await serviceClient
       .from('admin_settings')
@@ -80,8 +124,6 @@ Deno.serve(async (req: Request) => {
     let passed = false;
 
     if (matcherMode === 'mock') {
-      // Mock matcher mode for testing
-      // If first element of embedding is negative, simulate a fail
       if (embedding.length > 0 && embedding[0] < 0) {
         similarity = 0.40;
         passed = false;
@@ -90,7 +132,6 @@ Deno.serve(async (req: Request) => {
         passed = true;
       }
     } else {
-      // On-device matcher mode: compare embedding with stored enrolled embedding
       const { data: faceProfile, error: profileErr } = await serviceClient
         .from('face_profiles')
         .select('embedding, status')
@@ -99,7 +140,6 @@ Deno.serve(async (req: Request) => {
 
       if (profileErr || !faceProfile || !faceProfile.embedding) {
         logInfo('face_verify_no_enrolled_profile', { userId });
-        // Log attempt as failed with explicit gps_ok
         await serviceClient.from('verification_attempts').insert({
           user_id: userId,
           context: context,
@@ -122,15 +162,14 @@ Deno.serve(async (req: Request) => {
         });
       }
 
-      // Call compare_face_embeddings RPC
       const { data: simResult, error: simErr } = await serviceClient.rpc('compare_face_embeddings', {
         v1: embedding,
         v2: faceProfile.embedding,
       });
 
       if (simErr) {
-        logError('face_verify_rpc_error', simErr);
-        return errorResponse('database_error', 'Failed to compare face embeddings', 500);
+        console.error('[face-verify] compare_face_embeddings failed:', simErr.message);
+        return errorResponse('database_error', 'Failed to compare face embeddings on the server', 500);
       }
 
       similarity = typeof simResult === 'number' ? simResult : 0.0;
@@ -170,7 +209,7 @@ Deno.serve(async (req: Request) => {
       result = 'fail';
     }
 
-    // 3. Insert verification_attempts log row with explicit gps_ok
+    // 3. Insert verification_attempts log row
     const { error: insertAttemptErr } = await serviceClient
       .from('verification_attempts')
       .insert({
@@ -184,7 +223,7 @@ Deno.serve(async (req: Request) => {
       });
 
     if (insertAttemptErr) {
-      logError('verification_attempts_insert_error', insertAttemptErr);
+      console.error('[face-verify] verification_attempts insert failed:', insertAttemptErr.message);
     }
 
     let fraudFlagCreated = false;
@@ -209,7 +248,7 @@ Deno.serve(async (req: Request) => {
         });
 
       if (fraudErr) {
-        logError('fraud_flags_insert_error', fraudErr);
+        console.error('[face-verify] fraud_flags insert failed:', fraudErr.message);
       } else {
         fraudFlagCreated = true;
         logInfo('fraud_flag_created', { userId, ruleKey: 'repeated_face_fail', attempts: newConsecutiveFails });
@@ -241,7 +280,7 @@ Deno.serve(async (req: Request) => {
     });
 
   } catch (err) {
-    logError('face_verify_failed', err);
+    console.error('[face-verify] Unhandled error:', err instanceof Error ? err.message : String(err));
     return errorResponse('internal_error', 'Internal server error during face verification', 500);
   }
 });

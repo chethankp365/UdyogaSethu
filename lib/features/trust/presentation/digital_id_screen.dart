@@ -1,14 +1,25 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:udyogasethu/core/router/routes.dart';
+import 'package:udyogasethu/core/config/env.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/widgets/user_avatar.dart';
 import 'package:udyogasethu/features/trust/data/digital_id_repository.dart';
 import 'package:udyogasethu/features/trust/domain/digital_id_card.dart';
+
+/// State notifier for permanent profile QR visibility (D-QR testing toggle)
+class ProfileQrEnabledNotifier extends Notifier<bool> {
+  @override
+  bool build() => kProfileQrEnabled;
+
+  void setEnabled(bool value) => state = value;
+}
+
+final profileQrEnabledProvider = NotifierProvider<ProfileQrEnabledNotifier, bool>(
+  ProfileQrEnabledNotifier.new,
+);
 
 class DigitalIdScreen extends ConsumerStatefulWidget {
   const DigitalIdScreen({super.key});
@@ -58,6 +69,7 @@ class _DigitalIdScreenState extends ConsumerState<DigitalIdScreen> {
     try {
       final repo = ref.read(digitalIdRepositoryProvider);
       final data = await repo.fetchDigitalId(_getUserId());
+      final isQrEnabled = ref.read(profileQrEnabledProvider);
       if (mounted) {
         setState(() {
           _idCard = data;
@@ -67,7 +79,9 @@ class _DigitalIdScreenState extends ConsumerState<DigitalIdScreen> {
               : data.qrExpiresInSeconds;
           _isLoading = false;
         });
-        _startCountdown();
+        if (isQrEnabled) {
+          _startCountdown();
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -156,16 +170,11 @@ class _DigitalIdScreenState extends ConsumerState<DigitalIdScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isQrEnabled = ref.watch(profileQrEnabledProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Digital ID Card', style: TextStyle(fontWeight: FontWeight.bold)),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.qr_code_scanner_rounded),
-            tooltip: 'Scan & Verify',
-            onPressed: () => context.push(AppRoutes.scanVerify),
-          ),
-        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -188,75 +197,61 @@ class _DigitalIdScreenState extends ConsumerState<DigitalIdScreen> {
                   // Shareable Card Boundary
                   RepaintBoundary(
                     key: _cardBoundaryKey,
-                    child: _buildIdCardWidget(),
+                    child: _buildIdCardWidget(isQrEnabled),
                   ),
                   const SizedBox(height: 20),
 
-                  // QR Countdown & Expiry Progress Indicator
-                  _buildCountdownSection(),
-                  const SizedBox(height: 24),
+                  // QR Countdown & Expiry Progress Indicator (Shown only when QR is enabled)
+                  if (isQrEnabled) ...[
+                    _buildCountdownSection(),
+                    const SizedBox(height: 24),
+                  ],
 
                   // Actions
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: _shareCard,
-                          icon: const Icon(Icons.share_rounded, size: 18),
-                          label: const Text('Share ID Card'),
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                          ),
-                        ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: _shareCard,
+                      icon: const Icon(Icons.share_rounded, size: 18),
+                      label: const Text('Share ID Card'),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: () => context.push(AppRoutes.scanVerify),
-                          icon: const Icon(Icons.qr_code_scanner_rounded, size: 18),
-                          label: const Text('Scan to Verify'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.headerGreenDark,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                   const SizedBox(height: 16),
 
                   // Info Notice
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.blue.shade50,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.blue.shade200),
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(Icons.security_rounded, color: Colors.blue.shade800, size: 20),
-                        const SizedBox(width: 10),
-                        const Expanded(
-                          child: Text(
-                            'Privacy Protection: This QR code contains only a temporary cryptographic token with a 5-minute expiry. It never contains your phone number, Aadhaar number, or personal address.',
-                            style: TextStyle(fontSize: 12, color: AppColors.textDark, height: 1.3),
+                  if (isQrEnabled)
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.shade50,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.blue.shade200),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(Icons.security_rounded, color: Colors.blue.shade800, size: 20),
+                          const SizedBox(width: 10),
+                          const Expanded(
+                            child: Text(
+                              'Privacy Protection: This QR code contains only a temporary cryptographic token with a 5-minute expiry. It never contains your phone number, Aadhaar number, or personal address.',
+                              style: TextStyle(fontSize: 12, color: AppColors.textDark, height: 1.3),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
     );
   }
 
-  Widget _buildIdCardWidget() {
+  Widget _buildIdCardWidget(bool isQrEnabled) {
     final card = _idCard;
     if (card == null) return const SizedBox.shrink();
 
@@ -410,47 +405,97 @@ class _DigitalIdScreenState extends ConsumerState<DigitalIdScreen> {
                 const Divider(height: 1),
                 const SizedBox(height: 18),
 
-                // QR Code
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.grey.shade200, width: 1.5),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withAlpha(10),
-                        blurRadius: 10,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: card.qrToken != null
-                      ? QrImageView(
-                          data: card.qrToken!,
-                          version: QrVersions.auto,
-                          size: 190,
-                          eyeStyle: QrEyeStyle(
-                            eyeShape: QrEyeShape.square,
-                            color: isVerified ? Colors.teal.shade900 : AppColors.textDark,
-                          ),
-                          dataModuleStyle: QrDataModuleStyle(
-                            dataModuleShape: QrDataModuleShape.circle,
-                            color: isVerified ? AppColors.headerGreenDark : AppColors.textDark,
-                          ),
-                        )
-                      : const SizedBox(
-                          height: 190,
-                          width: 190,
-                          child: Center(child: CircularProgressIndicator()),
+                if (isQrEnabled) ...[
+                  // QR Code
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.grey.shade200, width: 1.5),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withAlpha(10),
+                          blurRadius: 10,
+                          offset: const Offset(0, 3),
                         ),
-                ),
-                const SizedBox(height: 12),
-
-                const Text(
-                  'Scan to verify identity and trust credentials',
-                  style: TextStyle(fontSize: 11, color: AppColors.textMuted, fontWeight: FontWeight.w500),
-                ),
+                      ],
+                    ),
+                    child: card.qrToken != null
+                        ? QrImageView(
+                            data: card.qrToken!,
+                            version: QrVersions.auto,
+                            size: 190,
+                            eyeStyle: QrEyeStyle(
+                              eyeShape: QrEyeShape.square,
+                              color: isVerified ? Colors.teal.shade900 : AppColors.textDark,
+                            ),
+                            dataModuleStyle: QrDataModuleStyle(
+                              dataModuleShape: QrDataModuleShape.circle,
+                              color: isVerified ? AppColors.headerGreenDark : AppColors.textDark,
+                            ),
+                          )
+                        : const SizedBox(
+                            height: 190,
+                            width: 190,
+                            child: Center(child: CircularProgressIndicator()),
+                          ),
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'Scan to verify identity and trust credentials',
+                    style: TextStyle(fontSize: 11, color: AppColors.textMuted, fontWeight: FontWeight.w500),
+                  ),
+                ] else ...[
+                  // Job Check-in QR Placeholder Card
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                    decoration: BoxDecoration(
+                      color: Colors.blueGrey.shade50.withAlpha(150),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.blueGrey.shade100, width: 1.5),
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.blueGrey.withAlpha(30),
+                                blurRadius: 10,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: Icon(Icons.qr_code_2_rounded, size: 48, color: Colors.blueGrey.shade700),
+                        ),
+                        const SizedBox(height: 14),
+                        const Text(
+                          'Job Check-in QR',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textDark,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        const Text(
+                          'Your QR ticket for each job appears here after you are selected.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: AppColors.textMuted,
+                            height: 1.35,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ],
             ),
           ),

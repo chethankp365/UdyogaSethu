@@ -2,13 +2,13 @@ import { handleCors } from '../_shared/cors.ts';
 import { logInfo, logError } from '../_shared/logger.ts';
 import { jsonResponse, errorResponse } from '../_shared/response.ts';
 import { getUserClient, getServiceClient } from '../_shared/supabase.ts';
-import { validateBody } from '../_shared/validation.ts';
 import { checkRateLimit } from '../_shared/rate_limiter.ts';
 
 export interface QrVerifyRequest {
-  qr_token: string;
+  qr_token?: string;
   lat?: number;
   lng?: number;
+  health?: boolean;
 }
 
 function base64UrlDecode(str: string): Uint8Array {
@@ -39,15 +39,77 @@ Deno.serve(async (req: Request) => {
     if (auth.errorResponse) return auth.errorResponse;
 
     const scannerUserId = auth.context!.user.id;
+    const serviceClient = getServiceClient();
+
+    let body: QrVerifyRequest = {};
+    try {
+      const text = await req.text();
+      if (text && text.trim().length > 0) {
+        body = JSON.parse(text);
+      }
+    } catch (_) {}
+
+    const url = new URL(req.url);
+    const isHealthCheck = body.health === true || url.searchParams.get('health') === 'true';
+
+    // Health check endpoint (signed-in users only)
+    if (isHealthCheck) {
+      const missingSecrets: string[] = [];
+      const missingDbObjects: string[] = [];
+
+      if (!Deno.env.get('QR_SIGNING_SECRET')) {
+        missingSecrets.push('QR_SIGNING_SECRET');
+      }
+
+      // Check qr_tokens table
+      const { error: qrErr } = await serviceClient
+        .from('qr_tokens')
+        .select('id')
+        .limit(1);
+      if (qrErr) {
+        missingDbObjects.push('qr_tokens');
+      }
+
+      // Check get_public_verification RPC
+      const { error: rpcErr } = await serviceClient.rpc('get_public_verification', {
+        p_user_id: scannerUserId,
+      });
+      // If error mentions function does not exist
+      if (rpcErr && rpcErr.message.includes('function') && rpcErr.message.includes('does not exist')) {
+        missingDbObjects.push('get_public_verification');
+      }
+
+      return jsonResponse({
+        ok: missingSecrets.length === 0 && missingDbObjects.length === 0,
+        missing_secrets: missingSecrets,
+        missing_db_objects: missingDbObjects,
+      });
+    }
+
+    // Role Guard per D-VISIBILITY: Verification is restricted to Job Providers and Admins
+    const { data: userRoles, error: rolesErr } = await serviceClient
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', scannerUserId);
+
+    const isProviderOrAdmin = userRoles?.some((r) => r.role === 'provider' || r.role === 'admin');
+    if (rolesErr || !isProviderOrAdmin) {
+      return errorResponse(
+        'unauthorized_role',
+        'Only registered Job Providers and Admins are authorized to scan and verify worker credentials.',
+        403
+      );
+    }
 
     // Rate-limit scanner to 30 verification checks per minute
     const rate = await checkRateLimit(scannerUserId, 'qr-verify', 30, 60);
     if (rate.errorResponse) return rate.errorResponse;
 
-    const validation = await validateBody<QrVerifyRequest>(req, ['qr_token']);
-    if (validation.errorResponse) return validation.errorResponse;
+    const qrToken = body.qr_token?.trim();
+    if (!qrToken) {
+      return errorResponse('bad_request', 'Missing required parameter: qr_token.', 400);
+    }
 
-    const qrToken = validation.data!.qr_token.trim();
     const parts = qrToken.split('.');
     if (parts.length !== 2) {
       return errorResponse('invalid_token', 'Invalid QR code format. Please scan a valid UdyogaSethu ID code.', 400);
@@ -56,8 +118,8 @@ Deno.serve(async (req: Request) => {
     const [encodedPayload, encodedSig] = parts;
     const signingSecret = Deno.env.get('QR_SIGNING_SECRET');
     if (!signingSecret) {
-      logError('qr_secret_missing', 'QR_SIGNING_SECRET is not configured');
-      return errorResponse('server_misconfiguration', 'QR verification key is missing', 500);
+      console.error('[qr-verify] QR_SIGNING_SECRET is not configured');
+      return errorResponse('server_misconfiguration', 'QR verification key is missing on the server.', 500);
     }
 
     const enc = new TextEncoder();
@@ -120,7 +182,6 @@ Deno.serve(async (req: Request) => {
 
     // Look up token hash in database for revocation check
     const tokenIdHash = await sha256Hex(tokenId);
-    const serviceClient = getServiceClient();
 
     const { data: tokenRecord, error: dbErr } = await serviceClient
       .from('qr_tokens')
@@ -129,7 +190,7 @@ Deno.serve(async (req: Request) => {
       .maybeSingle();
 
     if (dbErr || !tokenRecord) {
-      logInfo('qr_token_lookup_failed', { tokenIdHash, error: dbErr });
+      console.error('[qr-verify] qr_tokens lookup failed:', dbErr?.message ?? 'not found');
       return errorResponse('token_not_found', 'QR token not found in the verified registry.', 404);
     }
 
@@ -155,8 +216,8 @@ Deno.serve(async (req: Request) => {
     });
 
     if (rpcErr || !pubData) {
-      logError('get_public_verification_failed', rpcErr);
-      return errorResponse('verification_failed', 'Could not load worker verification status.', 500);
+      console.error('[qr-verify] get_public_verification failed:', rpcErr?.message);
+      return errorResponse('verification_failed', 'Could not load worker verification status from registry.', 500);
     }
 
     logInfo('qr_verification_success', {
@@ -180,7 +241,7 @@ Deno.serve(async (req: Request) => {
       verified_at: new Date().toISOString(),
     });
   } catch (err) {
-    logError('qr_verify_failed', err);
-    return errorResponse('internal_error', 'Internal server error', 500);
+    console.error('[qr-verify] Unhandled error:', err instanceof Error ? err.message : String(err));
+    return errorResponse('internal_error', 'Internal server error during QR verification.', 500);
   }
 });

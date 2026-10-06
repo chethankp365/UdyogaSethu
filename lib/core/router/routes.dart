@@ -62,4 +62,5 @@ class AppRoutes {
   static const String devConnection = '/dev/connection';
   static const String devRole = '/dev/role';
   static const String devAssets = '/dev/assets';
+  static const String devEdgeHealth = '/dev/edge-health';
 }

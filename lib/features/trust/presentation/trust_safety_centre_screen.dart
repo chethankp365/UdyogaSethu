@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 
-class TrustSafetyCentreScreen extends StatelessWidget {
+class TrustSafetyCentreScreen extends ConsumerWidget {
   const TrustSafetyCentreScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final activeRole = ref.watch(appSessionProvider).activeRole;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Trust & Safety Centre', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -56,34 +60,36 @@ class TrustSafetyCentreScreen extends StatelessWidget {
                     'UdyogaSethu enforces end-to-end trust mechanisms: verified identities, biometric protection, tamper-proof QR tickets, escrow payments, and instant emergency support.',
                     style: TextStyle(color: Colors.white70, fontSize: 13, height: 1.4),
                   ),
-                  const SizedBox(height: 14),
-
-                  // Quick Action Buttons
-                  Row(
-                    children: [
-                      ElevatedButton.icon(
-                        onPressed: () => context.push(AppRoutes.digitalId),
-                        icon: const Icon(Icons.badge_rounded, size: 16),
-                        label: const Text('My Digital ID'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: AppColors.headerGreenDark,
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      OutlinedButton.icon(
-                        onPressed: () => context.push(AppRoutes.scanVerify),
-                        icon: const Icon(Icons.qr_code_scanner_rounded, size: 16, color: Colors.white),
-                        label: const Text('Scan Worker ID', style: TextStyle(color: Colors.white, fontSize: 12)),
-                        style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Colors.white70),
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        ),
-                      ),
-                    ],
-                  ),
+                  if (activeRole == UserRole.seeker || activeRole == UserRole.provider) ...[
+                    const SizedBox(height: 14),
+                    // Quick Action Buttons (D-VISIBILITY)
+                    Row(
+                      children: [
+                        if (activeRole == UserRole.seeker)
+                          ElevatedButton.icon(
+                            onPressed: () => context.push(AppRoutes.digitalId),
+                            icon: const Icon(Icons.badge_rounded, size: 16),
+                            label: const Text('My Digital ID'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: AppColors.headerGreenDark,
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                            ),
+                          ),
+                        if (activeRole == UserRole.provider)
+                          OutlinedButton.icon(
+                            onPressed: () => context.push(AppRoutes.scanVerify),
+                            icon: const Icon(Icons.qr_code_scanner_rounded, size: 16, color: Colors.white),
+                            label: const Text('Scan Worker ID', style: TextStyle(color: Colors.white, fontSize: 12)),
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(color: Colors.white70),
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ],
                 ],
               ),
             ),

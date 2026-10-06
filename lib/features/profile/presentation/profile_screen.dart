@@ -140,6 +140,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final session = ref.watch(appSessionProvider);
+    final activeRole = widget.role;
     final activeSeekerType = session.seekerType ?? _seekerType;
     final visibleVerificationItems = verificationItemsFor(widget.role, activeSeekerType);
 
@@ -315,74 +316,87 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             ),
             const SizedBox(height: 16),
 
-            // Digital ID Card & Scan to Verify Quick Access Group
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Card(
-                      elevation: 0.5,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      child: InkWell(
-                        onTap: () => context.push(AppRoutes.digitalId),
-                        borderRadius: BorderRadius.circular(12),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: AppColors.headerGreenDark.withAlpha(25),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(Icons.badge_rounded, color: AppColors.headerGreenDark, size: 22),
-                              ),
-                              const SizedBox(height: 8),
-                              const Text('My Digital ID', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                              const Text('Show QR Pass', style: TextStyle(fontSize: 11, color: AppColors.textMuted)),
-                            ],
+            // Digital ID Card & Scan to Verify Quick Access Group (D-VISIBILITY)
+            if (activeRole == UserRole.seeker)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Card(
+                  elevation: 0.5,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  child: InkWell(
+                    onTap: () => context.push(AppRoutes.digitalId),
+                    borderRadius: BorderRadius.circular(12),
+                    child: Padding(
+                      padding: const EdgeInsets.all(14),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: AppColors.headerGreenDark.withAlpha(25),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.badge_rounded, color: AppColors.headerGreenDark, size: 24),
                           ),
-                        ),
+                          const SizedBox(width: 14),
+                          const Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('My Digital ID', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                                SizedBox(height: 2),
+                                Text('View verified digital credentials & ID', style: TextStyle(fontSize: 12, color: AppColors.textMuted)),
+                              ],
+                            ),
+                          ),
+                          const Icon(Icons.chevron_right_rounded, color: AppColors.textMuted),
+                        ],
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Card(
-                      elevation: 0.5,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      child: InkWell(
-                        onTap: () => context.push(AppRoutes.scanVerify),
-                        borderRadius: BorderRadius.circular(12),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue.shade50,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(Icons.qr_code_scanner_rounded, color: Colors.blue, size: 22),
-                              ),
-                              const SizedBox(height: 8),
-                              const Text('Scan & Verify', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                              const Text('Verify Worker', style: TextStyle(fontSize: 11, color: AppColors.textMuted)),
-                            ],
+                ),
+              )
+            else if (activeRole == UserRole.provider)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Card(
+                  elevation: 0.5,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  child: InkWell(
+                    onTap: () => context.push(AppRoutes.scanVerify),
+                    borderRadius: BorderRadius.circular(12),
+                    child: Padding(
+                      padding: const EdgeInsets.all(14),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.blue.shade50,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.qr_code_scanner_rounded, color: Colors.blue, size: 24),
                           ),
-                        ),
+                          const SizedBox(width: 14),
+                          const Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Scan & Verify', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                                SizedBox(height: 2),
+                                Text('Verify worker credentials instantly', style: TextStyle(fontSize: 12, color: AppColors.textMuted)),
+                              ],
+                            ),
+                          ),
+                          const Icon(Icons.chevron_right_rounded, color: AppColors.textMuted),
+                        ],
                       ),
                     ),
                   ),
-                ],
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
+            if (activeRole == UserRole.seeker || activeRole == UserRole.provider)
+              const SizedBox(height: 16),
 
             // Navigation Links Group
             Padding(
@@ -506,13 +520,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Widget _buildVerificationTile(VerificationItemConfig item) {
     if (item.type == VerificationType.face) {
       return FutureBuilder<bool>(
-        future: Supabase.instance.client
-            .from('face_profiles')
-            .select('id')
-            .eq('user_id', _getUserId())
-            .maybeSingle()
-            .then((res) => res != null)
-            .catchError((_) => false),
+        future: () async {
+          try {
+            final client = Supabase.instance.client;
+            final res = await client
+                .from('face_profiles')
+                .select('id')
+                .eq('user_id', _getUserId())
+                .maybeSingle();
+            return res != null;
+          } catch (_) {
+            return false;
+          }
+        }(),
         builder: (context, snapshot) {
           final isVerified = snapshot.data ?? false;
           return ListTile(

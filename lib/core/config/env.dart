@@ -28,6 +28,10 @@ class Env {
   /// Set to false by default. Set to true to re-enable multi-role switching.
   static const bool allowMultiRole = false;
 
+  /// Feature Flag: D-QR Profile permanent QR code visibility.
+  /// Set to false by default. In debug builds, can be toggled via Dev Menu.
+  static const bool profileQrEnabled = false;
+
   /// Returns true if valid Supabase configuration is available.
   static bool get isConfigured =>
       supabaseUrl.trim().isNotEmpty && supabaseAnonKey.trim().isNotEmpty;
@@ -35,6 +39,9 @@ class Env {
 
 /// Global feature flag constant matching Env.allowMultiRole
 const bool kAllowMultiRole = Env.allowMultiRole;
+
+/// Global feature flag constant for D-QR profile QR code (default false)
+const bool kProfileQrEnabled = Env.profileQrEnabled;
 
 /// A human-readable error screen shown when required environment variables are missing.
 class MissingEnvScreen extends StatelessWidget {
