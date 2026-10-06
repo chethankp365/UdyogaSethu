@@ -265,5 +265,47 @@ void main() {
       // Empty jobs state appears
       expect(find.text('No jobs near you yet'), findsOneWidget);
     });
+
+    testWidgets('Informal seeker does NOT see Students Priority badge in Recommendations Header', (tester) async {
+      final container = ProviderContainer(
+        overrides: [
+          seekerHomeProfileProvider.overrideWith((ref) async {
+            return const SeekerProfileDraft(
+              userId: 'user-raju',
+              fullName: 'Raju Informal',
+              seekerType: 'informal',
+            );
+          }),
+          seekerHomeSummaryProvider.overrideWith((ref) async => const SeekerHomeSummary()),
+          consentRepositoryProvider.overrideWithValue(
+            MockConsentRepository({}),
+          ),
+          seekerRecommendedJobsProvider.overrideWith((ref) async => []),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: const MaterialApp(
+            locale: Locale('en'),
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: SeekerHomeScreen(),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expect(find.text('🎓 Students Priority'), findsNothing);
+      expect(find.text('RECOMMENDED FOR YOU'), findsOneWidget);
+    });
   });
 }

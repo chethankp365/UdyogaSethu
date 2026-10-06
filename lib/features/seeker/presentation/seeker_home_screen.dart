@@ -927,7 +927,11 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
         Row(
           children: [
             Text(
-              l10n?.recommendedForYou ?? 'RECOMMENDED FOR YOU',
+              seekerType == 'student'
+                  ? 'STUDENT & FLEXIBLE GIGS'
+                  : (seekerType == 'part_time'
+                      ? 'PART-TIME & FLEXIBLE SHIFTS'
+                      : (l10n?.recommendedForYou ?? 'RECOMMENDED FOR YOU')),
               style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.textMuted, letterSpacing: 0.5),
             ),
             const Spacer(),
@@ -998,7 +1002,7 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
               itemBuilder: (context, index) {
                 final job = filtered[index];
                 final isApplied = appliedJobIds.contains(job.id);
-                return _buildJobCard(context, job, isApplied);
+                return _buildJobCard(context, job, isApplied, seekerType);
               },
             );
           },
@@ -1007,7 +1011,7 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
     );
   }
 
-  Widget _buildJobCard(BuildContext context, JobRecommendation job, bool isApplied) {
+  Widget _buildJobCard(BuildContext context, JobRecommendation job, bool isApplied, String seekerType) {
     final l10n = AppLocalizations.of(context);
 
     return Card(
@@ -1095,12 +1099,15 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
 
             const SizedBox(height: 10),
 
-            // Explainer Reasons Chips
+            // Explainer Reasons Chips (Strictly filter Students chips for non-student seekers)
             if (job.reasons.isNotEmpty)
               Wrap(
                 spacing: 6,
                 runSpacing: 4,
-                children: job.reasons.take(3).map((r) {
+                children: job.reasons
+                    .where((r) => !r.contains('Students') || seekerType == 'student' || seekerType == 'part_time')
+                    .take(3)
+                    .map((r) {
                   return Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
