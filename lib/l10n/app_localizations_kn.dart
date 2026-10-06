@@ -1163,4 +1163,69 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get flexibleShiftChip => 'ಹೊಂದಿಕೊಳ್ಳುವ ಪಾಳಿ';
+
+  @override
+  String get nearbyJobsMapTitle =>
+      'ಹತ್ತಿರದ ದಿನಗೂಲಿ ಉದ್ಯೋಗಗಳು ಮತ್ತು ಕಾರ್ಯಕ್ಷೇತ್ರಗಳು';
+
+  @override
+  String livePinsCount(Object count) {
+    return '$count ಲೈವ್ ಪಿನ್‌ಗಳು';
+  }
+
+  @override
+  String nearbyGpsPinListings(Object count) {
+    return 'ಹತ್ತಿರದ ಜಿಪಿಎಸ್ ಪಿನ್ ಪಟ್ಟಿಗಳು ($count)';
+  }
+
+  @override
+  String get tapPinOrCardToInspect => 'ಪರಿಶೀಲಿಸಲು ಪಿನ್ ಅಥವಾ ಕಾರ್ಡ್ ಸ್ಪರ್ಶಿಸಿ';
+
+  @override
+  String get applyButton => 'ಅರ್ಜಿ ಸಲ್ಲಿಸಿ';
+
+  @override
+  String get categoryFilterAll => 'ಎಲ್ಲವೂ';
+
+  @override
+  String get recenterMap => 'ಜಿಪಿಎಸ್ ಮರುಕೇಂದ್ರೀಕರಿಸಿ';
+
+  @override
+  String get zoomIn => 'ಜೂಮ್ ಇನ್';
+
+  @override
+  String get zoomOut => 'ಜೂಮ್ ಔಟ್';
+
+  @override
+  String get gpsDisabledBanner =>
+      'ಜಿಪಿಎಸ್ ನಿಷ್ಕ್ರಿಯವಾಗಿದೆ. ನಿಖರ ದೂರಕ್ಕಾಗಿ ಸ್ಥಳವನ್ನು ಆನ್ ಮಾಡಿ.';
+
+  @override
+  String get locationPermissionDeniedBanner =>
+      'ಸ್ಥಳದ ಅನುಮತಿ ನೀಡಿಲ್ಲ. ಡೀಫಾಲ್ಟ್ ಪ್ರದೇಶವನ್ನು ತೋರಿಸಲಾಗುತ್ತಿದೆ.';
+
+  @override
+  String get noJobsInArea =>
+      'ಈ ವ್ಯಾಪ್ತಿಯಲ್ಲಿ ಯಾವುದೇ ಕಾರ್ಯಕ್ಷೇತ್ರಗಳು ಕಂಡುಬಂದಿಲ್ಲ';
+
+  @override
+  String get searchRadius => 'ಹುಡುಕಾಟ ವ್ಯಾಪ್ತಿ';
+
+  @override
+  String radiusKm(Object radius) {
+    return '$radius ಕಿ.ಮೀ';
+  }
+
+  @override
+  String get openLocationSettings => 'ಸೆಟ್ಟಿಂಗ್‌ಗಳು';
+
+  @override
+  String get loadJobsError =>
+      'ಹತ್ತಿರದ ಉದ್ಯೋಗಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗುತ್ತಿಲ್ಲ. ಸಂಪರ್ಕ ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.';
+
+  @override
+  String get retryAction => 'ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ';
+
+  @override
+  String get openStreetMapAttribution => '© OpenStreetMap contributors';
 }

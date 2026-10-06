@@ -346,7 +346,25 @@
   "goodAfternoon": "ଶୁଭ ଅପରାହ୍ନ",
   "goodEvening": "ଶୁଭ ସନ୍ଧ୍ୟା",
   "studentsWelcomeChip": "ଛାତ୍ରମାନଙ୍କୁ ସ୍ୱାଗତ",
-  "flexibleShiftChip": "ନମନୀୟ ଶିଫ୍ଟ"
+  "flexibleShiftChip": "ନମନୀୟ ଶିଫ୍ଟ",
+  "nearbyJobsMapTitle": "ନିକଟସ୍ଥ ଦୈନିକ ମଜୁରୀ କାର୍ଯ୍ୟ ଏବଂ କାର୍ଯ୍ୟସ୍ଥଳ",
+  "livePinsCount": "{count} ଲାଇଭ୍ ପିନ୍",
+  "nearbyGpsPinListings": "ନିକଟସ୍ଥ ଜିପିଏସ୍ ପିନ୍ ତାଲିକା ({count})",
+  "tapPinOrCardToInspect": "ପରୀକ୍ଷା କରିବାକୁ ପିନ୍ କିମ୍ବା କାର୍ଡ ଟ୍ୟାପ୍ କରନ୍ତୁ",
+  "applyButton": "ଆବେଦନ କରନ୍ତୁ",
+  "categoryFilterAll": "ସମସ୍ତ",
+  "recenterMap": "ଜିପିଏସ୍ ପୁନଃ କେନ୍ଦ୍ରୀଭୂତ କରନ୍ତୁ",
+  "zoomIn": "ଜୁମ୍ ଇନ୍",
+  "zoomOut": "ଜୁମ୍ ଆଉଟ୍",
+  "gpsDisabledBanner": "ଜିପିଏସ୍ ବନ୍ଦ ଅଛି। ସଠିକ୍ ଦୂରତା ପାଇଁ ସ୍ଥାନ ଚାଲୁ କରନ୍ତୁ।",
+  "locationPermissionDeniedBanner": "ସ୍ଥାନ ଅନୁମତି ମିଳିନାହିଁ। ଡିଫଲ୍ଟ ଅଞ୍ଚଳ ଦେଖାଯାଉଛି।",
+  "noJobsInArea": "ଏହି ବ୍ୟାସାର୍ଦ୍ଧ ମଧ୍ୟରେ କୌଣସି କାର୍ଯ୍ୟସ୍ଥଳ ମିଳିଲା ନାହିଁ",
+  "searchRadius": "ସନ୍ଧାନ ବ୍ୟାସାର୍ଦ୍ଧ",
+  "radiusKm": "{radius} କିମି",
+  "openLocationSettings": "ସେଟିଂସ୍",
+  "loadJobsError": "ନିକଟସ୍ଥ କାର୍ଯ୍ୟ ଲୋଡ୍ କରିବାରେ ଅସମର୍ଥ। ସଂଯୋଗ ଯାଞ୍ଚ କରି ପୁନଃ ଚେଷ୍ଟା କରନ୍ତୁ।",
+  "retryAction": "ପୁନଃ ଚେଷ୍ଟା କରନ୍ତୁ",
+  "openStreetMapAttribution": "© OpenStreetMap contributors"
 }
 
 

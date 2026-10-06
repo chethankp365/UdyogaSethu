@@ -346,7 +346,25 @@
   "goodAfternoon": "శుభ మధ్యాహ్నం",
   "goodEvening": "శుభ సాయంత్రం",
   "studentsWelcomeChip": "విద్యార్థులకు స్వాగతం",
-  "flexibleShiftChip": "ఫ్లెక్సిబుల్ షిఫ్ట్"
+  "flexibleShiftChip": "ఫ్లెక్సిబుల్ షిఫ్ట్",
+  "nearbyJobsMapTitle": "సమీప రోజువారీ వేతన పనులు మరియు పని ప్రదేశాలు",
+  "livePinsCount": "{count} ప్రత్యక్ష పిన్లు",
+  "nearbyGpsPinListings": "సమీప జీపీఎస్ పిన్ జాబితాలు ({count})",
+  "tapPinOrCardToInspect": "పరిశీలించడానికి పిన్ లేదా కార్డును నొక్కండి",
+  "applyButton": "దరఖాస్తు చేసుకోండి",
+  "categoryFilterAll": "అన్నీ",
+  "recenterMap": "జీపీఎస్ రీసెంటర్ చేయండి",
+  "zoomIn": "జూమ్ ఇన్",
+  "zoomOut": "జూమ్ అవుట్",
+  "gpsDisabledBanner": "జీపీఎస్ ఆఫ్‌లో ఉంది. ఖచ్చితమైన దూరం కోసం లొకేషన్ ఆన్ చేయండి.",
+  "locationPermissionDeniedBanner": "లొకేషన్ అనుమతి లభించలేదు. డిఫాల్ట్ ప్రాంతాన్ని చూపిస్తోంది.",
+  "noJobsInArea": "ఈ పరిధిలో ఎలాంటి పని ప్రదేశాలు కనుగొనబడలేదు",
+  "searchRadius": "శోధన పరిధి",
+  "radiusKm": "{radius} కి.మీ",
+  "openLocationSettings": "సెట్టింగ్‌లు",
+  "loadJobsError": "సమీప పనులను లోడ్ చేయడం సాధ్యపడలేదు. నెట్‌వర్క్ తనిఖీ చేసి మళ్లీ ప్రయత్నించండి.",
+  "retryAction": "మళ్ళీ ప్రయత్నించండి",
+  "openStreetMapAttribution": "© OpenStreetMap contributors"
 }
 
 

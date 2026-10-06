@@ -346,7 +346,25 @@
   "goodAfternoon": "শুভ অপরাহ্ন",
   "goodEvening": "শুভ সন্ধ্যা",
   "studentsWelcomeChip": "শিক্ষার্থীদের স্বাগত",
-  "flexibleShiftChip": "নমনীয় শিফট"
+  "flexibleShiftChip": "নমনীয় শিফট",
+  "nearbyJobsMapTitle": "কাছাকাছি দৈনিক মজুরি কাজ এবং কর্মক্ষেত্র",
+  "livePinsCount": "{count} লাইভ পিন",
+  "nearbyGpsPinListings": "কাছাকাছি জিপিএস পিন তালিকা ({count})",
+  "tapPinOrCardToInspect": "যাচাই করতে পিন বা কার্ডে আলতো চাপুন",
+  "applyButton": "আবেদন করুন",
+  "categoryFilterAll": "সব",
+  "recenterMap": "জিপিএস পুনরায় কেন্দ্র করুন",
+  "zoomIn": "জুম ইন",
+  "zoomOut": "জুম আউট",
+  "gpsDisabledBanner": "জিপিএস বন্ধ আছে। সঠিক দূরত্বের জন্য লোকেশন চালু করুন।",
+  "locationPermissionDeniedBanner": "লোকেশন অনুমতি দেওয়া হয়নি। ডিফল্ট এলাকা দেখানো হচ্ছে।",
+  "noJobsInArea": "এই ব্যাসার্ধের মধ্যে কোনো কর্মক্ষেত্র পাওয়া যায়নি",
+  "searchRadius": "অনুসন্ধান ব্যাসার্ধ",
+  "radiusKm": "{radius} কিমি",
+  "openLocationSettings": "সেটিংস",
+  "loadJobsError": "কাছাকাছি কাজ লোড করা সম্ভব হচ্ছে না। সংযোগ পরীক্ষা করে পুনরায় চেষ্টা করুন।",
+  "retryAction": "আবার চেষ্টা করুন",
+  "openStreetMapAttribution": "© OpenStreetMap contributors"
 }
 
 

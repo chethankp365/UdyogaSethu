@@ -346,7 +346,25 @@
   "goodAfternoon": "शुभ दुपार",
   "goodEvening": "शुभ संध्याकाळ",
   "studentsWelcomeChip": "विद्यार्थ्यांचे स्वागत आहे",
-  "flexibleShiftChip": "लवचिक शिफ्ट"
+  "flexibleShiftChip": "लवचिक शिफ्ट",
+  "nearbyJobsMapTitle": "जवळपासचे दैनंदिन रोजंदारी कामे आणि कामाची ठिकाणे",
+  "livePinsCount": "{count} थेट पिन",
+  "nearbyGpsPinListings": "जवळपासच्या जीपीएस पिन याद्या ({count})",
+  "tapPinOrCardToInspect": "तपासण्यासाठी पिन किंवा कार्डवर टॅप करा",
+  "applyButton": "अर्ज करा",
+  "categoryFilterAll": "सर्व",
+  "recenterMap": "जीपीएस पुन्हा केंद्रस्थानी करा",
+  "zoomIn": "झूम इन",
+  "zoomOut": "झूम आउट",
+  "gpsDisabledBanner": "जीपीएस बंद आहे. अचूक अंतरासाठी स्थान चालू करा.",
+  "locationPermissionDeniedBanner": "स्थान परवानगी दिली नाही. डीफॉल्ट क्षेत्र दर्शवित आहे.",
+  "noJobsInArea": "या त्रिज्येत कोणतीही कार्यस्थळे आढळली नाहीत",
+  "searchRadius": "शोध त्रिज्या",
+  "radiusKm": "{radius} किमी",
+  "openLocationSettings": "सेटिंग्ज",
+  "loadJobsError": "जवळपासच्या नोकऱ्या लोड करण्यात अक्षम. कनेक्शन तपासा आणि पुन्हा प्रयत्न करा.",
+  "retryAction": "पुन्हा प्रयत्न करा",
+  "openStreetMapAttribution": "© OpenStreetMap contributors"
 }
 
 

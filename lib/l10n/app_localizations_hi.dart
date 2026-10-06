@@ -1151,4 +1151,68 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get flexibleShiftChip => 'लचीली शिफ्ट';
+
+  @override
+  String get nearbyJobsMapTitle => 'निकटवर्ती दैनिक मजदूरी कार्य और कार्यस्थल';
+
+  @override
+  String livePinsCount(Object count) {
+    return '$count लाइव पिन';
+  }
+
+  @override
+  String nearbyGpsPinListings(Object count) {
+    return 'निकटवर्ती जीपीएस पिन सूचियां ($count)';
+  }
+
+  @override
+  String get tapPinOrCardToInspect =>
+      'विवरण देखने के लिए पिन या कार्ड पर टैप करें';
+
+  @override
+  String get applyButton => 'आवेदन करें';
+
+  @override
+  String get categoryFilterAll => 'सभी';
+
+  @override
+  String get recenterMap => 'जीपीएस पुनः केंद्रित करें';
+
+  @override
+  String get zoomIn => 'ज़ूम इन';
+
+  @override
+  String get zoomOut => 'ज़ूम आउट';
+
+  @override
+  String get gpsDisabledBanner =>
+      'जीपीएस बंद है। सटीक दूरी के लिए लोकेशन चालू करें।';
+
+  @override
+  String get locationPermissionDeniedBanner =>
+      'लोकेशन अनुमति नहीं मिली। डिफ़ॉल्ट क्षेत्र दिखाया जा रहा है।';
+
+  @override
+  String get noJobsInArea => 'इस दायरे में कोई कार्यस्थल नहीं मिला';
+
+  @override
+  String get searchRadius => 'खोज दायरा';
+
+  @override
+  String radiusKm(Object radius) {
+    return '$radius किमी';
+  }
+
+  @override
+  String get openLocationSettings => 'सेटिंग्स';
+
+  @override
+  String get loadJobsError =>
+      'निकटवर्ती कार्य लोड करने में असमर्थ। कनेक्शन जांचें और पुनः प्रयास करें।';
+
+  @override
+  String get retryAction => 'पुनः प्रयास करें';
+
+  @override
+  String get openStreetMapAttribution => '© OpenStreetMap contributors';
 }

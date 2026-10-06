@@ -2185,6 +2185,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Flexible Shift'**
   String get flexibleShiftChip;
+
+  /// No description provided for @nearbyJobsMapTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'NEARBY DAILY WAGE JOBS & WORK SITES'**
+  String get nearbyJobsMapTitle;
+
+  /// No description provided for @livePinsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Live Pins'**
+  String livePinsCount(Object count);
+
+  /// No description provided for @nearbyGpsPinListings.
+  ///
+  /// In en, this message translates to:
+  /// **'NEARBY GPS PIN LISTINGS ({count})'**
+  String nearbyGpsPinListings(Object count);
+
+  /// No description provided for @tapPinOrCardToInspect.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap pin or card to inspect'**
+  String get tapPinOrCardToInspect;
+
+  /// No description provided for @applyButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get applyButton;
+
+  /// No description provided for @categoryFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get categoryFilterAll;
+
+  /// No description provided for @recenterMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Recenter GPS'**
+  String get recenterMap;
+
+  /// No description provided for @zoomIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom In'**
+  String get zoomIn;
+
+  /// No description provided for @zoomOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom Out'**
+  String get zoomOut;
+
+  /// No description provided for @gpsDisabledBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'GPS is turned off. Turn on location for accurate distances.'**
+  String get gpsDisabledBanner;
+
+  /// No description provided for @locationPermissionDeniedBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission not granted. Showing default area.'**
+  String get locationPermissionDeniedBanner;
+
+  /// No description provided for @noJobsInArea.
+  ///
+  /// In en, this message translates to:
+  /// **'No work sites found in this radius'**
+  String get noJobsInArea;
+
+  /// No description provided for @searchRadius.
+  ///
+  /// In en, this message translates to:
+  /// **'Search Radius'**
+  String get searchRadius;
+
+  /// No description provided for @radiusKm.
+  ///
+  /// In en, this message translates to:
+  /// **'{radius} km'**
+  String radiusKm(Object radius);
+
+  /// No description provided for @openLocationSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get openLocationSettings;
+
+  /// No description provided for @loadJobsError.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load nearby jobs. Check connection and tap Retry.'**
+  String get loadJobsError;
+
+  /// No description provided for @retryAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retryAction;
+
+  /// No description provided for @openStreetMapAttribution.
+  ///
+  /// In en, this message translates to:
+  /// **'© OpenStreetMap contributors'**
+  String get openStreetMapAttribution;
 }
 
 class _AppLocalizationsDelegate

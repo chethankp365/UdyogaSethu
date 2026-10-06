@@ -346,7 +346,25 @@
   "goodAfternoon": "Good Afternoon",
   "goodEvening": "Good Evening",
   "studentsWelcomeChip": "Students Welcome",
-  "flexibleShiftChip": "Flexible Shift"
+  "flexibleShiftChip": "Flexible Shift",
+  "nearbyJobsMapTitle": "NEARBY DAILY WAGE JOBS & WORK SITES",
+  "livePinsCount": "{count} Live Pins",
+  "nearbyGpsPinListings": "NEARBY GPS PIN LISTINGS ({count})",
+  "tapPinOrCardToInspect": "Tap pin or card to inspect",
+  "applyButton": "Apply",
+  "categoryFilterAll": "All",
+  "recenterMap": "Recenter GPS",
+  "zoomIn": "Zoom In",
+  "zoomOut": "Zoom Out",
+  "gpsDisabledBanner": "GPS is turned off. Turn on location for accurate distances.",
+  "locationPermissionDeniedBanner": "Location permission not granted. Showing default area.",
+  "noJobsInArea": "No work sites found in this radius",
+  "searchRadius": "Search Radius",
+  "radiusKm": "{radius} km",
+  "openLocationSettings": "Settings",
+  "loadJobsError": "Unable to load nearby jobs. Check connection and tap Retry.",
+  "retryAction": "Retry",
+  "openStreetMapAttribution": "© OpenStreetMap contributors"
 }
 
 

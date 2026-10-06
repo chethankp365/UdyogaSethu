@@ -20,6 +20,7 @@ class AppRoutes {
   // Seeker Shell Tabs
   static const String seekerHome = '/seeker/home';
   static const String seekerJobs = '/seeker/jobs';
+  static const String seekerMap = '/seeker/map';
   static const String seekerChat = '/seeker/chat';
   static const String seekerProfile = '/seeker/profile';
 

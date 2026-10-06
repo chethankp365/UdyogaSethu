@@ -1161,4 +1161,69 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get flexibleShiftChip => 'ఫ్లెక్సిబుల్ షిఫ్ట్';
+
+  @override
+  String get nearbyJobsMapTitle =>
+      'సమీప రోజువారీ వేతన పనులు మరియు పని ప్రదేశాలు';
+
+  @override
+  String livePinsCount(Object count) {
+    return '$count ప్రత్యక్ష పిన్లు';
+  }
+
+  @override
+  String nearbyGpsPinListings(Object count) {
+    return 'సమీప జీపీఎస్ పిన్ జాబితాలు ($count)';
+  }
+
+  @override
+  String get tapPinOrCardToInspect =>
+      'పరిశీలించడానికి పిన్ లేదా కార్డును నొక్కండి';
+
+  @override
+  String get applyButton => 'దరఖాస్తు చేసుకోండి';
+
+  @override
+  String get categoryFilterAll => 'అన్నీ';
+
+  @override
+  String get recenterMap => 'జీపీఎస్ రీసెంటర్ చేయండి';
+
+  @override
+  String get zoomIn => 'జూమ్ ఇన్';
+
+  @override
+  String get zoomOut => 'జూమ్ అవుట్';
+
+  @override
+  String get gpsDisabledBanner =>
+      'జీపీఎస్ ఆఫ్‌లో ఉంది. ఖచ్చితమైన దూరం కోసం లొకేషన్ ఆన్ చేయండి.';
+
+  @override
+  String get locationPermissionDeniedBanner =>
+      'లొకేషన్ అనుమతి లభించలేదు. డిఫాల్ట్ ప్రాంతాన్ని చూపిస్తోంది.';
+
+  @override
+  String get noJobsInArea => 'ఈ పరిధిలో ఎలాంటి పని ప్రదేశాలు కనుగొనబడలేదు';
+
+  @override
+  String get searchRadius => 'శోధన పరిధి';
+
+  @override
+  String radiusKm(Object radius) {
+    return '$radius కి.మీ';
+  }
+
+  @override
+  String get openLocationSettings => 'సెట్టింగ్‌లు';
+
+  @override
+  String get loadJobsError =>
+      'సమీప పనులను లోడ్ చేయడం సాధ్యపడలేదు. నెట్‌వర్క్ తనిఖీ చేసి మళ్లీ ప్రయత్నించండి.';
+
+  @override
+  String get retryAction => 'మళ్ళీ ప్రయత్నించండి';
+
+  @override
+  String get openStreetMapAttribution => '© OpenStreetMap contributors';
 }

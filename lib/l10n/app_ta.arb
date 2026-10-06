@@ -346,7 +346,25 @@
   "goodAfternoon": "மதிய வணக்கம்",
   "goodEvening": "மாலை வணக்கம்",
   "studentsWelcomeChip": "மாணவர்களுக்கு வரவேற்பு",
-  "flexibleShiftChip": "நெகிழ்வான பணி நேரம்"
+  "flexibleShiftChip": "நெகிழ்வான பணி நேரம்",
+  "nearbyJobsMapTitle": "அருகிலுள்ள தினசரி கூலி வேலைகள் மற்றும் பணி தளங்கள்",
+  "livePinsCount": "{count} நேரடி ஊசிகள்",
+  "nearbyGpsPinListings": "அருகிலுள்ள ஜிபிஎஸ் பின் பட்டியல்கள் ({count})",
+  "tapPinOrCardToInspect": "ஆராய பின் அல்லது கார்டைத் தட்டவும்",
+  "applyButton": "விண்ணப்பிக்கவும்",
+  "categoryFilterAll": "அனைத்தும்",
+  "recenterMap": "ஜிபிஎஸ் மறுமையப்படுத்துக",
+  "zoomIn": "பெரிதாக்கு",
+  "zoomOut": "சிறிதாக்கு",
+  "gpsDisabledBanner": "ஜிபிஎஸ் முடக்கப்பட்டுள்ளது. துல்லியமான தொலைவுக்கு இருப்பிடத்தை இயக்கவும்.",
+  "locationPermissionDeniedBanner": "இருப்பிட அனுமதி வழங்கப்படவில்லை. இயல்புநிலை பகுதி காட்டப்படுகிறது.",
+  "noJobsInArea": "இந்த ஆரத்திற்குள் எந்த பணித் தளமும் கிடைக்கவில்லை",
+  "searchRadius": "தேடல் ஆரம்",
+  "radiusKm": "{radius} கி.மீ",
+  "openLocationSettings": "அமைப்புகள்",
+  "loadJobsError": "அருகிலுள்ள வேலைகளை ஏற்றுவதில் தோல்வி. இணைப்பைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.",
+  "retryAction": "மீண்டும் முயற்சி",
+  "openStreetMapAttribution": "© OpenStreetMap contributors"
 }
 
 

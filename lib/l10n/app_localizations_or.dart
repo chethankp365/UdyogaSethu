@@ -1154,4 +1154,70 @@ class AppLocalizationsOr extends AppLocalizations {
 
   @override
   String get flexibleShiftChip => 'ନମନୀୟ ଶିଫ୍ଟ';
+
+  @override
+  String get nearbyJobsMapTitle =>
+      'ନିକଟସ୍ଥ ଦୈନିକ ମଜୁରୀ କାର୍ଯ୍ୟ ଏବଂ କାର୍ଯ୍ୟସ୍ଥଳ';
+
+  @override
+  String livePinsCount(Object count) {
+    return '$count ଲାଇଭ୍ ପିନ୍';
+  }
+
+  @override
+  String nearbyGpsPinListings(Object count) {
+    return 'ନିକଟସ୍ଥ ଜିପିଏସ୍ ପିନ୍ ତାଲିକା ($count)';
+  }
+
+  @override
+  String get tapPinOrCardToInspect =>
+      'ପରୀକ୍ଷା କରିବାକୁ ପିନ୍ କିମ୍ବା କାର୍ଡ ଟ୍ୟାପ୍ କରନ୍ତୁ';
+
+  @override
+  String get applyButton => 'ଆବେଦନ କରନ୍ତୁ';
+
+  @override
+  String get categoryFilterAll => 'ସମସ୍ତ';
+
+  @override
+  String get recenterMap => 'ଜିପିଏସ୍ ପୁନଃ କେନ୍ଦ୍ରୀଭୂତ କରନ୍ତୁ';
+
+  @override
+  String get zoomIn => 'ଜୁମ୍ ଇନ୍';
+
+  @override
+  String get zoomOut => 'ଜୁମ୍ ଆଉଟ୍';
+
+  @override
+  String get gpsDisabledBanner =>
+      'ଜିପିଏସ୍ ବନ୍ଦ ଅଛି। ସଠିକ୍ ଦୂରତା ପାଇଁ ସ୍ଥାନ ଚାଲୁ କରନ୍ତୁ।';
+
+  @override
+  String get locationPermissionDeniedBanner =>
+      'ସ୍ଥାନ ଅନୁମତି ମିଳିନାହିଁ। ଡିଫଲ୍ଟ ଅଞ୍ଚଳ ଦେଖାଯାଉଛି।';
+
+  @override
+  String get noJobsInArea =>
+      'ଏହି ବ୍ୟାସାର୍ଦ୍ଧ ମଧ୍ୟରେ କୌଣସି କାର୍ଯ୍ୟସ୍ଥଳ ମିଳିଲା ନାହିଁ';
+
+  @override
+  String get searchRadius => 'ସନ୍ଧାନ ବ୍ୟାସାର୍ଦ୍ଧ';
+
+  @override
+  String radiusKm(Object radius) {
+    return '$radius କିମି';
+  }
+
+  @override
+  String get openLocationSettings => 'ସେଟିଂସ୍';
+
+  @override
+  String get loadJobsError =>
+      'ନିକଟସ୍ଥ କାର୍ଯ୍ୟ ଲୋଡ୍ କରିବାରେ ଅସମର୍ଥ। ସଂଯୋଗ ଯାଞ୍ଚ କରି ପୁନଃ ଚେଷ୍ଟା କରନ୍ତୁ।';
+
+  @override
+  String get retryAction => 'ପୁନଃ ଚେଷ୍ଟା କରନ୍ତୁ';
+
+  @override
+  String get openStreetMapAttribution => '© OpenStreetMap contributors';
 }

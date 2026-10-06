@@ -1164,4 +1164,69 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get flexibleShiftChip => 'நெகிழ்வான பணி நேரம்';
+
+  @override
+  String get nearbyJobsMapTitle =>
+      'அருகிலுள்ள தினசரி கூலி வேலைகள் மற்றும் பணி தளங்கள்';
+
+  @override
+  String livePinsCount(Object count) {
+    return '$count நேரடி ஊசிகள்';
+  }
+
+  @override
+  String nearbyGpsPinListings(Object count) {
+    return 'அருகிலுள்ள ஜிபிஎஸ் பின் பட்டியல்கள் ($count)';
+  }
+
+  @override
+  String get tapPinOrCardToInspect => 'ஆராய பின் அல்லது கார்டைத் தட்டவும்';
+
+  @override
+  String get applyButton => 'விண்ணப்பிக்கவும்';
+
+  @override
+  String get categoryFilterAll => 'அனைத்தும்';
+
+  @override
+  String get recenterMap => 'ஜிபிஎஸ் மறுமையப்படுத்துக';
+
+  @override
+  String get zoomIn => 'பெரிதாக்கு';
+
+  @override
+  String get zoomOut => 'சிறிதாக்கு';
+
+  @override
+  String get gpsDisabledBanner =>
+      'ஜிபிஎஸ் முடக்கப்பட்டுள்ளது. துல்லியமான தொலைவுக்கு இருப்பிடத்தை இயக்கவும்.';
+
+  @override
+  String get locationPermissionDeniedBanner =>
+      'இருப்பிட அனுமதி வழங்கப்படவில்லை. இயல்புநிலை பகுதி காட்டப்படுகிறது.';
+
+  @override
+  String get noJobsInArea =>
+      'இந்த ஆரத்திற்குள் எந்த பணித் தளமும் கிடைக்கவில்லை';
+
+  @override
+  String get searchRadius => 'தேடல் ஆரம்';
+
+  @override
+  String radiusKm(Object radius) {
+    return '$radius கி.மீ';
+  }
+
+  @override
+  String get openLocationSettings => 'அமைப்புகள்';
+
+  @override
+  String get loadJobsError =>
+      'அருகிலுள்ள வேலைகளை ஏற்றுவதில் தோல்வி. இணைப்பைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get retryAction => 'மீண்டும் முயற்சி';
+
+  @override
+  String get openStreetMapAttribution => '© OpenStreetMap contributors';
 }

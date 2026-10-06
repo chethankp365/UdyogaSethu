@@ -1153,4 +1153,68 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get flexibleShiftChip => 'নমনীয় শিফট';
+
+  @override
+  String get nearbyJobsMapTitle => 'কাছাকাছি দৈনিক মজুরি কাজ এবং কর্মক্ষেত্র';
+
+  @override
+  String livePinsCount(Object count) {
+    return '$count লাইভ পিন';
+  }
+
+  @override
+  String nearbyGpsPinListings(Object count) {
+    return 'কাছাকাছি জিপিএস পিন তালিকা ($count)';
+  }
+
+  @override
+  String get tapPinOrCardToInspect => 'যাচাই করতে পিন বা কার্ডে আলতো চাপুন';
+
+  @override
+  String get applyButton => 'আবেদন করুন';
+
+  @override
+  String get categoryFilterAll => 'সব';
+
+  @override
+  String get recenterMap => 'জিপিএস পুনরায় কেন্দ্র করুন';
+
+  @override
+  String get zoomIn => 'জুম ইন';
+
+  @override
+  String get zoomOut => 'জুম আউট';
+
+  @override
+  String get gpsDisabledBanner =>
+      'জিপিএস বন্ধ আছে। সঠিক দূরত্বের জন্য লোকেশন চালু করুন।';
+
+  @override
+  String get locationPermissionDeniedBanner =>
+      'লোকেশন অনুমতি দেওয়া হয়নি। ডিফল্ট এলাকা দেখানো হচ্ছে।';
+
+  @override
+  String get noJobsInArea =>
+      'এই ব্যাসার্ধের মধ্যে কোনো কর্মক্ষেত্র পাওয়া যায়নি';
+
+  @override
+  String get searchRadius => 'অনুসন্ধান ব্যাসার্ধ';
+
+  @override
+  String radiusKm(Object radius) {
+    return '$radius কিমি';
+  }
+
+  @override
+  String get openLocationSettings => 'সেটিংস';
+
+  @override
+  String get loadJobsError =>
+      'কাছাকাছি কাজ লোড করা সম্ভব হচ্ছে না। সংযোগ পরীক্ষা করে পুনরায় চেষ্টা করুন।';
+
+  @override
+  String get retryAction => 'আবার চেষ্টা করুন';
+
+  @override
+  String get openStreetMapAttribution => '© OpenStreetMap contributors';
 }

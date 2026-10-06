@@ -1154,4 +1154,67 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get flexibleShiftChip => 'Flexible Shift';
+
+  @override
+  String get nearbyJobsMapTitle => 'NEARBY DAILY WAGE JOBS & WORK SITES';
+
+  @override
+  String livePinsCount(Object count) {
+    return '$count Live Pins';
+  }
+
+  @override
+  String nearbyGpsPinListings(Object count) {
+    return 'NEARBY GPS PIN LISTINGS ($count)';
+  }
+
+  @override
+  String get tapPinOrCardToInspect => 'Tap pin or card to inspect';
+
+  @override
+  String get applyButton => 'Apply';
+
+  @override
+  String get categoryFilterAll => 'All';
+
+  @override
+  String get recenterMap => 'Recenter GPS';
+
+  @override
+  String get zoomIn => 'Zoom In';
+
+  @override
+  String get zoomOut => 'Zoom Out';
+
+  @override
+  String get gpsDisabledBanner =>
+      'GPS is turned off. Turn on location for accurate distances.';
+
+  @override
+  String get locationPermissionDeniedBanner =>
+      'Location permission not granted. Showing default area.';
+
+  @override
+  String get noJobsInArea => 'No work sites found in this radius';
+
+  @override
+  String get searchRadius => 'Search Radius';
+
+  @override
+  String radiusKm(Object radius) {
+    return '$radius km';
+  }
+
+  @override
+  String get openLocationSettings => 'Settings';
+
+  @override
+  String get loadJobsError =>
+      'Unable to load nearby jobs. Check connection and tap Retry.';
+
+  @override
+  String get retryAction => 'Retry';
+
+  @override
+  String get openStreetMapAttribution => '© OpenStreetMap contributors';
 }

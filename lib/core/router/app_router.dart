@@ -44,6 +44,7 @@ import 'package:udyogasethu/features/trust/presentation/trust_safety_centre_scre
 import 'package:udyogasethu/features/verification/presentation/face_check_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_home_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_wizard_screen.dart';
+import 'package:udyogasethu/features/seeker/presentation/map/nearby_jobs_map_screen.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_home_screen.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_wizard_screen.dart';
 
@@ -332,11 +333,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: AppRoutes.seekerJobs,
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Nearby Jobs & Map',
-                  roleName: 'Job Seeker',
-                  icon: Icons.work_rounded,
-                ),
+                builder: (context, state) => const NearbyJobsMapScreen(),
+              ),
+              GoRoute(
+                path: AppRoutes.seekerMap,
+                builder: (context, state) => const NearbyJobsMapScreen(),
               ),
             ],
           ),

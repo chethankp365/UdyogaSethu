@@ -346,7 +346,25 @@
   "goodAfternoon": "ಶುಭ ಮಧ್ಯಾಹ್ನ",
   "goodEvening": "ಶುಭ ಸಂಜೆ",
   "studentsWelcomeChip": "ವಿದ್ಯಾರ್ಥಿಗಳಿಗೆ ಸ್ವಾಗತ",
-  "flexibleShiftChip": "ಹೊಂದಿಕೊಳ್ಳುವ ಪಾಳಿ"
+  "flexibleShiftChip": "ಹೊಂದಿಕೊಳ್ಳುವ ಪಾಳಿ",
+  "nearbyJobsMapTitle": "ಹತ್ತಿರದ ದಿನಗೂಲಿ ಉದ್ಯೋಗಗಳು ಮತ್ತು ಕಾರ್ಯಕ್ಷೇತ್ರಗಳು",
+  "livePinsCount": "{count} ಲೈವ್ ಪಿನ್‌ಗಳು",
+  "nearbyGpsPinListings": "ಹತ್ತಿರದ ಜಿಪಿಎಸ್ ಪಿನ್ ಪಟ್ಟಿಗಳು ({count})",
+  "tapPinOrCardToInspect": "ಪರಿಶೀಲಿಸಲು ಪಿನ್ ಅಥವಾ ಕಾರ್ಡ್ ಸ್ಪರ್ಶಿಸಿ",
+  "applyButton": "ಅರ್ಜಿ ಸಲ್ಲಿಸಿ",
+  "categoryFilterAll": "ಎಲ್ಲವೂ",
+  "recenterMap": "ಜಿಪಿಎಸ್ ಮರುಕೇಂದ್ರೀಕರಿಸಿ",
+  "zoomIn": "ಜೂಮ್ ಇನ್",
+  "zoomOut": "ಜೂಮ್ ಔಟ್",
+  "gpsDisabledBanner": "ಜಿಪಿಎಸ್ ನಿಷ್ಕ್ರಿಯವಾಗಿದೆ. ನಿಖರ ದೂರಕ್ಕಾಗಿ ಸ್ಥಳವನ್ನು ಆನ್ ಮಾಡಿ.",
+  "locationPermissionDeniedBanner": "ಸ್ಥಳದ ಅನುಮತಿ ನೀಡಿಲ್ಲ. ಡೀಫಾಲ್ಟ್ ಪ್ರದೇಶವನ್ನು ತೋರಿಸಲಾಗುತ್ತಿದೆ.",
+  "noJobsInArea": "ಈ ವ್ಯಾಪ್ತಿಯಲ್ಲಿ ಯಾವುದೇ ಕಾರ್ಯಕ್ಷೇತ್ರಗಳು ಕಂಡುಬಂದಿಲ್ಲ",
+  "searchRadius": "ಹುಡುಕಾಟ ವ್ಯಾಪ್ತಿ",
+  "radiusKm": "{radius} ಕಿ.ಮೀ",
+  "openLocationSettings": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+  "loadJobsError": "ಹತ್ತಿರದ ಉದ್ಯೋಗಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗುತ್ತಿಲ್ಲ. ಸಂಪರ್ಕ ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+  "retryAction": "ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ",
+  "openStreetMapAttribution": "© OpenStreetMap contributors"
 }
 
 
