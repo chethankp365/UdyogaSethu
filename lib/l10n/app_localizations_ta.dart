@@ -1938,4 +1938,234 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get noShowReportSuccess =>
       'No-show report received. Support and backup workers are being mobilized.';
+
+  @override
+  String get bookingWizardTitle => 'நேரடி முன்பதிவு';
+
+  @override
+  String get bookingStepService => 'சேவை';
+
+  @override
+  String get bookingStepDateTime => 'தேதி & நேரம்';
+
+  @override
+  String get bookingStepAddress => 'முகவரி';
+
+  @override
+  String get bookingStepPayment => 'விலை & கட்டணம்';
+
+  @override
+  String get bookingStepNotice => 'அறிவிப்பு';
+
+  @override
+  String get bookingStepTicket => 'முன்பதிவு பாஸ்';
+
+  @override
+  String get bookingWorkerDetails => 'தொழிலாளர் விவரங்கள்';
+
+  @override
+  String get bookingServiceTitleLabel => 'சேவை தலைப்பு / விவரம்';
+
+  @override
+  String get bookingServiceTitleHint =>
+      'எ.கா. வாழ்க்கை அறை விசிறி வயரிங் பழுது';
+
+  @override
+  String get bookingSpecialNotes => 'சிறப்பு வழிமுறைகள் / குறிப்புகள்';
+
+  @override
+  String get bookingSpecialNotesHint =>
+      'எ.கா. கூடுதல் 2.5 மிமீ வயர் கொண்டு வாருங்கள், ஏணி உள்ளது';
+
+  @override
+  String get bookingDuration => 'மதிப்பிடப்பட்ட காலம்';
+
+  @override
+  String get bookingDurationHalfDay => 'அரை நாள் (4 மணி)';
+
+  @override
+  String get bookingDurationFullDay => 'முழு நாள் (8 மணி)';
+
+  @override
+  String bookingDurationCustom(int hours) {
+    return 'தனிப்பயன் ($hours மணி)';
+  }
+
+  @override
+  String get bookingSelectDate => 'தேதியைத் தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get bookingSelectTimeSlot => 'நேர ஸ்லாட்டைத் தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get bookingSlotAvailable => 'கிடைக்கிறது';
+
+  @override
+  String get bookingSlotBooked => 'முன்பதிவு செய்யப்பட்டது';
+
+  @override
+  String get bookingScheduleConflictAlert =>
+      'இந்த நேரத்தில் தொழிலாளி ஏற்கனவே பதிவு செய்யப்பட்டுள்ளார். வேறு நேரத்தைத் தேர்ந்தெடுக்கவும்.';
+
+  @override
+  String get bookingAddressTitle => 'சேவை இடம்';
+
+  @override
+  String get bookingSavedAddresses => 'சேமிக்கப்பட்ட முகவரிகள்';
+
+  @override
+  String get bookingAddNewAddress => 'புதிய முகவரியைச் சேர்க்கவும்';
+
+  @override
+  String get bookingAddressLabel => 'முகவரி லேபிள்';
+
+  @override
+  String get bookingAddressLine1 => 'வீட்டு எண் & தெரு';
+
+  @override
+  String get bookingLandmark => 'அடையாளம் (விருப்பமானது)';
+
+  @override
+  String get bookingCity => 'நகரம்';
+
+  @override
+  String get bookingPincode => 'பின்கோடு';
+
+  @override
+  String get bookingSaveAsDefault => 'இயல்புநிலை முகவரியாகச் சேமிக்கவும்';
+
+  @override
+  String get bookingPriceBreakdown => 'விலை விவரம்';
+
+  @override
+  String get bookingAgreedWage => 'ஒப்புக்கொள்ளப்பட்ட கூலி';
+
+  @override
+  String get bookingPlatformFee => 'தள வசதி கட்டணம்';
+
+  @override
+  String get bookingProtectionCoverFee => 'வேலை பாதுகாப்பு கவர்';
+
+  @override
+  String get bookingTotalPrice => 'மொத்தத் தொகை';
+
+  @override
+  String get bookingFairWageVerified => 'நியாயமான கூலி வரம்பிற்குள்';
+
+  @override
+  String get bookingFairWageBelow => 'நிலையான நியாயமான கூலியை விடக் குறைவு';
+
+  @override
+  String get bookingPaymentMethod => 'கட்டண முறை';
+
+  @override
+  String get bookingPaymentCash => 'பணி முடிந்ததும் பணம்';
+
+  @override
+  String get bookingPaymentUpi => 'உடனடி UPI';
+
+  @override
+  String get bookingPaymentEscrow =>
+      'பாதுகாப்பான எஸ்க்ரோ (பரிந்துரைக்கப்படுகிறது)';
+
+  @override
+  String get bookingPaymentPlaceholder =>
+      'கட்டண நுழைவாயில் ஒருங்கிணைப்பு (P5.2)';
+
+  @override
+  String get bookingRecurringOption => 'மீண்டும் நிகழும் சேவை அட்டவணை';
+
+  @override
+  String get bookingRecurringToggle =>
+      'இதை வழக்கமான மீண்டும் நிகழும் சேவையாக்குங்கள்';
+
+  @override
+  String get bookingRecurringWeekly => 'வாராந்திர சுழற்சி';
+
+  @override
+  String get bookingRecurringMonthly => 'மாதாந்திர சுழற்சி';
+
+  @override
+  String get bookingUnverifiedNoticeTitle => 'உத்யோகசேது சரிபார்க்கப்படவில்லை';
+
+  @override
+  String get bookingUnverifiedNoticeSubtitle =>
+      'இந்தத் தொழிலாளி உத்யோகசேது பயிற்சி மற்றும் சரிபார்ப்பை முடிக்கவில்லை.';
+
+  @override
+  String get bookingUnverifiedNoticeDesc =>
+      'தொழிலாளியின் அடையாளம் பதிவு செய்யப்பட்டிருந்தாலும், அதிகாரப்பூர்வ நம்பிக்கை பேட்ஜை பெறவில்லை. முன்பதிவு முறையைத் தேர்ந்தெடுக்கவும்:';
+
+  @override
+  String get bookingProtectionCoverTitle =>
+      '₹40 வேலை பாதுகாப்பு கவரைச் சேர்க்கவும்';
+
+  @override
+  String get bookingProtectionCoverDesc =>
+      'விபத்து சொத்து சேத பாதுகாப்பு (₹10,000 வரை) மற்றும் சர்ச்சை தீர்வு ஆதரவு.';
+
+  @override
+  String get bookingBookWithoutProtection => 'பாதுகாப்பின்றி பதிவு செய்யவும்';
+
+  @override
+  String get bookingBookWithoutProtectionDesc =>
+      'சொத்து சேத கவரேஜ் இல்லாமல் நேரடி ரொக்கம்/எஸ்க்ரோ விதிமுறைகளுடன் தொடரவும்.';
+
+  @override
+  String get bookingProceedToTicket =>
+      'உறுதிசெய்து முன்பதிவு பாஸுக்குச் செல்லவும்';
+
+  @override
+  String get bookingTicketTitle => 'முன்பதிவு பாஸ் டிக்கெட்';
+
+  @override
+  String get bookingStatusWaiting => 'தொழிலாளருக்காக காத்திருக்கிறது';
+
+  @override
+  String get bookingCodeLabel => 'முன்பதிவு குறியீடு';
+
+  @override
+  String get bookingSuccessMessage =>
+      'முன்பதிவு கோரிக்கை தொழிலாளிக்கு அனுப்பப்பட்டது. அவர்கள் ஏற்றுக்கொண்டதும் உங்களுக்குத் தகவல் கிடைக்கும்.';
+
+  @override
+  String get bookingViewMyJobs => 'எனது வேலைகளில் காண்க';
+
+  @override
+  String get bookingReturnHome => 'வாடிக்கையாளர் மையத்திற்குத் திரும்பு';
+
+  @override
+  String get recurringManageTitle => 'மீண்டும் நிகழும் சேவைகள்';
+
+  @override
+  String get recurringNoBookings =>
+      'செயலில் உள்ள மீண்டும் நிகழும் முன்பதிவுகள் எதுவும் இல்லை.';
+
+  @override
+  String get recurringPause => 'அட்டவணையை இடைநிறுத்து';
+
+  @override
+  String get recurringResume => 'அட்டவணையை மீண்டும் தொடங்கு';
+
+  @override
+  String get recurringCancel => 'அட்டவணையை ரத்துசெய்';
+
+  @override
+  String get recurringSkipDate => 'அடுத்த தேதியைத் தவிர்க்கவும்';
+
+  @override
+  String get recurringDateSkipped =>
+      'அடுத்த திட்டமிடப்பட்ட சேவை தவிர்க்கப்பட்டது.';
+
+  @override
+  String get recurringStatusActive => 'செயலில் உள்ளது';
+
+  @override
+  String get recurringStatusPaused => 'இடைநிறுத்தப்பட்டது';
+
+  @override
+  String get recurringStatusCancelled => 'ரத்து செய்யப்பட்டது';
+
+  @override
+  String get demoModeBadge => 'டெமோ பயன்முறை';
 }

@@ -3583,6 +3583,432 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No-show report received. Support and backup workers are being mobilized.'**
   String get noShowReportSuccess;
+
+  /// No description provided for @bookingWizardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Direct Booking'**
+  String get bookingWizardTitle;
+
+  /// No description provided for @bookingStepService.
+  ///
+  /// In en, this message translates to:
+  /// **'Service'**
+  String get bookingStepService;
+
+  /// No description provided for @bookingStepDateTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Date & Time'**
+  String get bookingStepDateTime;
+
+  /// No description provided for @bookingStepAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get bookingStepAddress;
+
+  /// No description provided for @bookingStepPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Price & Pay'**
+  String get bookingStepPayment;
+
+  /// No description provided for @bookingStepNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Notice'**
+  String get bookingStepNotice;
+
+  /// No description provided for @bookingStepTicket.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking Pass'**
+  String get bookingStepTicket;
+
+  /// No description provided for @bookingWorkerDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker Details'**
+  String get bookingWorkerDetails;
+
+  /// No description provided for @bookingServiceTitleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Title / Description'**
+  String get bookingServiceTitleLabel;
+
+  /// No description provided for @bookingServiceTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Living room fan wiring repair'**
+  String get bookingServiceTitleHint;
+
+  /// No description provided for @bookingSpecialNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Special Instructions / Notes'**
+  String get bookingSpecialNotes;
+
+  /// No description provided for @bookingSpecialNotesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Bring extra 2.5mm wire, ladder available'**
+  String get bookingSpecialNotesHint;
+
+  /// No description provided for @bookingDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated Duration'**
+  String get bookingDuration;
+
+  /// No description provided for @bookingDurationHalfDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Half Day (4 hrs)'**
+  String get bookingDurationHalfDay;
+
+  /// No description provided for @bookingDurationFullDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Day (8 hrs)'**
+  String get bookingDurationFullDay;
+
+  /// No description provided for @bookingDurationCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom ({hours} hrs)'**
+  String bookingDurationCustom(int hours);
+
+  /// No description provided for @bookingSelectDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Date'**
+  String get bookingSelectDate;
+
+  /// No description provided for @bookingSelectTimeSlot.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Time Slot'**
+  String get bookingSelectTimeSlot;
+
+  /// No description provided for @bookingSlotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Available'**
+  String get bookingSlotAvailable;
+
+  /// No description provided for @bookingSlotBooked.
+  ///
+  /// In en, this message translates to:
+  /// **'Booked'**
+  String get bookingSlotBooked;
+
+  /// No description provided for @bookingScheduleConflictAlert.
+  ///
+  /// In en, this message translates to:
+  /// **'This worker is already booked during this time window. Please pick an alternative slot.'**
+  String get bookingScheduleConflictAlert;
+
+  /// No description provided for @bookingAddressTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Location'**
+  String get bookingAddressTitle;
+
+  /// No description provided for @bookingSavedAddresses.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved Addresses'**
+  String get bookingSavedAddresses;
+
+  /// No description provided for @bookingAddNewAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Add New Address'**
+  String get bookingAddNewAddress;
+
+  /// No description provided for @bookingAddressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Address Label'**
+  String get bookingAddressLabel;
+
+  /// No description provided for @bookingAddressLine1.
+  ///
+  /// In en, this message translates to:
+  /// **'Flat / House No. & Street'**
+  String get bookingAddressLine1;
+
+  /// No description provided for @bookingLandmark.
+  ///
+  /// In en, this message translates to:
+  /// **'Landmark (optional)'**
+  String get bookingLandmark;
+
+  /// No description provided for @bookingCity.
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get bookingCity;
+
+  /// No description provided for @bookingPincode.
+  ///
+  /// In en, this message translates to:
+  /// **'Pincode'**
+  String get bookingPincode;
+
+  /// No description provided for @bookingSaveAsDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Save as default address'**
+  String get bookingSaveAsDefault;
+
+  /// No description provided for @bookingPriceBreakdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Price Breakdown'**
+  String get bookingPriceBreakdown;
+
+  /// No description provided for @bookingAgreedWage.
+  ///
+  /// In en, this message translates to:
+  /// **'Agreed Worker Wage'**
+  String get bookingAgreedWage;
+
+  /// No description provided for @bookingPlatformFee.
+  ///
+  /// In en, this message translates to:
+  /// **'Platform Convenience Fee'**
+  String get bookingPlatformFee;
+
+  /// No description provided for @bookingProtectionCoverFee.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Protection Cover'**
+  String get bookingProtectionCoverFee;
+
+  /// No description provided for @bookingTotalPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Amount'**
+  String get bookingTotalPrice;
+
+  /// No description provided for @bookingFairWageVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Within Fair Wage Band'**
+  String get bookingFairWageVerified;
+
+  /// No description provided for @bookingFairWageBelow.
+  ///
+  /// In en, this message translates to:
+  /// **'Below Standard Fair Wage'**
+  String get bookingFairWageBelow;
+
+  /// No description provided for @bookingPaymentMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Method'**
+  String get bookingPaymentMethod;
+
+  /// No description provided for @bookingPaymentCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash on Completion'**
+  String get bookingPaymentCash;
+
+  /// No description provided for @bookingPaymentUpi.
+  ///
+  /// In en, this message translates to:
+  /// **'UPI Instant'**
+  String get bookingPaymentUpi;
+
+  /// No description provided for @bookingPaymentEscrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Protected Escrow (Recommended)'**
+  String get bookingPaymentEscrow;
+
+  /// No description provided for @bookingPaymentPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Gateway Integration (P5.2)'**
+  String get bookingPaymentPlaceholder;
+
+  /// No description provided for @bookingRecurringOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat Service Schedule'**
+  String get bookingRecurringOption;
+
+  /// No description provided for @bookingRecurringToggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Make this a recurring repeat service'**
+  String get bookingRecurringToggle;
+
+  /// No description provided for @bookingRecurringWeekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Repeat'**
+  String get bookingRecurringWeekly;
+
+  /// No description provided for @bookingRecurringMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Repeat'**
+  String get bookingRecurringMonthly;
+
+  /// No description provided for @bookingUnverifiedNoticeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Not UdyogaSethu Verified'**
+  String get bookingUnverifiedNoticeTitle;
+
+  /// No description provided for @bookingUnverifiedNoticeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This worker has not completed UdyogaSethu training & verification.'**
+  String get bookingUnverifiedNoticeSubtitle;
+
+  /// No description provided for @bookingUnverifiedNoticeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'While the worker is registered, they have not yet earned the official trust and skill badge. Choose your preferred booking mode below:'**
+  String get bookingUnverifiedNoticeDesc;
+
+  /// No description provided for @bookingProtectionCoverTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add ₹40 Job Protection Cover'**
+  String get bookingProtectionCoverTitle;
+
+  /// No description provided for @bookingProtectionCoverDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Simulated property damage coverage (up to ₹10,000) and verified dispute claim assistance.'**
+  String get bookingProtectionCoverDesc;
+
+  /// No description provided for @bookingBookWithoutProtection.
+  ///
+  /// In en, this message translates to:
+  /// **'Book without protection'**
+  String get bookingBookWithoutProtection;
+
+  /// No description provided for @bookingBookWithoutProtectionDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Proceed with direct cash/escrow terms without accidental damage coverage.'**
+  String get bookingBookWithoutProtectionDesc;
+
+  /// No description provided for @bookingProceedToTicket.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm & Proceed to Booking Pass Ticket'**
+  String get bookingProceedToTicket;
+
+  /// No description provided for @bookingTicketTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking Pass Ticket'**
+  String get bookingTicketTitle;
+
+  /// No description provided for @bookingStatusWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for worker'**
+  String get bookingStatusWaiting;
+
+  /// No description provided for @bookingCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking Code'**
+  String get bookingCodeLabel;
+
+  /// No description provided for @bookingSuccessMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking request sent to worker. You will receive an alert once accepted.'**
+  String get bookingSuccessMessage;
+
+  /// No description provided for @bookingViewMyJobs.
+  ///
+  /// In en, this message translates to:
+  /// **'View in My Jobs'**
+  String get bookingViewMyJobs;
+
+  /// No description provided for @bookingReturnHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Return to Customer Hub'**
+  String get bookingReturnHome;
+
+  /// No description provided for @recurringManageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurring Services'**
+  String get recurringManageTitle;
+
+  /// No description provided for @recurringNoBookings.
+  ///
+  /// In en, this message translates to:
+  /// **'No active recurring bookings found.'**
+  String get recurringNoBookings;
+
+  /// No description provided for @recurringPause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause Schedule'**
+  String get recurringPause;
+
+  /// No description provided for @recurringResume.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume Schedule'**
+  String get recurringResume;
+
+  /// No description provided for @recurringCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Schedule'**
+  String get recurringCancel;
+
+  /// No description provided for @recurringSkipDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip Next Date'**
+  String get recurringSkipDate;
+
+  /// No description provided for @recurringDateSkipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Next scheduled service skipped.'**
+  String get recurringDateSkipped;
+
+  /// No description provided for @recurringStatusActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get recurringStatusActive;
+
+  /// No description provided for @recurringStatusPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get recurringStatusPaused;
+
+  /// No description provided for @recurringStatusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get recurringStatusCancelled;
+
+  /// No description provided for @demoModeBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo mode'**
+  String get demoModeBadge;
 }
 
 class _AppLocalizationsDelegate

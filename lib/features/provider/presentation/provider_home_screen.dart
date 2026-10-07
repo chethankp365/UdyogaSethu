@@ -332,39 +332,98 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
 
   Widget _buildSubscriptionsPlaceholder(AppLocalizations l10n) {
     return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            children: [
-              const Icon(Icons.local_shipping_rounded, size: 54, color: AppColors.amberOrange),
-              const SizedBox(height: 14),
-              Text(
-                l10n.hubSubscriptionsComingSoon,
-                style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: AppColors.textDark),
-                textAlign: TextAlign.center,
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        children: [
+          // Recurring Services Card (Domestic Help, Cleaners, Cooks)
+          Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: AppColors.paleMint,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(Icons.repeat_rounded, color: AppColors.headerGreenDark, size: 28),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              l10n.bookingRecurringOption,
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              l10n.bookingRecurringToggle,
+                              style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    onPressed: () => context.push(AppRoutes.recurringBookings),
+                    icon: const Icon(Icons.calendar_month_rounded, size: 18),
+                    label: Text(l10n.recurringManageTitle),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.headerGreenDark,
+                      foregroundColor: Colors.white,
+                      minimumSize: const Size.fromHeight(44),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 8),
-              Text(
-                l10n.hubSubscriptionsComingSoonDesc,
-                style: const TextStyle(fontSize: 13, color: AppColors.textMuted),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  color: Colors.amber.shade50,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Text('Recurring Farm Baskets open in Phase 6', style: TextStyle(color: AppColors.amberOrange, fontWeight: FontWeight.bold, fontSize: 12)),
-              ),
-            ],
+            ),
           ),
-        ),
+          const SizedBox(height: 16),
+          Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  const Icon(Icons.local_shipping_rounded, size: 48, color: AppColors.amberOrange),
+                  const SizedBox(height: 12),
+                  Text(
+                    l10n.hubSubscriptionsComingSoon,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    l10n.hubSubscriptionsComingSoonDesc,
+                    style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 14),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.amber.shade50,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Text('Recurring Farm Baskets open in Phase 6', style: TextStyle(color: AppColors.amberOrange, fontWeight: FontWeight.bold, fontSize: 12)),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

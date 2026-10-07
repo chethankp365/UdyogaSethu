@@ -1934,4 +1934,230 @@ class AppLocalizationsTe extends AppLocalizations {
   @override
   String get noShowReportSuccess =>
       'No-show report received. Support and backup workers are being mobilized.';
+
+  @override
+  String get bookingWizardTitle => 'ప్రత్యక్ష బుకింగ్';
+
+  @override
+  String get bookingStepService => 'సేవ';
+
+  @override
+  String get bookingStepDateTime => 'తేదీ & సమయం';
+
+  @override
+  String get bookingStepAddress => 'చిరునామా';
+
+  @override
+  String get bookingStepPayment => 'ధర & చెల్లింపు';
+
+  @override
+  String get bookingStepNotice => 'నోటీస్';
+
+  @override
+  String get bookingStepTicket => 'బుకింగ్ పాస్';
+
+  @override
+  String get bookingWorkerDetails => 'కార్మికుని వివరాలు';
+
+  @override
+  String get bookingServiceTitleLabel => 'సేవ శీర్షిక / వివరణ';
+
+  @override
+  String get bookingServiceTitleHint =>
+      'ఉదా: లివింగ్ రూమ్ ఫ్యాన్ వైరింగ్ మరమ్మతు';
+
+  @override
+  String get bookingSpecialNotes => 'ప్రత్యేక సూచనలు / నోట్స్';
+
+  @override
+  String get bookingSpecialNotesHint =>
+      'ఉదా: అదనపు 2.5 మిమీ వైర్ తీసుకురండి, నిచ్చెన అందుబాటులో ఉంది';
+
+  @override
+  String get bookingDuration => 'అంచనా సమయం';
+
+  @override
+  String get bookingDurationHalfDay => 'అర రోజు (4 గంటలు)';
+
+  @override
+  String get bookingDurationFullDay => 'పూర్తి రోజు (8 గంటలు)';
+
+  @override
+  String bookingDurationCustom(int hours) {
+    return 'కస్టమ్ ($hours గంటలు)';
+  }
+
+  @override
+  String get bookingSelectDate => 'తేదీ ఎంచుకోండి';
+
+  @override
+  String get bookingSelectTimeSlot => 'సమయ స్లాట్ ఎంచుకోండి';
+
+  @override
+  String get bookingSlotAvailable => 'అందుబాటులో ఉంది';
+
+  @override
+  String get bookingSlotBooked => 'బుక్ చేయబడింది';
+
+  @override
+  String get bookingScheduleConflictAlert =>
+      'ఈ సమయంలో కార్మికుడు ఇప్పటికే బుక్ అయ్యాడు. దయచేసి మరొక స్లాట్ ఎంచుకోండి.';
+
+  @override
+  String get bookingAddressTitle => 'సేవా స్థలం';
+
+  @override
+  String get bookingSavedAddresses => 'సేవ్ చేసిన చిరునామాలు';
+
+  @override
+  String get bookingAddNewAddress => 'కొత్త చిరునామాను జోడించండి';
+
+  @override
+  String get bookingAddressLabel => 'చిరునామా లేబుల్';
+
+  @override
+  String get bookingAddressLine1 => 'ఫ్లాట్ / ఇల్లు నం. & వీధి';
+
+  @override
+  String get bookingLandmark => 'ల్యాండ్‌మార్క్ (ఐచ్ఛికం)';
+
+  @override
+  String get bookingCity => 'నగరం';
+
+  @override
+  String get bookingPincode => 'పిన్‌కోడ్';
+
+  @override
+  String get bookingSaveAsDefault => 'డిఫాల్ట్ చిరునామాగా సేవ్ చేయండి';
+
+  @override
+  String get bookingPriceBreakdown => 'ధర వివరాలు';
+
+  @override
+  String get bookingAgreedWage => 'అంగీకరించిన కార్మికుని వేతనం';
+
+  @override
+  String get bookingPlatformFee => 'ప్లాట్‌ఫారమ్ సౌలభ్య రుసుము';
+
+  @override
+  String get bookingProtectionCoverFee => 'జాబ్ ప్రొటెక్షన్ కవర్';
+
+  @override
+  String get bookingTotalPrice => 'మొత్తం చెల్లింపు';
+
+  @override
+  String get bookingFairWageVerified => 'సరైన వేతన పరిధిలో ఉంది';
+
+  @override
+  String get bookingFairWageBelow => 'ప్రామాణిక వేతనం కంటే తక్కువ';
+
+  @override
+  String get bookingPaymentMethod => 'చెల్లింపు విధానం';
+
+  @override
+  String get bookingPaymentCash => 'పని పూర్తయిన తర్వాత నగదు';
+
+  @override
+  String get bookingPaymentUpi => 'తక్షణ UPI';
+
+  @override
+  String get bookingPaymentEscrow => 'రక్షిత ఎస్క్రో (సిఫార్సు చేయబడింది)';
+
+  @override
+  String get bookingPaymentPlaceholder =>
+      'చెల్లింపు గేట్‌వే ఇంటిగ్రేషన్ (P5.2)';
+
+  @override
+  String get bookingRecurringOption => 'పునరావృత సేవా షెడ్యూల్';
+
+  @override
+  String get bookingRecurringToggle => 'దీన్ని సాధారణ పునరావృత సేవగా చేయండి';
+
+  @override
+  String get bookingRecurringWeekly => 'వారానికోసారి పునరావృతం';
+
+  @override
+  String get bookingRecurringMonthly => 'నెలావారీ పునరావృతం';
+
+  @override
+  String get bookingUnverifiedNoticeTitle => 'ఉద్యోగసేతు ధృవీకరించబడలేదు';
+
+  @override
+  String get bookingUnverifiedNoticeSubtitle =>
+      'ఈ కార్మికుడు ఉద్యోగసేతు శిక్షణ మరియు ధృవీకరణను పూర్తి చేయలేదు.';
+
+  @override
+  String get bookingUnverifiedNoticeDesc =>
+      'కార్మికుని గుర్తింపు నమోదు చేయబడినప్పటికీ, అధికారిక ట్రస్ట్ బ్యాడ్జ్ పొందలేదు. మీ బుకింగ్ విధానాన్ని ఎంచుకోండి:';
+
+  @override
+  String get bookingProtectionCoverTitle =>
+      '₹40 జాబ్ ప్రొటెక్షన్ కవర్ జోడించండి';
+
+  @override
+  String get bookingProtectionCoverDesc =>
+      'ప్రమాదవశాత్తు ఆస్తి నష్టం రక్షణ (₹10,000 వరకు) మరియు వివాద పరిష్కార మద్దతు.';
+
+  @override
+  String get bookingBookWithoutProtection => 'రక్షణ లేకుండా బుక్ చేయండి';
+
+  @override
+  String get bookingBookWithoutProtectionDesc =>
+      'ఆస్తి నష్టం కవర్ లేకుండా నేరుగా నగదు/ఎస్క్రో నిబంధనలతో కొనసాగండి.';
+
+  @override
+  String get bookingProceedToTicket => 'ధృవీకరించి బుకింగ్ పాస్‌కు వెళ్లండి';
+
+  @override
+  String get bookingTicketTitle => 'బుకింగ్ పాస్ టిక్కెట్';
+
+  @override
+  String get bookingStatusWaiting => 'కార్మికుడి కోసం వేచి చూస్తున్నారు';
+
+  @override
+  String get bookingCodeLabel => 'బుకింగ్ కోడ్';
+
+  @override
+  String get bookingSuccessMessage =>
+      'బుకింగ్ అభ్యర్థన కార్మికుడికి పంపబడింది. ఆమోదించబడిన తర్వాత మీకు సమాచారం అందుతుంది.';
+
+  @override
+  String get bookingViewMyJobs => 'నా ఉద్యోగాలలో చూడండి';
+
+  @override
+  String get bookingReturnHome => 'కస్టమర్ హబ్‌కు తిరిగి వెళ్లండి';
+
+  @override
+  String get recurringManageTitle => 'పునరావృత సేవలు';
+
+  @override
+  String get recurringNoBookings =>
+      'క్రియాశీల పునరావృత బుకింగ్‌లు కనుగొనబడలేదు.';
+
+  @override
+  String get recurringPause => 'షెడ్యూల్ పాజ్ చేయండి';
+
+  @override
+  String get recurringResume => 'షెడ్యూల్ పునఃప్రారంభించండి';
+
+  @override
+  String get recurringCancel => 'షెడ్యూల్ రద్దు చేయండి';
+
+  @override
+  String get recurringSkipDate => 'తదుపరి తేదీని దాటవేయండి';
+
+  @override
+  String get recurringDateSkipped => 'తదుపరి షెడ్యూల్ చేసిన సేవ దాటవేయబడింది.';
+
+  @override
+  String get recurringStatusActive => 'క్రియాశీలకం';
+
+  @override
+  String get recurringStatusPaused => 'పాజ్ చేయబడింది';
+
+  @override
+  String get recurringStatusCancelled => 'రద్దు చేయబడింది';
+
+  @override
+  String get demoModeBadge => 'డెమో మోడ్';
 }

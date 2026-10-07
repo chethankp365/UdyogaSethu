@@ -118,7 +118,11 @@ This document records key design, architectural, role model, and implementation 
   * **Double-Booking Prevention**: SQL RPC `public.accept_assignment` rejects overlapping assignments, throwing an exception which the UI catches to display an explanatory `Schedule Conflict` alert dialog.
   * **Travel Warning**: SQL returns travel time warning when a job starts < 60 minutes after another job, alerting the worker to plan travel.
   * **Offline Resilience**: Offline cached job view displays an amber warning banner and disables application with an explanatory snackbar.
-  * **Debug Seeding Helper**: Clearly marked Amber debug helper card in `Requests` segment (gated strictly under `kDebugMode`) to seed 2 overlapping direct-booking invitations from demo employers to allow phone testing without waiting for provider screens.
+* **D-BOOKING-PROTECTION — Unverified Worker Notice & Simulated Job Protection Cover**:
+  * **Unverified Worker Dark Panel**: When a provider initiates a direct booking with an unverified worker (`is_worker_verified == false`), Step 6 of the guided booking flow displays the dark-panel warning screen (`#0B132B`, matching the prototype "Not UdyogaSethu Verified"). Verified workers bypass this notice directly.
+  * **Simulated Job Protection Cover**: Offers an optional ₹40 (4,000 paise) Job Protection Cover covering property damage and claims. In compliance with the AGENTS.md Honesty Rule, this cover is simulated and explicitly badged with an amber "Demo mode" chip in the UI.
+  * **Persistence**: Selection is persisted in `assignments.protection_selected` and `direct_hire_metadata->>'protection_selected'`.
+  * **Booking Pass Ticket**: Upon confirmation via `request_worker` RPC, the provider receives a perforated Booking Pass Ticket showing booking code and "Waiting for worker" status.
 
 ---
 

@@ -35,6 +35,8 @@ class AppRoutes {
   static const String providerJobApplicants = '/provider/jobs/:id/applicants';
   static const String providerJobEdit = '/provider/jobs/:id/edit';
   static const String providerWorkerProfile = '/provider/workers/:id';
+  static const String providerBooking = '/provider/booking';
+  static const String recurringBookings = '/provider/recurring';
 
   // Farmer Shell Tabs
   static const String farmerHome = '/farmer/home';

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/widgets/user_avatar.dart';
+import 'package:udyogasethu/features/booking/domain/booking_draft.dart';
 import 'package:udyogasethu/features/provider/data/worker_search_repository.dart';
 import 'package:udyogasethu/features/provider/domain/worker_detail_profile.dart';
 import 'package:udyogasethu/features/provider/presentation/worker_search_controller.dart';
@@ -635,19 +638,24 @@ class _WorkerProfileScreenState extends ConsumerState<WorkerProfileScreen> {
                 icon: const Icon(Icons.calendar_month_rounded, size: 20),
                 label: Text(l10n.workerProfileBookNow, style: const TextStyle(fontWeight: FontWeight.bold)),
                 onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (ctx) => AlertDialog(
-                      title: Text(l10n.hubBookWorker),
-                      content: Text(
-                        'Booking ${profile.fullName} for ${profile.formattedDailyRate}.\n\nDirect booking flow with unverified worker notice and schedule conflict protection will be completed in Step P4.6.',
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(ctx).pop(),
-                          child: const Text('Got it'),
-                        ),
-                      ],
+                  final primarySkill = profile.skills.isNotEmpty ? profile.skills.first.name : profile.headline;
+                  context.push(
+                    AppRoutes.providerBooking,
+                    extra: BookingDraft(
+                      workerId: profile.userId,
+                      workerName: profile.fullName,
+                      workerAvatar: profile.avatarPath,
+                      workerRating: profile.ratingAvg,
+                      workerJobsCount: profile.jobsCompleted,
+                      isWorkerVerified: profile.isVerifiedBadge,
+                      categoryName: primarySkill,
+                      dailyRatePaise: profile.dailyRatePaise ?? 85000,
+                      hourlyRatePaise: profile.hourlyRatePaise ?? 15000,
+                      wagePaise: (profile.dailyRatePaise != null && profile.dailyRatePaise! > 0)
+                          ? profile.dailyRatePaise!
+                          : 85000,
+                      title: '$primarySkill Service',
+                      selectedDate: DateTime.now().add(const Duration(days: 1)),
                     ),
                   );
                 },

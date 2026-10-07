@@ -1945,4 +1945,229 @@ class AppLocalizationsKn extends AppLocalizations {
   @override
   String get noShowReportSuccess =>
       'ಗೈರುಹಾಜರಿ ವರದಿ ದಾಖಲಾಗಿದೆ. ಪರ್ಯಾಯ ಕಾರ್ಮಿಕರನ್ನು ಸಜ್ಜುಗೊಳಿಸಲಾಗುತ್ತಿದೆ.';
+
+  @override
+  String get bookingWizardTitle => 'ನೇರ ಬುಕಿಂಗ್';
+
+  @override
+  String get bookingStepService => 'ಸೇವೆ';
+
+  @override
+  String get bookingStepDateTime => 'ದಿನಾಂಕ ಮತ್ತು ಸಮಯ';
+
+  @override
+  String get bookingStepAddress => 'ವಿಳಾಸ';
+
+  @override
+  String get bookingStepPayment => 'ದರ ಮತ್ತು ಪಾವತಿ';
+
+  @override
+  String get bookingStepNotice => 'ಸೂಚನೆ';
+
+  @override
+  String get bookingStepTicket => 'ಬುಕಿಂಗ್ ಪಾಸ್';
+
+  @override
+  String get bookingWorkerDetails => 'ಕಾರ್ಮಿಕ ವಿವರಗಳು';
+
+  @override
+  String get bookingServiceTitleLabel => 'ಸೇವೆಯ ಶೀರ್ಷಿಕೆ / ವಿವರಣೆ';
+
+  @override
+  String get bookingServiceTitleHint =>
+      'ಉದಾ: ಲಿವಿಂಗ್ ರೂಮ್ ಫ್ಯಾನ್ ವೈರಿಂಗ್ ದುರಸ್ತಿ';
+
+  @override
+  String get bookingSpecialNotes => 'ವಿಶೇಷ ಸೂಚನೆಗಳು / ಟಿಪ್ಪಣಿಗಳು';
+
+  @override
+  String get bookingSpecialNotesHint =>
+      'ಉದಾ: ಹೆಚ್ಚುವರಿ ವೈರ್ ತನ್ನಿ, ಏಣಿ ಲಭ್ಯವಿದೆ';
+
+  @override
+  String get bookingDuration => 'ಅಂದಾಜು ಅವಧಿ';
+
+  @override
+  String get bookingDurationHalfDay => 'ಅರ್ಧ ದಿನ (4 ಗಂಟೆ)';
+
+  @override
+  String get bookingDurationFullDay => 'ಪೂರ್ಣ ದಿನ (8 ಗಂಟೆ)';
+
+  @override
+  String bookingDurationCustom(int hours) {
+    return 'ಕಸ್ಟಮ್ ($hours ಗಂಟೆ)';
+  }
+
+  @override
+  String get bookingSelectDate => 'ದಿನಾಂಕ ಆಯ್ಕೆಮಾಡಿ';
+
+  @override
+  String get bookingSelectTimeSlot => 'ಸಮಯದ ಸ್ಲಾಟ್ ಆಯ್ಕೆಮಾಡಿ';
+
+  @override
+  String get bookingSlotAvailable => 'ಲಭ್ಯವಿದೆ';
+
+  @override
+  String get bookingSlotBooked => 'ಬುಕ್ ಆಗಿದೆ';
+
+  @override
+  String get bookingScheduleConflictAlert =>
+      'ಈ ಸಮಯದಲ್ಲಿ ಕಾರ್ಮಿಕರು ಈಗಾಗಲೇ ಬುಕ್ ಆಗಿದ್ದಾರೆ. ದಯವಿಟ್ಟು ಬೇರೆ ಸಮಯ ಆರಿಸಿ.';
+
+  @override
+  String get bookingAddressTitle => 'ಸೇವಾ ಸ್ಥಳ';
+
+  @override
+  String get bookingSavedAddresses => 'ಉಳಿಸಿದ ವಿಳಾಸಗಳು';
+
+  @override
+  String get bookingAddNewAddress => 'ಹೊಸ ವಿಳಾಸ ಸೇರಿಸಿ';
+
+  @override
+  String get bookingAddressLabel => 'ವಿಳಾಸದ ಲೇಬಲ್';
+
+  @override
+  String get bookingAddressLine1 => 'ಮನೆ / ಫ್ಲಾಟ್ ನಂ. ಮತ್ತು ರಸ್ತೆ';
+
+  @override
+  String get bookingLandmark => 'ಗುರುತಿನ ಸ್ಥಳ (ಐಚ್ಛಿಕ)';
+
+  @override
+  String get bookingCity => 'ನಗರ';
+
+  @override
+  String get bookingPincode => 'ಪಿನ್‌ಕೋಡ್';
+
+  @override
+  String get bookingSaveAsDefault => 'ಡೀಫಾಲ್ಟ್ ವಿಳಾಸವಾಗಿ ಉಳಿಸಿ';
+
+  @override
+  String get bookingPriceBreakdown => 'ದರದ ವಿವರ';
+
+  @override
+  String get bookingAgreedWage => 'ಒಪ್ಪಂದದ ಕಾರ್ಮಿಕ ಕೂಲಿ';
+
+  @override
+  String get bookingPlatformFee => 'ಪ್ಲಾಟ್‌ಫಾರ್ಮ್ ಶುಲ್ಕ';
+
+  @override
+  String get bookingProtectionCoverFee => 'ಉದ್ಯೋಗ ರಕ್ಷಣೆ ಕವರ್';
+
+  @override
+  String get bookingTotalPrice => 'ಒಟ್ಟು ಮೊತ್ತ';
+
+  @override
+  String get bookingFairWageVerified => 'ನ್ಯಾಯಯುತ ಕೂಲಿ ಪಟ್ಟಿಯಲ್ಲಿದೆ';
+
+  @override
+  String get bookingFairWageBelow => 'ಪ್ರಮಾಣಿತ ನ್ಯಾಯಯುತ ಕೂಲಿಗಿಂತ ಕಡಿಮೆ';
+
+  @override
+  String get bookingPaymentMethod => 'ಪಾವತಿ ವಿಧಾನ';
+
+  @override
+  String get bookingPaymentCash => 'ಕೆಲಸ ಮುಗಿದ ನಂತರ ನಗದು';
+
+  @override
+  String get bookingPaymentUpi => 'ತಕ್ಷಣದ ಯುಪಿಐ (UPI)';
+
+  @override
+  String get bookingPaymentEscrow => 'ರಕ್ಷಿತ ಎಸ್ಕ್ರೋ (ಶಿಫಾರಸು ಮಾಡಲಾಗಿದೆ)';
+
+  @override
+  String get bookingPaymentPlaceholder => 'ಪಾವತಿ ಗೇಟ್‌ವೇ ಏಕೀಕರಣ (P5.2)';
+
+  @override
+  String get bookingRecurringOption => 'ಮರುಕಳಿಸುವ ಸೇವಾ ವೇಳಾಪಟ್ಟಿ';
+
+  @override
+  String get bookingRecurringToggle =>
+      'ಇದನ್ನು ನಿಯಮಿತ ಮರುಕಳಿಸುವ ಸೇವೆಯನ್ನಾಗಿ ಮಾಡಿ';
+
+  @override
+  String get bookingRecurringWeekly => 'ವಾರಕ್ಕೊಮ್ಮೆ ಮರುಕಳಿಕೆ';
+
+  @override
+  String get bookingRecurringMonthly => 'ತಿಂಗಳಿಗೊಮ್ಮೆ ಮರುಕಳಿಕೆ';
+
+  @override
+  String get bookingUnverifiedNoticeTitle => 'ಉದ್ಯೋಗಸೇತು ಪರಿಶೀಲಿತವಾಗಿಲ್ಲ';
+
+  @override
+  String get bookingUnverifiedNoticeSubtitle =>
+      'ಈ ಕಾರ್ಮಿಕರು ಉದ್ಯೋಗಸೇತು ತರಬೇತಿ ಮತ್ತು ಪರಿಶೀಲನೆ ಪೂರ್ಣಗೊಳಿಸಿಲ್ಲ.';
+
+  @override
+  String get bookingUnverifiedNoticeDesc =>
+      'ಕಾರ್ಮಿಕರ ಗುರುತು ನೋಂದಾಯಿಸಲ್ಪಟ್ಟಿದ್ದರೂ, ಅಧಿಕೃತ ಕೌಶಲ್ಯ ಬ್ಯಾಡ್ಜ್ ಪಡೆದಿಲ್ಲ. ನಿಮ್ಮ ಆದ್ಯತೆಯ ಬುಕಿಂಗ್ ವಿಧಾನ ಆಯ್ಕೆಮಾಡಿ:';
+
+  @override
+  String get bookingProtectionCoverTitle => '₹40 ಉದ್ಯೋಗ ರಕ್ಷಣೆ ಕವರ್ ಸೇರಿಸಿ';
+
+  @override
+  String get bookingProtectionCoverDesc =>
+      'ಆಕಸ್ಮಿಕ ಆಸ್ತಿ ಹಾನಿ ರಕ್ಷಣೆ (₹10,000 ವರೆಗೆ) ಮತ್ತು ವಿವಾದ ಪರಿಹಾರ ಬೆಂಬಲ.';
+
+  @override
+  String get bookingBookWithoutProtection => 'ರಕ್ಷಣೆಯಿಲ್ಲದೆ ಬುಕ್ ಮಾಡಿ';
+
+  @override
+  String get bookingBookWithoutProtectionDesc =>
+      'ಆಸ್ತಿ ಹಾನಿ ರಕ್ಷಣೆಯಿಲ್ಲದೆ ನೇರ ನಗದು/ಎಸ್ಕ್ರೋ ನಿಯಮಗಳೊಂದಿಗೆ ಮುಂದುವರಿಯಿರಿ.';
+
+  @override
+  String get bookingProceedToTicket => 'ದೃಢೀಕರಿಸಿ ಬುಕಿಂಗ್ ಪಾಸ್‌ಗೆ ಮುಂದುವರಿಯಿರಿ';
+
+  @override
+  String get bookingTicketTitle => 'ಬುಕಿಂಗ್ ಪಾಸ್ ಟಿಕೆಟ್';
+
+  @override
+  String get bookingStatusWaiting => 'ಕಾರ್ಮಿಕರಿಗಾಗಿ ಕಾಯಲಾಗುತ್ತಿದೆ';
+
+  @override
+  String get bookingCodeLabel => 'ಬುಕಿಂಗ್ ಕೋಡ್';
+
+  @override
+  String get bookingSuccessMessage =>
+      'ಬುಕಿಂಗ್ ವಿನಂತಿಯನ್ನು ಕಾರ್ಮಿಕರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ. ಅವರು ಸ್ವೀಕರಿಸಿದ ನಂತರ ನಿಮಗೆ ಸೂಚನೆ ಸಿಗುತ್ತದೆ.';
+
+  @override
+  String get bookingViewMyJobs => 'ನನ್ನ ಉದ್ಯೋಗಗಳಲ್ಲಿ ವೀಕ್ಷಿಸಿ';
+
+  @override
+  String get bookingReturnHome => 'ಗ್ರಾಹಕರ ಹಬ್‌ಗೆ ಹಿಂತಿರುಗಿ';
+
+  @override
+  String get recurringManageTitle => 'ಮರುಕಳಿಸುವ ಸೇವೆಗಳು';
+
+  @override
+  String get recurringNoBookings =>
+      'ಯಾವುದೇ ಸಕ್ರಿಯ ಮರುಕಳಿಸುವ ಬುಕಿಂಗ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ.';
+
+  @override
+  String get recurringPause => 'ವೇಳಾಪಟ್ಟಿ ನಿಲ್ಲಿಸಿ';
+
+  @override
+  String get recurringResume => 'ವೇಳಾಪಟ್ಟಿ ಮುಂದುವರಿಸಿ';
+
+  @override
+  String get recurringCancel => 'ವೇಳಾಪಟ್ಟಿ ರದ್ದುಮಾಡಿ';
+
+  @override
+  String get recurringSkipDate => 'ಮುಂದಿನ ದಿನಾಂಕ ಬಿಟ್ಟುಬಿಡಿ';
+
+  @override
+  String get recurringDateSkipped => 'ಮುಂದಿನ ನಿಗದಿತ ಸೇವೆಯನ್ನು ಬಿಟ್ಟುಬಿಡಲಾಗಿದೆ.';
+
+  @override
+  String get recurringStatusActive => 'ಸಕ್ರಿಯ';
+
+  @override
+  String get recurringStatusPaused => 'ನಿಲ್ಲಿಸಲಾಗಿದೆ';
+
+  @override
+  String get recurringStatusCancelled => 'ರದ್ದುಗೊಳಿಸಲಾಗಿದೆ';
+
+  @override
+  String get demoModeBadge => 'ಡೆಮೊ ಮೋಡ್';
 }

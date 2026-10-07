@@ -92,7 +92,7 @@
   "wageTypeDaily": "Daily Wage",
   "wageTypeHourly": "Hourly Wage",
   "wageTypeFixed": "Fixed Payment",
-  "walletBalance": "Wallet Balance: ₹{balance}",
+  "walletBalance": "Wallet Balance",
   "jobsCount": "{count, plural, =0{No jobs found} =1{1 job found} other{{count} jobs found}}",
   "applicantsCount": "{count, plural, =0{No applicants} =1{1 applicant} other{{count} applicants}}",
   "distanceKm": "{distance} km away",
@@ -324,7 +324,6 @@
   "seekerHomeTitle": "Seeker Home",
   "searchJobsPlaceholder": "Search jobs, services...",
   "todaysGoal": "Today's Goal",
-  "walletBalance": "Wallet Balance",
   "viewWallet": "View Wallet >",
   "locationSharingActive": "Location sharing active for safety monitoring",
   "changeLocation": "Change >",
@@ -423,14 +422,20 @@
   "providerSlotsCounter": "{filled} / {total} Slots Filled",
   "@providerSlotsCounter": {
     "placeholders": {
-      "filled": {"type": "int"},
-      "total": {"type": "int"}
+      "filled": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "providerSlotsOpenCount": "{count} Open",
   "@providerSlotsOpenCount": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "providerPostNewJob": "Post a Job",
@@ -442,7 +447,9 @@
   "providerApplicantsBadge": "{count} Applicants",
   "@providerApplicantsBadge": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "providerJobPaused": "Paused",
@@ -456,7 +463,9 @@
   "providerCancelWarningHiredDesc": "Warning: This job has {count} hired worker(s). Cancelling will immediately notify workers, cancel their assignments, and release escrow holds. This may negatively impact your employer reliability rating.",
   "@providerCancelWarningHiredDesc": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "providerCancelStandardDesc": "Are you sure you want to cancel this job posting? Open slots will be removed.",
@@ -485,23 +494,35 @@
   "postJobFairWageBandRange": "₹{min} - ₹{max} / {unit}",
   "@postJobFairWageBandRange": {
     "placeholders": {
-      "min": {"type": "int"},
-      "max": {"type": "int"},
-      "unit": {"type": "String"}
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
     }
   },
   "postJobBelowFairWageWarning": "Wage is below the recommended fair wage band (₹{min} - ₹{max}). Workers may be slower to apply, but you can still proceed.",
   "@postJobBelowFairWageWarning": {
     "placeholders": {
-      "min": {"type": "int"},
-      "max": {"type": "int"}
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
     }
   },
   "postJobDurationLabel": "Estimated Duration",
   "postJobDurationHours": "{hours} hours",
   "@postJobDurationHours": {
     "placeholders": {
-      "hours": {"type": "int"}
+      "hours": {
+        "type": "int"
+      }
     }
   },
   "postJobStartDateLabel": "Start Date & Time",
@@ -527,7 +548,9 @@
   "postJobGeofenceMeters": "{meters} meters",
   "@postJobGeofenceMeters": {
     "placeholders": {
-      "meters": {"type": "int"}
+      "meters": {
+        "type": "int"
+      }
     }
   },
   "postJobPublishButton": "Publish Job Posting",
@@ -536,7 +559,9 @@
   "applicantsScreenTitle": "Applicants ({count})",
   "@applicantsScreenTitle": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "applicantsNoApplicantsTitle": "No Applications Yet",
@@ -544,26 +569,36 @@
   "applicantCardJobsDone": "{count} jobs done",
   "@applicantCardJobsDone": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "applicantCardRating": "{rating} ({count})",
   "@applicantCardRating": {
     "placeholders": {
-      "rating": {"type": "double"},
-      "count": {"type": "int"}
+      "rating": {
+        "type": "double"
+      },
+      "count": {
+        "type": "int"
+      }
     }
   },
   "applicantCardLanguages": "Languages: {langs}",
   "@applicantCardLanguages": {
     "placeholders": {
-      "langs": {"type": "String"}
+      "langs": {
+        "type": "String"
+      }
     }
   },
   "applicantCardSkills": "Skills: {skills}",
   "@applicantCardSkills": {
     "placeholders": {
-      "skills": {"type": "String"}
+      "skills": {
+        "type": "String"
+      }
     }
   },
   "applicantActionHire": "Hire",
@@ -579,7 +614,9 @@
   "applicantHireConfirmDesc": "Hiring {name} will assign them 1 slot on this job. They will receive a booking notification.",
   "@applicantHireConfirmDesc": {
     "placeholders": {
-      "name": {"type": "String"}
+      "name": {
+        "type": "String"
+      }
     }
   },
   "applicantHiredSuccess": "Worker hired successfully! Assignment created.",
@@ -592,7 +629,9 @@
   "hubGreeting": "Hello, {name}! 👋",
   "@hubGreeting": {
     "placeholders": {
-      "name": {"type": "String"}
+      "name": {
+        "type": "String"
+      }
     }
   },
   "hubTabWorkers": "Workers & Services",
@@ -609,7 +648,9 @@
   "hubConfirmedBooking": "CONFIRMED BOOKING • {code}",
   "@hubConfirmedBooking": {
     "placeholders": {
-      "code": {"type": "String"}
+      "code": {
+        "type": "String"
+      }
     }
   },
   "hubWorkerNotArrived": "Worker Has Not Arrived",
@@ -659,7 +700,9 @@
   "workerSearchResultsCount": "Found {count} workers nearby",
   "@workerSearchResultsCount": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "workerSearchNoResults": "No workers match your filter criteria",
@@ -669,8 +712,83 @@
   "noShowHelpTitle": "Worker Attendance & No-Show Support",
   "noShowHelpDesc": "If your booked worker has not arrived by the scheduled shift time, our safety system protects you with an instant replacement or a 100% escrow refund.",
   "noShowReportButton": "Report No-Show Now",
-  "noShowReportSuccess": "No-show report received. Support and backup workers are being mobilized."
+  "noShowReportSuccess": "No-show report received. Support and backup workers are being mobilized.",
+  "bookingWizardTitle": "Direct Booking",
+  "bookingStepService": "Service",
+  "bookingStepDateTime": "Date & Time",
+  "bookingStepAddress": "Address",
+  "bookingStepPayment": "Price & Pay",
+  "bookingStepNotice": "Notice",
+  "bookingStepTicket": "Booking Pass",
+  "bookingWorkerDetails": "Worker Details",
+  "bookingServiceTitleLabel": "Service Title / Description",
+  "bookingServiceTitleHint": "e.g. Living room fan wiring repair",
+  "bookingSpecialNotes": "Special Instructions / Notes",
+  "bookingSpecialNotesHint": "e.g. Bring extra 2.5mm wire, ladder available",
+  "bookingDuration": "Estimated Duration",
+  "bookingDurationHalfDay": "Half Day (4 hrs)",
+  "bookingDurationFullDay": "Full Day (8 hrs)",
+  "bookingDurationCustom": "Custom ({hours} hrs)",
+  "@bookingDurationCustom": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "bookingSelectDate": "Select Date",
+  "bookingSelectTimeSlot": "Select Time Slot",
+  "bookingSlotAvailable": "Available",
+  "bookingSlotBooked": "Booked",
+  "bookingScheduleConflictAlert": "This worker is already booked during this time window. Please pick an alternative slot.",
+  "bookingAddressTitle": "Service Location",
+  "bookingSavedAddresses": "Saved Addresses",
+  "bookingAddNewAddress": "Add New Address",
+  "bookingAddressLabel": "Address Label",
+  "bookingAddressLine1": "Flat / House No. & Street",
+  "bookingLandmark": "Landmark (optional)",
+  "bookingCity": "City",
+  "bookingPincode": "Pincode",
+  "bookingSaveAsDefault": "Save as default address",
+  "bookingPriceBreakdown": "Price Breakdown",
+  "bookingAgreedWage": "Agreed Worker Wage",
+  "bookingPlatformFee": "Platform Convenience Fee",
+  "bookingProtectionCoverFee": "Job Protection Cover",
+  "bookingTotalPrice": "Total Amount",
+  "bookingFairWageVerified": "Within Fair Wage Band",
+  "bookingFairWageBelow": "Below Standard Fair Wage",
+  "bookingPaymentMethod": "Payment Method",
+  "bookingPaymentCash": "Cash on Completion",
+  "bookingPaymentUpi": "UPI Instant",
+  "bookingPaymentEscrow": "Protected Escrow (Recommended)",
+  "bookingPaymentPlaceholder": "Payment Gateway Integration (P5.2)",
+  "bookingRecurringOption": "Repeat Service Schedule",
+  "bookingRecurringToggle": "Make this a recurring repeat service",
+  "bookingRecurringWeekly": "Weekly Repeat",
+  "bookingRecurringMonthly": "Monthly Repeat",
+  "bookingUnverifiedNoticeTitle": "Not UdyogaSethu Verified",
+  "bookingUnverifiedNoticeSubtitle": "This worker has not completed UdyogaSethu training & verification.",
+  "bookingUnverifiedNoticeDesc": "While the worker is registered, they have not yet earned the official trust and skill badge. Choose your preferred booking mode below:",
+  "bookingProtectionCoverTitle": "Add ₹40 Job Protection Cover",
+  "bookingProtectionCoverDesc": "Simulated property damage coverage (up to ₹10,000) and verified dispute claim assistance.",
+  "bookingBookWithoutProtection": "Book without protection",
+  "bookingBookWithoutProtectionDesc": "Proceed with direct cash/escrow terms without accidental damage coverage.",
+  "bookingProceedToTicket": "Confirm & Proceed to Booking Pass Ticket",
+  "bookingTicketTitle": "Booking Pass Ticket",
+  "bookingStatusWaiting": "Waiting for worker",
+  "bookingCodeLabel": "Booking Code",
+  "bookingSuccessMessage": "Booking request sent to worker. You will receive an alert once accepted.",
+  "bookingViewMyJobs": "View in My Jobs",
+  "bookingReturnHome": "Return to Customer Hub",
+  "recurringManageTitle": "Recurring Services",
+  "recurringNoBookings": "No active recurring bookings found.",
+  "recurringPause": "Pause Schedule",
+  "recurringResume": "Resume Schedule",
+  "recurringCancel": "Cancel Schedule",
+  "recurringSkipDate": "Skip Next Date",
+  "recurringDateSkipped": "Next scheduled service skipped.",
+  "recurringStatusActive": "Active",
+  "recurringStatusPaused": "Paused",
+  "recurringStatusCancelled": "Cancelled",
+  "demoModeBadge": "Demo mode"
 }
-
-
-

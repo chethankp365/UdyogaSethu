@@ -49,6 +49,9 @@ import 'package:udyogasethu/features/provider/presentation/post_job_wizard_scree
 import 'package:udyogasethu/features/provider/presentation/job_applicants_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/worker_search_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/worker_profile_screen.dart';
+import 'package:udyogasethu/features/booking/domain/booking_draft.dart';
+import 'package:udyogasethu/features/booking/presentation/guided_booking_screen.dart';
+import 'package:udyogasethu/features/booking/presentation/recurring_bookings_screen.dart';
 import 'package:udyogasethu/features/seeker/domain/job_recommendation.dart';
 import 'package:udyogasethu/features/seeker/presentation/job_detail_screen.dart';
 import 'package:udyogasethu/features/seeker/presentation/map/nearby_jobs_map_screen.dart';
@@ -592,6 +595,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           final id = state.pathParameters['id'] ?? '';
           return WorkerProfileScreen(workerId: id);
         },
+      ),
+      GoRoute(
+        path: AppRoutes.providerBooking,
+        builder: (context, state) {
+          final draft = state.extra as BookingDraft?;
+          return GuidedBookingScreen(initialDraft: draft);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.recurringBookings,
+        builder: (context, state) => const RecurringBookingsScreen(),
       ),
 
       // Debug Routes

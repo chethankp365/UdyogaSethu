@@ -1922,4 +1922,227 @@ class AppLocalizationsMr extends AppLocalizations {
   @override
   String get noShowReportSuccess =>
       'No-show report received. Support and backup workers are being mobilized.';
+
+  @override
+  String get bookingWizardTitle => 'Direct Booking';
+
+  @override
+  String get bookingStepService => 'Service';
+
+  @override
+  String get bookingStepDateTime => 'Date & Time';
+
+  @override
+  String get bookingStepAddress => 'Address';
+
+  @override
+  String get bookingStepPayment => 'Price & Pay';
+
+  @override
+  String get bookingStepNotice => 'Notice';
+
+  @override
+  String get bookingStepTicket => 'Booking Pass';
+
+  @override
+  String get bookingWorkerDetails => 'Worker Details';
+
+  @override
+  String get bookingServiceTitleLabel => 'Service Title / Description';
+
+  @override
+  String get bookingServiceTitleHint => 'e.g. Living room fan wiring repair';
+
+  @override
+  String get bookingSpecialNotes => 'Special Instructions / Notes';
+
+  @override
+  String get bookingSpecialNotesHint =>
+      'e.g. Bring extra 2.5mm wire, ladder available';
+
+  @override
+  String get bookingDuration => 'Estimated Duration';
+
+  @override
+  String get bookingDurationHalfDay => 'Half Day (4 hrs)';
+
+  @override
+  String get bookingDurationFullDay => 'Full Day (8 hrs)';
+
+  @override
+  String bookingDurationCustom(int hours) {
+    return 'Custom ($hours hrs)';
+  }
+
+  @override
+  String get bookingSelectDate => 'Select Date';
+
+  @override
+  String get bookingSelectTimeSlot => 'Select Time Slot';
+
+  @override
+  String get bookingSlotAvailable => 'Available';
+
+  @override
+  String get bookingSlotBooked => 'Booked';
+
+  @override
+  String get bookingScheduleConflictAlert =>
+      'This worker is already booked during this time window. Please pick an alternative slot.';
+
+  @override
+  String get bookingAddressTitle => 'Service Location';
+
+  @override
+  String get bookingSavedAddresses => 'Saved Addresses';
+
+  @override
+  String get bookingAddNewAddress => 'Add New Address';
+
+  @override
+  String get bookingAddressLabel => 'Address Label';
+
+  @override
+  String get bookingAddressLine1 => 'Flat / House No. & Street';
+
+  @override
+  String get bookingLandmark => 'Landmark (optional)';
+
+  @override
+  String get bookingCity => 'City';
+
+  @override
+  String get bookingPincode => 'Pincode';
+
+  @override
+  String get bookingSaveAsDefault => 'Save as default address';
+
+  @override
+  String get bookingPriceBreakdown => 'Price Breakdown';
+
+  @override
+  String get bookingAgreedWage => 'Agreed Worker Wage';
+
+  @override
+  String get bookingPlatformFee => 'Platform Convenience Fee';
+
+  @override
+  String get bookingProtectionCoverFee => 'Job Protection Cover';
+
+  @override
+  String get bookingTotalPrice => 'Total Amount';
+
+  @override
+  String get bookingFairWageVerified => 'Within Fair Wage Band';
+
+  @override
+  String get bookingFairWageBelow => 'Below Standard Fair Wage';
+
+  @override
+  String get bookingPaymentMethod => 'Payment Method';
+
+  @override
+  String get bookingPaymentCash => 'Cash on Completion';
+
+  @override
+  String get bookingPaymentUpi => 'UPI Instant';
+
+  @override
+  String get bookingPaymentEscrow => 'Protected Escrow (Recommended)';
+
+  @override
+  String get bookingPaymentPlaceholder => 'Payment Gateway Integration (P5.2)';
+
+  @override
+  String get bookingRecurringOption => 'Repeat Service Schedule';
+
+  @override
+  String get bookingRecurringToggle => 'Make this a recurring repeat service';
+
+  @override
+  String get bookingRecurringWeekly => 'Weekly Repeat';
+
+  @override
+  String get bookingRecurringMonthly => 'Monthly Repeat';
+
+  @override
+  String get bookingUnverifiedNoticeTitle => 'Not UdyogaSethu Verified';
+
+  @override
+  String get bookingUnverifiedNoticeSubtitle =>
+      'This worker has not completed UdyogaSethu training & verification.';
+
+  @override
+  String get bookingUnverifiedNoticeDesc =>
+      'While the worker is registered, they have not yet earned the official trust and skill badge. Choose your preferred booking mode below:';
+
+  @override
+  String get bookingProtectionCoverTitle => 'Add ₹40 Job Protection Cover';
+
+  @override
+  String get bookingProtectionCoverDesc =>
+      'Simulated property damage coverage (up to ₹10,000) and verified dispute claim assistance.';
+
+  @override
+  String get bookingBookWithoutProtection => 'Book without protection';
+
+  @override
+  String get bookingBookWithoutProtectionDesc =>
+      'Proceed with direct cash/escrow terms without accidental damage coverage.';
+
+  @override
+  String get bookingProceedToTicket =>
+      'Confirm & Proceed to Booking Pass Ticket';
+
+  @override
+  String get bookingTicketTitle => 'Booking Pass Ticket';
+
+  @override
+  String get bookingStatusWaiting => 'Waiting for worker';
+
+  @override
+  String get bookingCodeLabel => 'Booking Code';
+
+  @override
+  String get bookingSuccessMessage =>
+      'Booking request sent to worker. You will receive an alert once accepted.';
+
+  @override
+  String get bookingViewMyJobs => 'View in My Jobs';
+
+  @override
+  String get bookingReturnHome => 'Return to Customer Hub';
+
+  @override
+  String get recurringManageTitle => 'Recurring Services';
+
+  @override
+  String get recurringNoBookings => 'No active recurring bookings found.';
+
+  @override
+  String get recurringPause => 'Pause Schedule';
+
+  @override
+  String get recurringResume => 'Resume Schedule';
+
+  @override
+  String get recurringCancel => 'Cancel Schedule';
+
+  @override
+  String get recurringSkipDate => 'Skip Next Date';
+
+  @override
+  String get recurringDateSkipped => 'Next scheduled service skipped.';
+
+  @override
+  String get recurringStatusActive => 'Active';
+
+  @override
+  String get recurringStatusPaused => 'Paused';
+
+  @override
+  String get recurringStatusCancelled => 'Cancelled';
+
+  @override
+  String get demoModeBadge => 'Demo mode';
 }

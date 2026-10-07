@@ -1922,4 +1922,227 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get noShowReportSuccess =>
       'No-show report received. Support and backup workers are being mobilized.';
+
+  @override
+  String get bookingWizardTitle => 'सीधी बुकिंग';
+
+  @override
+  String get bookingStepService => 'सेवा';
+
+  @override
+  String get bookingStepDateTime => 'तारीख और समय';
+
+  @override
+  String get bookingStepAddress => 'पता';
+
+  @override
+  String get bookingStepPayment => 'मूल्य और भुगतान';
+
+  @override
+  String get bookingStepNotice => 'सूचना';
+
+  @override
+  String get bookingStepTicket => 'बुकिंग पास';
+
+  @override
+  String get bookingWorkerDetails => 'श्रमिक विवरण';
+
+  @override
+  String get bookingServiceTitleLabel => 'सेवा का शीर्षक / विवरण';
+
+  @override
+  String get bookingServiceTitleHint => 'उदा. लिविंग रूम पंखा वायरिंग मरम्मत';
+
+  @override
+  String get bookingSpecialNotes => 'विशेष निर्देश / टिप्पणियां';
+
+  @override
+  String get bookingSpecialNotesHint =>
+      'उदा. अतिरिक्त 2.5 मिमी तार लाएं, सीढ़ी उपलब्ध है';
+
+  @override
+  String get bookingDuration => 'अनुमानित अवधि';
+
+  @override
+  String get bookingDurationHalfDay => 'आधा दिन (4 घंटे)';
+
+  @override
+  String get bookingDurationFullDay => 'पूरा दिन (8 घंटे)';
+
+  @override
+  String bookingDurationCustom(int hours) {
+    return 'कस्टम ($hours घंटे)';
+  }
+
+  @override
+  String get bookingSelectDate => 'तारीख चुनें';
+
+  @override
+  String get bookingSelectTimeSlot => 'समय स्लॉट चुनें';
+
+  @override
+  String get bookingSlotAvailable => 'उपलब्ध';
+
+  @override
+  String get bookingSlotBooked => 'बुक किया हुआ';
+
+  @override
+  String get bookingScheduleConflictAlert =>
+      'यह श्रमिक इस समय स्लॉट में पहले से बुक है। कृपया कोई अन्य स्लॉट चुनें।';
+
+  @override
+  String get bookingAddressTitle => 'सेवा स्थल';
+
+  @override
+  String get bookingSavedAddresses => 'सहेजे गए पते';
+
+  @override
+  String get bookingAddNewAddress => 'नया पता जोड़ें';
+
+  @override
+  String get bookingAddressLabel => 'पता लेबल';
+
+  @override
+  String get bookingAddressLine1 => 'मकान/फ्लैट नं. व सड़क';
+
+  @override
+  String get bookingLandmark => 'लैंडमार्क (वैकल्पिक)';
+
+  @override
+  String get bookingCity => 'शहर';
+
+  @override
+  String get bookingPincode => 'पिनकोड';
+
+  @override
+  String get bookingSaveAsDefault => 'डिफ़ॉल्ट पते के रूप में सहेजें';
+
+  @override
+  String get bookingPriceBreakdown => 'मूल्य विवरण';
+
+  @override
+  String get bookingAgreedWage => 'सहमत श्रमिक मजदूरी';
+
+  @override
+  String get bookingPlatformFee => 'प्लेटफ़ॉर्म सुविधा शुल्क';
+
+  @override
+  String get bookingProtectionCoverFee => 'जॉब सुरक्षा कवर';
+
+  @override
+  String get bookingTotalPrice => 'कुल राशि';
+
+  @override
+  String get bookingFairWageVerified => 'उचित मजदूरी दायरे में';
+
+  @override
+  String get bookingFairWageBelow => 'मानक उचित मजदूरी से कम';
+
+  @override
+  String get bookingPaymentMethod => 'भुगतान विधि';
+
+  @override
+  String get bookingPaymentCash => 'काम पूरा होने पर नकद';
+
+  @override
+  String get bookingPaymentUpi => 'त्वरित यूपीआई (UPI)';
+
+  @override
+  String get bookingPaymentEscrow => 'सुरक्षित एस्क्रो (अनुशंसित)';
+
+  @override
+  String get bookingPaymentPlaceholder => 'भुगतान गेटवे एकीकरण (P5.2)';
+
+  @override
+  String get bookingRecurringOption => 'दोहराई जाने वाली सेवा अनुसूची';
+
+  @override
+  String get bookingRecurringToggle => 'इसे नियमित दोहराई जाने वाली सेवा बनाएं';
+
+  @override
+  String get bookingRecurringWeekly => 'साप्ताहिक दोहराव';
+
+  @override
+  String get bookingRecurringMonthly => 'मासिक दोहराव';
+
+  @override
+  String get bookingUnverifiedNoticeTitle => 'उद्योगसेतु सत्यापित नहीं';
+
+  @override
+  String get bookingUnverifiedNoticeSubtitle =>
+      'इस श्रमिक ने उद्योगसेतु प्रशिक्षण और सत्यापन पूरा नहीं किया है।';
+
+  @override
+  String get bookingUnverifiedNoticeDesc =>
+      'श्रमिक की पहचान पंजीकृत है, लेकिन उन्होंने आधिकारिक विश्वास बैज प्राप्त नहीं किया है। नीचे अपनी पसंदीदा बुकिंग विधि चुनें:';
+
+  @override
+  String get bookingProtectionCoverTitle => '₹40 जॉब सुरक्षा कवर जोड़ें';
+
+  @override
+  String get bookingProtectionCoverDesc =>
+      'आकस्मिक संपत्ति क्षति सुरक्षा (₹10,000 तक) और विवाद दावा सहायता।';
+
+  @override
+  String get bookingBookWithoutProtection => 'बिना सुरक्षा के बुक करें';
+
+  @override
+  String get bookingBookWithoutProtectionDesc =>
+      'बिना संपत्ति क्षति कवर के सीधे नकद/एस्क्रो शर्तों के साथ आगे बढ़ें।';
+
+  @override
+  String get bookingProceedToTicket => 'पुष्टि करें और बुकिंग पास पर आगे बढ़ें';
+
+  @override
+  String get bookingTicketTitle => 'बुकिंग पास टिकट';
+
+  @override
+  String get bookingStatusWaiting => 'श्रमिक की प्रतीक्षा है';
+
+  @override
+  String get bookingCodeLabel => 'बुकिंग कोड';
+
+  @override
+  String get bookingSuccessMessage =>
+      'बुकिंग अनुरोध श्रमिक को भेजा गया। स्वीकार होने पर आपको सूचना मिलेगी।';
+
+  @override
+  String get bookingViewMyJobs => 'मेरी नौकरियों में देखें';
+
+  @override
+  String get bookingReturnHome => 'ग्राहक हब पर लौटें';
+
+  @override
+  String get recurringManageTitle => 'दोहराई जाने वाली सेवाएं';
+
+  @override
+  String get recurringNoBookings =>
+      'कोई सक्रिय दोहराई जाने वाली बुकिंग नहीं मिली।';
+
+  @override
+  String get recurringPause => 'अनुसूची रोकें';
+
+  @override
+  String get recurringResume => 'अनुसूची फिर से शुरू करें';
+
+  @override
+  String get recurringCancel => 'अनुसूची रद्द करें';
+
+  @override
+  String get recurringSkipDate => 'अगली तारीख छोड़ें';
+
+  @override
+  String get recurringDateSkipped => 'अगली निर्धारित सेवा छोड़ दी गई।';
+
+  @override
+  String get recurringStatusActive => 'सक्रिय';
+
+  @override
+  String get recurringStatusPaused => 'रोका गया';
+
+  @override
+  String get recurringStatusCancelled => 'रद्द किया गया';
+
+  @override
+  String get demoModeBadge => 'डेमो मोड';
 }
