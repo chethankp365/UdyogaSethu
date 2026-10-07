@@ -20,3 +20,4 @@ export 'info_banner.dart';
 export 'responsive_container.dart';
 export 'connection_debug_screen.dart';
 export 'user_avatar.dart';
+export 'job_row.dart';

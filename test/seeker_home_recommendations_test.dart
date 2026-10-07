@@ -189,8 +189,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Check header greeting and user name
-      expect(find.textContaining('Welcome back, Chethan Kumar!'), findsOneWidget);
-      expect(find.text('Seeker Home'), findsOneWidget);
+      expect(find.textContaining('Chethan Kumar'), findsOneWidget);
       expect(find.text('SOS'), findsOneWidget);
 
       // Check Today's Goal and Wallet
@@ -340,11 +339,10 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expect(find.text('Verification in Progress: 2 of 4 steps complete'), findsOneWidget);
-      expect(find.text('2/4 Done'), findsOneWidget);
-      expect(find.byType(LinearProgressIndicator), findsOneWidget);
-      expect(find.text('Find Jobs'), findsOneWidget);
-      expect(find.text('Complete Profile'), findsOneWidget);
+      // Big Safety Onboarding card is removed from Home (lives in Profile and Safety Hub)
+      expect(find.text('Safety Onboarding & Verified Badge'), findsNothing);
+      expect(find.text('2/4 Done'), findsNothing);
+      expect(find.text('Safety Hub'), findsOneWidget);
     });
 
     testWidgets('Editing daily goal via dialog updates goal display and progress', (tester) async {
@@ -446,7 +444,10 @@ void main() {
             ],
             supportedLocales: AppLocalizations.supportedLocales,
             home: MediaQuery(
-              data: MediaQueryData(textScaler: TextScaler.linear(1.3)),
+              data: MediaQueryData(
+                size: Size(360, 800),
+                textScaler: TextScaler.linear(1.3),
+              ),
               child: SeekerHomeScreen(),
             ),
           ),
@@ -457,7 +458,7 @@ void main() {
       FlutterError.onError = originalOnError;
 
       expect(errorDetails, isNull);
-      expect(find.text('Seeker Home'), findsOneWidget);
+      expect(find.textContaining('Chethan Kumar'), findsOneWidget);
       expect(find.text('SOS'), findsOneWidget);
     });
   });
