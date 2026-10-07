@@ -111,6 +111,15 @@ This document records key design, architectural, role model, and implementation 
   * **Goal Target**: Daily earnings goal defaults to ₹1,500 (150,000 paise) across all seeker categories.
   * **Interactive Adjustment**: Seekers can tap the goal ring or edit button to open a quick modal to set custom targets (₹500, ₹1,000, ₹1,500, ₹2,000, ₹3,000), persisting the goal state in Riverpod `seekerDailyGoalProvider`.
 
+* **D-JOB-DETAIL-APPLY — Job Posting, Pre-Application Eligibility & Double-Booking Prevention**:
+  * **Screen 34 Prototype Fidelity**: Built Job Detail screen matching prototype "Job Posting & Payment Protection" with category WebP hero illustration, verified employer badge & rating card, rate/distance/walk chips, 5-row specs table (Duration, Start Time, Materials Provided, Escrow Protected, Slots Open), description, site photo, and bottom action bar (Chat, Apply Now).
+  * **Pre-Application Eligibility Gate**: Tapping Apply Now opens a bottom sheet executing `public.check_job_eligibility(p_job_id)` RPC, verifying driving licence, verification badge, audience gating, and calendar schedule conflicts before submission.
+  * **Seeker Jobs Tab 5 Segments**: 5 distinct segments (`Applied`, `Accepted`, `Active`, `Completed`, `Requests`). Requests segment lists direct booking invitations with Accept, Decline, and Request More Details actions.
+  * **Double-Booking Prevention**: SQL RPC `public.accept_assignment` rejects overlapping assignments, throwing an exception which the UI catches to display an explanatory `Schedule Conflict` alert dialog.
+  * **Travel Warning**: SQL returns travel time warning when a job starts < 60 minutes after another job, alerting the worker to plan travel.
+  * **Offline Resilience**: Offline cached job view displays an amber warning banner and disables application with an explanatory snackbar.
+  * **Debug Seeding Helper**: Clearly marked Amber debug helper card in `Requests` segment (gated strictly under `kDebugMode`) to seed 2 overlapping direct-booking invitations from demo employers to allow phone testing without waiting for provider screens.
+
 ---
 
 ## Known Issues & Pre-Launch Security Requirements

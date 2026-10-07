@@ -1314,6 +1314,7 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
                   job: job,
                   isApplied: isApplied,
                   seekerType: seekerType,
+                  onTap: () => context.push('/job/${job.id}', extra: job),
                   onApply: () async {
                     final uid = Supabase.instance.client.auth.currentUser?.id;
                     if (uid != null) {

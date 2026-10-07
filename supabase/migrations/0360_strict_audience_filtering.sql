@@ -446,7 +446,7 @@ BEGIN
     job_id,
     worker_id,
     status,
-    notes,
+    message,
     created_at
   ) VALUES (
     p_job_id,

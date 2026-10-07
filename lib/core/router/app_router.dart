@@ -45,8 +45,11 @@ import 'package:udyogasethu/features/trust/presentation/trust_safety_centre_scre
 import 'package:udyogasethu/features/verification/presentation/face_check_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_home_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_wizard_screen.dart';
+import 'package:udyogasethu/features/seeker/domain/job_recommendation.dart';
+import 'package:udyogasethu/features/seeker/presentation/job_detail_screen.dart';
 import 'package:udyogasethu/features/seeker/presentation/map/nearby_jobs_map_screen.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_home_screen.dart';
+import 'package:udyogasethu/features/seeker/presentation/seeker_jobs_screen.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_wizard_screen.dart';
 
 /// RouterNotifier notifies [GoRouter] when session state changes without recreating the router.
@@ -353,7 +356,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: AppRoutes.seekerJobs,
-                builder: (context, state) => const NearbyJobsMapScreen(),
+                builder: (context, state) => const SeekerJobsScreen(),
               ),
               GoRoute(
                 path: AppRoutes.seekerMap,
@@ -553,6 +556,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/account/linked',
         builder: (context, state) => const LinkedAccountsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.jobDetail,
+        builder: (context, state) {
+          final id = state.pathParameters['id'] ?? '';
+          final preloaded = state.extra as JobRecommendation?;
+          return JobDetailScreen(
+            jobId: id,
+            preloadedJob: preloaded,
+          );
+        },
       ),
 
       // Debug Routes

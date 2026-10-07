@@ -93,3 +93,69 @@ Direct client updates to server-computed fields (such as ratings, completed jobs
 | `job-evidence` | **No** | 25 MB | Images, MP4, MP3, WAV, AAC | Assignment Party OR Admin | Owner folder (`{user_id}/*`) |
 | `dispute-evidence` | **No** | 25 MB | Images, PDF, MP3, WAV | Dispute Party OR Admin | Owner folder (`{user_id}/*`) |
 | `chat-attachments` | **No** | 15 MB | Images, PDF, MP3, WAV | Thread Member | Owner folder (`{user_id}/*`) |
+
+---
+
+## Phase 4.3: Job Detail, Pre-Application Eligibility & Direct-Booking Requests
+
+### Remote RPCs
+1. **`public.check_job_eligibility(p_job_id UUID)`**:
+   Evaluates DL requirement, verified worker requirement, category audience compatibility, and checks whether the applicant already has an overlapping active/accepted shift.
+2. **`public.get_job_detail(p_job_id UUID)`**:
+   Returns enriched job metadata including employer verified badge, ratings, reviews count, category icon/slug, and open slots count.
+3. **`public.debug_seed_overlapping_requests(p_worker_id UUID DEFAULT NULL)`**:
+   Creates 2 demo direct-booking requests from demo employers (`Sharma Builders` and `Sai Electricals`) with overlapping time slots:
+   - Slot A: 10:00 AM – 02:00 PM (4 hrs, ₹900)
+   - Slot B: 01:00 PM – 05:00 PM (4 hrs, ₹850) — overlaps with Slot A between 1:00 PM and 2:00 PM!
+
+### Manual SQL Snippet for Overlapping Direct Bookings
+If testing directly via the Supabase SQL editor for your logged-in worker ID:
+```sql
+-- 1. Call debug seed RPC for your worker UUID:
+SELECT public.debug_seed_overlapping_requests('<YOUR-LOGGED-IN-WORKER-UUID>');
+
+-- Or execute manually:
+DO $$
+DECLARE
+  v_worker_id UUID := '<YOUR-LOGGED-IN-WORKER-UUID>';
+  v_prov1 UUID;
+  v_prov2 UUID;
+  v_cat UUID;
+  v_job1 UUID;
+  v_job2 UUID;
+  v_today DATE := CURRENT_DATE + INTERVAL '1 day';
+BEGIN
+  SELECT id INTO v_prov1 FROM public.profiles WHERE full_name = 'Sharma Builders' LIMIT 1;
+  SELECT id INTO v_prov2 FROM public.profiles WHERE full_name = 'Sai Electricals' LIMIT 1;
+  SELECT id INTO v_cat FROM public.service_categories WHERE slug = 'electrician' LIMIT 1;
+
+  -- Create Job 1 (10 AM - 2 PM)
+  INSERT INTO public.jobs (
+    provider_id, category_id, title, description,
+    wage_type, wage_paise, est_duration_minutes, start_at,
+    status, slots_total, slots_filled, address_text
+  ) VALUES (
+    v_prov1, v_cat, 'Commercial Electrician - Slot A', 'Conduit and cabling work',
+    'daily', 90000, 240, (v_today || ' 10:00:00+05:30')::TIMESTAMPTZ,
+    'open', 1, 0, 'Koramangala 4th Block, Bengaluru'
+  ) RETURNING id INTO v_job1;
+
+  -- Create Job 2 (1 PM - 5 PM, overlaps 1 PM - 2 PM)
+  INSERT INTO public.jobs (
+    provider_id, category_id, title, description,
+    wage_type, wage_paise, est_duration_minutes, start_at,
+    status, slots_total, slots_filled, address_text
+  ) VALUES (
+    v_prov2, v_cat, 'Site Electrical Maintenance - Slot B', 'Circuit maintenance',
+    'daily', 85000, 240, (v_today || ' 13:00:00+05:30')::TIMESTAMPTZ,
+    'open', 1, 0, 'HSR Layout, Bengaluru'
+  ) RETURNING id INTO v_job2;
+
+  -- Send direct booking assignments
+  INSERT INTO public.job_assignments (
+    job_id, worker_id, status, assigned_by, scheduled_start, scheduled_end
+  ) VALUES
+    (v_job1, v_worker_id, 'invited', v_prov1, (v_today || ' 10:00:00+05:30')::TIMESTAMPTZ, (v_today || ' 14:00:00+05:30')::TIMESTAMPTZ),
+    (v_job2, v_worker_id, 'invited', v_prov2, (v_today || ' 13:00:00+05:30')::TIMESTAMPTZ, (v_today || ' 17:00:00+05:30')::TIMESTAMPTZ);
+END $$;
+```
