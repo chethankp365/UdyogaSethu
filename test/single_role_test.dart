@@ -8,6 +8,7 @@ import 'package:udyogasethu/core/config/env.dart';
 import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/features/onboarding/presentation/role_conflict_screen.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_home_screen.dart';
+import 'package:udyogasethu/features/seeker/presentation/seeker_home_controller.dart';
 import 'package:udyogasethu/features/seeker/domain/seeker_profile_draft.dart';
 
 Widget createTestApp(Widget child) {

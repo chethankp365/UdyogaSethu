@@ -11,30 +11,7 @@ import 'package:udyogasethu/features/seeker/data/seeker_home_repository.dart';
 import 'package:udyogasethu/features/seeker/domain/job_recommendation.dart';
 import 'package:udyogasethu/features/seeker/domain/seeker_profile_draft.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_home_controller.dart';
-import 'package:udyogasethu/features/seeker/presentation/seeker_wizard_controller.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
-
-final seekerHomeProfileProvider = FutureProvider<SeekerProfileDraft>((ref) async {
-  final repo = ref.watch(seekerProfileRepositoryProvider);
-  String? userId;
-  bool isSupabaseInitialized = true;
-  try {
-    final user = Supabase.instance.client.auth.currentUser;
-    if (user != null && user.id.isNotEmpty) userId = user.id;
-  } catch (_) {
-    isSupabaseInitialized = false;
-  }
-  if (isSupabaseInitialized && userId == null) {
-    return const SeekerProfileDraft(userId: '');
-  }
-  final targetId = userId ?? 'test-user-id';
-  return repo.loadDraft(targetId);
-});
-
-final seekerSkillsListProvider = FutureProvider<List<SkillItem>>((ref) async {
-  final repo = ref.watch(seekerProfileRepositoryProvider);
-  return repo.fetchSkills();
-});
 
 class SeekerHomeScreen extends ConsumerStatefulWidget {
   const SeekerHomeScreen({super.key});
@@ -1280,9 +1257,8 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
         ),
         const SizedBox(height: 12),
 
-        recommendationsAsync.when(
-          loading: () => _buildSkeletonLoaders(),
-          error: (err, stack) => Container(
+        if (recommendationsAsync.hasError)
+          Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Colors.red.shade50,
@@ -1291,7 +1267,10 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
             ),
             child: Column(
               children: [
-                Text('Error loading recommendations: $err', style: const TextStyle(color: Colors.red, fontSize: 12)),
+                Text(
+                  'Error loading recommendations: ${recommendationsAsync.error}',
+                  style: const TextStyle(color: Colors.red, fontSize: 12),
+                ),
                 const SizedBox(height: 8),
                 ElevatedButton(
                   onPressed: () => ref.invalidate(seekerRecommendedJobsProvider),
@@ -1299,14 +1278,18 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
                 ),
               ],
             ),
-          ),
-          data: (jobs) {
+          )
+        else if (recommendationsAsync.isLoading)
+          _buildSkeletonLoaders()
+        else if (recommendationsAsync.hasValue) ...[
+          () {
+            final jobs = recommendationsAsync.value!;
             final filtered = searchQuery.isEmpty
                 ? jobs
                 : jobs.where((j) => j.title.toLowerCase().contains(searchQuery)).toList();
 
             if (filtered.isEmpty) {
-              return _buildEmptyState(context);
+              return _buildEmptyState(context, seekerType);
             }
 
             return ListView.separated(
@@ -1320,8 +1303,8 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
                 return _buildJobCard(context, job, isApplied, seekerType);
               },
             );
-          },
-        ),
+          }(),
+        ],
       ],
     );
   }
@@ -1436,7 +1419,13 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
                 spacing: 6,
                 runSpacing: 4,
                 children: job.reasons
-                    .where((r) => !r.contains('Students') || seekerType == 'student' || seekerType == 'part_time')
+                    .where((r) {
+                      if (r.contains('Students')) {
+                        return (seekerType == 'student' || seekerType == 'part_time') &&
+                            (SupabaseSeekerHomeRepository.studentCategorySlugs.contains(job.categorySlug) || job.isStudentFriendly);
+                      }
+                      return true;
+                    })
                     .take(3)
                     .map((r) {
                   return Container(
@@ -1499,10 +1488,17 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
     );
   }
 
-  Widget _buildEmptyState(BuildContext context) {
+  Widget _buildEmptyState(BuildContext context, String seekerType) {
     final l10n = AppLocalizations.of(context);
+    final emptyTitle = seekerType == 'student'
+        ? 'No student jobs near you yet'
+        : seekerType == 'part_time'
+            ? 'No part-time gigs near you yet'
+            : (l10n?.noJobsNearYou ?? 'No jobs near you yet');
+
     return Container(
-      padding: const EdgeInsets.all(24),
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -1513,7 +1509,7 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
           const Icon(Icons.work_off_outlined, color: AppColors.textMuted, size: 48),
           const SizedBox(height: 12),
           Text(
-            l10n?.noJobsNearYou ?? 'No jobs near you yet',
+            emptyTitle,
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark),
           ),
           const SizedBox(height: 6),

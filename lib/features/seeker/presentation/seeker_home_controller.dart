@@ -7,6 +7,8 @@ import 'package:udyogasethu/features/privacy/data/consent_repository.dart';
 import 'package:udyogasethu/features/privacy/domain/consent_purpose.dart';
 import 'package:udyogasethu/features/seeker/data/seeker_home_repository.dart';
 import 'package:udyogasethu/features/seeker/domain/job_recommendation.dart';
+import 'package:udyogasethu/features/seeker/domain/seeker_profile_draft.dart';
+import 'package:udyogasethu/features/seeker/presentation/seeker_wizard_controller.dart';
 
 class SeekerLocationState {
   final String displayName;
@@ -226,11 +228,34 @@ final seekerAdBannerProvider = FutureProvider<SponsoredAdBanner?>((ref) async {
   return repo.fetchSponsoredBanner(targetRole: 'seeker');
 });
 
+final seekerHomeProfileProvider = FutureProvider<SeekerProfileDraft>((ref) async {
+  final repo = ref.watch(seekerProfileRepositoryProvider);
+  String? userId;
+  bool isSupabaseInitialized = true;
+  try {
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user != null && user.id.isNotEmpty) userId = user.id;
+  } catch (_) {
+    isSupabaseInitialized = false;
+  }
+  if (isSupabaseInitialized && userId == null) {
+    return const SeekerProfileDraft(userId: '');
+  }
+  final targetId = userId ?? 'test-user-id';
+  return repo.loadDraft(targetId);
+});
+
+final seekerSkillsListProvider = FutureProvider<List<SkillItem>>((ref) async {
+  final repo = ref.watch(seekerProfileRepositoryProvider);
+  return repo.fetchSkills();
+});
+
 final seekerRecommendedJobsProvider =
     FutureProvider<List<JobRecommendation>>((ref) async {
   final repo = ref.watch(seekerHomeRepositoryProvider);
   final location = ref.watch(seekerLocationProvider);
   final radius = ref.watch(seekerSearchRadiusProvider);
+  final profileAsync = ref.watch(seekerHomeProfileProvider);
 
   String? uid;
   try {
@@ -238,9 +263,11 @@ final seekerRecommendedJobsProvider =
   } catch (_) {}
 
   final targetUid = uid ?? '00000000-0000-0000-0000-000000000000';
+  final seekerType = profileAsync.value?.seekerType ?? 'informal';
 
   return repo.fetchRecommendations(
     workerId: targetUid,
+    seekerType: seekerType,
     lat: location.lat,
     lng: location.lng,
     radiusM: radius,

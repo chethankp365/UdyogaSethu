@@ -263,7 +263,7 @@ void main() {
       expect(find.text('🎓 Students Priority'), findsOneWidget);
 
       // Empty jobs state appears
-      expect(find.text('No jobs near you yet'), findsOneWidget);
+      expect(find.text('No student jobs near you yet'), findsOneWidget);
     });
 
     testWidgets('Informal seeker does NOT see Students Priority badge in Recommendations Header', (tester) async {

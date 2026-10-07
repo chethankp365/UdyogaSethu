@@ -1,26 +1,19 @@
 -- supabase/dev/remove_sample_jobs.sql
--- Rollback script for sample jobs seeded by sample_jobs.sql.
+-- Deletes only the [TEST] rows created by sample_jobs.sql.
+-- Safe to run repeatedly.
+
+DELETE FROM public.job_applications
+WHERE job_id IN (
+  SELECT id FROM public.jobs WHERE title LIKE '[TEST]%'
+);
 
 DELETE FROM public.jobs
-WHERE id IN (
-  -- 10 Student & Part-time jobs
-  '66666666-6666-4666-8666-666666666601',
-  '66666666-6666-4666-8666-666666666602',
-  '66666666-6666-4666-8666-666666666603',
-  '66666666-6666-4666-8666-666666666604',
-  '66666666-6666-4666-8666-666666666605',
-  '66666666-6666-4666-8666-666666666606',
-  '66666666-6666-4666-8666-666666666607',
-  '66666666-6666-4666-8666-666666666608',
-  '66666666-6666-4666-8666-666666666609',
-  '66666666-6666-4666-8666-666666666610',
-  -- 8 Informal trade jobs
-  '55555555-5555-4555-8555-555555555501',
-  '55555555-5555-4555-8555-555555555502',
-  '55555555-5555-4555-8555-555555555503',
-  '55555555-5555-4555-8555-555555555504',
-  '55555555-5555-4555-8555-555555555505',
-  '55555555-5555-4555-8555-555555555506',
-  '55555555-5555-4555-8555-555555555507',
-  '55555555-5555-4555-8555-555555555508'
-);
+WHERE title LIKE '[TEST]%';
+
+DELETE FROM public.ad_banners
+WHERE title LIKE '[TEST]%';
+
+-- Verification query: confirm zero [TEST] rows remain
+SELECT 
+  (SELECT COUNT(*) FROM public.jobs WHERE title LIKE '[TEST]%') AS remaining_test_jobs,
+  (SELECT COUNT(*) FROM public.ad_banners WHERE title LIKE '[TEST]%') AS remaining_test_banners;

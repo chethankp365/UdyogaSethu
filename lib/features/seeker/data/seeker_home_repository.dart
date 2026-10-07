@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/errors/app_exception.dart';
@@ -6,6 +7,7 @@ import 'package:udyogasethu/features/seeker/domain/job_recommendation.dart';
 abstract class SeekerHomeRepository {
   Future<List<JobRecommendation>> fetchRecommendations({
     required String workerId,
+    required String seekerType,
     double? lat,
     double? lng,
     double radiusM = 50000,
@@ -24,9 +26,33 @@ class SupabaseSeekerHomeRepository implements SeekerHomeRepository {
 
   SupabaseSeekerHomeRepository(this._supabase);
 
+  static const Set<String> studentCategorySlugs = {
+    'content-writing',
+    'design-data-work',
+    'tutoring-academics',
+    'campus-brand-promotion',
+    'retail-food-service',
+    'delivery-gig-work',
+  };
+
+  static const Set<String> tradeCategorySlugs = {
+    'electrician',
+    'plumber',
+    'carpenter',
+    'mason',
+    'construction',
+    'painting',
+    'loader',
+    'cleaner',
+    'driver',
+    'domestic_help',
+    'agri_labour',
+  };
+
   @override
   Future<List<JobRecommendation>> fetchRecommendations({
     required String workerId,
+    required String seekerType,
     double? lat,
     double? lng,
     double radiusM = 50000,
@@ -44,12 +70,38 @@ class SupabaseSeekerHomeRepository implements SeekerHomeRepository {
         },
       );
 
+      final List<JobRecommendation> rawList = [];
       if (response is List) {
-        return response
-            .map((item) => JobRecommendation.fromJson(Map<String, dynamic>.from(item as Map)))
-            .toList();
+        for (final item in response) {
+          if (item is Map) {
+            rawList.add(JobRecommendation.fromJson(Map<String, dynamic>.from(item)));
+          }
+        }
       }
-      return [];
+
+      final isStudentOrPartTime = seekerType == 'student' || seekerType == 'part_time';
+
+      // Strict client-side safety filter matching D-AUDIENCE
+      // Zero tolerance: trade jobs NEVER show to students; student gigs NEVER show to informal
+      final filteredList = rawList.where((job) {
+        if (isStudentOrPartTime) {
+          if (tradeCategorySlugs.contains(job.categorySlug)) return false;
+          return studentCategorySlugs.contains(job.categorySlug) || job.isStudentFriendly;
+        } else {
+          if (studentCategorySlugs.contains(job.categorySlug)) return false;
+          return true;
+        }
+      }).toList();
+
+      if (kDebugMode) {
+        debugPrint('[DEBUG SeekerFeed] RPC called: recommended_jobs(workerId: $workerId, lat: $lat, lng: $lng, radiusM: $radiusM)');
+        debugPrint('[DEBUG SeekerFeed] Seeker type: $seekerType');
+        debugPrint('[DEBUG SeekerFeed] Target audience filter: ${isStudentOrPartTime ? "[student, part_time]" : "[informal]"}');
+        debugPrint('[DEBUG SeekerFeed] Jobs returned before filter: ${rawList.length}');
+        debugPrint('[DEBUG SeekerFeed] Jobs returned after filter: ${filteredList.length}');
+      }
+
+      return filteredList;
     } catch (e, stack) {
       AppLogger.e('Failed to fetch recommended_jobs: $e', e, stack);
       rethrow;
@@ -99,15 +151,17 @@ class SupabaseSeekerHomeRepository implements SeekerHomeRepository {
   @override
   Future<bool> applyToJob({required String jobId, required String workerId}) async {
     try {
-      await _supabase.from('job_applications').upsert({
-        'job_id': jobId,
-        'worker_id': workerId,
-        'status': 'applied',
-      }, onConflict: 'job_id,worker_id');
-      return true;
+      final response = await _supabase.rpc(
+        'apply_to_job',
+        params: {'p_job_id': jobId},
+      );
+      return response != null;
+    } on PostgrestException catch (e, stack) {
+      AppLogger.e('RPC apply_to_job error: ${e.message} (code: ${e.code})', e, stack);
+      rethrow;
     } catch (e, stack) {
       AppLogger.e('Failed to apply to job $jobId: $e', e, stack);
-      return false;
+      rethrow;
     }
   }
 }
