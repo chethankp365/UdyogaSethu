@@ -1259,4 +1259,142 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get refreshConsentsTooltip => 'நிலையைப் புதுப்பிக்கவும்';
+
+  @override
+  String get tabOverview => 'மேலோட்டம்';
+
+  @override
+  String get tabWorkShowcase => 'வேலை கண்காட்சி';
+
+  @override
+  String get tabSafetyStatus => 'பாதுகாப்பு நிலை';
+
+  @override
+  String get verifiedJobsStat => 'சரிபார்க்கப்பட்ட வேலைகள்';
+
+  @override
+  String get ratingStat => 'மதிப்பீடு';
+
+  @override
+  String get totalEarningsStat => 'மொத்த வருமானம்';
+
+  @override
+  String categoryPrefix(Object category) {
+    return 'பிரிவு: $category';
+  }
+
+  @override
+  String get roleCredentialsTitle => 'பணி சான்றுகள் & பிரிவு பேட்ஜ்கள்';
+
+  @override
+  String get changeCategoryBtn => 'பிரிவை மாற்றுக';
+
+  @override
+  String get changeCategoryTitle => 'தொழிலாளி பிரிவை மாற்றுக';
+
+  @override
+  String get changeCategorySubtitle =>
+      'வேலைகள் மற்றும் சரிபார்ப்பை தனிப்பயனாக்க உங்கள் வேலை வகையைத் தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get categoryInformalTitle => 'முறைசாரா / திறமையான தொழிலாளி';
+
+  @override
+  String get categoryInformalDesc =>
+      'கைவினைத் தொழில்கள், வீட்டுச் சேவைகள் மற்றும் விவசாயப் பணிகள்';
+
+  @override
+  String get categoryStudentTitle => 'மாணவர் கிக் தொழிலாளி';
+
+  @override
+  String get categoryStudentDesc =>
+      'கேம்பஸ் கிக்ஸ், டியூஷன், வடிவமைப்பு & ஆன்லைன் பணிகள்';
+
+  @override
+  String get categoryPartTimeTitle => 'பகுதி நேரத் தொழிலாளி';
+
+  @override
+  String get categoryPartTimeDesc =>
+      'சில்லறை வணிகம், உணவக சேவை, நெகிழ்வான ஷிப்டுகள்';
+
+  @override
+  String get mySkillsTitle => 'எனது திறன்கள்';
+
+  @override
+  String get addSkillBtn => '+ திறன் சேர்';
+
+  @override
+  String get addSkillDialogTitle => 'ஒரு திறனைத் தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get addSkillDialogSubtitle =>
+      'உங்கள் சுயவிவரத்திற்குப் பொருந்தும் திறன்களைத் தேர்வுசெய்க';
+
+  @override
+  String get languageAccessibilityTitle => 'மொழி & அணுகல்தன்மை';
+
+  @override
+  String get verificationStatusTitle => 'சரிபார்ப்பு நிலை';
+
+  @override
+  String get accountAndSafetyTitle => 'கணக்கு & பாதுகாப்பு';
+
+  @override
+  String get emptyShowcaseTitle =>
+      'நீங்கள் முடித்த வேலைகள், புகைப்படங்கள் மற்றும் மதிப்பீடுகள் இங்கே தோன்றும்';
+
+  @override
+  String get emptyShowcaseSubtitle =>
+      'உத்யோகசேது மூலம் வேலைகளை முடித்ததும், சரிபார்க்கப்பட்ட மதிப்புரைகள் மற்றும் வருவாய் இங்கே காட்சிப்படுத்தப்படும்.';
+
+  @override
+  String get browseJobsAction => 'வேலைகளை உலாவுக';
+
+  @override
+  String get safetyLifecycleTitle => 'பாதுகாப்பு ஆன்போர்டிங் & பேட்ஜ்கள்';
+
+  @override
+  String get notVerifiedYet => 'இன்னும் சரிபார்க்கப்படவில்லை';
+
+  @override
+  String get verifiedWorkerBadge => 'உத்யோகசேது சரிபார்க்கப்பட்டது ✓';
+
+  @override
+  String get dlVerified => 'ஓட்டுநர் உரிமம் சரிபார்க்கப்பட்டது ✓';
+
+  @override
+  String get dlPending => 'ஓட்டுநர் உரிமத்தைச் சேர்க்கவும்';
+
+  @override
+  String get studentBadgeVerified => 'மாணவர் நிலை சரிபார்க்கப்பட்டது ✓';
+
+  @override
+  String get studentBadgePending => 'மாணவர் நிலையைச் சரிபார்க்கவும்';
+
+  @override
+  String get bankUpiVerified => 'வங்கி / யுபிஐ இணைக்கப்பட்டுள்ளது ✓';
+
+  @override
+  String get bankUpiPending => 'வங்கி / யுபிஐ இணைக்கவும்';
+
+  @override
+  String get bgCheckVerified => 'பின்னணி சரிபார்ப்பு முடிந்தது ✓';
+
+  @override
+  String get bgCheckPending => 'பின்னணி சரிபார்ப்பு நிலுவையில் உள்ளது';
+
+  @override
+  String get aadhaarVerified => 'ஆதார் இ-கேஒய்சி சரிபார்க்கப்பட்டது ✓';
+
+  @override
+  String get faceLivenessVerified => 'முக பயோமெட்ரிக் சரிபார்க்கப்பட்டது ✓';
+
+  @override
+  String get safetyTrainingVerified =>
+      '1-நாள் பாதுகாப்புப் பயிற்சி முடிந்தது ✓';
+
+  @override
+  String categoryUpdatedSnackbar(Object category) {
+    return 'பிரிவு $category என புதுப்பிக்கப்பட்டது! ஊட்டமும் திறன்களும் புதுப்பிக்கப்பட்டன.';
+  }
 }

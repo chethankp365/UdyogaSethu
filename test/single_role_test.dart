@@ -111,13 +111,11 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expect(find.text('Seeker Home'), findsOneWidget);
-      expect(find.textContaining('Welcome back, Chethan Kumar!'), findsOneWidget);
-      expect(find.text('Safety Onboarding & Verified Badge'), findsOneWidget);
-      expect(find.text('Informal Seeker'), findsOneWidget);
-      expect(find.text('₹650 / day'), findsOneWidget);
-      expect(find.text('Find Jobs'), findsOneWidget);
-      expect(find.text('Complete Profile'), findsOneWidget);
+      expect(find.textContaining('Chethan Kumar'), findsOneWidget);
+      expect(find.text('Nearby Jobs'), findsOneWidget);
+      expect(find.text('SOS'), findsOneWidget);
+      expect(find.text("Today's Goal"), findsOneWidget);
+      expect(find.text('Wallet Balance'), findsOneWidget);
     });
   });
 }

@@ -2347,6 +2347,258 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Refresh Status'**
   String get refreshConsentsTooltip;
+
+  /// No description provided for @tabOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get tabOverview;
+
+  /// No description provided for @tabWorkShowcase.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Showcase'**
+  String get tabWorkShowcase;
+
+  /// No description provided for @tabSafetyStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Safety Status'**
+  String get tabSafetyStatus;
+
+  /// No description provided for @verifiedJobsStat.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified Jobs'**
+  String get verifiedJobsStat;
+
+  /// No description provided for @ratingStat.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get ratingStat;
+
+  /// No description provided for @totalEarningsStat.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Earnings'**
+  String get totalEarningsStat;
+
+  /// No description provided for @categoryPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Category: {category}'**
+  String categoryPrefix(Object category);
+
+  /// No description provided for @roleCredentialsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'ROLE CREDENTIALS & CATEGORY BADGES'**
+  String get roleCredentialsTitle;
+
+  /// No description provided for @changeCategoryBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Category'**
+  String get changeCategoryBtn;
+
+  /// No description provided for @changeCategoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Worker Category'**
+  String get changeCategoryTitle;
+
+  /// No description provided for @changeCategorySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select your work type to personalize jobs and verification'**
+  String get changeCategorySubtitle;
+
+  /// No description provided for @categoryInformalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Informal / Skilled Worker'**
+  String get categoryInformalTitle;
+
+  /// No description provided for @categoryInformalDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Trades, craftsmanship, home services & agricultural work'**
+  String get categoryInformalDesc;
+
+  /// No description provided for @categoryStudentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Student Gig Worker'**
+  String get categoryStudentTitle;
+
+  /// No description provided for @categoryStudentDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Campus gigs, tutoring, creative design & online tasks'**
+  String get categoryStudentDesc;
+
+  /// No description provided for @categoryPartTimeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Part-Time Worker'**
+  String get categoryPartTimeTitle;
+
+  /// No description provided for @categoryPartTimeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Retail, restaurant service, flexible evening & weekend shifts'**
+  String get categoryPartTimeDesc;
+
+  /// No description provided for @mySkillsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'MY SKILLS'**
+  String get mySkillsTitle;
+
+  /// No description provided for @addSkillBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'+ Add Skill'**
+  String get addSkillBtn;
+
+  /// No description provided for @addSkillDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a Skill'**
+  String get addSkillDialogTitle;
+
+  /// No description provided for @addSkillDialogSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose skills matching your work profile'**
+  String get addSkillDialogSubtitle;
+
+  /// No description provided for @languageAccessibilityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'LANGUAGE & ACCESSIBILITY'**
+  String get languageAccessibilityTitle;
+
+  /// No description provided for @verificationStatusTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'VERIFICATION STATUS'**
+  String get verificationStatusTitle;
+
+  /// No description provided for @accountAndSafetyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Account & Safety'**
+  String get accountAndSafetyTitle;
+
+  /// No description provided for @emptyShowcaseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your completed jobs, photos and ratings will appear here'**
+  String get emptyShowcaseTitle;
+
+  /// No description provided for @emptyShowcaseSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Once you complete jobs through UdyogaSethu, verified employer reviews, photos, and earnings will be showcased here.'**
+  String get emptyShowcaseSubtitle;
+
+  /// No description provided for @browseJobsAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse Jobs'**
+  String get browseJobsAction;
+
+  /// No description provided for @safetyLifecycleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Safety Onboarding & Badges'**
+  String get safetyLifecycleTitle;
+
+  /// No description provided for @notVerifiedYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not verified yet'**
+  String get notVerifiedYet;
+
+  /// No description provided for @verifiedWorkerBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'UDYOGASETHU VERIFIED ✓'**
+  String get verifiedWorkerBadge;
+
+  /// No description provided for @dlVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Driving Licence Verified ✓'**
+  String get dlVerified;
+
+  /// No description provided for @dlPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Driving Licence'**
+  String get dlPending;
+
+  /// No description provided for @studentBadgeVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Student Status Verified ✓'**
+  String get studentBadgeVerified;
+
+  /// No description provided for @studentBadgePending.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Student Status'**
+  String get studentBadgePending;
+
+  /// No description provided for @bankUpiVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank / UPI Linked ✓'**
+  String get bankUpiVerified;
+
+  /// No description provided for @bankUpiPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Link Bank / UPI'**
+  String get bankUpiPending;
+
+  /// No description provided for @bgCheckVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Background Check Clear ✓'**
+  String get bgCheckVerified;
+
+  /// No description provided for @bgCheckPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Background Check'**
+  String get bgCheckPending;
+
+  /// No description provided for @aadhaarVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Aadhaar eKYC Verified ✓'**
+  String get aadhaarVerified;
+
+  /// No description provided for @faceLivenessVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Face Liveness Verified ✓'**
+  String get faceLivenessVerified;
+
+  /// No description provided for @safetyTrainingVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'1-Day Safety Training Completed ✓'**
+  String get safetyTrainingVerified;
+
+  /// No description provided for @categoryUpdatedSnackbar.
+  ///
+  /// In en, this message translates to:
+  /// **'Category updated to {category}! Feed and skills refreshed.'**
+  String categoryUpdatedSnackbar(Object category);
 }
 
 class _AppLocalizationsDelegate

@@ -1256,4 +1256,141 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get refreshConsentsTooltip => 'స్థితిని రిఫ్రెష్ చేయండి';
+
+  @override
+  String get tabOverview => 'అవలోకనం';
+
+  @override
+  String get tabWorkShowcase => 'పని ప్రదర్శన';
+
+  @override
+  String get tabSafetyStatus => 'భద్రతా స్థితి';
+
+  @override
+  String get verifiedJobsStat => 'ధృవీకరించిన ఉద్యోగాలు';
+
+  @override
+  String get ratingStat => 'రేటింగ్';
+
+  @override
+  String get totalEarningsStat => 'మొత్తం సంపాదన';
+
+  @override
+  String categoryPrefix(Object category) {
+    return 'వర్గం: $category';
+  }
+
+  @override
+  String get roleCredentialsTitle => 'పాత్ర ఆధారాలు & కేటగిరీ బ్యాడ్జ్‌లు';
+
+  @override
+  String get changeCategoryBtn => 'వర్గాన్ని మార్చండి';
+
+  @override
+  String get changeCategoryTitle => 'కార్మికుల వర్గాన్ని మార్చండి';
+
+  @override
+  String get changeCategorySubtitle =>
+      'ఉద్యోగాలు మరియు ధృవీకరణను వ్యక్తిగతీకరించడానికి మీ పని రకాన్ని ఎంచుకోండి';
+
+  @override
+  String get categoryInformalTitle => 'అనధికారిక / నైపుణ్యం కలిగిన కార్మికుడు';
+
+  @override
+  String get categoryInformalDesc =>
+      'వృత్తులు, చేతిపనులు, గృహ సేవలు & వ్యవసాయ పనులు';
+
+  @override
+  String get categoryStudentTitle => 'విద్యార్థి గిగ్ కార్మికుడు';
+
+  @override
+  String get categoryStudentDesc =>
+      'క్యాంపస్ గిగ్స్, ట్యూటరింగ్, డిజైన్ & ఆన్‌లైన్ పనులు';
+
+  @override
+  String get categoryPartTimeTitle => 'పార్ట్-టైమ్ కార్మికుడు';
+
+  @override
+  String get categoryPartTimeDesc =>
+      'రిటైల్, రెస్టారెంట్ సేవ, సౌకర్యవంతమైన షిఫ్ట్‌లు';
+
+  @override
+  String get mySkillsTitle => 'నా నైపుణ్యాలు';
+
+  @override
+  String get addSkillBtn => '+ నైపుణ్యాన్ని జోడించండి';
+
+  @override
+  String get addSkillDialogTitle => 'నైపుణ్యాన్ని ఎంచుకోండి';
+
+  @override
+  String get addSkillDialogSubtitle =>
+      'మీ ప్రొఫైల్‌కు సరిపోయే నైపుణ్యాలను ఎంచుకోండి';
+
+  @override
+  String get languageAccessibilityTitle => 'భాష & ప్రాప్యత';
+
+  @override
+  String get verificationStatusTitle => 'ధృవీకరణ స్థితి';
+
+  @override
+  String get accountAndSafetyTitle => 'ఖాతా & భద్రత';
+
+  @override
+  String get emptyShowcaseTitle =>
+      'మీరు పూర్తి చేసిన పనులు, ఫోటోలు మరియు రేటింగ్‌లు ఇక్కడ కనిపిస్తాయి';
+
+  @override
+  String get emptyShowcaseSubtitle =>
+      'ఉద్యోగసేతు ద్వారా పనులను పూర్తి చేసిన తర్వాత, ధృవీకరించిన సమీక్షలు మరియు సంపాదన ఇక్కడ ప్రదర్శించబడతాయి.';
+
+  @override
+  String get browseJobsAction => 'ఉద్యోగాలను బ్రౌజ్ చేయండి';
+
+  @override
+  String get safetyLifecycleTitle => 'భద్రతా ఆన్‌బోర్డింగ్ & బ్యాడ్జ్‌లు';
+
+  @override
+  String get notVerifiedYet => 'ఇంకా ధృవీకరించబడలేదు';
+
+  @override
+  String get verifiedWorkerBadge => 'ఉద్యోగసేతు ధృవీకరించబడింది ✓';
+
+  @override
+  String get dlVerified => 'డ్రైవింగ్ లైసెన్స్ ధృవీకరించబడింది ✓';
+
+  @override
+  String get dlPending => 'డ్రైవింగ్ లైసెన్స్ జోడించండి';
+
+  @override
+  String get studentBadgeVerified => 'విద్యార్థి స్థితి ధృవీకరించబడింది ✓';
+
+  @override
+  String get studentBadgePending => 'విద్యార్థి స్థితిని ధృవీకరించండి';
+
+  @override
+  String get bankUpiVerified => 'బ్యాంక్ / యుపిఐ లింక్ చేయబడింది ✓';
+
+  @override
+  String get bankUpiPending => 'బ్యాంక్ / యుపిఐ లింక్ చేయండి';
+
+  @override
+  String get bgCheckVerified => 'బ్యాక్‌గ్రౌండ్ చెక్ పూర్తయింది ✓';
+
+  @override
+  String get bgCheckPending => 'బ్యాక్‌గ్రౌండ్ చెక్ పెండింగ్‌లో ఉంది';
+
+  @override
+  String get aadhaarVerified => 'ఆధార్ ఇ-కేవైసి ధృవీకరించబడింది ✓';
+
+  @override
+  String get faceLivenessVerified => 'ముఖ బయోమెట్రిక్ ధృవీకరించబడింది ✓';
+
+  @override
+  String get safetyTrainingVerified => '1-రోజు భద్రతా శిక్షణ పూర్తయింది ✓';
+
+  @override
+  String categoryUpdatedSnackbar(Object category) {
+    return 'వర్గం $category కి నవీకరించబడింది! ఫీడ్ మరియు నైపుణ్యాలు రిఫ్రెష్ చేయబడ్డాయి.';
+  }
 }

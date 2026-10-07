@@ -1258,4 +1258,143 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get refreshConsentsTooltip => 'ಸ್ಥಿತಿಯನ್ನು ನವೀಕರಿಸಿ';
+
+  @override
+  String get tabOverview => 'ಅವಲೋಕನ';
+
+  @override
+  String get tabWorkShowcase => 'ಕೆಲಸದ ಪ್ರದರ್ಶನ';
+
+  @override
+  String get tabSafetyStatus => 'ಸುರಕ್ಷತಾ ಸ್ಥಿತಿ';
+
+  @override
+  String get verifiedJobsStat => 'ಪರಿಶೀಲಿಸಿದ ಕೆಲಸಗಳು';
+
+  @override
+  String get ratingStat => 'ರೇಟಿಂಗ್';
+
+  @override
+  String get totalEarningsStat => 'ಒಟ್ಟು ಗಳಿಕೆ';
+
+  @override
+  String categoryPrefix(Object category) {
+    return 'ವರ್ಗ: $category';
+  }
+
+  @override
+  String get roleCredentialsTitle =>
+      'ಪಾತ್ರದ ರುಜುವಾತುಗಳು ಮತ್ತು ವರ್ಗದ ಬ್ಯಾಡ್ಜ್‌ಗಳು';
+
+  @override
+  String get changeCategoryBtn => 'ವರ್ಗವನ್ನು ಬದಲಾಯಿಸಿ';
+
+  @override
+  String get changeCategoryTitle => 'ಕೆಲಸಗಾರರ ವರ್ಗ ಬದಲಾಯಿಸಿ';
+
+  @override
+  String get changeCategorySubtitle =>
+      'ಉದ್ಯೋಗಗಳು ಮತ್ತು ಪರಿಶೀಲನೆಯನ್ನು ಕಸ್ಟಮೈಸ್ ಮಾಡಲು ನಿಮ್ಮ ಕೆಲಸದ ಪ್ರಕಾರವನ್ನು ಆಯ್ಕೆಮಾಡಿ';
+
+  @override
+  String get categoryInformalTitle => 'ಅನೌಪಚಾರಿಕ / ನುರಿತ ಕೆಲಸಗಾರ';
+
+  @override
+  String get categoryInformalDesc =>
+      'ವೃತ್ತಿಗಳು, ಕರಕುಶಲತೆ, ಮನೆ ಸೇವೆಗಳು ಮತ್ತು ಕೃಷಿ ಕೆಲಸ';
+
+  @override
+  String get categoryStudentTitle => 'ವಿದ್ಯಾರ್ಥಿ ಗಿಗ್ ಕೆಲಸಗಾರ';
+
+  @override
+  String get categoryStudentDesc =>
+      'ಕ್ಯಾಂಪಸ್ ಕೆಲಸಗಳು, ಬೋಧನೆ, ಸೃಜನಶೀಲ ವಿನ್ಯಾಸ ಮತ್ತು ಆನ್‌ಲೈನ್ ಕಾರ್ಯಗಳು';
+
+  @override
+  String get categoryPartTimeTitle => 'ಅರೆಕಾಲಿಕ ಕೆಲಸಗಾರ';
+
+  @override
+  String get categoryPartTimeDesc =>
+      'ಚಿಲ್ಲರೆ ವ್ಯಾಪಾರ, ರೆಸ್ಟೋರೆಂಟ್ ಸೇವೆ, ಹೊಂದಿಕೊಳ್ಳುವ ಸಂಜೆ ಮತ್ತು ವಾರಾಂತ್ಯದ ಪಾಳಿಗಳು';
+
+  @override
+  String get mySkillsTitle => 'ನನ್ನ ಕೌಶಲ್ಯಗಳು';
+
+  @override
+  String get addSkillBtn => '+ ಕೌಶಲ್ಯ ಸೇರಿಸಿ';
+
+  @override
+  String get addSkillDialogTitle => 'ಕೌಶಲ್ಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ';
+
+  @override
+  String get addSkillDialogSubtitle =>
+      'ನಿಮ್ಮ ಕೆಲಸದ ಪ್ರೊಫೈಲ್‌ಗೆ ಹೊಂದಿಕೆಯಾಗುವ ಕೌಶಲ್ಯಗಳನ್ನು ಆರಿಸಿ';
+
+  @override
+  String get languageAccessibilityTitle => 'ಭಾಷೆ ಮತ್ತು ಪ್ರವೇಶಿಸುವಿಕೆ';
+
+  @override
+  String get verificationStatusTitle => 'ಪರಿಶೀಲನೆ ಸ್ಥಿತಿ';
+
+  @override
+  String get accountAndSafetyTitle => 'ಖಾತೆ ಮತ್ತು ಸುರಕ್ಷತೆ';
+
+  @override
+  String get emptyShowcaseTitle =>
+      'ನಿಮ್ಮ ಪೂರ್ಣಗೊಂಡ ಕೆಲಸಗಳು, ಫೋಟೋಗಳು ಮತ್ತು ರೇಟಿಂಗ್‌ಗಳು ಇಲ್ಲಿ ಕಾಣಿಸಿಕೊಳ್ಳುತ್ತವೆ';
+
+  @override
+  String get emptyShowcaseSubtitle =>
+      'ನೀವು ಉದ್ಯೋಗಸೇತು ಮೂಲಕ ಕೆಲಸಗಳನ್ನು ಪೂರ್ಣಗೊಳಿಸಿದ ನಂತರ, ಪರಿಶೀಲಿಸಿದ ಉದ್ಯೋಗದಾತರ ವಿಮರ್ಶೆಗಳು, ಫೋಟೋಗಳು ಮತ್ತು ಗಳಿಕೆಗಳನ್ನು ಇಲ್ಲಿ ಪ್ರದರ್ಶಿಸಲಾಗುತ್ತದೆ.';
+
+  @override
+  String get browseJobsAction => 'ಉದ್ಯೋಗಗಳನ್ನು ಬ್ರೌಸ್ ಮಾಡಿ';
+
+  @override
+  String get safetyLifecycleTitle =>
+      'ಸುರಕ್ಷತಾ ಆನ್‌ಬೋರ್ಡಿಂಗ್ ಮತ್ತು ಬ್ಯಾಡ್ಜ್‌ಗಳು';
+
+  @override
+  String get notVerifiedYet => 'ಇನ್ನೂ ಪರಿಶೀಲಿಸಲಾಗಿಲ್ಲ';
+
+  @override
+  String get verifiedWorkerBadge => 'ಉದ್ಯೋಗಸೇತು ಪರಿಶೀಲಿತ ✓';
+
+  @override
+  String get dlVerified => 'ಚಾಲನಾ ಪರವಾನಗಿ ಪರಿಶೀಲಿಸಲಾಗಿದೆ ✓';
+
+  @override
+  String get dlPending => 'ಚಾಲನಾ ಪರವಾನಗಿ ಸೇರಿಸಿ';
+
+  @override
+  String get studentBadgeVerified => 'ವಿದ್ಯಾರ್ಥಿ ಸ್ಥಿತಿ ಪರಿಶೀಲಿಸಲಾಗಿದೆ ✓';
+
+  @override
+  String get studentBadgePending => 'ವಿದ್ಯಾರ್ಥಿ ಸ್ಥಿತಿ ಪರಿಶೀಲಿಸಿ';
+
+  @override
+  String get bankUpiVerified => 'ಬ್ಯಾಂಕ್ / ಯುಪಿಐ ಲಿಂಕ್ ಆಗಿದೆ ✓';
+
+  @override
+  String get bankUpiPending => 'ಬ್ಯಾಂಕ್ / ಯುಪಿಐ ಲಿಂಕ್ ಮಾಡಿ';
+
+  @override
+  String get bgCheckVerified => 'ಹಿನ್ನೆಲೆ ಪರಿಶೀಲನೆ ಪೂರ್ಣಗೊಂಡಿದೆ ✓';
+
+  @override
+  String get bgCheckPending => 'ಹಿನ್ನೆಲೆ ಪರಿಶೀಲನೆ ಬಾಕಿ ಇದೆ';
+
+  @override
+  String get aadhaarVerified => 'ಆಧಾರ್ ಇ-ಕೆವೈಸಿ ಪರಿಶೀಲಿಸಲಾಗಿದೆ ✓';
+
+  @override
+  String get faceLivenessVerified => 'ಮುಖದ ಬಯೋಮೆಟ್ರಿಕ್ ಪರಿಶೀಲಿಸಲಾಗಿದೆ ✓';
+
+  @override
+  String get safetyTrainingVerified => '1-ದಿನದ ಸುರಕ್ಷತಾ ತರಬೇತಿ ಪೂರ್ಣಗೊಂಡಿದೆ ✓';
+
+  @override
+  String categoryUpdatedSnackbar(Object category) {
+    return 'ವರ್ಗವನ್ನು $category ಗೆ ನವೀಕರಿಸಲಾಗಿದೆ! ಫೀಡ್ ಮತ್ತು ಕೌಶಲ್ಯಗಳನ್ನು ರಿಫ್ರೆಶ್ ಮಾಡಲಾಗಿದೆ.';
+  }
 }

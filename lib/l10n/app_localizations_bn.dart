@@ -1247,4 +1247,141 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get refreshConsentsTooltip => 'স্ট্যাটাস রিফ্রেশ করুন';
+
+  @override
+  String get tabOverview => 'Overview';
+
+  @override
+  String get tabWorkShowcase => 'Work Showcase';
+
+  @override
+  String get tabSafetyStatus => 'Safety Status';
+
+  @override
+  String get verifiedJobsStat => 'Verified Jobs';
+
+  @override
+  String get ratingStat => 'Rating';
+
+  @override
+  String get totalEarningsStat => 'Total Earnings';
+
+  @override
+  String categoryPrefix(Object category) {
+    return 'Category: $category';
+  }
+
+  @override
+  String get roleCredentialsTitle => 'ROLE CREDENTIALS & CATEGORY BADGES';
+
+  @override
+  String get changeCategoryBtn => 'Change Category';
+
+  @override
+  String get changeCategoryTitle => 'Change Worker Category';
+
+  @override
+  String get changeCategorySubtitle =>
+      'Select your work type to personalize jobs and verification';
+
+  @override
+  String get categoryInformalTitle => 'Informal / Skilled Worker';
+
+  @override
+  String get categoryInformalDesc =>
+      'Trades, craftsmanship, home services & agricultural work';
+
+  @override
+  String get categoryStudentTitle => 'Student Gig Worker';
+
+  @override
+  String get categoryStudentDesc =>
+      'Campus gigs, tutoring, creative design & online tasks';
+
+  @override
+  String get categoryPartTimeTitle => 'Part-Time Worker';
+
+  @override
+  String get categoryPartTimeDesc =>
+      'Retail, restaurant service, flexible evening & weekend shifts';
+
+  @override
+  String get mySkillsTitle => 'MY SKILLS';
+
+  @override
+  String get addSkillBtn => '+ Add Skill';
+
+  @override
+  String get addSkillDialogTitle => 'Select a Skill';
+
+  @override
+  String get addSkillDialogSubtitle =>
+      'Choose skills matching your work profile';
+
+  @override
+  String get languageAccessibilityTitle => 'LANGUAGE & ACCESSIBILITY';
+
+  @override
+  String get verificationStatusTitle => 'VERIFICATION STATUS';
+
+  @override
+  String get accountAndSafetyTitle => 'Account & Safety';
+
+  @override
+  String get emptyShowcaseTitle =>
+      'Your completed jobs, photos and ratings will appear here';
+
+  @override
+  String get emptyShowcaseSubtitle =>
+      'Once you complete jobs through UdyogaSethu, verified employer reviews, photos, and earnings will be showcased here.';
+
+  @override
+  String get browseJobsAction => 'Browse Jobs';
+
+  @override
+  String get safetyLifecycleTitle => 'Safety Onboarding & Badges';
+
+  @override
+  String get notVerifiedYet => 'Not verified yet';
+
+  @override
+  String get verifiedWorkerBadge => 'UDYOGASETHU VERIFIED ✓';
+
+  @override
+  String get dlVerified => 'Driving Licence Verified ✓';
+
+  @override
+  String get dlPending => 'Add Driving Licence';
+
+  @override
+  String get studentBadgeVerified => 'Student Status Verified ✓';
+
+  @override
+  String get studentBadgePending => 'Verify Student Status';
+
+  @override
+  String get bankUpiVerified => 'Bank / UPI Linked ✓';
+
+  @override
+  String get bankUpiPending => 'Link Bank / UPI';
+
+  @override
+  String get bgCheckVerified => 'Background Check Clear ✓';
+
+  @override
+  String get bgCheckPending => 'Pending Background Check';
+
+  @override
+  String get aadhaarVerified => 'Aadhaar eKYC Verified ✓';
+
+  @override
+  String get faceLivenessVerified => 'Face Liveness Verified ✓';
+
+  @override
+  String get safetyTrainingVerified => '1-Day Safety Training Completed ✓';
+
+  @override
+  String categoryUpdatedSnackbar(Object category) {
+    return 'Category updated to $category! Feed and skills refreshed.';
+  }
 }

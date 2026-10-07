@@ -1245,4 +1245,139 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get refreshConsentsTooltip => 'स्थिति ताज़ा करें';
+
+  @override
+  String get tabOverview => 'अवलोकन';
+
+  @override
+  String get tabWorkShowcase => 'काम का प्रदर्शन';
+
+  @override
+  String get tabSafetyStatus => 'सुरक्षा स्थिति';
+
+  @override
+  String get verifiedJobsStat => 'सत्यापित काम';
+
+  @override
+  String get ratingStat => 'रेटिंग';
+
+  @override
+  String get totalEarningsStat => 'कुल कमाई';
+
+  @override
+  String categoryPrefix(Object category) {
+    return 'श्रेणी: $category';
+  }
+
+  @override
+  String get roleCredentialsTitle => 'भूमिका क्रेडेंशियल्स और श्रेणी बैज';
+
+  @override
+  String get changeCategoryBtn => 'श्रेणी बदलें';
+
+  @override
+  String get changeCategoryTitle => 'कार्यकर्ता श्रेणी बदलें';
+
+  @override
+  String get changeCategorySubtitle =>
+      'नौकरियों और सत्यापन को निजीकृत करने के लिए अपना कार्य प्रकार चुनें';
+
+  @override
+  String get categoryInformalTitle => 'अनौपचारिक / कुशल कार्यकर्ता';
+
+  @override
+  String get categoryInformalDesc => 'शिल्प कौशल, गृह सेवाएं और कृषि कार्य';
+
+  @override
+  String get categoryStudentTitle => 'छात्र गिग कार्यकर्ता';
+
+  @override
+  String get categoryStudentDesc =>
+      'कैंपस गिग्स, ट्यूशन, डिज़ाइन और ऑनलाइन कार्य';
+
+  @override
+  String get categoryPartTimeTitle => 'अंशकालिक कार्यकर्ता';
+
+  @override
+  String get categoryPartTimeDesc => 'रिटेल, रेस्टोरेंट सेवा और लचीली शिफ्ट';
+
+  @override
+  String get mySkillsTitle => 'मेरे कौशल';
+
+  @override
+  String get addSkillBtn => '+ कौशल जोड़ें';
+
+  @override
+  String get addSkillDialogTitle => 'एक कौशल चुनें';
+
+  @override
+  String get addSkillDialogSubtitle =>
+      'अपनी प्रोफ़ाइल से मेल खाने वाले कौशल चुनें';
+
+  @override
+  String get languageAccessibilityTitle => 'भाषा और पहुंच';
+
+  @override
+  String get verificationStatusTitle => 'सत्यापन स्थिति';
+
+  @override
+  String get accountAndSafetyTitle => 'खाता और सुरक्षा';
+
+  @override
+  String get emptyShowcaseTitle =>
+      'आपके पूरे किए गए काम, फ़ोटो और रेटिंग यहां दिखाई देंगे';
+
+  @override
+  String get emptyShowcaseSubtitle =>
+      'जब आप उद्योगसेतु के माध्यम से काम पूरा करेंगे, तो नियोक्ताओं की समीक्षाएं, फ़ोटो और कमाई यहां प्रदर्शित की जाएगी।';
+
+  @override
+  String get browseJobsAction => 'नौकरियां ब्राउज़ करें';
+
+  @override
+  String get safetyLifecycleTitle => 'सुरक्षा ऑनबोर्डिंग और बैज';
+
+  @override
+  String get notVerifiedYet => 'अभी सत्यापित नहीं है';
+
+  @override
+  String get verifiedWorkerBadge => 'उद्योगसेतु सत्यापित ✓';
+
+  @override
+  String get dlVerified => 'ड्राइविंग लाइसेंस सत्यापित ✓';
+
+  @override
+  String get dlPending => 'ड्राइविंग लाइसेंस जोड़ें';
+
+  @override
+  String get studentBadgeVerified => 'छात्र स्थिति सत्यापित ✓';
+
+  @override
+  String get studentBadgePending => 'छात्र स्थिति सत्यापित करें';
+
+  @override
+  String get bankUpiVerified => 'बैंक / यूपीआई लिंक है ✓';
+
+  @override
+  String get bankUpiPending => 'बैंक / यूपीआई लिंक करें';
+
+  @override
+  String get bgCheckVerified => 'बैकग्राउंड जांच पूरी ✓';
+
+  @override
+  String get bgCheckPending => 'बैकग्राउंड जांच लंबित';
+
+  @override
+  String get aadhaarVerified => 'आधार ई-केवाईसी सत्यापित ✓';
+
+  @override
+  String get faceLivenessVerified => 'चेहरा बायोमेट्रिक सत्यापित ✓';
+
+  @override
+  String get safetyTrainingVerified => '1-दिवसीय सुरक्षा प्रशिक्षण पूर्ण ✓';
+
+  @override
+  String categoryUpdatedSnackbar(Object category) {
+    return 'श्रेणी को $category में अपडेट किया गया! फ़ीड और कौशल ताज़ा किए गए।';
+  }
 }
