@@ -80,6 +80,13 @@ class ProviderJobsNotifier extends AsyncNotifier<List<ProviderJob>> {
     await refreshJobs();
     return res;
   }
+
+  Future<Map<String, dynamic>> updateJobStatus(String jobId, String status) async {
+    final repo = ref.read(providerJobsRepositoryProvider);
+    final res = await repo.updateJobStatus(jobId, status);
+    await refreshJobs();
+    return res;
+  }
 }
 
 final providerJobsNotifierProvider =

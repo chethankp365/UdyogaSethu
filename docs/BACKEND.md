@@ -197,3 +197,24 @@ BEGIN
      - Automatically transitions job status to `'filled'` if `slots_filled = slots_total`.
      - Creates/activates a `job_assignments` record with status `'assigned'` or `'accepted'`, setting `scheduled_start` and `scheduled_end`.
      - Inserts an in-app notification in `public.notifications` alerting the worker that they have been hired.
+
+### Migration `0390_provider_hub_worker_search.sql` (P4.5)
+Implemented backend RPCs for Customer Hub, Multi-Filter Worker Search, Worker Profile Details, Active Bookings, and Favourites:
+
+1. **`public.nearby_workers(...)`**:
+   - Comprehensive worker discovery RPC taking:
+     `p_lat`, `p_lng`, `p_radius_m` (default 10,000m), `p_seeker_type`, `p_category_id`, `p_language`, `p_availability`, `p_min_rate_paise`, `p_max_rate_paise`, `p_gender`, `p_min_rating`, `p_min_jobs_completed`, `p_verified_only`, `p_search_query`, `p_limit`, `p_offset`.
+   - Joins `worker_profiles`, `profiles`, computed worker ratings, completed job counts, language array, and skills array.
+   - Computes distance in meters from provider's coordinates.
+   - Enforces privacy: returns profile details with phone masked or nullified for discovery view.
+
+2. **`public.get_worker_profile_detail(...)`**:
+   - Returns full public profile for a single worker: bio, rating, jobs completed, experience, languages, skills, trust credentials/badges (Aadhaar face verified, police check, etc.), customer reviews with star ratings and comments, and whether the worker is marked favourite by the calling provider.
+
+3. **`public.get_provider_active_booking(p_provider_id UUID DEFAULT NULL)`**:
+   - Queries active assignments (`accepted`, `started`, `in_progress`) for jobs owned by the provider.
+   - Returns booking code, job title, role/category name, worker contact/avatar, scheduled start/end times, and escrow held amount.
+   - Provides mock fallback booking if no real active booking is found.
+
+4. **`public.toggle_user_favourite(p_target_id UUID, p_target_type TEXT DEFAULT 'worker')`**:
+   - Inserts or deletes favourite relationship in `public.user_favourites`.

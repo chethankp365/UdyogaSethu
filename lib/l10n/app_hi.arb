@@ -622,5 +622,95 @@
   "applicantHiredSuccess": "श्रमिक को सफलतापूर्वक नियुक्त किया गया!",
   "applicantShortlistedSuccess": "आवेदक को शॉर्टलिस्ट में ले जाया गया।",
   "applicantRejectedSuccess": "आवेदन अस्वीकार कर दिया गया।",
-  "applicantJobFullNotice": "इस नौकरी के सभी स्थान भर चुके हैं।"
+  "applicantJobFullNotice": "इस नौकरी के सभी स्थान भर चुके हैं।",
+  "hubTitle": "Customer Hub",
+  "hubVerifiedAccount": "Verified Account",
+  "hubTagline": "Farm-Fresh Goods and Verified On-Demand Workers",
+  "hubGreeting": "Hello, {name}! 👋",
+  "@hubGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "hubTabWorkers": "Workers & Services",
+  "hubTabProduce": "🌾 Farm Produce",
+  "hubTabSubscriptions": "Subscriptions",
+  "hubProduceComingSoon": "Farm-Direct Produce Marketplace",
+  "hubProduceComingSoonDesc": "Direct farm-fresh vegetables, organic produce, and pure dairy coming in Phase 6.",
+  "hubSubscriptionsComingSoon": "Farm Produce & Milk Subscriptions",
+  "hubSubscriptionsComingSoonDesc": "Daily milk deliveries and weekly organic vegetable baskets straight to your doorstep coming in Phase 6.",
+  "hubActionScanFarmQr": "Scan Farm QR",
+  "hubActionNoShowHelp": "No-Show Help",
+  "hubActionMilkBasket": "Milk / Basket",
+  "hubActionFarmerChat": "Farmer Chat",
+  "hubConfirmedBooking": "CONFIRMED BOOKING • {code}",
+  "@hubConfirmedBooking": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "hubWorkerNotArrived": "Worker Has Not Arrived",
+  "hubProtectedChat": "Protected Chat",
+  "hubVerifiedWorkersTitle": "VERIFIED ON-DEMAND LOCAL WORKERS",
+  "hub100AadhaarVerified": "100% Aadhaar Verified",
+  "hubBookWorker": "Book Worker",
+  "hubSearchWorkers": "Search Workers",
+  "hubSearchHint": "Search by skill, distance, language...",
+  "hubViewAllWorkers": "View All Workers",
+  "hubNoActiveBooking": "No Active Booking Right Now",
+  "hubNoActiveBookingDesc": "Book a verified worker or post a job to see active shift status here.",
+  "workerFilterTitle": "Filter Workers",
+  "workerFilterCategory": "Service Category",
+  "workerFilterAllCategories": "All Categories",
+  "workerFilterDistance": "Maximum Distance",
+  "workerFilterLanguage": "Language Spoken",
+  "workerFilterAllLanguages": "All Languages",
+  "workerFilterAvailability": "Availability",
+  "workerFilterAllAvailability": "All Statuses",
+  "workerFilterRateRange": "Daily Wage Range",
+  "workerFilterGender": "Gender Preference (Optional)",
+  "workerFilterAnyGender": "Any Gender",
+  "workerFilterMinRating": "Minimum Rating",
+  "workerFilterAnyRating": "Any Rating",
+  "workerFilterMinJobs": "Minimum Completed Jobs",
+  "workerFilterAnyJobs": "Any Experience",
+  "workerFilterVerifiedOnly": "Verified Workers Only",
+  "workerFilterApply": "Apply Filters",
+  "workerFilterReset": "Reset Filters",
+  "workerUnverifiedNotice": "Unverified Worker",
+  "workerProfileTitle": "Worker Profile",
+  "workerProfileBio": "About Worker",
+  "workerProfileSkills": "Skills & Specializations",
+  "workerProfileExperience": "Work Experience",
+  "workerProfileRates": "Standard Wage Rates",
+  "workerProfileLanguages": "Languages Spoken",
+  "workerProfileServiceRadius": "Service Radius",
+  "workerProfileTrustBadges": "Trust & Verification Badges",
+  "workerProfileReviews": "Employer Reviews & Ratings",
+  "workerProfileRecentlyViewed": "Recently Viewed",
+  "workerProfileFavourite": "Favourite",
+  "workerProfileFavouriteAdded": "Worker added to favourites.",
+  "workerProfileFavouriteRemoved": "Worker removed from favourites.",
+  "workerProfileBookNow": "Book Worker",
+  "workerProfileChat": "Protected Chat",
+  "workerSearchResultsCount": "Found {count} workers nearby",
+  "@workerSearchResultsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "workerSearchNoResults": "No workers match your filter criteria",
+  "workerSearchNoResultsDesc": "Try increasing the search distance, resetting filters, or switching language preference.",
+  "workerSearchToggleList": "List View",
+  "workerSearchToggleMap": "Map View",
+  "noShowHelpTitle": "Worker Attendance & No-Show Support",
+  "noShowHelpDesc": "If your booked worker has not arrived by the scheduled shift time, our safety system protects you with an instant replacement or a 100% escrow refund.",
+  "noShowReportButton": "Report No-Show Now",
+  "noShowReportSuccess": "No-show report received. Support and backup workers are being mobilized."
 }

@@ -47,6 +47,8 @@ import 'package:udyogasethu/features/provider/presentation/provider_home_screen.
 import 'package:udyogasethu/features/provider/presentation/provider_wizard_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/post_job_wizard_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/job_applicants_screen.dart';
+import 'package:udyogasethu/features/provider/presentation/worker_search_screen.dart';
+import 'package:udyogasethu/features/provider/presentation/worker_profile_screen.dart';
 import 'package:udyogasethu/features/seeker/domain/job_recommendation.dart';
 import 'package:udyogasethu/features/seeker/presentation/job_detail_screen.dart';
 import 'package:udyogasethu/features/seeker/presentation/map/nearby_jobs_map_screen.dart';
@@ -407,11 +409,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: AppRoutes.providerWorkers,
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Worker Search & Hires',
-                  roleName: 'Job Provider',
-                  icon: Icons.people_alt_rounded,
-                ),
+                builder: (context, state) => const WorkerSearchScreen(),
               ),
             ],
           ),
@@ -586,6 +584,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final id = state.pathParameters['id'];
           return PostJobWizardScreen(editJobId: id);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.providerWorkerProfile,
+        builder: (context, state) {
+          final id = state.pathParameters['id'] ?? '';
+          return WorkerProfileScreen(workerId: id);
         },
       ),
 

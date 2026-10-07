@@ -3169,6 +3169,420 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All slots for this job are filled.'**
   String get applicantJobFullNotice;
+
+  /// No description provided for @hubTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer Hub'**
+  String get hubTitle;
+
+  /// No description provided for @hubVerifiedAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified Account'**
+  String get hubVerifiedAccount;
+
+  /// No description provided for @hubTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm-Fresh Goods and Verified On-Demand Workers'**
+  String get hubTagline;
+
+  /// No description provided for @hubGreeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Hello, {name}! 👋'**
+  String hubGreeting(String name);
+
+  /// No description provided for @hubTabWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Workers & Services'**
+  String get hubTabWorkers;
+
+  /// No description provided for @hubTabProduce.
+  ///
+  /// In en, this message translates to:
+  /// **'🌾 Farm Produce'**
+  String get hubTabProduce;
+
+  /// No description provided for @hubTabSubscriptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscriptions'**
+  String get hubTabSubscriptions;
+
+  /// No description provided for @hubProduceComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm-Direct Produce Marketplace'**
+  String get hubProduceComingSoon;
+
+  /// No description provided for @hubProduceComingSoonDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Direct farm-fresh vegetables, organic produce, and pure dairy coming in Phase 6.'**
+  String get hubProduceComingSoonDesc;
+
+  /// No description provided for @hubSubscriptionsComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm Produce & Milk Subscriptions'**
+  String get hubSubscriptionsComingSoon;
+
+  /// No description provided for @hubSubscriptionsComingSoonDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily milk deliveries and weekly organic vegetable baskets straight to your doorstep coming in Phase 6.'**
+  String get hubSubscriptionsComingSoonDesc;
+
+  /// No description provided for @hubActionScanFarmQr.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Farm QR'**
+  String get hubActionScanFarmQr;
+
+  /// No description provided for @hubActionNoShowHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'No-Show Help'**
+  String get hubActionNoShowHelp;
+
+  /// No description provided for @hubActionMilkBasket.
+  ///
+  /// In en, this message translates to:
+  /// **'Milk / Basket'**
+  String get hubActionMilkBasket;
+
+  /// No description provided for @hubActionFarmerChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Farmer Chat'**
+  String get hubActionFarmerChat;
+
+  /// No description provided for @hubConfirmedBooking.
+  ///
+  /// In en, this message translates to:
+  /// **'CONFIRMED BOOKING • {code}'**
+  String hubConfirmedBooking(String code);
+
+  /// No description provided for @hubWorkerNotArrived.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker Has Not Arrived'**
+  String get hubWorkerNotArrived;
+
+  /// No description provided for @hubProtectedChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Protected Chat'**
+  String get hubProtectedChat;
+
+  /// No description provided for @hubVerifiedWorkersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'VERIFIED ON-DEMAND LOCAL WORKERS'**
+  String get hubVerifiedWorkersTitle;
+
+  /// No description provided for @hub100AadhaarVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'100% Aadhaar Verified'**
+  String get hub100AadhaarVerified;
+
+  /// No description provided for @hubBookWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Book Worker'**
+  String get hubBookWorker;
+
+  /// No description provided for @hubSearchWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Search Workers'**
+  String get hubSearchWorkers;
+
+  /// No description provided for @hubSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by skill, distance, language...'**
+  String get hubSearchHint;
+
+  /// No description provided for @hubViewAllWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'View All Workers'**
+  String get hubViewAllWorkers;
+
+  /// No description provided for @hubNoActiveBooking.
+  ///
+  /// In en, this message translates to:
+  /// **'No Active Booking Right Now'**
+  String get hubNoActiveBooking;
+
+  /// No description provided for @hubNoActiveBookingDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Book a verified worker or post a job to see active shift status here.'**
+  String get hubNoActiveBookingDesc;
+
+  /// No description provided for @workerFilterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter Workers'**
+  String get workerFilterTitle;
+
+  /// No description provided for @workerFilterCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Category'**
+  String get workerFilterCategory;
+
+  /// No description provided for @workerFilterAllCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'All Categories'**
+  String get workerFilterAllCategories;
+
+  /// No description provided for @workerFilterDistance.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum Distance'**
+  String get workerFilterDistance;
+
+  /// No description provided for @workerFilterLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language Spoken'**
+  String get workerFilterLanguage;
+
+  /// No description provided for @workerFilterAllLanguages.
+  ///
+  /// In en, this message translates to:
+  /// **'All Languages'**
+  String get workerFilterAllLanguages;
+
+  /// No description provided for @workerFilterAvailability.
+  ///
+  /// In en, this message translates to:
+  /// **'Availability'**
+  String get workerFilterAvailability;
+
+  /// No description provided for @workerFilterAllAvailability.
+  ///
+  /// In en, this message translates to:
+  /// **'All Statuses'**
+  String get workerFilterAllAvailability;
+
+  /// No description provided for @workerFilterRateRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Wage Range'**
+  String get workerFilterRateRange;
+
+  /// No description provided for @workerFilterGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender Preference (Optional)'**
+  String get workerFilterGender;
+
+  /// No description provided for @workerFilterAnyGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Any Gender'**
+  String get workerFilterAnyGender;
+
+  /// No description provided for @workerFilterMinRating.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum Rating'**
+  String get workerFilterMinRating;
+
+  /// No description provided for @workerFilterAnyRating.
+  ///
+  /// In en, this message translates to:
+  /// **'Any Rating'**
+  String get workerFilterAnyRating;
+
+  /// No description provided for @workerFilterMinJobs.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum Completed Jobs'**
+  String get workerFilterMinJobs;
+
+  /// No description provided for @workerFilterAnyJobs.
+  ///
+  /// In en, this message translates to:
+  /// **'Any Experience'**
+  String get workerFilterAnyJobs;
+
+  /// No description provided for @workerFilterVerifiedOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified Workers Only'**
+  String get workerFilterVerifiedOnly;
+
+  /// No description provided for @workerFilterApply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Filters'**
+  String get workerFilterApply;
+
+  /// No description provided for @workerFilterReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Filters'**
+  String get workerFilterReset;
+
+  /// No description provided for @workerUnverifiedNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Unverified Worker'**
+  String get workerUnverifiedNotice;
+
+  /// No description provided for @workerProfileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker Profile'**
+  String get workerProfileTitle;
+
+  /// No description provided for @workerProfileBio.
+  ///
+  /// In en, this message translates to:
+  /// **'About Worker'**
+  String get workerProfileBio;
+
+  /// No description provided for @workerProfileSkills.
+  ///
+  /// In en, this message translates to:
+  /// **'Skills & Specializations'**
+  String get workerProfileSkills;
+
+  /// No description provided for @workerProfileExperience.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Experience'**
+  String get workerProfileExperience;
+
+  /// No description provided for @workerProfileRates.
+  ///
+  /// In en, this message translates to:
+  /// **'Standard Wage Rates'**
+  String get workerProfileRates;
+
+  /// No description provided for @workerProfileLanguages.
+  ///
+  /// In en, this message translates to:
+  /// **'Languages Spoken'**
+  String get workerProfileLanguages;
+
+  /// No description provided for @workerProfileServiceRadius.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Radius'**
+  String get workerProfileServiceRadius;
+
+  /// No description provided for @workerProfileTrustBadges.
+  ///
+  /// In en, this message translates to:
+  /// **'Trust & Verification Badges'**
+  String get workerProfileTrustBadges;
+
+  /// No description provided for @workerProfileReviews.
+  ///
+  /// In en, this message translates to:
+  /// **'Employer Reviews & Ratings'**
+  String get workerProfileReviews;
+
+  /// No description provided for @workerProfileRecentlyViewed.
+  ///
+  /// In en, this message translates to:
+  /// **'Recently Viewed'**
+  String get workerProfileRecentlyViewed;
+
+  /// No description provided for @workerProfileFavourite.
+  ///
+  /// In en, this message translates to:
+  /// **'Favourite'**
+  String get workerProfileFavourite;
+
+  /// No description provided for @workerProfileFavouriteAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker added to favourites.'**
+  String get workerProfileFavouriteAdded;
+
+  /// No description provided for @workerProfileFavouriteRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker removed from favourites.'**
+  String get workerProfileFavouriteRemoved;
+
+  /// No description provided for @workerProfileBookNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Book Worker'**
+  String get workerProfileBookNow;
+
+  /// No description provided for @workerProfileChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Protected Chat'**
+  String get workerProfileChat;
+
+  /// No description provided for @workerSearchResultsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Found {count} workers nearby'**
+  String workerSearchResultsCount(int count);
+
+  /// No description provided for @workerSearchNoResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No workers match your filter criteria'**
+  String get workerSearchNoResults;
+
+  /// No description provided for @workerSearchNoResultsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Try increasing the search distance, resetting filters, or switching language preference.'**
+  String get workerSearchNoResultsDesc;
+
+  /// No description provided for @workerSearchToggleList.
+  ///
+  /// In en, this message translates to:
+  /// **'List View'**
+  String get workerSearchToggleList;
+
+  /// No description provided for @workerSearchToggleMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Map View'**
+  String get workerSearchToggleMap;
+
+  /// No description provided for @noShowHelpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker Attendance & No-Show Support'**
+  String get noShowHelpTitle;
+
+  /// No description provided for @noShowHelpDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'If your booked worker has not arrived by the scheduled shift time, our safety system protects you with an instant replacement or a 100% escrow refund.'**
+  String get noShowHelpDesc;
+
+  /// No description provided for @noShowReportButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Report No-Show Now'**
+  String get noShowReportButton;
+
+  /// No description provided for @noShowReportSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'No-show report received. Support and backup workers are being mobilized.'**
+  String get noShowReportSuccess;
 }
 
 class _AppLocalizationsDelegate

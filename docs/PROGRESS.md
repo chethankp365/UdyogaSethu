@@ -120,6 +120,16 @@
   - **Routing & Localization**: Registered `/provider/jobs/new`, `/provider/jobs/:id/applicants`, `/provider/jobs/:id/edit` in `routes.dart` and `app_router.dart`. Added 95 localization keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`) verified via `dart run tool/check_l10n.dart` (510 keys across all 8 files, 100% complete).
   - **Testing & Quality**: Built `test/provider_jobs_test.dart` (6/6 tests passing). Full test suite: 242/242 passing tests in `flutter test`. 0 issues in `flutter analyze`).
 
+- [x] **P4.5**: Provider: customer hub, worker search and worker profile (Status: Done |
+  - **Database Migration `0390_provider_hub_worker_search.sql`**: Pushed cleanly to live Supabase project `mmzbpeqkfomnywuzoqii`. Implemented RPCs: `nearby_workers(...)` (multi-criteria filtering by lat/lng radius, seeker_type, category, language, availability, rates, gender, rating, jobs completed, verified badge, text search), `get_worker_profile_detail(...)` (comprehensive worker profile including trust badges, reviews, showcase gallery, skills), `get_provider_active_booking(...)` (active booking lookup for Provider Hub), and `toggle_user_favourite(...)`.
+  - **Domain Models**: Built `NearbyWorker` (rates, distance formatting, language helpers), `WorkerSkillItem`, `WorkerFilterCriteria` (search state with active count and copyWith), `WorkerDetailProfile` (trust badges, ratings, stats), and `ProviderActiveBooking` (booking code, shift timings, escrow held amount).
+  - **Repository & State**: Built `WorkerSearchRepository` and `SupabaseWorkerSearchRepository`. State management via `WorkerFilterNotifier`, `ProviderLocationNotifier`, and `WorkerDetailNotifier`.
+  - **Worker Search (`WorkerSearchScreen`)**: Multi-filter worker discovery with search bar, audio hint, verified toggle, radius slider, category chips, language picker, gender preference, rating threshold, and interactive Map vs List toggle.
+  - **Worker Profile (`WorkerProfileScreen`)**: Detailed profile showcasing trust badges (Aadhaar, Police check), jobs done & experience stats, daily and hourly rate breakdown, client reviews with stars, favourite toggle, and action buttons for protected chat and booking.
+  - **Customer Hub (`ProviderHomeScreen`)**: Embedded active booking card displaying scheduled shift, worker card with verification badge, live call/message actions, and escrow held confirmation.
+  - **Routing & Localization**: Registered `/provider/workers` (Tab 2 of Provider Shell) and `/provider/workers/:id` in `routes.dart` and `app_router.dart`. Added localization keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`).
+  - **Testing & Quality**: Built `test/worker_search_test.dart` (6/6 passing tests). Full test suite: 248/248 passing tests across 40 test files in `flutter test`. 0 issues in `flutter analyze`).
+
 ---
 
 ## Manual steps pending
@@ -142,6 +152,6 @@
 
 ## Known issues
 - **Profile & Auth Foreign Key Cascade vs D11 Retention (To be fixed in P5.1 migration)**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`, and financial/order tables (`wallets`, `payouts`, `orders`, `group_orders`, `group_order_members`, `disputes`, `dispute_evidence`, `job_assignments`, `job_evidence`, `ratings_reviews`) referencing `profiles(id)` with `ON DELETE CASCADE`. Calling `auth.admin.deleteUser` cascades through `auth.users -> profiles -> child tables`, erasing financial audit trails and breaking D11. The P5.1 migration must alter these foreign key constraints (e.g., remove cascade on `profiles.id` so scrubbed tombstone profiles survive, or move records to snapshot columns with `ON DELETE SET NULL`) and re-verify that account deletion never fails and re-registration with the same phone number works cleanly.
-- **Phase 4.5**: Provider hub, worker search and worker profile is the planned next step.
+- **Phase 4.6**: Provider direct booking and custom quotes is the planned next step.
 - **Phase 9 (Admin Console)**: Admin console is built in a separate web/desktop project and is out of scope for this Flutter app.
 

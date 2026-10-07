@@ -50,7 +50,7 @@ class FakeProviderJobsRepository implements ProviderJobsRepository {
       ProviderJob(
         id: 'job-2',
         providerId: 'prov-1',
-        title: 'Master Electrician',
+        title: 'Senior Electrician',
         categoryName: 'Electrician',
         wagePaise: 95000,
         wageType: 'daily',
@@ -366,7 +366,7 @@ void main() {
       await tester.tap(find.text('Filled (1)'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Master Electrician'), findsOneWidget);
+      expect(find.text('Senior Electrician'), findsOneWidget);
       expect(find.text('1 / 1 Slots Filled'), findsOneWidget);
       expect(find.text('Fully Filled'), findsOneWidget);
 

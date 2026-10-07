@@ -1719,4 +1719,223 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get applicantJobFullNotice => 'All slots for this job are filled.';
+
+  @override
+  String get hubTitle => 'Customer Hub';
+
+  @override
+  String get hubVerifiedAccount => 'Verified Account';
+
+  @override
+  String get hubTagline => 'Farm-Fresh Goods and Verified On-Demand Workers';
+
+  @override
+  String hubGreeting(String name) {
+    return 'Hello, $name! 👋';
+  }
+
+  @override
+  String get hubTabWorkers => 'Workers & Services';
+
+  @override
+  String get hubTabProduce => '🌾 Farm Produce';
+
+  @override
+  String get hubTabSubscriptions => 'Subscriptions';
+
+  @override
+  String get hubProduceComingSoon => 'Farm-Direct Produce Marketplace';
+
+  @override
+  String get hubProduceComingSoonDesc =>
+      'Direct farm-fresh vegetables, organic produce, and pure dairy coming in Phase 6.';
+
+  @override
+  String get hubSubscriptionsComingSoon => 'Farm Produce & Milk Subscriptions';
+
+  @override
+  String get hubSubscriptionsComingSoonDesc =>
+      'Daily milk deliveries and weekly organic vegetable baskets straight to your doorstep coming in Phase 6.';
+
+  @override
+  String get hubActionScanFarmQr => 'Scan Farm QR';
+
+  @override
+  String get hubActionNoShowHelp => 'No-Show Help';
+
+  @override
+  String get hubActionMilkBasket => 'Milk / Basket';
+
+  @override
+  String get hubActionFarmerChat => 'Farmer Chat';
+
+  @override
+  String hubConfirmedBooking(String code) {
+    return 'CONFIRMED BOOKING • $code';
+  }
+
+  @override
+  String get hubWorkerNotArrived => 'Worker Has Not Arrived';
+
+  @override
+  String get hubProtectedChat => 'Protected Chat';
+
+  @override
+  String get hubVerifiedWorkersTitle => 'VERIFIED ON-DEMAND LOCAL WORKERS';
+
+  @override
+  String get hub100AadhaarVerified => '100% Aadhaar Verified';
+
+  @override
+  String get hubBookWorker => 'Book Worker';
+
+  @override
+  String get hubSearchWorkers => 'Search Workers';
+
+  @override
+  String get hubSearchHint => 'Search by skill, distance, language...';
+
+  @override
+  String get hubViewAllWorkers => 'View All Workers';
+
+  @override
+  String get hubNoActiveBooking => 'No Active Booking Right Now';
+
+  @override
+  String get hubNoActiveBookingDesc =>
+      'Book a verified worker or post a job to see active shift status here.';
+
+  @override
+  String get workerFilterTitle => 'Filter Workers';
+
+  @override
+  String get workerFilterCategory => 'Service Category';
+
+  @override
+  String get workerFilterAllCategories => 'All Categories';
+
+  @override
+  String get workerFilterDistance => 'Maximum Distance';
+
+  @override
+  String get workerFilterLanguage => 'Language Spoken';
+
+  @override
+  String get workerFilterAllLanguages => 'All Languages';
+
+  @override
+  String get workerFilterAvailability => 'Availability';
+
+  @override
+  String get workerFilterAllAvailability => 'All Statuses';
+
+  @override
+  String get workerFilterRateRange => 'Daily Wage Range';
+
+  @override
+  String get workerFilterGender => 'Gender Preference (Optional)';
+
+  @override
+  String get workerFilterAnyGender => 'Any Gender';
+
+  @override
+  String get workerFilterMinRating => 'Minimum Rating';
+
+  @override
+  String get workerFilterAnyRating => 'Any Rating';
+
+  @override
+  String get workerFilterMinJobs => 'Minimum Completed Jobs';
+
+  @override
+  String get workerFilterAnyJobs => 'Any Experience';
+
+  @override
+  String get workerFilterVerifiedOnly => 'Verified Workers Only';
+
+  @override
+  String get workerFilterApply => 'Apply Filters';
+
+  @override
+  String get workerFilterReset => 'Reset Filters';
+
+  @override
+  String get workerUnverifiedNotice => 'Unverified Worker';
+
+  @override
+  String get workerProfileTitle => 'Worker Profile';
+
+  @override
+  String get workerProfileBio => 'About Worker';
+
+  @override
+  String get workerProfileSkills => 'Skills & Specializations';
+
+  @override
+  String get workerProfileExperience => 'Work Experience';
+
+  @override
+  String get workerProfileRates => 'Standard Wage Rates';
+
+  @override
+  String get workerProfileLanguages => 'Languages Spoken';
+
+  @override
+  String get workerProfileServiceRadius => 'Service Radius';
+
+  @override
+  String get workerProfileTrustBadges => 'Trust & Verification Badges';
+
+  @override
+  String get workerProfileReviews => 'Employer Reviews & Ratings';
+
+  @override
+  String get workerProfileRecentlyViewed => 'Recently Viewed';
+
+  @override
+  String get workerProfileFavourite => 'Favourite';
+
+  @override
+  String get workerProfileFavouriteAdded => 'Worker added to favourites.';
+
+  @override
+  String get workerProfileFavouriteRemoved => 'Worker removed from favourites.';
+
+  @override
+  String get workerProfileBookNow => 'Book Worker';
+
+  @override
+  String get workerProfileChat => 'Protected Chat';
+
+  @override
+  String workerSearchResultsCount(int count) {
+    return 'Found $count workers nearby';
+  }
+
+  @override
+  String get workerSearchNoResults => 'No workers match your filter criteria';
+
+  @override
+  String get workerSearchNoResultsDesc =>
+      'Try increasing the search distance, resetting filters, or switching language preference.';
+
+  @override
+  String get workerSearchToggleList => 'List View';
+
+  @override
+  String get workerSearchToggleMap => 'Map View';
+
+  @override
+  String get noShowHelpTitle => 'Worker Attendance & No-Show Support';
+
+  @override
+  String get noShowHelpDesc =>
+      'If your booked worker has not arrived by the scheduled shift time, our safety system protects you with an instant replacement or a 100% escrow refund.';
+
+  @override
+  String get noShowReportButton => 'Report No-Show Now';
+
+  @override
+  String get noShowReportSuccess =>
+      'No-show report received. Support and backup workers are being mobilized.';
 }

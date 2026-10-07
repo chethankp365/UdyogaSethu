@@ -71,6 +71,8 @@ class ProviderProfileDraft {
 
   bool get isHousehold => providerType == 'household';
   bool get isEmployer => providerType == 'employer';
+  String get siteAddress => [siteAddressLine1, siteLandmark].where((s) => s.isNotEmpty).join(', ');
+  String get homeAddress => [addressLine1, landmark].where((s) => s.isNotEmpty).join(', ');
 
   ProviderProfileDraft copyWith({
     int? currentStep,

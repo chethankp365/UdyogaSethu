@@ -622,5 +622,95 @@
   "applicantHiredSuccess": "ಕಾರ್ಮಿಕರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ನೇಮಿಸಿಕೊಳ್ಳಲಾಗಿದೆ!",
   "applicantShortlistedSuccess": "ಅರ್ಜಿದಾರರನ್ನು ಆಯ್ಕೆಪಟ್ಟಿಗೆ ಸೇರಿಸಲಾಗಿದೆ.",
   "applicantRejectedSuccess": "ಅರ್ಜಿಯನ್ನು ತಿರಸ್ಕರಿಸಲಾಗಿದೆ.",
-  "applicantJobFullNotice": "ಈ ಕೆಲಸದ ಎಲ್ಲಾ ಸ್ಥಳಗಳು ಭರ್ತಿಯಾಗಿವೆ."
+  "applicantJobFullNotice": "ಈ ಕೆಲಸದ ಎಲ್ಲಾ ಸ್ಥಳಗಳು ಭರ್ತಿಯಾಗಿವೆ.",
+  "hubTitle": "ಗ್ರಾಹಕ ಹಬ್",
+  "hubVerifiedAccount": "ಪರಿಶೀಲಿಸಿದ ಖಾತೆ",
+  "hubTagline": "ತಾಜಾ ಕೃಷಿ ಉತ್ಪನ್ನಗಳು ಮತ್ತು ಪರಿಶೀಲಿತ ಆನ್-ಡಿಮಾಂಡ್ ಕಾರ್ಮಿಕರು",
+  "hubGreeting": "ನಮಸ್ಕಾರ, {name}! 👋",
+  "@hubGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "hubTabWorkers": "ಕಾರ್ಮಿಕರು ಮತ್ತು ಸೇವೆಗಳು",
+  "hubTabProduce": "🌾 ಕೃಷಿ ಉತ್ಪನ್ನಗಳು",
+  "hubTabSubscriptions": "ಚಂದಾದಾರಿಕೆಗಳು",
+  "hubProduceComingSoon": "ರೈತರಿಂದ ನೇರ ಕೃಷಿ ಉತ್ಪನ್ನಗಳ ಮಾರುಕಟ್ಟೆ",
+  "hubProduceComingSoonDesc": "ಹಂತ 6 ರಲ್ಲಿ ನೇರ ತಾಜಾ ತರಕಾರಿಗಳು, ಸಾವಯವ ಉತ್ಪನ್ನಗಳು ಮತ್ತು ಶುದ್ಧ ಹಾಲು ಲಭ್ಯವಾಗಲಿದೆ.",
+  "hubSubscriptionsComingSoon": "ಹಾಲು ಮತ್ತು ತರಕಾರಿ ಚಂದಾದಾರಿಕೆಗಳು",
+  "hubSubscriptionsComingSoonDesc": "ಪ್ರತಿದಿನ ಶುದ್ಧ ಹಾಲು ಮತ್ತು ವಾರಕ್ಕೊಮ್ಮೆ ಸಾವಯವ ತರಕಾರಿ ಬುಟ್ಟಿಗಳು ಮನೆಬಾಗಿಲಿಗೆ ಲಭ್ಯವಾಗಲಿವೆ.",
+  "hubActionScanFarmQr": "ಕೃಷಿ QR ಸ್ಕ್ಯಾನ್",
+  "hubActionNoShowHelp": "ಗೈರುಹಾಜರಿ ಸಹಾಯ",
+  "hubActionMilkBasket": "ಹಾಲು / ಬುಟ್ಟಿ",
+  "hubActionFarmerChat": "ರೈತರ ಜೊತೆ ಚಾಟ್",
+  "hubConfirmedBooking": "ದೃಢೀಕರಿಸಿದ ಬುಕಿಂಗ್ • {code}",
+  "@hubConfirmedBooking": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "hubWorkerNotArrived": "ಕಾರ್ಮಿಕರು ಬಂದಿಲ್ಲ",
+  "hubProtectedChat": "ರಕ್ಷಿತ ಚಾಟ್",
+  "hubVerifiedWorkersTitle": "ಪರಿಶೀಲಿತ ಸ್ಥಳೀಯ ಕಾರ್ಮಿಕರು",
+  "hub100AadhaarVerified": "100% ಆಧಾರ್ ಪರಿಶೀಲಿಸಲಾಗಿದೆ",
+  "hubBookWorker": "ಕಾರ್ಮಿಕರನ್ನು ಕಾಯ್ದಿರಿಸಿ",
+  "hubSearchWorkers": "ಕಾರ್ಮಿಕರನ್ನು ಹುಡುಕಿ",
+  "hubSearchHint": "ಕೌಶಲ್ಯ, ದೂರ, ಭಾಷೆಯಿಂದ ಹುಡುಕಿ...",
+  "hubViewAllWorkers": "ಎಲ್ಲಾ ಕಾರ್ಮಿಕರನ್ನು ವೀಕ್ಷಿಸಿ",
+  "hubNoActiveBooking": "ಪ್ರಸ್ತುತ ಯಾವುದೇ ಸಕ್ರಿಯ ಬುಕಿಂಗ್ ಇಲ್ಲ",
+  "hubNoActiveBookingDesc": "ಇಲ್ಲಿ ನೇರ ಕೆಲಸದ ಸ್ಥಿತಿಯನ್ನು ನೋಡಲು ಕಾರ್ಮಿಕರನ್ನು ಬುಕ್ ಮಾಡಿ ಅಥವಾ ಉದ್ಯೋಗ ಪ್ರಕಟಿಸಿ.",
+  "workerFilterTitle": "ಫಿಲ್ಟರ್ ಕಾರ್ಮಿಕರು",
+  "workerFilterCategory": "ಕೆಲಸದ ವರ್ಗ",
+  "workerFilterAllCategories": "ಎಲ್ಲಾ ವರ್ಗಗಳು",
+  "workerFilterDistance": "ಗರಿಷ್ಠ ದೂರ",
+  "workerFilterLanguage": "ಮಾತನಾಡುವ ಭಾಷೆ",
+  "workerFilterAllLanguages": "ಎಲ್ಲಾ ಭಾಷೆಗಳು",
+  "workerFilterAvailability": "ಲಭ್ಯತೆ",
+  "workerFilterAllAvailability": "ಎಲ್ಲಾ ಸ್ಥಿತಿಗಳು",
+  "workerFilterRateRange": "ದೈನಂದಿನ ಕೂಲಿ ಶ್ರೇಣಿ",
+  "workerFilterGender": "ಲಿಂಗ ಆದ್ಯತೆ (ಐಚ್ಛಿಕ)",
+  "workerFilterAnyGender": "ಯಾವುದಾದರೂ ಲಿಂಗ",
+  "workerFilterMinRating": "ಕನಿಷ್ಠ ರೇಟಿಂಗ್",
+  "workerFilterAnyRating": "ಯಾವುದಾದರೂ ರೇಟಿಂಗ್",
+  "workerFilterMinJobs": "ಪೂರ್ಣಗೊಳಿಸಿದ ಕನಿಷ್ಠ ಕೆಲಸಗಳು",
+  "workerFilterAnyJobs": "ಯಾವುದೇ ಅನುಭವ",
+  "workerFilterVerifiedOnly": "ಪರಿಶೀಲಿಸಿದ ಕಾರ್ಮಿಕರು ಮಾತ್ರ",
+  "workerFilterApply": "ಫಿಲ್ಟರ್ ಅನ್ವಯಿಸಿ",
+  "workerFilterReset": "ಫಿಲ್ಟರ್ ತೆರವುಗೊಳಿಸಿ",
+  "workerUnverifiedNotice": "ದೃಢೀಕರಿಸದ ಕಾರ್ಮಿಕ",
+  "workerProfileTitle": "ಕಾರ್ಮಿಕರ ವಿವರ",
+  "workerProfileBio": "ಕಾರ್ಮಿಕರ ಬಗ್ಗೆ",
+  "workerProfileSkills": "ಕೌಶಲ್ಯಗಳು ಮತ್ತು ಪರಿಣತಿ",
+  "workerProfileExperience": "ಕೆಲಸದ ಅನುಭವ",
+  "workerProfileRates": "ಪ್ರಮಾಣಿತ ಕೂಲಿ ದರಗಳು",
+  "workerProfileLanguages": "ಮಾತನಾಡುವ ಭಾಷೆಗಳು",
+  "workerProfileServiceRadius": "ಸೇವಾ ವ್ಯಾಪ್ತಿ",
+  "workerProfileTrustBadges": "ವಿಶ್ವಾಸ ಮತ್ತು ಪರಿಶೀಲನಾ ಬ್ಯಾಡ್ಜ್‌ಗಳು",
+  "workerProfileReviews": "ಮಾಲೀಕರ ವಿಮರ್ಶೆಗಳು ಮತ್ತು ರೇಟಿಂಗ್‌ಗಳು",
+  "workerProfileRecentlyViewed": "ಇತ್ತೀಚೆಗೆ ವೀಕ್ಷಿಸಿದವರು",
+  "workerProfileFavourite": "ನೆಚ್ಚಿನವರು",
+  "workerProfileFavouriteAdded": "ಕಾರ್ಮಿಕರನ್ನು ನೆಚ್ಚಿನ ಪಟ್ಟಿಗೆ ಸೇರಿಸಲಾಗಿದೆ.",
+  "workerProfileFavouriteRemoved": "ಕಾರ್ಮಿಕರನ್ನು ನೆಚ್ಚಿನ ಪಟ್ಟಿಯಿಂದ ತೆಗೆದುಹಾಕಲಾಗಿದೆ.",
+  "workerProfileBookNow": "ಕಾರ್ಮಿಕರನ್ನು ಕಾಯ್ದಿರಿಸಿ",
+  "workerProfileChat": "ರಕ್ಷಿತ ಚಾಟ್",
+  "workerSearchResultsCount": "ಹತ್ತಿರದಲ್ಲಿ {count} ಕಾರ್ಮಿಕರು ಕಂಡುಬಂದಿದ್ದಾರೆ",
+  "@workerSearchResultsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "workerSearchNoResults": "ನಿಮ್ಮ ಫಿಲ್ಟರ್‌ಗೆ ಯಾವುದೇ ಕಾರ್ಮಿಕರು ಹೊಂದಿಕೆಯಾಗುತ್ತಿಲ್ಲ",
+  "workerSearchNoResultsDesc": "ಹುಡುಕಾಟದ ದೂರ ಹೆಚ್ಚಿಸಿ, ಫಿಲ್ಟರ್‌ಗಳನ್ನು ಮರುಹೊಂದಿಸಿ ಅಥವಾ ಭಾಷೆಯನ್ನು ಬದಲಿಸಿ.",
+  "workerSearchToggleList": "ಪಟ್ಟಿ ನೋಟ",
+  "workerSearchToggleMap": "ನಕ್ಷೆ ನೋಟ",
+  "noShowHelpTitle": "ಕಾರ್ಮಿಕರ ಹಾಜರಾತಿ ಮತ್ತು ಗೈರುಹಾಜರಿ ನೆರವು",
+  "noShowHelpDesc": "ನಿಗದಿತ ಸಮಯಕ್ಕೆ ಕಾರ್ಮಿಕರು ಬರದಿದ್ದರೆ, ನಮ್ಮ ಭದ್ರತಾ ವ್ಯವಸ್ಥೆಯು ತಕ್ಷಣದ ಪರ್ಯಾಯ ಕಾರ್ಮಿಕ ಅಥವಾ 100% ಎಸ್ಕ್ರೋ ಮರುಪಾವತಿಯನ್ನು ಒದಗಿಸುತ್ತದೆ.",
+  "noShowReportButton": "ಗೈರುಹಾಜರಿ ವರದಿ ಮಾಡಿ",
+  "noShowReportSuccess": "ಗೈರುಹಾಜರಿ ವರದಿ ದಾಖಲಾಗಿದೆ. ಪರ್ಯಾಯ ಕಾರ್ಮಿಕರನ್ನು ಸಜ್ಜುಗೊಳಿಸಲಾಗುತ್ತಿದೆ."
 }

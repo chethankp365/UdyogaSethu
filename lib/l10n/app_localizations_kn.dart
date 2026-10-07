@@ -1722,4 +1722,227 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get applicantJobFullNotice => 'ಈ ಕೆಲಸದ ಎಲ್ಲಾ ಸ್ಥಳಗಳು ಭರ್ತಿಯಾಗಿವೆ.';
+
+  @override
+  String get hubTitle => 'ಗ್ರಾಹಕ ಹಬ್';
+
+  @override
+  String get hubVerifiedAccount => 'ಪರಿಶೀಲಿಸಿದ ಖಾತೆ';
+
+  @override
+  String get hubTagline =>
+      'ತಾಜಾ ಕೃಷಿ ಉತ್ಪನ್ನಗಳು ಮತ್ತು ಪರಿಶೀಲಿತ ಆನ್-ಡಿಮಾಂಡ್ ಕಾರ್ಮಿಕರು';
+
+  @override
+  String hubGreeting(String name) {
+    return 'ನಮಸ್ಕಾರ, $name! 👋';
+  }
+
+  @override
+  String get hubTabWorkers => 'ಕಾರ್ಮಿಕರು ಮತ್ತು ಸೇವೆಗಳು';
+
+  @override
+  String get hubTabProduce => '🌾 ಕೃಷಿ ಉತ್ಪನ್ನಗಳು';
+
+  @override
+  String get hubTabSubscriptions => 'ಚಂದಾದಾರಿಕೆಗಳು';
+
+  @override
+  String get hubProduceComingSoon => 'ರೈತರಿಂದ ನೇರ ಕೃಷಿ ಉತ್ಪನ್ನಗಳ ಮಾರುಕಟ್ಟೆ';
+
+  @override
+  String get hubProduceComingSoonDesc =>
+      'ಹಂತ 6 ರಲ್ಲಿ ನೇರ ತಾಜಾ ತರಕಾರಿಗಳು, ಸಾವಯವ ಉತ್ಪನ್ನಗಳು ಮತ್ತು ಶುದ್ಧ ಹಾಲು ಲಭ್ಯವಾಗಲಿದೆ.';
+
+  @override
+  String get hubSubscriptionsComingSoon => 'ಹಾಲು ಮತ್ತು ತರಕಾರಿ ಚಂದಾದಾರಿಕೆಗಳು';
+
+  @override
+  String get hubSubscriptionsComingSoonDesc =>
+      'ಪ್ರತಿದಿನ ಶುದ್ಧ ಹಾಲು ಮತ್ತು ವಾರಕ್ಕೊಮ್ಮೆ ಸಾವಯವ ತರಕಾರಿ ಬುಟ್ಟಿಗಳು ಮನೆಬಾಗಿಲಿಗೆ ಲಭ್ಯವಾಗಲಿವೆ.';
+
+  @override
+  String get hubActionScanFarmQr => 'ಕೃಷಿ QR ಸ್ಕ್ಯಾನ್';
+
+  @override
+  String get hubActionNoShowHelp => 'ಗೈರುಹಾಜರಿ ಸಹಾಯ';
+
+  @override
+  String get hubActionMilkBasket => 'ಹಾಲು / ಬುಟ್ಟಿ';
+
+  @override
+  String get hubActionFarmerChat => 'ರೈತರ ಜೊತೆ ಚಾಟ್';
+
+  @override
+  String hubConfirmedBooking(String code) {
+    return 'ದೃಢೀಕರಿಸಿದ ಬುಕಿಂಗ್ • $code';
+  }
+
+  @override
+  String get hubWorkerNotArrived => 'ಕಾರ್ಮಿಕರು ಬಂದಿಲ್ಲ';
+
+  @override
+  String get hubProtectedChat => 'ರಕ್ಷಿತ ಚಾಟ್';
+
+  @override
+  String get hubVerifiedWorkersTitle => 'ಪರಿಶೀಲಿತ ಸ್ಥಳೀಯ ಕಾರ್ಮಿಕರು';
+
+  @override
+  String get hub100AadhaarVerified => '100% ಆಧಾರ್ ಪರಿಶೀಲಿಸಲಾಗಿದೆ';
+
+  @override
+  String get hubBookWorker => 'ಕಾರ್ಮಿಕರನ್ನು ಕಾಯ್ದಿರಿಸಿ';
+
+  @override
+  String get hubSearchWorkers => 'ಕಾರ್ಮಿಕರನ್ನು ಹುಡುಕಿ';
+
+  @override
+  String get hubSearchHint => 'ಕೌಶಲ್ಯ, ದೂರ, ಭಾಷೆಯಿಂದ ಹುಡುಕಿ...';
+
+  @override
+  String get hubViewAllWorkers => 'ಎಲ್ಲಾ ಕಾರ್ಮಿಕರನ್ನು ವೀಕ್ಷಿಸಿ';
+
+  @override
+  String get hubNoActiveBooking => 'ಪ್ರಸ್ತುತ ಯಾವುದೇ ಸಕ್ರಿಯ ಬುಕಿಂಗ್ ಇಲ್ಲ';
+
+  @override
+  String get hubNoActiveBookingDesc =>
+      'ಇಲ್ಲಿ ನೇರ ಕೆಲಸದ ಸ್ಥಿತಿಯನ್ನು ನೋಡಲು ಕಾರ್ಮಿಕರನ್ನು ಬುಕ್ ಮಾಡಿ ಅಥವಾ ಉದ್ಯೋಗ ಪ್ರಕಟಿಸಿ.';
+
+  @override
+  String get workerFilterTitle => 'ಫಿಲ್ಟರ್ ಕಾರ್ಮಿಕರು';
+
+  @override
+  String get workerFilterCategory => 'ಕೆಲಸದ ವರ್ಗ';
+
+  @override
+  String get workerFilterAllCategories => 'ಎಲ್ಲಾ ವರ್ಗಗಳು';
+
+  @override
+  String get workerFilterDistance => 'ಗರಿಷ್ಠ ದೂರ';
+
+  @override
+  String get workerFilterLanguage => 'ಮಾತನಾಡುವ ಭಾಷೆ';
+
+  @override
+  String get workerFilterAllLanguages => 'ಎಲ್ಲಾ ಭಾಷೆಗಳು';
+
+  @override
+  String get workerFilterAvailability => 'ಲಭ್ಯತೆ';
+
+  @override
+  String get workerFilterAllAvailability => 'ಎಲ್ಲಾ ಸ್ಥಿತಿಗಳು';
+
+  @override
+  String get workerFilterRateRange => 'ದೈನಂದಿನ ಕೂಲಿ ಶ್ರೇಣಿ';
+
+  @override
+  String get workerFilterGender => 'ಲಿಂಗ ಆದ್ಯತೆ (ಐಚ್ಛಿಕ)';
+
+  @override
+  String get workerFilterAnyGender => 'ಯಾವುದಾದರೂ ಲಿಂಗ';
+
+  @override
+  String get workerFilterMinRating => 'ಕನಿಷ್ಠ ರೇಟಿಂಗ್';
+
+  @override
+  String get workerFilterAnyRating => 'ಯಾವುದಾದರೂ ರೇಟಿಂಗ್';
+
+  @override
+  String get workerFilterMinJobs => 'ಪೂರ್ಣಗೊಳಿಸಿದ ಕನಿಷ್ಠ ಕೆಲಸಗಳು';
+
+  @override
+  String get workerFilterAnyJobs => 'ಯಾವುದೇ ಅನುಭವ';
+
+  @override
+  String get workerFilterVerifiedOnly => 'ಪರಿಶೀಲಿಸಿದ ಕಾರ್ಮಿಕರು ಮಾತ್ರ';
+
+  @override
+  String get workerFilterApply => 'ಫಿಲ್ಟರ್ ಅನ್ವಯಿಸಿ';
+
+  @override
+  String get workerFilterReset => 'ಫಿಲ್ಟರ್ ತೆರವುಗೊಳಿಸಿ';
+
+  @override
+  String get workerUnverifiedNotice => 'ದೃಢೀಕರಿಸದ ಕಾರ್ಮಿಕ';
+
+  @override
+  String get workerProfileTitle => 'ಕಾರ್ಮಿಕರ ವಿವರ';
+
+  @override
+  String get workerProfileBio => 'ಕಾರ್ಮಿಕರ ಬಗ್ಗೆ';
+
+  @override
+  String get workerProfileSkills => 'ಕೌಶಲ್ಯಗಳು ಮತ್ತು ಪರಿಣತಿ';
+
+  @override
+  String get workerProfileExperience => 'ಕೆಲಸದ ಅನುಭವ';
+
+  @override
+  String get workerProfileRates => 'ಪ್ರಮಾಣಿತ ಕೂಲಿ ದರಗಳು';
+
+  @override
+  String get workerProfileLanguages => 'ಮಾತನಾಡುವ ಭಾಷೆಗಳು';
+
+  @override
+  String get workerProfileServiceRadius => 'ಸೇವಾ ವ್ಯಾಪ್ತಿ';
+
+  @override
+  String get workerProfileTrustBadges => 'ವಿಶ್ವಾಸ ಮತ್ತು ಪರಿಶೀಲನಾ ಬ್ಯಾಡ್ಜ್‌ಗಳು';
+
+  @override
+  String get workerProfileReviews => 'ಮಾಲೀಕರ ವಿಮರ್ಶೆಗಳು ಮತ್ತು ರೇಟಿಂಗ್‌ಗಳು';
+
+  @override
+  String get workerProfileRecentlyViewed => 'ಇತ್ತೀಚೆಗೆ ವೀಕ್ಷಿಸಿದವರು';
+
+  @override
+  String get workerProfileFavourite => 'ನೆಚ್ಚಿನವರು';
+
+  @override
+  String get workerProfileFavouriteAdded =>
+      'ಕಾರ್ಮಿಕರನ್ನು ನೆಚ್ಚಿನ ಪಟ್ಟಿಗೆ ಸೇರಿಸಲಾಗಿದೆ.';
+
+  @override
+  String get workerProfileFavouriteRemoved =>
+      'ಕಾರ್ಮಿಕರನ್ನು ನೆಚ್ಚಿನ ಪಟ್ಟಿಯಿಂದ ತೆಗೆದುಹಾಕಲಾಗಿದೆ.';
+
+  @override
+  String get workerProfileBookNow => 'ಕಾರ್ಮಿಕರನ್ನು ಕಾಯ್ದಿರಿಸಿ';
+
+  @override
+  String get workerProfileChat => 'ರಕ್ಷಿತ ಚಾಟ್';
+
+  @override
+  String workerSearchResultsCount(int count) {
+    return 'ಹತ್ತಿರದಲ್ಲಿ $count ಕಾರ್ಮಿಕರು ಕಂಡುಬಂದಿದ್ದಾರೆ';
+  }
+
+  @override
+  String get workerSearchNoResults =>
+      'ನಿಮ್ಮ ಫಿಲ್ಟರ್‌ಗೆ ಯಾವುದೇ ಕಾರ್ಮಿಕರು ಹೊಂದಿಕೆಯಾಗುತ್ತಿಲ್ಲ';
+
+  @override
+  String get workerSearchNoResultsDesc =>
+      'ಹುಡುಕಾಟದ ದೂರ ಹೆಚ್ಚಿಸಿ, ಫಿಲ್ಟರ್‌ಗಳನ್ನು ಮರುಹೊಂದಿಸಿ ಅಥವಾ ಭಾಷೆಯನ್ನು ಬದಲಿಸಿ.';
+
+  @override
+  String get workerSearchToggleList => 'ಪಟ್ಟಿ ನೋಟ';
+
+  @override
+  String get workerSearchToggleMap => 'ನಕ್ಷೆ ನೋಟ';
+
+  @override
+  String get noShowHelpTitle => 'ಕಾರ್ಮಿಕರ ಹಾಜರಾತಿ ಮತ್ತು ಗೈರುಹಾಜರಿ ನೆರವು';
+
+  @override
+  String get noShowHelpDesc =>
+      'ನಿಗದಿತ ಸಮಯಕ್ಕೆ ಕಾರ್ಮಿಕರು ಬರದಿದ್ದರೆ, ನಮ್ಮ ಭದ್ರತಾ ವ್ಯವಸ್ಥೆಯು ತಕ್ಷಣದ ಪರ್ಯಾಯ ಕಾರ್ಮಿಕ ಅಥವಾ 100% ಎಸ್ಕ್ರೋ ಮರುಪಾವತಿಯನ್ನು ಒದಗಿಸುತ್ತದೆ.';
+
+  @override
+  String get noShowReportButton => 'ಗೈರುಹಾಜರಿ ವರದಿ ಮಾಡಿ';
+
+  @override
+  String get noShowReportSuccess =>
+      'ಗೈರುಹಾಜರಿ ವರದಿ ದಾಖಲಾಗಿದೆ. ಪರ್ಯಾಯ ಕಾರ್ಮಿಕರನ್ನು ಸಜ್ಜುಗೊಳಿಸಲಾಗುತ್ತಿದೆ.';
 }
