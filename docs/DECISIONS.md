@@ -19,6 +19,9 @@ This document records key design, architectural, role model, and implementation 
 | D-QR | QR Verification Contract, Non-PII HMAC Payload, and Role Separation (`digitalId` for Seekers, `scanVerify` for Providers with single-phone demo testing) | Adopted | QR Verification Architecture |
 | D-VISIBILITY | Strict Multi-Layer Role & Seeker Type Feature Gating: UI, Route Guards (`app_router.dart`), Edge Function health checks, and Server-Side RPC/Trigger boundaries | Adopted | Role Gating & Security |
 | D-AUDIENCE | Job Audience Enforcement: Server-side PostgreSQL RPC filtering (`apply_to_job`, `recommended_jobs`, `nearby_jobs`) with informal seeker gating | Adopted | Job Matching & Audience Rules |
+| D-REF-UI | UI Reference Mapping: Every UI prompt matches `docs/reference/UdyogaSetu_Built_Project.pdf` (Page 2 Phone 2 = Home, Page 3 Phone 4 & Page 4 Phone 2 = Profile, Page 4 Phone 4 = Category Change) | Adopted | Design System & UI Truth |
+| D-HOME-CLEAN | Removal of Safety Onboarding Card from Home: Redundant card moved exclusively to Profile & Safety Hub to match Page 2 Phone 2 | Adopted | Home Screen Cleanliness |
+| D-GOAL-DEFAULT | Today's Goal Default: Standard daily earnings target set to ₹1,500 with interactive modal chip adjuster | Adopted | Daily Goal Gamification |
 
 ## Known Issues & Planned Fixes (Pre-P5.1)
 
@@ -92,6 +95,21 @@ This document records key design, architectural, role model, and implementation 
   * **Database-Driven Gating**: Migration `0350_audience_and_jobs_rules.sql` establishes `public.job_audience` enum (`all_workers`, `informal_workers`, `students_only`, `part_time_only`) and `target_audiences` array column on `jobs` table.
   * **RPC Protection**: Gating is strictly enforced server-side inside `public.apply_to_job` RPC. An informal worker attempting to apply to a `students_only` job is rejected with an explicit database exception: `'Informal job seekers cannot apply to jobs restricted exclusively to students.'`.
   * **Recommendation & Map Alignment**: `recommended_jobs` and `nearby_jobs` RPCs automatically evaluate the caller's `seeker_type` from `worker_profiles` and filter out incompatible jobs from recommendation feeds and GPS pin clusters.
+
+* **D-REF-UI — PDF Reference Alignment & Visual Truth**:
+  * **Single Source of Truth**: Every UI prompt strictly matches `docs/reference/UdyogaSetu_Built_Project.pdf`:
+    * Page 2 Phone 2: Seeker Home (dark green gradient header, SOS pill, GPS chevron, search bar with mic, frosted-glass Today's Goal ring and Wallet card, 4 quick actions, sponsored job card, and compact JobRow list).
+    * Page 2 Phone 3: GPS Map & live nearby job clusters.
+    * Page 3 Phone 2: Recommended Jobs feed with compact `JobRow` layout, category thumbnails, and one-tap application.
+    * Page 3 Phone 4 & Page 4 Phone 2: Seeker Profile (dark green header, 3 tabs [Overview, Work Showcase, Safety Status], Role Credentials card, Language Switcher, My Skills with dialog, Verification Status, and Account & Safety card).
+    * Page 4 Phone 4: Worker Category & Preferences change modal allowing post-login role specialization (Informal, Student, Part-Time).
+
+* **D-HOME-CLEAN — Removal of Redundant Safety Onboarding Card from Home**:
+  * **Layout Fidelity**: To match Page 2 Phone 2 exactly, the redundant `Safety Onboarding & Verified Badge` banner on Seeker Home was removed. Safety onboarding and verification lifecycle management is accessed via the Profile screen ("Safety Status" tab & "VERIFICATION STATUS" card) and the Trust & Safety Centre.
+
+* **D-GOAL-DEFAULT — Today's Goal Gamification & Default Earnings Target**:
+  * **Goal Target**: Daily earnings goal defaults to ₹1,500 (150,000 paise) across all seeker categories.
+  * **Interactive Adjustment**: Seekers can tap the goal ring or edit button to open a quick modal to set custom targets (₹500, ₹1,000, ₹1,500, ₹2,000, ₹3,000), persisting the goal state in Riverpod `seekerDailyGoalProvider`.
 
 ---
 

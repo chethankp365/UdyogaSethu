@@ -104,13 +104,21 @@
   - **Part 5 (Privacy Centre That Reflects Reality)**: Aligned `ConsentLog` and `SupabaseConsentRepository` with real database schema `(id, user_id, purpose, granted, version, created_at)` and aligned RPCs (`get_user_consents`, `record_user_consent_v2`, `revoke_consent`, `withdraw_face_consent`). Implemented live OS permission checks (`Permission.camera`, `Permission.location`, `Permission.notification`, `Geolocator.isLocationServiceEnabled()`), lifecycle resumed auto-refresh, pull-to-refresh, and purpose-specific withdrawal dialogs with server data erasure.
   - **Part 6 (Documentation & Handover)**: Documented D-QR, D-VISIBILITY, and D-AUDIENCE in `docs/DECISIONS.md`. Updated `docs/PROGRESS.md`. 214 tests passing, 0 analysis issues).
 
+- [x] **P4.1, P4.2 & P2.10 UI Alignment Pass (Parts A, B, C, D, E)**: Reference-Matched Redesign for Seeker Home, Recommended Job Cards, and Seeker Profile (Status: Done |
+  - **Part A (Student Feed Bug Resolved)**: Authored migration `0360_strict_audience_filtering.sql` to strictly enforce audience filtering in SQL (`recommended_jobs` & `apply_to_job` RPCs). Enhanced `seeker_home_repository.dart` with audience-based filtering and `kDebugMode` logging. Created dev seed script `supabase/dev/sample_jobs.sql` (seeding 5 jobs with diverse audiences) and `supabase/dev/remove_sample_jobs.sql`. Built automated test suite `test/seeker_audience_feed_test.dart` (8 passing tests).
+  - **Part B & C (Seeker Home & Job Row Redesign matching Page 2 Phone 2 & Page 3 Phone 2)**: Generated 36 production WebP category assets (800x450, <70 KB) in `assets/images/jobs/` using `tool/build_job_assets.dart` and registered in `pubspec.yaml`. Built reusable `JobRow` widget (`lib/core/widgets/job_row.dart`) with fallback slugs and silent precache error handling. Redesigned `SeekerHomeScreen` matching Page 2 Phone 2 (dark green gradient header, SOS pill, GPS chevron, search bar with mic, frosted-glass Today's Goal ring and Wallet card, 4 Quick Actions, Sponsored job card, compact `JobRow` list). Built automated test suite `test/seeker_home_recommendations_test.dart` (9 passing tests).
+  - **Part D (Seeker Profile Redesign matching Page 3 Phone 4, Page 4 Phone 2 & Page 4 Phone 4)**: Redesigned `ProfileScreen` matching reference with dark-green gradient header, 3 tabs (`Overview`, `Work Showcase`, `Safety Status`), 3 live stats (`Verified Jobs`, `Rating`, `Total Earnings`), Role Credentials card, live language switcher chips calling `localeProvider`, My Skills card with `SkillsPickerDialog`, Verification Status card, and Account & Safety navigation card. Built `SeekerTypeChangeDialog` (`lib/features/profile/presentation/seeker_type_change_dialog.dart`) matching Page 4 Phone 4 allowing category switching between Informal, Student, and Part-Time with database persistence. Built `SkillsPickerDialog` (`lib/features/profile/presentation/skills_picker_dialog.dart`). Added full localization across 5 languages (`en`, `kn`, `hi`, `te`, `ta`). Built automated test suite `test/seeker_profile_redesign_test.dart` (8 passing tests).
+  - **Part E (Decisions & Progress Record)**: Recorded `D-REF-UI` (UI Reference Mapping), `D-HOME-CLEAN` (Removal of redundant Safety banner from Home), and `D-GOAL-DEFAULT` (Today's Goal default ₹1,500 with modal adjuster) in `docs/DECISIONS.md`. Updated `docs/PROGRESS.md`. All 230 tests passing, 0 analyzer issues).
+
 ---
 
 ## Manual steps pending
-1. **Apply Audience and Consent RPCs Migration**:
+1. **Apply Strict Audience Filtering Migration**:
+   - Open Supabase SQL Editor and execute `supabase/migrations/0360_strict_audience_filtering.sql` to install audience filtering on `recommended_jobs` and `apply_to_job` RPCs.
+   - *(Optional for testing)*: Execute `supabase/dev/sample_jobs.sql` to populate sample student, informal, and part-time jobs (and `supabase/dev/remove_sample_jobs.sql` when done testing).
+2. **Apply Audience and Consent RPCs Migration (if not yet applied)**:
    - Open Supabase SQL Editor and execute `supabase/migrations/0350_audience_and_jobs_rules.sql`.
-   - *(Optional for testing)*: Execute `supabase/migrations/0350_sample_seed.sql` to populate sample student-only and informal jobs (and `0350_sample_teardown.sql` when ready to remove).
-2. **Deploy Updated Edge Functions**:
+3. **Deploy Updated Edge Functions**:
    Run the following commands using Supabase CLI:
    ```bash
    npx supabase functions deploy qr-issue
