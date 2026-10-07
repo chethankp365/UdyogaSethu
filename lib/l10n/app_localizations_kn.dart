@@ -1397,4 +1397,329 @@ class AppLocalizationsKn extends AppLocalizations {
   String categoryUpdatedSnackbar(Object category) {
     return 'ವರ್ಗವನ್ನು $category ಗೆ ನವೀಕರಿಸಲಾಗಿದೆ! ಫೀಡ್ ಮತ್ತು ಕೌಶಲ್ಯಗಳನ್ನು ರಿಫ್ರೆಶ್ ಮಾಡಲಾಗಿದೆ.';
   }
+
+  @override
+  String get providerMyJobsTitle => 'ನನ್ನ ಉದ್ಯೋಗಗಳು';
+
+  @override
+  String get providerTabOpen => 'ತೆರೆದಿದೆ';
+
+  @override
+  String get providerTabFilled => 'ಭರ್ತಿಯಾಗಿದೆ';
+
+  @override
+  String get providerTabCompleted => 'ಪೂರ್ಣಗೊಂಡಿದೆ';
+
+  @override
+  String providerSlotsCounter(int filled, int total) {
+    return '$filled / $total ಸ್ಥಳಗಳು ಭರ್ತಿಯಾಗಿವೆ';
+  }
+
+  @override
+  String providerSlotsOpenCount(int count) {
+    return '$count ಲಭ್ಯವಿದೆ';
+  }
+
+  @override
+  String get providerPostNewJob => 'ಉದ್ಯೋಗ ಪ್ರಕಟಿಸಿ';
+
+  @override
+  String get providerNoJobsTitle => 'ಯಾವುದೇ ಉದ್ಯೋಗಗಳು ಕಂಡುಬಂದಿಲ್ಲ';
+
+  @override
+  String get providerNoOpenJobsDesc =>
+      'ನಿಮ್ಮಲ್ಲಿ ಯಾವುದೇ ತೆರೆದ ಉದ್ಯೋಗ ಪ್ರಕಟಣೆಗಳಿಲ್ಲ. ಪರಿಶೀಲಿತ ಕಾರ್ಮಿಕರನ್ನು ನೇಮಿಸಿಕೊಳ್ಳಲು ಹೊಸದನ್ನು ರಚಿಸಿ.';
+
+  @override
+  String get providerNoFilledJobsDesc =>
+      'ಪ್ರಸ್ತುತ ಯಾವುದೇ ಉದ್ಯೋಗಗಳು ಭರ್ತಿಯಾಗಿಲ್ಲ.';
+
+  @override
+  String get providerNoCompletedJobsDesc =>
+      'ಇನ್ನೂ ಯಾವುದೇ ಉದ್ಯೋಗಗಳು ಪೂರ್ಣಗೊಂಡಿಲ್ಲ.';
+
+  @override
+  String get providerViewApplicants => 'ಅರ್ಜಿದಾರರನ್ನು ವೀಕ್ಷಿಸಿ';
+
+  @override
+  String providerApplicantsBadge(int count) {
+    return '$count ಅರ್ಜಿದಾರರು';
+  }
+
+  @override
+  String get providerJobPaused => 'ತಾತ್ಕಾಲಿಕ ನಿಲುಗಡೆ';
+
+  @override
+  String get providerJobDraft => 'ಕರಡು';
+
+  @override
+  String get providerJobCancelled => 'ರದ್ದುಗೊಳಿಸಲಾಗಿದೆ';
+
+  @override
+  String get providerActionEdit => 'ಪ್ರಕಟಣೆ ಸಂಪಾದಿಸಿ';
+
+  @override
+  String get providerActionPause => 'ಪ್ರಕಟಣೆ ನಿಲ್ಲಿಸಿ';
+
+  @override
+  String get providerActionResume => 'ಪ್ರಕಟಣೆ ಮುಂದುವರಿಸಿ';
+
+  @override
+  String get providerActionCancel => 'ಉದ್ಯೋಗ ರದ್ದುಮಾಡಿ';
+
+  @override
+  String get providerCancelWarningTitle => 'ಉದ್ಯೋಗ ಪ್ರಕಟಣೆ ರದ್ದುಗೊಳಿಸಬೇಕೇ?';
+
+  @override
+  String providerCancelWarningHiredDesc(int count) {
+    return 'ಎಚ್ಚರಿಕೆ: ಈ ಉದ್ಯೋಗಕ್ಕೆ $count ಕಾರ್ಮಿಕರನ್ನು ನೇಮಿಸಲಾಗಿದೆ. ರದ್ದುಗೊಳಿಸುವುದರಿಂದ ಅವರಿಗೆ ತಕ್ಷಣ ತಿಳಿಸಲಾಗುತ್ತದೆ ಮತ್ತು ನಿಯೋಜನೆಗಳನ್ನು ರದ್ದುಗೊಳಿಸಲಾಗುತ್ತದೆ.';
+  }
+
+  @override
+  String get providerCancelStandardDesc =>
+      'ಈ ಉದ್ಯೋಗ ಪ್ರಕಟಣೆಯನ್ನು ರದ್ದುಗೊಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?';
+
+  @override
+  String get providerConfirmCancel => 'ರದ್ದತಿಯನ್ನು ದೃಢೀಕರಿಸಿ';
+
+  @override
+  String get providerJobCancelledSuccess => 'ಉದ್ಯೋಗ ರದ್ದುಗೊಳಿಸಲಾಗಿದೆ.';
+
+  @override
+  String get providerJobPausedSuccess => 'ಉದ್ಯೋಗ ಪ್ರಕಟಣೆಯನ್ನು ನಿಲ್ಲಿಸಲಾಗಿದೆ.';
+
+  @override
+  String get providerJobResumedSuccess => 'ಉದ್ಯೋಗ ಪ್ರಕಟಣೆ ಈಗ ಸಕ್ರಿಯವಾಗಿದೆ.';
+
+  @override
+  String get postJobWizardTitle => 'ದೈನಂದಿನ ಕೂಲಿ ಉದ್ಯೋಗ ಪ್ರಕಟಿಸಿ';
+
+  @override
+  String get editJobWizardTitle => 'ಉದ್ಯೋಗ ಪ್ರಕಟಣೆ ಸಂಪಾದಿಸಿ';
+
+  @override
+  String get postJobStep1 => 'ವರ್ಗ ಮತ್ತು ಶೀರ್ಷಿಕೆ';
+
+  @override
+  String get postJobStep2 => 'ಕೂಲಿ ಮತ್ತು ವೇಳಾಪಟ್ಟಿ';
+
+  @override
+  String get postJobStep3 => 'ಸ್ಥಳಗಳು ಮತ್ತು ಪಾವತಿ';
+
+  @override
+  String get postJobStep4 => 'ಅಗತ್ಯತೆಗಳು ಮತ್ತು ಸ್ಥಳ';
+
+  @override
+  String get postJobStep5 => 'ಪೂರ್ವವೀಕ್ಷಣೆ ಮತ್ತು ಪ್ರಕಟಣೆ';
+
+  @override
+  String get postJobSelectCategory => 'ಕೆಲಸದ ವರ್ಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ';
+
+  @override
+  String get postJobTitleLabel => 'ಉದ್ಯೋಗದ ಶೀರ್ಷಿಕೆ';
+
+  @override
+  String get postJobTitleHint => 'ಉದಾ: ಕಟ್ಟಡ ಸಹಾಯಕ, ಎಲೆಕ್ಟ್ರಿಷಿಯನ್, ಪ್ಲಂಬರ್';
+
+  @override
+  String get postJobDescLabel => 'ಉದ್ಯೋಗ ವಿವರಣೆ';
+
+  @override
+  String get postJobDescHint =>
+      'ನಿರ್ದಿಷ್ಟ ಕಾರ್ಯಗಳು, ಅಗತ್ಯವಿರುವ ಉಪಕರಣಗಳು ಅಥವಾ ಸ್ಥಳದ ವಿವರಗಳನ್ನು ಬರೆಯಿರಿ...';
+
+  @override
+  String get postJobWageType => 'ಕೂಲಿ ಪ್ರಕಾರ';
+
+  @override
+  String get postJobWageDaily => 'ದೈನಂದಿನ';
+
+  @override
+  String get postJobWageHourly => 'ಗಂಟೆಯ';
+
+  @override
+  String get postJobWageFixed => 'ನಿಗದಿತ';
+
+  @override
+  String get postJobAmountLabel => 'ಕೂಲಿ ಮೊತ್ತ (₹)';
+
+  @override
+  String get postJobFairWageBandTitle => 'ನ್ಯಾಯಯುತ ಕೂಲಿ ಪಟ್ಟಿ:';
+
+  @override
+  String postJobFairWageBandRange(int min, int max, String unit) {
+    return '₹$min - ₹$max / $unit';
+  }
+
+  @override
+  String postJobBelowFairWageWarning(int min, int max) {
+    return 'ಕೂಲಿ ನ್ಯಾಯಯುತ ಕೂಲಿ ಮಟ್ಟಕ್ಕಿಂತ (₹$min - ₹$max) ಕಡಿಮೆಯಾಗಿದೆ. ಕಾರ್ಮಿಕರು ಅರ್ಜಿ ಸಲ್ಲಿಸಲು ವಿಳಂಬವಾಗಬಹುದು, ಆದರೆ ನೀವು ಮುಂದುವರಿಯಬಹುದು.';
+  }
+
+  @override
+  String get postJobDurationLabel => 'ಅಂದಾಜು ಅವಧಿ';
+
+  @override
+  String postJobDurationHours(int hours) {
+    return '$hours ಗಂಟೆಗಳು';
+  }
+
+  @override
+  String get postJobStartDateLabel => 'ಪ್ರಾರಂಭದ ದಿನಾಂಕ ಮತ್ತು ಸಮಯ';
+
+  @override
+  String get postJobSelectDateTime => 'ದಿನಾಂಕ ಮತ್ತು ಸಮಯ ಆಯ್ಕೆಮಾಡಿ';
+
+  @override
+  String get postJobSlotsTotalLabel => 'ಅಗತ್ಯವಿರುವ ಕಾರ್ಮಿಕರ ಸಂಖ್ಯೆ';
+
+  @override
+  String get postJobMaterialsLabel => 'ಸಾಮಗ್ರಿಗಳು ಮತ್ತು ಉಪಕರಣಗಳು';
+
+  @override
+  String get postJobMaterialsProvided => 'ನಾನೇ ಎಲ್ಲಾ ಉಪಕರಣಗಳನ್ನು ಒದಗಿಸುತ್ತೇನೆ';
+
+  @override
+  String get postJobMaterialsWorkerBrings =>
+      'ಕಾರ್ಮಿಕರೇ ತಮ್ಮ ಉಪಕರಣಗಳನ್ನು ತರಬೇಕು';
+
+  @override
+  String get postJobPaymentModeLabel => 'ಪಾವತಿ ಸಂರಕ್ಷಣಾ ವಿಧಾನ';
+
+  @override
+  String get postJobPaymentEscrow => 'ರಕ್ಷಿತ ಎಸ್ಕ್ರೋ (ಶಿಫಾರಸು ಮಾಡಲಾಗಿದೆ)';
+
+  @override
+  String get postJobPaymentEscrowDesc =>
+      'ಕೆಲಸ ಪರಿಶೀಲಿಸಿ ಅನುಮೋದಿಸುವವರೆಗೆ ಹಣ ಸುರಕ್ಷಿತವಾಗಿರುತ್ತದೆ';
+
+  @override
+  String get postJobPaymentUpi => 'ಕೆಲಸ ಮುಗಿದ ನಂತರ ನೇರ UPI';
+
+  @override
+  String get postJobPaymentUpiDesc =>
+      'ಕೆಲಸ ಮುಗಿದ ನಂತರ ಸೈಟ್‌ನಲ್ಲಿ ನೇರವಾಗಿ QR ಮೂಲಕ ಪಾವತಿಸಿ';
+
+  @override
+  String get postJobPaymentCash => 'ಸೈಟ್‌ನಲ್ಲಿ ದೈನಂದಿನ ನಗದು';
+
+  @override
+  String get postJobPaymentCashDesc => 'ಪಾಳಿ ಮುಗಿದ ನಂತರ ನಗದು ಪಾವತಿಸಿ';
+
+  @override
+  String get postJobRequirementsLabel => 'ಕಾರ್ಮಿಕರ ಅಗತ್ಯತೆಗಳು';
+
+  @override
+  String get postJobReqVerifiedOnly =>
+      'ಹಿನ್ನೆಲೆ ಮತ್ತು ಗುರುತು ಪರಿಶೀಲಿಸಿದವರು ಮಾತ್ರ';
+
+  @override
+  String get postJobReqLicence => 'ಚಾಲನಾ ಪರವಾನಗಿ ಅಗತ್ಯವಿದೆ';
+
+  @override
+  String get postJobReqStudents => 'ವಿದ್ಯಾರ್ಥಿಗಳಿಗೆ ಸೂಕ್ತವಾಗಿದೆ';
+
+  @override
+  String get postJobLocationLabel => 'ಕೆಲಸದ ಸ್ಥಳ';
+
+  @override
+  String get postJobAddressHint => 'ವಿಳಾಸ ಅಥವಾ ಗುರುತಿನ ಸ್ಥಳ ನಮೂದಿಸಿ';
+
+  @override
+  String get postJobGeofenceRadiusLabel => 'ಜಿಯೋಫೆನ್ಸ್ ಚೆಕ್-ಇನ್ ವ್ಯಾಪ್ತಿ';
+
+  @override
+  String postJobGeofenceMeters(int meters) {
+    return '$meters ಮೀಟರ್';
+  }
+
+  @override
+  String get postJobPublishButton => 'ಉದ್ಯೋಗ ಪ್ರಕಟಿಸಿ';
+
+  @override
+  String get postJobSaveEditButton => 'ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ';
+
+  @override
+  String get postJobPublishSuccess => 'ಉದ್ಯೋಗ ಯಶಸ್ವಿಯಾಗಿ ಪ್ರಕಟಿಸಲಾಗಿದೆ!';
+
+  @override
+  String applicantsScreenTitle(int count) {
+    return 'ಅರ್ಜಿದಾರರು ($count)';
+  }
+
+  @override
+  String get applicantsNoApplicantsTitle => 'ಇನ್ನೂ ಯಾವುದೇ ಅರ್ಜಿಗಳಿಲ್ಲ';
+
+  @override
+  String get applicantsNoApplicantsDesc =>
+      'ಹತ್ತಿರದ ಕಾರ್ಮಿಕರಿಗೆ ಸೂಚಿಸಲಾಗುತ್ತಿದೆ. ಅವರು ಅರ್ಜಿ ಸಲ್ಲಿಸಿದ ನಂತರ ಇಲ್ಲಿ ಕಾಣಿಸಿಕೊಳ್ಳುತ್ತಾರೆ.';
+
+  @override
+  String applicantCardJobsDone(int count) {
+    return '$count ಕೆಲಸಗಳು ಮುಗಿದಿವೆ';
+  }
+
+  @override
+  String applicantCardRating(double rating, int count) {
+    return '$rating ($count)';
+  }
+
+  @override
+  String applicantCardLanguages(String langs) {
+    return 'ಭಾಷೆಗಳು: $langs';
+  }
+
+  @override
+  String applicantCardSkills(String skills) {
+    return 'ಕೌಶಲ್ಯಗಳು: $skills';
+  }
+
+  @override
+  String get applicantActionHire => 'ನೇಮಿಸಿಕೊಳ್ಳಿ';
+
+  @override
+  String get applicantActionShortlist => 'ಆಯ್ಕೆಪಟ್ಟಿ';
+
+  @override
+  String get applicantActionReject => 'ತಿರಸ್ಕರಿಸಿ';
+
+  @override
+  String get applicantActionChat => 'ಮಾತುಕತೆ';
+
+  @override
+  String get applicantActionProfile => 'ಪ್ರೊಫೈಲ್ ವೀಕ್ಷಿಸಿ';
+
+  @override
+  String get applicantStatusApplied => 'ಅರ್ಜಿ ಸಲ್ಲಿಸಲಾಗಿದೆ';
+
+  @override
+  String get applicantStatusShortlisted => 'ಆಯ್ಕೆಪಟ್ಟಿಯಲ್ಲಿದೆ';
+
+  @override
+  String get applicantStatusHired => 'ನೇಮಕಗೊಂಡಿದೆ';
+
+  @override
+  String get applicantStatusRejected => 'ತಿರಸ್ಕರಿಸಲಾಗಿದೆ';
+
+  @override
+  String get applicantHireConfirmTitle => 'ಕಾರ್ಮಿಕರನ್ನು ನೇಮಿಸಿಕೊಳ್ಳಬೇಕೇ?';
+
+  @override
+  String applicantHireConfirmDesc(String name) {
+    return '$name ಅವರನ್ನು ನೇಮಿಸಿಕೊಳ್ಳುವುದರಿಂದ ಅವರಿಗೆ ಈ ಕೆಲಸದಲ್ಲಿ 1 ಸ್ಥಳ ನಿಗದಿಯಾಗುತ್ತದೆ.';
+  }
+
+  @override
+  String get applicantHiredSuccess =>
+      'ಕಾರ್ಮಿಕರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ನೇಮಿಸಿಕೊಳ್ಳಲಾಗಿದೆ!';
+
+  @override
+  String get applicantShortlistedSuccess =>
+      'ಅರ್ಜಿದಾರರನ್ನು ಆಯ್ಕೆಪಟ್ಟಿಗೆ ಸೇರಿಸಲಾಗಿದೆ.';
+
+  @override
+  String get applicantRejectedSuccess => 'ಅರ್ಜಿಯನ್ನು ತಿರಸ್ಕರಿಸಲಾಗಿದೆ.';
+
+  @override
+  String get applicantJobFullNotice => 'ಈ ಕೆಲಸದ ಎಲ್ಲಾ ಸ್ಥಳಗಳು ಭರ್ತಿಯಾಗಿವೆ.';
 }

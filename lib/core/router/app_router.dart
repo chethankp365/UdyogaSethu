@@ -45,6 +45,8 @@ import 'package:udyogasethu/features/trust/presentation/trust_safety_centre_scre
 import 'package:udyogasethu/features/verification/presentation/face_check_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_home_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_wizard_screen.dart';
+import 'package:udyogasethu/features/provider/presentation/post_job_wizard_screen.dart';
+import 'package:udyogasethu/features/provider/presentation/job_applicants_screen.dart';
 import 'package:udyogasethu/features/seeker/domain/job_recommendation.dart';
 import 'package:udyogasethu/features/seeker/presentation/job_detail_screen.dart';
 import 'package:udyogasethu/features/seeker/presentation/map/nearby_jobs_map_screen.dart';
@@ -566,6 +568,24 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             jobId: id,
             preloadedJob: preloaded,
           );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.providerJobNew,
+        builder: (context, state) => const PostJobWizardScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.providerJobApplicants,
+        builder: (context, state) {
+          final id = state.pathParameters['id'] ?? '';
+          return JobApplicantsScreen(jobId: id);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.providerJobEdit,
+        builder: (context, state) {
+          final id = state.pathParameters['id'];
+          return PostJobWizardScreen(editJobId: id);
         },
       ),
 

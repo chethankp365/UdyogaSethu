@@ -157,5 +157,43 @@ BEGIN
   ) VALUES
     (v_job1, v_worker_id, 'invited', v_prov1, (v_today || ' 10:00:00+05:30')::TIMESTAMPTZ, (v_today || ' 14:00:00+05:30')::TIMESTAMPTZ),
     (v_job2, v_worker_id, 'invited', v_prov2, (v_today || ' 13:00:00+05:30')::TIMESTAMPTZ, (v_today || ' 17:00:00+05:30')::TIMESTAMPTZ);
-END $$;
-```
+
+---
+
+## Phase 4.4: Provider Jobs Management & Applicant Hiring
+
+### Remote RPCs
+1. **`public.post_provider_job(...)`**:
+   - Inserts a job posting for the authenticated provider into `public.jobs`.
+   - Accepts category, title, description, wage type (`daily`, `hourly`, `fixed`), wage in paise, estimated duration minutes, start timestamp (`start_at`), total slots (`slots_total`), materials provided boolean, payment mode (`cash`, `upi`, `escrow`), requirements (`verified_only`, `licence_required`, `students_ok`), address text, latitude/longitude, and geofence radius (defaulting to 150m).
+   - Automatically computes PostGIS geography point `ST_SetSRID(ST_MakePoint(p_lng, p_lat), 4326)::geography`.
+   - Enforces provider profile ownership (`provider_id = auth.uid()`) and non-empty title/wage.
+
+2. **`public.update_provider_job(...)`**:
+   - Updates title, description, wage, duration, start time, total slots, materials, payment mode, requirements, address, location, and geofence.
+   - Prevents updating if the job is already `cancelled` or `completed`.
+   - Ensures `slots_total >= slots_filled`.
+
+3. **`public.get_provider_jobs(p_provider_id UUID DEFAULT NULL)`**:
+   - Returns provider's jobs list with enriched counts: `applicant_count` and `hired_count`.
+   - Includes category name and icon slug from `service_categories`.
+   - Filters by owner (`auth.uid()`) by default.
+
+4. **`public.get_job_applicants(p_job_id UUID)`**:
+   - Returns all applicants for a given job owned by the calling provider.
+   - Joins `job_applications` with `profiles` and `worker_profiles`.
+   - Returns worker display name, phone, avatar URL, verification status, rating, completed jobs count, worker skills array, spoken languages array, applicant distance in meters (`distance_m`) computed from job location, application status (`pending`, `shortlisted`, `rejected`, `hired`, `withdrawn`), application note, applied timestamp, and hired assignment ID if hired.
+
+5. **`public.update_provider_job_status(p_job_id UUID, p_status job_status)`**:
+   - Allows provider to toggle status between `open`, `draft` (paused), `cancelled`, and `closed`.
+   - When cancelling a job with active/hired workers, marks pending assignments as `cancelled` with reason note.
+
+6. **`public.respond_to_application(p_application_id UUID, p_action text, p_notes text DEFAULT NULL)`**:
+   - Handles applicant management actions: `hire`, `shortlist`, `reject`.
+   - When `hire`:
+     - Checks that job is not full (`slots_filled < slots_total`).
+     - Verifies application is not already hired.
+     - Increments `jobs.slots_filled`.
+     - Automatically transitions job status to `'filled'` if `slots_filled = slots_total`.
+     - Creates/activates a `job_assignments` record with status `'assigned'` or `'accepted'`, setting `scheduled_start` and `scheduled_end`.
+     - Inserts an in-app notification in `public.notifications` alerting the worker that they have been hired.

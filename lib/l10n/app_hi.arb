@@ -92,7 +92,7 @@
   "wageTypeDaily": "दैनिक मजदूरी",
   "wageTypeHourly": "प्रति घंटा मजदूरी",
   "wageTypeFixed": "निश्चित भुगतान",
-  "walletBalance": "वॉलेट शेष: ₹{balance}",
+  "walletBalance": "वॉलेट बैलेंस",
   "jobsCount": "{count, plural, =0{कोई काम नहीं मिला} =1{1 काम मिला} other{{count} काम मिले}}",
   "applicantsCount": "{count, plural, =0{कोई आवेदक नहीं} =1{1 आवेदक} other{{count} आवेदक}}",
   "distanceKm": "{distance} किमी दूर",
@@ -324,7 +324,6 @@
   "seekerHomeTitle": "रोजगार साधक होम",
   "searchJobsPlaceholder": "नौकरियां, सेवाएं खोजें...",
   "todaysGoal": "आज का लक्ष्य",
-  "walletBalance": "वॉलेट बैलेंस",
   "viewWallet": "वॉलेट देखें >",
   "locationSharingActive": "सुरक्षा निगरानी के लिए स्थान साझाकरण सक्रिय है",
   "changeLocation": "बदलें >",
@@ -415,7 +414,213 @@
   "aadhaarVerified": "आधार ई-केवाईसी सत्यापित ✓",
   "faceLivenessVerified": "चेहरा बायोमेट्रिक सत्यापित ✓",
   "safetyTrainingVerified": "1-दिवसीय सुरक्षा प्रशिक्षण पूर्ण ✓",
-  "categoryUpdatedSnackbar": "श्रेणी को {category} में अपडेट किया गया! फ़ीड और कौशल ताज़ा किए गए।"
+  "categoryUpdatedSnackbar": "श्रेणी को {category} में अपडेट किया गया! फ़ीड और कौशल ताज़ा किए गए।",
+  "providerMyJobsTitle": "मेरे काम",
+  "providerTabOpen": "खुले",
+  "providerTabFilled": "भरे हुए",
+  "providerTabCompleted": "पूर्ण",
+  "providerSlotsCounter": "{filled} / {total} स्थान भरे गए",
+  "@providerSlotsCounter": {
+    "placeholders": {
+      "filled": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "providerSlotsOpenCount": "{count} खाली",
+  "@providerSlotsOpenCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "providerPostNewJob": "नौकरी पोस्ट करें",
+  "providerNoJobsTitle": "कोई नौकरी नहीं मिली",
+  "providerNoOpenJobsDesc": "आपके पास कोई खुली नौकरी पोस्टिंग नहीं है। सत्यापित श्रमिकों को नियुक्त करने के लिए एक बनाएं।",
+  "providerNoFilledJobsDesc": "वर्तमान में कोई नौकरी भरी नहीं है।",
+  "providerNoCompletedJobsDesc": "अभी तक कोई नौकरी पूर्ण नहीं हुई है।",
+  "providerViewApplicants": "आवेदक देखें",
+  "providerApplicantsBadge": "{count} आवेदक",
+  "@providerApplicantsBadge": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "providerJobPaused": "रोका गया",
+  "providerJobDraft": "ड्राफ्ट",
+  "providerJobCancelled": "रद्द",
+  "providerActionEdit": "पोस्टिंग संपादित करें",
+  "providerActionPause": "पोस्टिंग रोकें",
+  "providerActionResume": "पोस्टिंग फिर से शुरू करें",
+  "providerActionCancel": "नौकरी रद्द करें",
+  "providerCancelWarningTitle": "क्या नौकरी पोस्टिंग रद्द करें?",
+  "providerCancelWarningHiredDesc": "चेतावनी: इस नौकरी में {count} श्रमिक नियुक्त हैं। रद्द करने से उन्हें तुरंत सूचित किया जाएगा और कार्य रद्द हो जाएगा।",
+  "@providerCancelWarningHiredDesc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "providerCancelStandardDesc": "क्या आप वाकई इस नौकरी पोस्टिंग को रद्द करना चाहते हैं?",
+  "providerConfirmCancel": "रद्दीकरण की पुष्टि करें",
+  "providerJobCancelledSuccess": "नौकरी रद्द कर दी गई है।",
+  "providerJobPausedSuccess": "नौकरी पोस्टिंग रोक दी गई है।",
+  "providerJobResumedSuccess": "नौकरी पोस्टिंग अब सक्रिय है।",
+  "postJobWizardTitle": "दैनिक वेतन नौकरी पोस्ट करें",
+  "editJobWizardTitle": "नौकरी पोस्टिंग संपादित करें",
+  "postJobStep1": "श्रेणी और शीर्षक",
+  "postJobStep2": "वेतन और समय",
+  "postJobStep3": "स्थान और भुगतान",
+  "postJobStep4": "आवश्यकताएं और पता",
+  "postJobStep5": "पूर्वावलोकन और प्रकाशित करें",
+  "postJobSelectCategory": "कार्य श्रेणी चुनें",
+  "postJobTitleLabel": "नौकरी का शीर्षक",
+  "postJobTitleHint": "उदा., निर्माण सहायक, इलेक्ट्रीशियन, प्लंबर",
+  "postJobDescLabel": "नौकरी विवरण",
+  "postJobDescHint": "विशिष्ट कार्य, आवश्यक उपकरण या स्थान विवरण लिखें...",
+  "postJobWageType": "वेतन प्रकार",
+  "postJobWageDaily": "दैनिक",
+  "postJobWageHourly": "प्रति घंटा",
+  "postJobWageFixed": "निश्चित",
+  "postJobAmountLabel": "वेतन राशि (₹)",
+  "postJobFairWageBandTitle": "उचित वेतन सीमा:",
+  "postJobFairWageBandRange": "₹{min} - ₹{max} / {unit}",
+  "@postJobFairWageBandRange": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "postJobBelowFairWageWarning": "वेतन अनुशंसित उचित वेतन सीमा (₹{min} - ₹{max}) से कम है। श्रमिक आवेदन करने में धीमे हो सकते हैं, लेकिन आप आगे बढ़ सकते हैं।",
+  "@postJobBelowFairWageWarning": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "postJobDurationLabel": "अनुमानित अवधि",
+  "postJobDurationHours": "{hours} घंटे",
+  "@postJobDurationHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "postJobStartDateLabel": "प्रारंभ तिथि और समय",
+  "postJobSelectDateTime": "तिथि और समय चुनें",
+  "postJobSlotsTotalLabel": "आवश्यक श्रमिकों की संख्या",
+  "postJobMaterialsLabel": "सामग्री और उपकरण",
+  "postJobMaterialsProvided": "मैं सभी उपकरण और सामग्री प्रदान करूँगा",
+  "postJobMaterialsWorkerBrings": "श्रमिक को अपने उपकरण लाने चाहिए",
+  "postJobPaymentModeLabel": "भुगतान सुरक्षा मोड",
+  "postJobPaymentEscrow": "सुरक्षित एस्क्रो (अनुशंसित)",
+  "postJobPaymentEscrowDesc": "कार्य सत्यापित और स्वीकृत होने तक धनराशि सुरक्षित रखी जाती है",
+  "postJobPaymentUpi": "कार्य पूरा होने पर सीधा UPI",
+  "postJobPaymentUpiDesc": "साइट पर सीधे कार्यकर्ता के UPI QR पर भुगतान करें",
+  "postJobPaymentCash": "साइट पर दैनिक नकद",
+  "postJobPaymentCashDesc": "शिफ्ट समाप्त होने के बाद नकद भुगतान करें",
+  "postJobRequirementsLabel": "श्रमिक आवश्यकताएं",
+  "postJobReqVerifiedOnly": "केवल पृष्ठभूमि और पहचान सत्यापित",
+  "postJobReqLicence": "ड्राइविंग लाइसेंस आवश्यक",
+  "postJobReqStudents": "छात्र और अंशकालिक अनुकूल",
+  "postJobLocationLabel": "कार्य स्थल",
+  "postJobAddressHint": "साइट का पता या लैंडमार्क दर्ज करें",
+  "postJobGeofenceRadiusLabel": "जियोफेंस चेक-इन त्रिज्या",
+  "postJobGeofenceMeters": "{meters} मीटर",
+  "@postJobGeofenceMeters": {
+    "placeholders": {
+      "meters": {
+        "type": "int"
+      }
+    }
+  },
+  "postJobPublishButton": "नौकरी प्रकाशित करें",
+  "postJobSaveEditButton": "परिवर्तन सहेजें",
+  "postJobPublishSuccess": "नौकरी सफलतापूर्वक पोस्ट की गई!",
+  "applicantsScreenTitle": "आवेदक ({count})",
+  "@applicantsScreenTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "applicantsNoApplicantsTitle": "अभी तक कोई आवेदन नहीं",
+  "applicantsNoApplicantsDesc": "आस-पास के श्रमिकों को सूचित किया जा रहा है। आवेदन करने पर वे यहाँ दिखाई देंगे।",
+  "applicantCardJobsDone": "{count} काम पूरे हुए",
+  "@applicantCardJobsDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "applicantCardRating": "{rating} ({count})",
+  "@applicantCardRating": {
+    "placeholders": {
+      "rating": {
+        "type": "double"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "applicantCardLanguages": "भाषाएं: {langs}",
+  "@applicantCardLanguages": {
+    "placeholders": {
+      "langs": {
+        "type": "String"
+      }
+    }
+  },
+  "applicantCardSkills": "कौशल: {skills}",
+  "@applicantCardSkills": {
+    "placeholders": {
+      "skills": {
+        "type": "String"
+      }
+    }
+  },
+  "applicantActionHire": "नियुक्त करें",
+  "applicantActionShortlist": "शॉर्टलिस्ट",
+  "applicantActionReject": "अस्वीकार करें",
+  "applicantActionChat": "चैट",
+  "applicantActionProfile": "प्रोफ़ाइल देखें",
+  "applicantStatusApplied": "आवेदित",
+  "applicantStatusShortlisted": "शॉर्टलिस्टेड",
+  "applicantStatusHired": "नियुक्त",
+  "applicantStatusRejected": "अस्वीकृत",
+  "applicantHireConfirmTitle": "श्रमिक को नियुक्त करें?",
+  "applicantHireConfirmDesc": "{name} को नियुक्त करने से उन्हें इस नौकरी में 1 स्थान दिया जाएगा।",
+  "@applicantHireConfirmDesc": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "applicantHiredSuccess": "श्रमिक को सफलतापूर्वक नियुक्त किया गया!",
+  "applicantShortlistedSuccess": "आवेदक को शॉर्टलिस्ट में ले जाया गया।",
+  "applicantRejectedSuccess": "आवेदन अस्वीकार कर दिया गया।",
+  "applicantJobFullNotice": "इस नौकरी के सभी स्थान भर चुके हैं।"
 }
-
-

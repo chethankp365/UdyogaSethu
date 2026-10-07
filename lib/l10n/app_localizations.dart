@@ -2599,6 +2599,576 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Category updated to {category}! Feed and skills refreshed.'**
   String categoryUpdatedSnackbar(Object category);
+
+  /// No description provided for @providerMyJobsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Jobs'**
+  String get providerMyJobsTitle;
+
+  /// No description provided for @providerTabOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get providerTabOpen;
+
+  /// No description provided for @providerTabFilled.
+  ///
+  /// In en, this message translates to:
+  /// **'Filled'**
+  String get providerTabFilled;
+
+  /// No description provided for @providerTabCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get providerTabCompleted;
+
+  /// No description provided for @providerSlotsCounter.
+  ///
+  /// In en, this message translates to:
+  /// **'{filled} / {total} Slots Filled'**
+  String providerSlotsCounter(int filled, int total);
+
+  /// No description provided for @providerSlotsOpenCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Open'**
+  String providerSlotsOpenCount(int count);
+
+  /// No description provided for @providerPostNewJob.
+  ///
+  /// In en, this message translates to:
+  /// **'Post a Job'**
+  String get providerPostNewJob;
+
+  /// No description provided for @providerNoJobsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Jobs Found'**
+  String get providerNoJobsTitle;
+
+  /// No description provided for @providerNoOpenJobsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have any open job postings. Create one to hire verified local workers.'**
+  String get providerNoOpenJobsDesc;
+
+  /// No description provided for @providerNoFilledJobsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'No jobs are currently filled.'**
+  String get providerNoFilledJobsDesc;
+
+  /// No description provided for @providerNoCompletedJobsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'No completed jobs yet.'**
+  String get providerNoCompletedJobsDesc;
+
+  /// No description provided for @providerViewApplicants.
+  ///
+  /// In en, this message translates to:
+  /// **'View Applicants'**
+  String get providerViewApplicants;
+
+  /// No description provided for @providerApplicantsBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Applicants'**
+  String providerApplicantsBadge(int count);
+
+  /// No description provided for @providerJobPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get providerJobPaused;
+
+  /// No description provided for @providerJobDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get providerJobDraft;
+
+  /// No description provided for @providerJobCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get providerJobCancelled;
+
+  /// No description provided for @providerActionEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Posting'**
+  String get providerActionEdit;
+
+  /// No description provided for @providerActionPause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause Posting'**
+  String get providerActionPause;
+
+  /// No description provided for @providerActionResume.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume Posting'**
+  String get providerActionResume;
+
+  /// No description provided for @providerActionCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Job'**
+  String get providerActionCancel;
+
+  /// No description provided for @providerCancelWarningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Job Posting?'**
+  String get providerCancelWarningTitle;
+
+  /// No description provided for @providerCancelWarningHiredDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning: This job has {count} hired worker(s). Cancelling will immediately notify workers, cancel their assignments, and release escrow holds. This may negatively impact your employer reliability rating.'**
+  String providerCancelWarningHiredDesc(int count);
+
+  /// No description provided for @providerCancelStandardDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to cancel this job posting? Open slots will be removed.'**
+  String get providerCancelStandardDesc;
+
+  /// No description provided for @providerConfirmCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Cancellation'**
+  String get providerConfirmCancel;
+
+  /// No description provided for @providerJobCancelledSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Job has been cancelled.'**
+  String get providerJobCancelledSuccess;
+
+  /// No description provided for @providerJobPausedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Job posting has been paused.'**
+  String get providerJobPausedSuccess;
+
+  /// No description provided for @providerJobResumedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Job posting is now active.'**
+  String get providerJobResumedSuccess;
+
+  /// No description provided for @postJobWizardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Post a Daily Wage Job'**
+  String get postJobWizardTitle;
+
+  /// No description provided for @editJobWizardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Job Posting'**
+  String get editJobWizardTitle;
+
+  /// No description provided for @postJobStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Category & Title'**
+  String get postJobStep1;
+
+  /// No description provided for @postJobStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Wages & Schedule'**
+  String get postJobStep2;
+
+  /// No description provided for @postJobStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Slots & Payment'**
+  String get postJobStep3;
+
+  /// No description provided for @postJobStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Requirements & Location'**
+  String get postJobStep4;
+
+  /// No description provided for @postJobStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview & Publish'**
+  String get postJobStep5;
+
+  /// No description provided for @postJobSelectCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Work Category'**
+  String get postJobSelectCategory;
+
+  /// No description provided for @postJobTitleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Title'**
+  String get postJobTitleLabel;
+
+  /// No description provided for @postJobTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Construction Helper, Electrician, Plumber'**
+  String get postJobTitleHint;
+
+  /// No description provided for @postJobDescLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Description'**
+  String get postJobDescLabel;
+
+  /// No description provided for @postJobDescHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe specific tasks, tools needed, or location details...'**
+  String get postJobDescHint;
+
+  /// No description provided for @postJobWageType.
+  ///
+  /// In en, this message translates to:
+  /// **'Wage Type'**
+  String get postJobWageType;
+
+  /// No description provided for @postJobWageDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get postJobWageDaily;
+
+  /// No description provided for @postJobWageHourly.
+  ///
+  /// In en, this message translates to:
+  /// **'Hourly'**
+  String get postJobWageHourly;
+
+  /// No description provided for @postJobWageFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixed'**
+  String get postJobWageFixed;
+
+  /// No description provided for @postJobAmountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Wage Amount (₹)'**
+  String get postJobAmountLabel;
+
+  /// No description provided for @postJobFairWageBandTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fair Wage Band:'**
+  String get postJobFairWageBandTitle;
+
+  /// No description provided for @postJobFairWageBandRange.
+  ///
+  /// In en, this message translates to:
+  /// **'₹{min} - ₹{max} / {unit}'**
+  String postJobFairWageBandRange(int min, int max, String unit);
+
+  /// No description provided for @postJobBelowFairWageWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Wage is below the recommended fair wage band (₹{min} - ₹{max}). Workers may be slower to apply, but you can still proceed.'**
+  String postJobBelowFairWageWarning(int min, int max);
+
+  /// No description provided for @postJobDurationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated Duration'**
+  String get postJobDurationLabel;
+
+  /// No description provided for @postJobDurationHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} hours'**
+  String postJobDurationHours(int hours);
+
+  /// No description provided for @postJobStartDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Date & Time'**
+  String get postJobStartDateLabel;
+
+  /// No description provided for @postJobSelectDateTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Date & Time'**
+  String get postJobSelectDateTime;
+
+  /// No description provided for @postJobSlotsTotalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of Workers Needed (Slots)'**
+  String get postJobSlotsTotalLabel;
+
+  /// No description provided for @postJobMaterialsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Materials & Tools'**
+  String get postJobMaterialsLabel;
+
+  /// No description provided for @postJobMaterialsProvided.
+  ///
+  /// In en, this message translates to:
+  /// **'I will provide all tools and materials'**
+  String get postJobMaterialsProvided;
+
+  /// No description provided for @postJobMaterialsWorkerBrings.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker should bring their own tools'**
+  String get postJobMaterialsWorkerBrings;
+
+  /// No description provided for @postJobPaymentModeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Protection Mode'**
+  String get postJobPaymentModeLabel;
+
+  /// No description provided for @postJobPaymentEscrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Protected Escrow (Recommended)'**
+  String get postJobPaymentEscrow;
+
+  /// No description provided for @postJobPaymentEscrowDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Funds held securely until work is verified and approved'**
+  String get postJobPaymentEscrowDesc;
+
+  /// No description provided for @postJobPaymentUpi.
+  ///
+  /// In en, this message translates to:
+  /// **'Direct UPI on Completion'**
+  String get postJobPaymentUpi;
+
+  /// No description provided for @postJobPaymentUpiDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay directly to worker UPI QR on site'**
+  String get postJobPaymentUpiDesc;
+
+  /// No description provided for @postJobPaymentCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Cash at Site'**
+  String get postJobPaymentCash;
+
+  /// No description provided for @postJobPaymentCashDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay physical cash after shift ends'**
+  String get postJobPaymentCashDesc;
+
+  /// No description provided for @postJobRequirementsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker Requirements'**
+  String get postJobRequirementsLabel;
+
+  /// No description provided for @postJobReqVerifiedOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Background & Identity Verified Only'**
+  String get postJobReqVerifiedOnly;
+
+  /// No description provided for @postJobReqLicence.
+  ///
+  /// In en, this message translates to:
+  /// **'Driving Licence Required'**
+  String get postJobReqLicence;
+
+  /// No description provided for @postJobReqStudents.
+  ///
+  /// In en, this message translates to:
+  /// **'Students & Part-Time Friendly'**
+  String get postJobReqStudents;
+
+  /// No description provided for @postJobLocationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Site Location'**
+  String get postJobLocationLabel;
+
+  /// No description provided for @postJobAddressHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter site address or landmark'**
+  String get postJobAddressHint;
+
+  /// No description provided for @postJobGeofenceRadiusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Geofence Check-in Radius'**
+  String get postJobGeofenceRadiusLabel;
+
+  /// No description provided for @postJobGeofenceMeters.
+  ///
+  /// In en, this message translates to:
+  /// **'{meters} meters'**
+  String postJobGeofenceMeters(int meters);
+
+  /// No description provided for @postJobPublishButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish Job Posting'**
+  String get postJobPublishButton;
+
+  /// No description provided for @postJobSaveEditButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get postJobSaveEditButton;
+
+  /// No description provided for @postJobPublishSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Job posted successfully!'**
+  String get postJobPublishSuccess;
+
+  /// No description provided for @applicantsScreenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Applicants ({count})'**
+  String applicantsScreenTitle(int count);
+
+  /// No description provided for @applicantsNoApplicantsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Applications Yet'**
+  String get applicantsNoApplicantsTitle;
+
+  /// No description provided for @applicantsNoApplicantsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Workers nearby are being notified. Applicants will appear here once they apply.'**
+  String get applicantsNoApplicantsDesc;
+
+  /// No description provided for @applicantCardJobsDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} jobs done'**
+  String applicantCardJobsDone(int count);
+
+  /// No description provided for @applicantCardRating.
+  ///
+  /// In en, this message translates to:
+  /// **'{rating} ({count})'**
+  String applicantCardRating(double rating, int count);
+
+  /// No description provided for @applicantCardLanguages.
+  ///
+  /// In en, this message translates to:
+  /// **'Languages: {langs}'**
+  String applicantCardLanguages(String langs);
+
+  /// No description provided for @applicantCardSkills.
+  ///
+  /// In en, this message translates to:
+  /// **'Skills: {skills}'**
+  String applicantCardSkills(String skills);
+
+  /// No description provided for @applicantActionHire.
+  ///
+  /// In en, this message translates to:
+  /// **'Hire'**
+  String get applicantActionHire;
+
+  /// No description provided for @applicantActionShortlist.
+  ///
+  /// In en, this message translates to:
+  /// **'Shortlist'**
+  String get applicantActionShortlist;
+
+  /// No description provided for @applicantActionReject.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get applicantActionReject;
+
+  /// No description provided for @applicantActionChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat'**
+  String get applicantActionChat;
+
+  /// No description provided for @applicantActionProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'View Profile'**
+  String get applicantActionProfile;
+
+  /// No description provided for @applicantStatusApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'Applied'**
+  String get applicantStatusApplied;
+
+  /// No description provided for @applicantStatusShortlisted.
+  ///
+  /// In en, this message translates to:
+  /// **'Shortlisted'**
+  String get applicantStatusShortlisted;
+
+  /// No description provided for @applicantStatusHired.
+  ///
+  /// In en, this message translates to:
+  /// **'Hired'**
+  String get applicantStatusHired;
+
+  /// No description provided for @applicantStatusRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get applicantStatusRejected;
+
+  /// No description provided for @applicantHireConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hire Worker?'**
+  String get applicantHireConfirmTitle;
+
+  /// No description provided for @applicantHireConfirmDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Hiring {name} will assign them 1 slot on this job. They will receive a booking notification.'**
+  String applicantHireConfirmDesc(String name);
+
+  /// No description provided for @applicantHiredSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker hired successfully! Assignment created.'**
+  String get applicantHiredSuccess;
+
+  /// No description provided for @applicantShortlistedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Applicant moved to shortlist.'**
+  String get applicantShortlistedSuccess;
+
+  /// No description provided for @applicantRejectedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Application rejected.'**
+  String get applicantRejectedSuccess;
+
+  /// No description provided for @applicantJobFullNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'All slots for this job are filled.'**
+  String get applicantJobFullNotice;
 }
 
 class _AppLocalizationsDelegate

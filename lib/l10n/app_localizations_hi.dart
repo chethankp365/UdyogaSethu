@@ -1380,4 +1380,327 @@ class AppLocalizationsHi extends AppLocalizations {
   String categoryUpdatedSnackbar(Object category) {
     return 'श्रेणी को $category में अपडेट किया गया! फ़ीड और कौशल ताज़ा किए गए।';
   }
+
+  @override
+  String get providerMyJobsTitle => 'मेरे काम';
+
+  @override
+  String get providerTabOpen => 'खुले';
+
+  @override
+  String get providerTabFilled => 'भरे हुए';
+
+  @override
+  String get providerTabCompleted => 'पूर्ण';
+
+  @override
+  String providerSlotsCounter(int filled, int total) {
+    return '$filled / $total स्थान भरे गए';
+  }
+
+  @override
+  String providerSlotsOpenCount(int count) {
+    return '$count खाली';
+  }
+
+  @override
+  String get providerPostNewJob => 'नौकरी पोस्ट करें';
+
+  @override
+  String get providerNoJobsTitle => 'कोई नौकरी नहीं मिली';
+
+  @override
+  String get providerNoOpenJobsDesc =>
+      'आपके पास कोई खुली नौकरी पोस्टिंग नहीं है। सत्यापित श्रमिकों को नियुक्त करने के लिए एक बनाएं।';
+
+  @override
+  String get providerNoFilledJobsDesc => 'वर्तमान में कोई नौकरी भरी नहीं है।';
+
+  @override
+  String get providerNoCompletedJobsDesc =>
+      'अभी तक कोई नौकरी पूर्ण नहीं हुई है।';
+
+  @override
+  String get providerViewApplicants => 'आवेदक देखें';
+
+  @override
+  String providerApplicantsBadge(int count) {
+    return '$count आवेदक';
+  }
+
+  @override
+  String get providerJobPaused => 'रोका गया';
+
+  @override
+  String get providerJobDraft => 'ड्राफ्ट';
+
+  @override
+  String get providerJobCancelled => 'रद्द';
+
+  @override
+  String get providerActionEdit => 'पोस्टिंग संपादित करें';
+
+  @override
+  String get providerActionPause => 'पोस्टिंग रोकें';
+
+  @override
+  String get providerActionResume => 'पोस्टिंग फिर से शुरू करें';
+
+  @override
+  String get providerActionCancel => 'नौकरी रद्द करें';
+
+  @override
+  String get providerCancelWarningTitle => 'क्या नौकरी पोस्टिंग रद्द करें?';
+
+  @override
+  String providerCancelWarningHiredDesc(int count) {
+    return 'चेतावनी: इस नौकरी में $count श्रमिक नियुक्त हैं। रद्द करने से उन्हें तुरंत सूचित किया जाएगा और कार्य रद्द हो जाएगा।';
+  }
+
+  @override
+  String get providerCancelStandardDesc =>
+      'क्या आप वाकई इस नौकरी पोस्टिंग को रद्द करना चाहते हैं?';
+
+  @override
+  String get providerConfirmCancel => 'रद्दीकरण की पुष्टि करें';
+
+  @override
+  String get providerJobCancelledSuccess => 'नौकरी रद्द कर दी गई है।';
+
+  @override
+  String get providerJobPausedSuccess => 'नौकरी पोस्टिंग रोक दी गई है।';
+
+  @override
+  String get providerJobResumedSuccess => 'नौकरी पोस्टिंग अब सक्रिय है।';
+
+  @override
+  String get postJobWizardTitle => 'दैनिक वेतन नौकरी पोस्ट करें';
+
+  @override
+  String get editJobWizardTitle => 'नौकरी पोस्टिंग संपादित करें';
+
+  @override
+  String get postJobStep1 => 'श्रेणी और शीर्षक';
+
+  @override
+  String get postJobStep2 => 'वेतन और समय';
+
+  @override
+  String get postJobStep3 => 'स्थान और भुगतान';
+
+  @override
+  String get postJobStep4 => 'आवश्यकताएं और पता';
+
+  @override
+  String get postJobStep5 => 'पूर्वावलोकन और प्रकाशित करें';
+
+  @override
+  String get postJobSelectCategory => 'कार्य श्रेणी चुनें';
+
+  @override
+  String get postJobTitleLabel => 'नौकरी का शीर्षक';
+
+  @override
+  String get postJobTitleHint => 'उदा., निर्माण सहायक, इलेक्ट्रीशियन, प्लंबर';
+
+  @override
+  String get postJobDescLabel => 'नौकरी विवरण';
+
+  @override
+  String get postJobDescHint =>
+      'विशिष्ट कार्य, आवश्यक उपकरण या स्थान विवरण लिखें...';
+
+  @override
+  String get postJobWageType => 'वेतन प्रकार';
+
+  @override
+  String get postJobWageDaily => 'दैनिक';
+
+  @override
+  String get postJobWageHourly => 'प्रति घंटा';
+
+  @override
+  String get postJobWageFixed => 'निश्चित';
+
+  @override
+  String get postJobAmountLabel => 'वेतन राशि (₹)';
+
+  @override
+  String get postJobFairWageBandTitle => 'उचित वेतन सीमा:';
+
+  @override
+  String postJobFairWageBandRange(int min, int max, String unit) {
+    return '₹$min - ₹$max / $unit';
+  }
+
+  @override
+  String postJobBelowFairWageWarning(int min, int max) {
+    return 'वेतन अनुशंसित उचित वेतन सीमा (₹$min - ₹$max) से कम है। श्रमिक आवेदन करने में धीमे हो सकते हैं, लेकिन आप आगे बढ़ सकते हैं।';
+  }
+
+  @override
+  String get postJobDurationLabel => 'अनुमानित अवधि';
+
+  @override
+  String postJobDurationHours(int hours) {
+    return '$hours घंटे';
+  }
+
+  @override
+  String get postJobStartDateLabel => 'प्रारंभ तिथि और समय';
+
+  @override
+  String get postJobSelectDateTime => 'तिथि और समय चुनें';
+
+  @override
+  String get postJobSlotsTotalLabel => 'आवश्यक श्रमिकों की संख्या';
+
+  @override
+  String get postJobMaterialsLabel => 'सामग्री और उपकरण';
+
+  @override
+  String get postJobMaterialsProvided =>
+      'मैं सभी उपकरण और सामग्री प्रदान करूँगा';
+
+  @override
+  String get postJobMaterialsWorkerBrings => 'श्रमिक को अपने उपकरण लाने चाहिए';
+
+  @override
+  String get postJobPaymentModeLabel => 'भुगतान सुरक्षा मोड';
+
+  @override
+  String get postJobPaymentEscrow => 'सुरक्षित एस्क्रो (अनुशंसित)';
+
+  @override
+  String get postJobPaymentEscrowDesc =>
+      'कार्य सत्यापित और स्वीकृत होने तक धनराशि सुरक्षित रखी जाती है';
+
+  @override
+  String get postJobPaymentUpi => 'कार्य पूरा होने पर सीधा UPI';
+
+  @override
+  String get postJobPaymentUpiDesc =>
+      'साइट पर सीधे कार्यकर्ता के UPI QR पर भुगतान करें';
+
+  @override
+  String get postJobPaymentCash => 'साइट पर दैनिक नकद';
+
+  @override
+  String get postJobPaymentCashDesc =>
+      'शिफ्ट समाप्त होने के बाद नकद भुगतान करें';
+
+  @override
+  String get postJobRequirementsLabel => 'श्रमिक आवश्यकताएं';
+
+  @override
+  String get postJobReqVerifiedOnly => 'केवल पृष्ठभूमि और पहचान सत्यापित';
+
+  @override
+  String get postJobReqLicence => 'ड्राइविंग लाइसेंस आवश्यक';
+
+  @override
+  String get postJobReqStudents => 'छात्र और अंशकालिक अनुकूल';
+
+  @override
+  String get postJobLocationLabel => 'कार्य स्थल';
+
+  @override
+  String get postJobAddressHint => 'साइट का पता या लैंडमार्क दर्ज करें';
+
+  @override
+  String get postJobGeofenceRadiusLabel => 'जियोफेंस चेक-इन त्रिज्या';
+
+  @override
+  String postJobGeofenceMeters(int meters) {
+    return '$meters मीटर';
+  }
+
+  @override
+  String get postJobPublishButton => 'नौकरी प्रकाशित करें';
+
+  @override
+  String get postJobSaveEditButton => 'परिवर्तन सहेजें';
+
+  @override
+  String get postJobPublishSuccess => 'नौकरी सफलतापूर्वक पोस्ट की गई!';
+
+  @override
+  String applicantsScreenTitle(int count) {
+    return 'आवेदक ($count)';
+  }
+
+  @override
+  String get applicantsNoApplicantsTitle => 'अभी तक कोई आवेदन नहीं';
+
+  @override
+  String get applicantsNoApplicantsDesc =>
+      'आस-पास के श्रमिकों को सूचित किया जा रहा है। आवेदन करने पर वे यहाँ दिखाई देंगे।';
+
+  @override
+  String applicantCardJobsDone(int count) {
+    return '$count काम पूरे हुए';
+  }
+
+  @override
+  String applicantCardRating(double rating, int count) {
+    return '$rating ($count)';
+  }
+
+  @override
+  String applicantCardLanguages(String langs) {
+    return 'भाषाएं: $langs';
+  }
+
+  @override
+  String applicantCardSkills(String skills) {
+    return 'कौशल: $skills';
+  }
+
+  @override
+  String get applicantActionHire => 'नियुक्त करें';
+
+  @override
+  String get applicantActionShortlist => 'शॉर्टलिस्ट';
+
+  @override
+  String get applicantActionReject => 'अस्वीकार करें';
+
+  @override
+  String get applicantActionChat => 'चैट';
+
+  @override
+  String get applicantActionProfile => 'प्रोफ़ाइल देखें';
+
+  @override
+  String get applicantStatusApplied => 'आवेदित';
+
+  @override
+  String get applicantStatusShortlisted => 'शॉर्टलिस्टेड';
+
+  @override
+  String get applicantStatusHired => 'नियुक्त';
+
+  @override
+  String get applicantStatusRejected => 'अस्वीकृत';
+
+  @override
+  String get applicantHireConfirmTitle => 'श्रमिक को नियुक्त करें?';
+
+  @override
+  String applicantHireConfirmDesc(String name) {
+    return '$name को नियुक्त करने से उन्हें इस नौकरी में 1 स्थान दिया जाएगा।';
+  }
+
+  @override
+  String get applicantHiredSuccess => 'श्रमिक को सफलतापूर्वक नियुक्त किया गया!';
+
+  @override
+  String get applicantShortlistedSuccess =>
+      'आवेदक को शॉर्टलिस्ट में ले जाया गया।';
+
+  @override
+  String get applicantRejectedSuccess => 'आवेदन अस्वीकार कर दिया गया।';
+
+  @override
+  String get applicantJobFullNotice => 'इस नौकरी के सभी स्थान भर चुके हैं।';
 }

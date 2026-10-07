@@ -92,7 +92,7 @@
   "wageTypeDaily": "ದಿನಗೂಲಿ",
   "wageTypeHourly": "ಗಂಟೆಗೂಲಿ",
   "wageTypeFixed": "ನಿಗದಿತ ಮೊತ್ತ",
-  "walletBalance": "ವ್ಯಾಲೆಟ್ ಬಾಕಿ: ₹{balance}",
+  "walletBalance": "ವಾಲೆಟ್ ಬ್ಯಾಲೆನ್ಸ್",
   "jobsCount": "{count, plural, =0{ಯಾವ ಕೆಲಸಗಳೂ ಸಿಗಲಿಲ್ಲ} =1{1 ಕೆಲಸ ಸಿಕ್ಕಿದೆ} other{{count} ಕೆಲಸಗಳು ಸಿಕ್ಕಿವೆ}}",
   "applicantsCount": "{count, plural, =0{ಯಾರೂ ಅರ್ಜಿ ಸಲ್ಲಿಸಿಲ್ಲ} =1{1 ಅರ್ಜಿದಾರರು} other{{count} ಅರ್ಜಿದಾರರು}}",
   "distanceKm": "{distance} ಕಿಮೀ ದೂರದಲ್ಲಿದೆ",
@@ -324,7 +324,6 @@
   "seekerHomeTitle": "ಉದ್ಯೋಗಾಕಾಂಕ್ಷಿ ಮುಖಪುಟ",
   "searchJobsPlaceholder": "ಉದ್ಯೋಗಗಳು, ಸೇವೆಗಳನ್ನು ಹುಡುಕಿ...",
   "todaysGoal": "ಇಂದಿನ ಗುರಿ",
-  "walletBalance": "ವಾಲೆಟ್ ಬ್ಯಾಲೆನ್ಸ್",
   "viewWallet": "ವಾಲೆಟ್ ನೋಡಿ >",
   "locationSharingActive": "ಸುರಕ್ಷತಾ ಮೇಲ್ವಿಚಾರಣೆಗಾಗಿ ಸ್ಥಳ ಹಂಚಿಕೆ ಸಕ್ರಿಯವಾಗಿದೆ",
   "changeLocation": "ಬದಲಾಯಿಸಿ >",
@@ -415,7 +414,213 @@
   "aadhaarVerified": "ಆಧಾರ್ ಇ-ಕೆವೈಸಿ ಪರಿಶೀಲಿಸಲಾಗಿದೆ ✓",
   "faceLivenessVerified": "ಮುಖದ ಬಯೋಮೆಟ್ರಿಕ್ ಪರಿಶೀಲಿಸಲಾಗಿದೆ ✓",
   "safetyTrainingVerified": "1-ದಿನದ ಸುರಕ್ಷತಾ ತರಬೇತಿ ಪೂರ್ಣಗೊಂಡಿದೆ ✓",
-  "categoryUpdatedSnackbar": "ವರ್ಗವನ್ನು {category} ಗೆ ನವೀಕರಿಸಲಾಗಿದೆ! ಫೀಡ್ ಮತ್ತು ಕೌಶಲ್ಯಗಳನ್ನು ರಿಫ್ರೆಶ್ ಮಾಡಲಾಗಿದೆ."
+  "categoryUpdatedSnackbar": "ವರ್ಗವನ್ನು {category} ಗೆ ನವೀಕರಿಸಲಾಗಿದೆ! ಫೀಡ್ ಮತ್ತು ಕೌಶಲ್ಯಗಳನ್ನು ರಿಫ್ರೆಶ್ ಮಾಡಲಾಗಿದೆ.",
+  "providerMyJobsTitle": "ನನ್ನ ಉದ್ಯೋಗಗಳು",
+  "providerTabOpen": "ತೆರೆದಿದೆ",
+  "providerTabFilled": "ಭರ್ತಿಯಾಗಿದೆ",
+  "providerTabCompleted": "ಪೂರ್ಣಗೊಂಡಿದೆ",
+  "providerSlotsCounter": "{filled} / {total} ಸ್ಥಳಗಳು ಭರ್ತಿಯಾಗಿವೆ",
+  "@providerSlotsCounter": {
+    "placeholders": {
+      "filled": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "providerSlotsOpenCount": "{count} ಲಭ್ಯವಿದೆ",
+  "@providerSlotsOpenCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "providerPostNewJob": "ಉದ್ಯೋಗ ಪ್ರಕಟಿಸಿ",
+  "providerNoJobsTitle": "ಯಾವುದೇ ಉದ್ಯೋಗಗಳು ಕಂಡುಬಂದಿಲ್ಲ",
+  "providerNoOpenJobsDesc": "ನಿಮ್ಮಲ್ಲಿ ಯಾವುದೇ ತೆರೆದ ಉದ್ಯೋಗ ಪ್ರಕಟಣೆಗಳಿಲ್ಲ. ಪರಿಶೀಲಿತ ಕಾರ್ಮಿಕರನ್ನು ನೇಮಿಸಿಕೊಳ್ಳಲು ಹೊಸದನ್ನು ರಚಿಸಿ.",
+  "providerNoFilledJobsDesc": "ಪ್ರಸ್ತುತ ಯಾವುದೇ ಉದ್ಯೋಗಗಳು ಭರ್ತಿಯಾಗಿಲ್ಲ.",
+  "providerNoCompletedJobsDesc": "ಇನ್ನೂ ಯಾವುದೇ ಉದ್ಯೋಗಗಳು ಪೂರ್ಣಗೊಂಡಿಲ್ಲ.",
+  "providerViewApplicants": "ಅರ್ಜಿದಾರರನ್ನು ವೀಕ್ಷಿಸಿ",
+  "providerApplicantsBadge": "{count} ಅರ್ಜಿದಾರರು",
+  "@providerApplicantsBadge": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "providerJobPaused": "ತಾತ್ಕಾಲಿಕ ನಿಲುಗಡೆ",
+  "providerJobDraft": "ಕರಡು",
+  "providerJobCancelled": "ರದ್ದುಗೊಳಿಸಲಾಗಿದೆ",
+  "providerActionEdit": "ಪ್ರಕಟಣೆ ಸಂಪಾದಿಸಿ",
+  "providerActionPause": "ಪ್ರಕಟಣೆ ನಿಲ್ಲಿಸಿ",
+  "providerActionResume": "ಪ್ರಕಟಣೆ ಮುಂದುವರಿಸಿ",
+  "providerActionCancel": "ಉದ್ಯೋಗ ರದ್ದುಮಾಡಿ",
+  "providerCancelWarningTitle": "ಉದ್ಯೋಗ ಪ್ರಕಟಣೆ ರದ್ದುಗೊಳಿಸಬೇಕೇ?",
+  "providerCancelWarningHiredDesc": "ಎಚ್ಚರಿಕೆ: ಈ ಉದ್ಯೋಗಕ್ಕೆ {count} ಕಾರ್ಮಿಕರನ್ನು ನೇಮಿಸಲಾಗಿದೆ. ರದ್ದುಗೊಳಿಸುವುದರಿಂದ ಅವರಿಗೆ ತಕ್ಷಣ ತಿಳಿಸಲಾಗುತ್ತದೆ ಮತ್ತು ನಿಯೋಜನೆಗಳನ್ನು ರದ್ದುಗೊಳಿಸಲಾಗುತ್ತದೆ.",
+  "@providerCancelWarningHiredDesc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "providerCancelStandardDesc": "ಈ ಉದ್ಯೋಗ ಪ್ರಕಟಣೆಯನ್ನು ರದ್ದುಗೊಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?",
+  "providerConfirmCancel": "ರದ್ದತಿಯನ್ನು ದೃಢೀಕರಿಸಿ",
+  "providerJobCancelledSuccess": "ಉದ್ಯೋಗ ರದ್ದುಗೊಳಿಸಲಾಗಿದೆ.",
+  "providerJobPausedSuccess": "ಉದ್ಯೋಗ ಪ್ರಕಟಣೆಯನ್ನು ನಿಲ್ಲಿಸಲಾಗಿದೆ.",
+  "providerJobResumedSuccess": "ಉದ್ಯೋಗ ಪ್ರಕಟಣೆ ಈಗ ಸಕ್ರಿಯವಾಗಿದೆ.",
+  "postJobWizardTitle": "ದೈನಂದಿನ ಕೂಲಿ ಉದ್ಯೋಗ ಪ್ರಕಟಿಸಿ",
+  "editJobWizardTitle": "ಉದ್ಯೋಗ ಪ್ರಕಟಣೆ ಸಂಪಾದಿಸಿ",
+  "postJobStep1": "ವರ್ಗ ಮತ್ತು ಶೀರ್ಷಿಕೆ",
+  "postJobStep2": "ಕೂಲಿ ಮತ್ತು ವೇಳಾಪಟ್ಟಿ",
+  "postJobStep3": "ಸ್ಥಳಗಳು ಮತ್ತು ಪಾವತಿ",
+  "postJobStep4": "ಅಗತ್ಯತೆಗಳು ಮತ್ತು ಸ್ಥಳ",
+  "postJobStep5": "ಪೂರ್ವವೀಕ್ಷಣೆ ಮತ್ತು ಪ್ರಕಟಣೆ",
+  "postJobSelectCategory": "ಕೆಲಸದ ವರ್ಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+  "postJobTitleLabel": "ಉದ್ಯೋಗದ ಶೀರ್ಷಿಕೆ",
+  "postJobTitleHint": "ಉದಾ: ಕಟ್ಟಡ ಸಹಾಯಕ, ಎಲೆಕ್ಟ್ರಿಷಿಯನ್, ಪ್ಲಂಬರ್",
+  "postJobDescLabel": "ಉದ್ಯೋಗ ವಿವರಣೆ",
+  "postJobDescHint": "ನಿರ್ದಿಷ್ಟ ಕಾರ್ಯಗಳು, ಅಗತ್ಯವಿರುವ ಉಪಕರಣಗಳು ಅಥವಾ ಸ್ಥಳದ ವಿವರಗಳನ್ನು ಬರೆಯಿರಿ...",
+  "postJobWageType": "ಕೂಲಿ ಪ್ರಕಾರ",
+  "postJobWageDaily": "ದೈನಂದಿನ",
+  "postJobWageHourly": "ಗಂಟೆಯ",
+  "postJobWageFixed": "ನಿಗದಿತ",
+  "postJobAmountLabel": "ಕೂಲಿ ಮೊತ್ತ (₹)",
+  "postJobFairWageBandTitle": "ನ್ಯಾಯಯುತ ಕೂಲಿ ಪಟ್ಟಿ:",
+  "postJobFairWageBandRange": "₹{min} - ₹{max} / {unit}",
+  "@postJobFairWageBandRange": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "postJobBelowFairWageWarning": "ಕೂಲಿ ನ್ಯಾಯಯುತ ಕೂಲಿ ಮಟ್ಟಕ್ಕಿಂತ (₹{min} - ₹{max}) ಕಡಿಮೆಯಾಗಿದೆ. ಕಾರ್ಮಿಕರು ಅರ್ಜಿ ಸಲ್ಲಿಸಲು ವಿಳಂಬವಾಗಬಹುದು, ಆದರೆ ನೀವು ಮುಂದುವರಿಯಬಹುದು.",
+  "@postJobBelowFairWageWarning": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "postJobDurationLabel": "ಅಂದಾಜು ಅವಧಿ",
+  "postJobDurationHours": "{hours} ಗಂಟೆಗಳು",
+  "@postJobDurationHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "postJobStartDateLabel": "ಪ್ರಾರಂಭದ ದಿನಾಂಕ ಮತ್ತು ಸಮಯ",
+  "postJobSelectDateTime": "ದಿನಾಂಕ ಮತ್ತು ಸಮಯ ಆಯ್ಕೆಮಾಡಿ",
+  "postJobSlotsTotalLabel": "ಅಗತ್ಯವಿರುವ ಕಾರ್ಮಿಕರ ಸಂಖ್ಯೆ",
+  "postJobMaterialsLabel": "ಸಾಮಗ್ರಿಗಳು ಮತ್ತು ಉಪಕರಣಗಳು",
+  "postJobMaterialsProvided": "ನಾನೇ ಎಲ್ಲಾ ಉಪಕರಣಗಳನ್ನು ಒದಗಿಸುತ್ತೇನೆ",
+  "postJobMaterialsWorkerBrings": "ಕಾರ್ಮಿಕರೇ ತಮ್ಮ ಉಪಕರಣಗಳನ್ನು ತರಬೇಕು",
+  "postJobPaymentModeLabel": "ಪಾವತಿ ಸಂರಕ್ಷಣಾ ವಿಧಾನ",
+  "postJobPaymentEscrow": "ರಕ್ಷಿತ ಎಸ್ಕ್ರೋ (ಶಿಫಾರಸು ಮಾಡಲಾಗಿದೆ)",
+  "postJobPaymentEscrowDesc": "ಕೆಲಸ ಪರಿಶೀಲಿಸಿ ಅನುಮೋದಿಸುವವರೆಗೆ ಹಣ ಸುರಕ್ಷಿತವಾಗಿರುತ್ತದೆ",
+  "postJobPaymentUpi": "ಕೆಲಸ ಮುಗಿದ ನಂತರ ನೇರ UPI",
+  "postJobPaymentUpiDesc": "ಕೆಲಸ ಮುಗಿದ ನಂತರ ಸೈಟ್‌ನಲ್ಲಿ ನೇರವಾಗಿ QR ಮೂಲಕ ಪಾವತಿಸಿ",
+  "postJobPaymentCash": "ಸೈಟ್‌ನಲ್ಲಿ ದೈನಂದಿನ ನಗದು",
+  "postJobPaymentCashDesc": "ಪಾಳಿ ಮುಗಿದ ನಂತರ ನಗದು ಪಾವತಿಸಿ",
+  "postJobRequirementsLabel": "ಕಾರ್ಮಿಕರ ಅಗತ್ಯತೆಗಳು",
+  "postJobReqVerifiedOnly": "ಹಿನ್ನೆಲೆ ಮತ್ತು ಗುರುತು ಪರಿಶೀಲಿಸಿದವರು ಮಾತ್ರ",
+  "postJobReqLicence": "ಚಾಲನಾ ಪರವಾನಗಿ ಅಗತ್ಯವಿದೆ",
+  "postJobReqStudents": "ವಿದ್ಯಾರ್ಥಿಗಳಿಗೆ ಸೂಕ್ತವಾಗಿದೆ",
+  "postJobLocationLabel": "ಕೆಲಸದ ಸ್ಥಳ",
+  "postJobAddressHint": "ವಿಳಾಸ ಅಥವಾ ಗುರುತಿನ ಸ್ಥಳ ನಮೂದಿಸಿ",
+  "postJobGeofenceRadiusLabel": "ಜಿಯೋಫೆನ್ಸ್ ಚೆಕ್-ಇನ್ ವ್ಯಾಪ್ತಿ",
+  "postJobGeofenceMeters": "{meters} ಮೀಟರ್",
+  "@postJobGeofenceMeters": {
+    "placeholders": {
+      "meters": {
+        "type": "int"
+      }
+    }
+  },
+  "postJobPublishButton": "ಉದ್ಯೋಗ ಪ್ರಕಟಿಸಿ",
+  "postJobSaveEditButton": "ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ",
+  "postJobPublishSuccess": "ಉದ್ಯೋಗ ಯಶಸ್ವಿಯಾಗಿ ಪ್ರಕಟಿಸಲಾಗಿದೆ!",
+  "applicantsScreenTitle": "ಅರ್ಜಿದಾರರು ({count})",
+  "@applicantsScreenTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "applicantsNoApplicantsTitle": "ಇನ್ನೂ ಯಾವುದೇ ಅರ್ಜಿಗಳಿಲ್ಲ",
+  "applicantsNoApplicantsDesc": "ಹತ್ತಿರದ ಕಾರ್ಮಿಕರಿಗೆ ಸೂಚಿಸಲಾಗುತ್ತಿದೆ. ಅವರು ಅರ್ಜಿ ಸಲ್ಲಿಸಿದ ನಂತರ ಇಲ್ಲಿ ಕಾಣಿಸಿಕೊಳ್ಳುತ್ತಾರೆ.",
+  "applicantCardJobsDone": "{count} ಕೆಲಸಗಳು ಮುಗಿದಿವೆ",
+  "@applicantCardJobsDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "applicantCardRating": "{rating} ({count})",
+  "@applicantCardRating": {
+    "placeholders": {
+      "rating": {
+        "type": "double"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "applicantCardLanguages": "ಭಾಷೆಗಳು: {langs}",
+  "@applicantCardLanguages": {
+    "placeholders": {
+      "langs": {
+        "type": "String"
+      }
+    }
+  },
+  "applicantCardSkills": "ಕೌಶಲ್ಯಗಳು: {skills}",
+  "@applicantCardSkills": {
+    "placeholders": {
+      "skills": {
+        "type": "String"
+      }
+    }
+  },
+  "applicantActionHire": "ನೇಮಿಸಿಕೊಳ್ಳಿ",
+  "applicantActionShortlist": "ಆಯ್ಕೆಪಟ್ಟಿ",
+  "applicantActionReject": "ತಿರಸ್ಕರಿಸಿ",
+  "applicantActionChat": "ಮಾತುಕತೆ",
+  "applicantActionProfile": "ಪ್ರೊಫೈಲ್ ವೀಕ್ಷಿಸಿ",
+  "applicantStatusApplied": "ಅರ್ಜಿ ಸಲ್ಲಿಸಲಾಗಿದೆ",
+  "applicantStatusShortlisted": "ಆಯ್ಕೆಪಟ್ಟಿಯಲ್ಲಿದೆ",
+  "applicantStatusHired": "ನೇಮಕಗೊಂಡಿದೆ",
+  "applicantStatusRejected": "ತಿರಸ್ಕರಿಸಲಾಗಿದೆ",
+  "applicantHireConfirmTitle": "ಕಾರ್ಮಿಕರನ್ನು ನೇಮಿಸಿಕೊಳ್ಳಬೇಕೇ?",
+  "applicantHireConfirmDesc": "{name} ಅವರನ್ನು ನೇಮಿಸಿಕೊಳ್ಳುವುದರಿಂದ ಅವರಿಗೆ ಈ ಕೆಲಸದಲ್ಲಿ 1 ಸ್ಥಳ ನಿಗದಿಯಾಗುತ್ತದೆ.",
+  "@applicantHireConfirmDesc": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "applicantHiredSuccess": "ಕಾರ್ಮಿಕರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ನೇಮಿಸಿಕೊಳ್ಳಲಾಗಿದೆ!",
+  "applicantShortlistedSuccess": "ಅರ್ಜಿದಾರರನ್ನು ಆಯ್ಕೆಪಟ್ಟಿಗೆ ಸೇರಿಸಲಾಗಿದೆ.",
+  "applicantRejectedSuccess": "ಅರ್ಜಿಯನ್ನು ತಿರಸ್ಕರಿಸಲಾಗಿದೆ.",
+  "applicantJobFullNotice": "ಈ ಕೆಲಸದ ಎಲ್ಲಾ ಸ್ಥಳಗಳು ಭರ್ತಿಯಾಗಿವೆ."
 }
-
-

@@ -92,7 +92,7 @@
   "wageTypeDaily": "Daily Wage",
   "wageTypeHourly": "Hourly Wage",
   "wageTypeFixed": "Fixed Payment",
-  "walletBalance": "Wallet Balance: ₹{balance}",
+  "walletBalance": "ୱାଲେଟ୍ ବାଲାନ୍ସ",
   "jobsCount": "{count, plural, =0{No jobs found} =1{1 job found} other{{count} jobs found}}",
   "applicantsCount": "{count, plural, =0{No applicants} =1{1 applicant} other{{count} applicants}}",
   "distanceKm": "{distance} km away",
@@ -324,7 +324,6 @@
   "seekerHomeTitle": "କର୍ମସନ୍ଧାନୀ ହୋମ୍",
   "searchJobsPlaceholder": "କାର୍ଯ୍ୟ, ସେବା ସନ୍ଧାନ କରନ୍ତୁ...",
   "todaysGoal": "ଆଜିର ଲକ୍ଷ୍ୟ",
-  "walletBalance": "ୱାଲେଟ୍ ବାଲାନ୍ସ",
   "viewWallet": "ୱାଲେଟ୍ ଦେଖନ୍ତୁ >",
   "locationSharingActive": "ସୁରକ୍ଷା ନିରୀକ୍ଷଣ ପାଇଁ ଅବସ୍ଥିତି ଅଂଶୀଦାର ସକ୍ରିୟ ଅଛି",
   "changeLocation": "ପରିବର୍ତ୍ତନ >",
@@ -373,7 +372,255 @@
   "notificationPermissionSubtitle": "ତୁରନ୍ତ କାର୍ଯ୍ୟ ସତର୍କତା, ଦେୟ ଏବଂ ସୁରକ୍ଷା ଅଦ୍ୟତନ ପାଇଁ ବ୍ୟବହୃତ ହୁଏ।",
   "permissionAllowedStatus": "ଅନୁମୋଦିତ",
   "permissionBlockedStatus": "ଅବରୋଧିତ / ବନ୍ଦ",
-  "refreshConsentsTooltip": "ସ୍ଥିତି ସତେଜ କରନ୍ତୁ"
+  "refreshConsentsTooltip": "ସ୍ଥିତି ସତେଜ କରନ୍ତୁ",
+  "tabOverview": "Overview",
+  "tabWorkShowcase": "Work Showcase",
+  "tabSafetyStatus": "Safety Status",
+  "verifiedJobsStat": "Verified Jobs",
+  "ratingStat": "Rating",
+  "totalEarningsStat": "Total Earnings",
+  "categoryPrefix": "Category: {category}",
+  "roleCredentialsTitle": "ROLE CREDENTIALS & CATEGORY BADGES",
+  "changeCategoryBtn": "Change Category",
+  "changeCategoryTitle": "Change Worker Category",
+  "changeCategorySubtitle": "Select your work type to personalize jobs and verification",
+  "categoryInformalTitle": "Informal / Skilled Worker",
+  "categoryInformalDesc": "Trades, craftsmanship, home services & agricultural work",
+  "categoryStudentTitle": "Student Gig Worker",
+  "categoryStudentDesc": "Campus gigs, tutoring, creative design & online tasks",
+  "categoryPartTimeTitle": "Part-Time Worker",
+  "categoryPartTimeDesc": "Retail, restaurant service, flexible evening & weekend shifts",
+  "mySkillsTitle": "MY SKILLS",
+  "addSkillBtn": "+ Add Skill",
+  "addSkillDialogTitle": "Select a Skill",
+  "addSkillDialogSubtitle": "Choose skills matching your work profile",
+  "languageAccessibilityTitle": "LANGUAGE & ACCESSIBILITY",
+  "verificationStatusTitle": "VERIFICATION STATUS",
+  "accountAndSafetyTitle": "Account & Safety",
+  "emptyShowcaseTitle": "Your completed jobs, photos and ratings will appear here",
+  "emptyShowcaseSubtitle": "Once you complete jobs through UdyogaSethu, verified employer reviews, photos, and earnings will be showcased here.",
+  "browseJobsAction": "Browse Jobs",
+  "safetyLifecycleTitle": "Safety Onboarding & Badges",
+  "notVerifiedYet": "Not verified yet",
+  "verifiedWorkerBadge": "UDYOGASETHU VERIFIED ✓",
+  "dlVerified": "Driving Licence Verified ✓",
+  "dlPending": "Add Driving Licence",
+  "studentBadgeVerified": "Student Status Verified ✓",
+  "studentBadgePending": "Verify Student Status",
+  "bankUpiVerified": "Bank / UPI Linked ✓",
+  "bankUpiPending": "Link Bank / UPI",
+  "bgCheckVerified": "Background Check Clear ✓",
+  "bgCheckPending": "Pending Background Check",
+  "aadhaarVerified": "Aadhaar eKYC Verified ✓",
+  "faceLivenessVerified": "Face Liveness Verified ✓",
+  "safetyTrainingVerified": "1-Day Safety Training Completed ✓",
+  "categoryUpdatedSnackbar": "Category updated to {category}! Feed and skills refreshed.",
+  "providerMyJobsTitle": "My Jobs",
+  "providerTabOpen": "Open",
+  "providerTabFilled": "Filled",
+  "providerTabCompleted": "Completed",
+  "providerSlotsCounter": "{filled} / {total} Slots Filled",
+  "@providerSlotsCounter": {
+    "placeholders": {
+      "filled": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "providerSlotsOpenCount": "{count} Open",
+  "@providerSlotsOpenCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "providerPostNewJob": "Post a Job",
+  "providerNoJobsTitle": "No Jobs Found",
+  "providerNoOpenJobsDesc": "You don't have any open job postings. Create one to hire verified local workers.",
+  "providerNoFilledJobsDesc": "No jobs are currently filled.",
+  "providerNoCompletedJobsDesc": "No completed jobs yet.",
+  "providerViewApplicants": "View Applicants",
+  "providerApplicantsBadge": "{count} Applicants",
+  "@providerApplicantsBadge": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "providerJobPaused": "Paused",
+  "providerJobDraft": "Draft",
+  "providerJobCancelled": "Cancelled",
+  "providerActionEdit": "Edit Posting",
+  "providerActionPause": "Pause Posting",
+  "providerActionResume": "Resume Posting",
+  "providerActionCancel": "Cancel Job",
+  "providerCancelWarningTitle": "Cancel Job Posting?",
+  "providerCancelWarningHiredDesc": "Warning: This job has {count} hired worker(s). Cancelling will immediately notify workers, cancel their assignments, and release escrow holds. This may negatively impact your employer reliability rating.",
+  "@providerCancelWarningHiredDesc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "providerCancelStandardDesc": "Are you sure you want to cancel this job posting? Open slots will be removed.",
+  "providerConfirmCancel": "Confirm Cancellation",
+  "providerJobCancelledSuccess": "Job has been cancelled.",
+  "providerJobPausedSuccess": "Job posting has been paused.",
+  "providerJobResumedSuccess": "Job posting is now active.",
+  "postJobWizardTitle": "Post a Daily Wage Job",
+  "editJobWizardTitle": "Edit Job Posting",
+  "postJobStep1": "Category & Title",
+  "postJobStep2": "Wages & Schedule",
+  "postJobStep3": "Slots & Payment",
+  "postJobStep4": "Requirements & Location",
+  "postJobStep5": "Preview & Publish",
+  "postJobSelectCategory": "Select Work Category",
+  "postJobTitleLabel": "Job Title",
+  "postJobTitleHint": "e.g., Construction Helper, Electrician, Plumber",
+  "postJobDescLabel": "Job Description",
+  "postJobDescHint": "Describe specific tasks, tools needed, or location details...",
+  "postJobWageType": "Wage Type",
+  "postJobWageDaily": "Daily",
+  "postJobWageHourly": "Hourly",
+  "postJobWageFixed": "Fixed",
+  "postJobAmountLabel": "Wage Amount (₹)",
+  "postJobFairWageBandTitle": "Fair Wage Band:",
+  "postJobFairWageBandRange": "₹{min} - ₹{max} / {unit}",
+  "@postJobFairWageBandRange": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "postJobBelowFairWageWarning": "Wage is below the recommended fair wage band (₹{min} - ₹{max}). Workers may be slower to apply, but you can still proceed.",
+  "@postJobBelowFairWageWarning": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "postJobDurationLabel": "Estimated Duration",
+  "postJobDurationHours": "{hours} hours",
+  "@postJobDurationHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "postJobStartDateLabel": "Start Date & Time",
+  "postJobSelectDateTime": "Select Date & Time",
+  "postJobSlotsTotalLabel": "Number of Workers Needed (Slots)",
+  "postJobMaterialsLabel": "Materials & Tools",
+  "postJobMaterialsProvided": "I will provide all tools and materials",
+  "postJobMaterialsWorkerBrings": "Worker should bring their own tools",
+  "postJobPaymentModeLabel": "Payment Protection Mode",
+  "postJobPaymentEscrow": "Protected Escrow (Recommended)",
+  "postJobPaymentEscrowDesc": "Funds held securely until work is verified and approved",
+  "postJobPaymentUpi": "Direct UPI on Completion",
+  "postJobPaymentUpiDesc": "Pay directly to worker UPI QR on site",
+  "postJobPaymentCash": "Daily Cash at Site",
+  "postJobPaymentCashDesc": "Pay physical cash after shift ends",
+  "postJobRequirementsLabel": "Worker Requirements",
+  "postJobReqVerifiedOnly": "Background & Identity Verified Only",
+  "postJobReqLicence": "Driving Licence Required",
+  "postJobReqStudents": "Students & Part-Time Friendly",
+  "postJobLocationLabel": "Work Site Location",
+  "postJobAddressHint": "Enter site address or landmark",
+  "postJobGeofenceRadiusLabel": "Geofence Check-in Radius",
+  "postJobGeofenceMeters": "{meters} meters",
+  "@postJobGeofenceMeters": {
+    "placeholders": {
+      "meters": {
+        "type": "int"
+      }
+    }
+  },
+  "postJobPublishButton": "Publish Job Posting",
+  "postJobSaveEditButton": "Save Changes",
+  "postJobPublishSuccess": "Job posted successfully!",
+  "applicantsScreenTitle": "Applicants ({count})",
+  "@applicantsScreenTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "applicantsNoApplicantsTitle": "No Applications Yet",
+  "applicantsNoApplicantsDesc": "Workers nearby are being notified. Applicants will appear here once they apply.",
+  "applicantCardJobsDone": "{count} jobs done",
+  "@applicantCardJobsDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "applicantCardRating": "{rating} ({count})",
+  "@applicantCardRating": {
+    "placeholders": {
+      "rating": {
+        "type": "double"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "applicantCardLanguages": "Languages: {langs}",
+  "@applicantCardLanguages": {
+    "placeholders": {
+      "langs": {
+        "type": "String"
+      }
+    }
+  },
+  "applicantCardSkills": "Skills: {skills}",
+  "@applicantCardSkills": {
+    "placeholders": {
+      "skills": {
+        "type": "String"
+      }
+    }
+  },
+  "applicantActionHire": "Hire",
+  "applicantActionShortlist": "Shortlist",
+  "applicantActionReject": "Reject",
+  "applicantActionChat": "Chat",
+  "applicantActionProfile": "View Profile",
+  "applicantStatusApplied": "Applied",
+  "applicantStatusShortlisted": "Shortlisted",
+  "applicantStatusHired": "Hired",
+  "applicantStatusRejected": "Rejected",
+  "applicantHireConfirmTitle": "Hire Worker?",
+  "applicantHireConfirmDesc": "Hiring {name} will assign them 1 slot on this job. They will receive a booking notification.",
+  "@applicantHireConfirmDesc": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "applicantHiredSuccess": "Worker hired successfully! Assignment created.",
+  "applicantShortlistedSuccess": "Applicant moved to shortlist.",
+  "applicantRejectedSuccess": "Application rejected.",
+  "applicantJobFullNotice": "All slots for this job are filled."
 }
-
-

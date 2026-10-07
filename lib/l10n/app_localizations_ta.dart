@@ -1397,4 +1397,326 @@ class AppLocalizationsTa extends AppLocalizations {
   String categoryUpdatedSnackbar(Object category) {
     return 'பிரிவு $category என புதுப்பிக்கப்பட்டது! ஊட்டமும் திறன்களும் புதுப்பிக்கப்பட்டன.';
   }
+
+  @override
+  String get providerMyJobsTitle => 'My Jobs';
+
+  @override
+  String get providerTabOpen => 'Open';
+
+  @override
+  String get providerTabFilled => 'Filled';
+
+  @override
+  String get providerTabCompleted => 'Completed';
+
+  @override
+  String providerSlotsCounter(int filled, int total) {
+    return '$filled / $total Slots Filled';
+  }
+
+  @override
+  String providerSlotsOpenCount(int count) {
+    return '$count Open';
+  }
+
+  @override
+  String get providerPostNewJob => 'Post a Job';
+
+  @override
+  String get providerNoJobsTitle => 'No Jobs Found';
+
+  @override
+  String get providerNoOpenJobsDesc =>
+      'You don\'t have any open job postings. Create one to hire verified local workers.';
+
+  @override
+  String get providerNoFilledJobsDesc => 'No jobs are currently filled.';
+
+  @override
+  String get providerNoCompletedJobsDesc => 'No completed jobs yet.';
+
+  @override
+  String get providerViewApplicants => 'View Applicants';
+
+  @override
+  String providerApplicantsBadge(int count) {
+    return '$count Applicants';
+  }
+
+  @override
+  String get providerJobPaused => 'Paused';
+
+  @override
+  String get providerJobDraft => 'Draft';
+
+  @override
+  String get providerJobCancelled => 'Cancelled';
+
+  @override
+  String get providerActionEdit => 'Edit Posting';
+
+  @override
+  String get providerActionPause => 'Pause Posting';
+
+  @override
+  String get providerActionResume => 'Resume Posting';
+
+  @override
+  String get providerActionCancel => 'Cancel Job';
+
+  @override
+  String get providerCancelWarningTitle => 'Cancel Job Posting?';
+
+  @override
+  String providerCancelWarningHiredDesc(int count) {
+    return 'Warning: This job has $count hired worker(s). Cancelling will immediately notify workers, cancel their assignments, and release escrow holds. This may negatively impact your employer reliability rating.';
+  }
+
+  @override
+  String get providerCancelStandardDesc =>
+      'Are you sure you want to cancel this job posting? Open slots will be removed.';
+
+  @override
+  String get providerConfirmCancel => 'Confirm Cancellation';
+
+  @override
+  String get providerJobCancelledSuccess => 'Job has been cancelled.';
+
+  @override
+  String get providerJobPausedSuccess => 'Job posting has been paused.';
+
+  @override
+  String get providerJobResumedSuccess => 'Job posting is now active.';
+
+  @override
+  String get postJobWizardTitle => 'Post a Daily Wage Job';
+
+  @override
+  String get editJobWizardTitle => 'Edit Job Posting';
+
+  @override
+  String get postJobStep1 => 'Category & Title';
+
+  @override
+  String get postJobStep2 => 'Wages & Schedule';
+
+  @override
+  String get postJobStep3 => 'Slots & Payment';
+
+  @override
+  String get postJobStep4 => 'Requirements & Location';
+
+  @override
+  String get postJobStep5 => 'Preview & Publish';
+
+  @override
+  String get postJobSelectCategory => 'Select Work Category';
+
+  @override
+  String get postJobTitleLabel => 'Job Title';
+
+  @override
+  String get postJobTitleHint =>
+      'e.g., Construction Helper, Electrician, Plumber';
+
+  @override
+  String get postJobDescLabel => 'Job Description';
+
+  @override
+  String get postJobDescHint =>
+      'Describe specific tasks, tools needed, or location details...';
+
+  @override
+  String get postJobWageType => 'Wage Type';
+
+  @override
+  String get postJobWageDaily => 'Daily';
+
+  @override
+  String get postJobWageHourly => 'Hourly';
+
+  @override
+  String get postJobWageFixed => 'Fixed';
+
+  @override
+  String get postJobAmountLabel => 'Wage Amount (₹)';
+
+  @override
+  String get postJobFairWageBandTitle => 'Fair Wage Band:';
+
+  @override
+  String postJobFairWageBandRange(int min, int max, String unit) {
+    return '₹$min - ₹$max / $unit';
+  }
+
+  @override
+  String postJobBelowFairWageWarning(int min, int max) {
+    return 'Wage is below the recommended fair wage band (₹$min - ₹$max). Workers may be slower to apply, but you can still proceed.';
+  }
+
+  @override
+  String get postJobDurationLabel => 'Estimated Duration';
+
+  @override
+  String postJobDurationHours(int hours) {
+    return '$hours hours';
+  }
+
+  @override
+  String get postJobStartDateLabel => 'Start Date & Time';
+
+  @override
+  String get postJobSelectDateTime => 'Select Date & Time';
+
+  @override
+  String get postJobSlotsTotalLabel => 'Number of Workers Needed (Slots)';
+
+  @override
+  String get postJobMaterialsLabel => 'Materials & Tools';
+
+  @override
+  String get postJobMaterialsProvided =>
+      'I will provide all tools and materials';
+
+  @override
+  String get postJobMaterialsWorkerBrings =>
+      'Worker should bring their own tools';
+
+  @override
+  String get postJobPaymentModeLabel => 'Payment Protection Mode';
+
+  @override
+  String get postJobPaymentEscrow => 'Protected Escrow (Recommended)';
+
+  @override
+  String get postJobPaymentEscrowDesc =>
+      'Funds held securely until work is verified and approved';
+
+  @override
+  String get postJobPaymentUpi => 'Direct UPI on Completion';
+
+  @override
+  String get postJobPaymentUpiDesc => 'Pay directly to worker UPI QR on site';
+
+  @override
+  String get postJobPaymentCash => 'Daily Cash at Site';
+
+  @override
+  String get postJobPaymentCashDesc => 'Pay physical cash after shift ends';
+
+  @override
+  String get postJobRequirementsLabel => 'Worker Requirements';
+
+  @override
+  String get postJobReqVerifiedOnly => 'Background & Identity Verified Only';
+
+  @override
+  String get postJobReqLicence => 'Driving Licence Required';
+
+  @override
+  String get postJobReqStudents => 'Students & Part-Time Friendly';
+
+  @override
+  String get postJobLocationLabel => 'Work Site Location';
+
+  @override
+  String get postJobAddressHint => 'Enter site address or landmark';
+
+  @override
+  String get postJobGeofenceRadiusLabel => 'Geofence Check-in Radius';
+
+  @override
+  String postJobGeofenceMeters(int meters) {
+    return '$meters meters';
+  }
+
+  @override
+  String get postJobPublishButton => 'Publish Job Posting';
+
+  @override
+  String get postJobSaveEditButton => 'Save Changes';
+
+  @override
+  String get postJobPublishSuccess => 'Job posted successfully!';
+
+  @override
+  String applicantsScreenTitle(int count) {
+    return 'Applicants ($count)';
+  }
+
+  @override
+  String get applicantsNoApplicantsTitle => 'No Applications Yet';
+
+  @override
+  String get applicantsNoApplicantsDesc =>
+      'Workers nearby are being notified. Applicants will appear here once they apply.';
+
+  @override
+  String applicantCardJobsDone(int count) {
+    return '$count jobs done';
+  }
+
+  @override
+  String applicantCardRating(double rating, int count) {
+    return '$rating ($count)';
+  }
+
+  @override
+  String applicantCardLanguages(String langs) {
+    return 'Languages: $langs';
+  }
+
+  @override
+  String applicantCardSkills(String skills) {
+    return 'Skills: $skills';
+  }
+
+  @override
+  String get applicantActionHire => 'Hire';
+
+  @override
+  String get applicantActionShortlist => 'Shortlist';
+
+  @override
+  String get applicantActionReject => 'Reject';
+
+  @override
+  String get applicantActionChat => 'Chat';
+
+  @override
+  String get applicantActionProfile => 'View Profile';
+
+  @override
+  String get applicantStatusApplied => 'Applied';
+
+  @override
+  String get applicantStatusShortlisted => 'Shortlisted';
+
+  @override
+  String get applicantStatusHired => 'Hired';
+
+  @override
+  String get applicantStatusRejected => 'Rejected';
+
+  @override
+  String get applicantHireConfirmTitle => 'Hire Worker?';
+
+  @override
+  String applicantHireConfirmDesc(String name) {
+    return 'Hiring $name will assign them 1 slot on this job. They will receive a booking notification.';
+  }
+
+  @override
+  String get applicantHiredSuccess =>
+      'Worker hired successfully! Assignment created.';
+
+  @override
+  String get applicantShortlistedSuccess => 'Applicant moved to shortlist.';
+
+  @override
+  String get applicantRejectedSuccess => 'Application rejected.';
+
+  @override
+  String get applicantJobFullNotice => 'All slots for this job are filled.';
 }
