@@ -2399,4 +2399,94 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get bookingCodeCopied => 'ಬುಕಿಂಗ್ ಕೋಡ್ ನಕಲಿಸಲಾಗಿದೆ';
+
+  @override
+  String get verifyYourPresence => 'ನಿಮ್ಮ ಉಪಸ್ಥಿತಿಯನ್ನು ದೃಢೀಕರಿಸಿ';
+
+  @override
+  String get verifyPresenceSubtitle =>
+      'ಪ್ರಾರಂಭಿಸುವ ಮೊದಲು ಮುಖದ ಹೊಂದಾಣಿಕೆ ಮತ್ತು ಸ್ಥಳದ ಜಿಯೋಫೆನ್ಸ್ ಪರಿಶೀಲನೆ ಅಗತ್ಯವಿದೆ';
+
+  @override
+  String get gpsPerimeterCheck => 'ಜಿಪಿಎಸ್ ಕೆಲಸದ ಸ್ಥಳದ ಪರಿಶೀಲನೆ';
+
+  @override
+  String get withinPerimeter => 'ಕೆಲಸದ ಸ್ಥಳದ ವ್ಯಾಪ್ತಿಯಲ್ಲಿದೆ';
+
+  @override
+  String get outsidePerimeter => 'ಕೆಲಸದ ಸ್ಥಳದ ವ್ಯಾಪ್ತಿಯ ಹೊರಗಿದೆ';
+
+  @override
+  String distanceFromSite(String distance, String radius) {
+    return 'ಸ್ಥಳದಿಂದ ದೂರ: $distanceಮೀ (ಅನುಮತಿಸಿದ ದೂರ: $radiusಮೀ)';
+  }
+
+  @override
+  String get mockLocationDetected =>
+      'ನಕಲಿ / ಮಾಕ್ ಜಿಪಿಎಸ್ ಪತ್ತೆಯಾಗಿದೆ. ಪ್ರಾರಂಭ ನಿರಾಕರಿಸಲಾಗಿದೆ ಮತ್ತು ತನಿಖೆಗೆ ದಾಖಲಿಸಲಾಗಿದೆ.';
+
+  @override
+  String get faceSelfieCheck => 'ಮುಂಭಾಗದ ಕ್ಯಾಮೆರಾ ಮುಖ ಪರಿಶೀಲನೆ';
+
+  @override
+  String get takeSelfieBtn => 'ಪರಿಶೀಲನಾ ಸೆಲ್ಫಿ ತೆಗೆದುಕೊಳ್ಳಿ';
+
+  @override
+  String get retakeSelfieBtn => 'ಮತ್ತೆ ಸೆಲ್ಫಿ ತೆಗೆದುಕೊಳ್ಳಿ';
+
+  @override
+  String get verifyAndStartJob => 'ಉಪಸ್ಥಿತಿ ದೃಢೀಕರಿಸಿ ಮತ್ತು ಕೆಲಸ ಪ್ರಾರಂಭಿಸಿ';
+
+  @override
+  String get verificationFailed => 'ಪರಿಶೀಲನೆ ನಿರಾಕರಿಸಲಾಗಿದೆ';
+
+  @override
+  String outOfGeofenceMessage(String distance, String radius) {
+    return 'ನೀವು ಕೆಲಸದ ಸ್ಥಳದಿಂದ $distanceಮೀ ದೂರದಲ್ಲಿದ್ದೀರಿ. ಪ್ರಾರಂಭಿಸಲು $radiusಮೀ ಒಳಗೆ ಇರಬೇಕು.';
+  }
+
+  @override
+  String get getHelpOrSupport => 'ಸಹಾಯ / ಬೆಂಬಲ ಪಡೆಯಿರಿ';
+
+  @override
+  String get completionTitle => 'ಕೆಲಸ ಮುಕ್ತಾಯ ಮತ್ತು ಸಾಕ್ಷ್ಯ';
+
+  @override
+  String get completionSubtitle =>
+      'ಮುಕ್ತಾಯ ದೃಢೀಕರಿಸಲು ಸೆಲ್ಫಿ ಮತ್ತು ಕೆಲಸದ ಫೋಟೋಗಳನ್ನು ಸಲ್ಲಿಸಿ';
+
+  @override
+  String get workResultPhotos => 'ಕೆಲಸದ ಪುರಾವೆ ಫೋಟೋಗಳು (ಖಾಸಗಿ)';
+
+  @override
+  String get addWorkPhoto => 'ಫೋಟೋ ಸೇರಿಸಿ';
+
+  @override
+  String get completeAndSubmit => 'ಮುಕ್ತಾಯ ಸಲ್ಲಿಸಿ ಮತ್ತು ಟೈಮರ್ ನಿಲ್ಲಿಸಿ';
+
+  @override
+  String get midJobCheckTitle => 'ಮಧ್ಯಂತರ ಪರಿಶೀಲನೆ ಅಗತ್ಯವಿದೆ';
+
+  @override
+  String get midJobCheckSubtitle =>
+      'ಹೆಚ್ಚಿನ ಮೌಲ್ಯದ ಉದ್ಯೋಗ ಸುರಕ್ಷತಾ ಪರಿಶೀಲನೆ (ವೇತನ >= ₹೨,೦೦೦)';
+
+  @override
+  String get midJobConfirmSelfie => 'ಮಧ್ಯಂತರ ಸೆಲ್ಫಿ ತೆಗೆದುಕೊಳ್ಳಿ';
+
+  @override
+  String get midJobCustomerConfirm =>
+      'ಕೆಲಸಗಾರರು ಸ್ಥಳದಲ್ಲಿದ್ದಾರೆ ಎಂದು ದೃಢೀಕರಿಸಿ';
+
+  @override
+  String get timerTitle => 'ಲೈವ್ ಕೆಲಸದ ಟೈಮರ್';
+
+  @override
+  String get timerRunning => 'ಟೈಮರ್ ಚಾಲನೆಯಲ್ಲಿದೆ';
+
+  @override
+  String get timerPaused => 'ಟೈಮರ್ ವಿರಾಮದಲ್ಲಿದೆ';
+
+  @override
+  String get elapsedTime => 'ಕಳೆದ ಸಮಯ';
 }

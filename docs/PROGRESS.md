@@ -170,6 +170,23 @@
   - **ActiveJobScreen Integration**: Added "Show QR Ticket" primary action for workers and "Scan Worker QR" for providers during `accepted` and `ticket_issued` stages, with direct AppBar QR button shortcut.
   - **Localization & Quality**: Added 22 keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`) verified via `tool/check_l10n.dart` (722 keys each, 100% complete) and regenerated via `flutter gen-l10n`. Added unit & widget tests in `test/job_ticket_test.dart` (7/7 tests passed). Full test suite: 328/328 tests passed cleanly (`flutter test`). Static analysis: `flutter analyze` 0 issues.
 
+- [x] **P4.9**: Two-step verified start, timer, mid-job check, completion and evidence (Status: Done | Features #42, #43, #44, #45, #46, #47, #31)
+  - **Database Migration `0440_assignment_verify_stage.sql`**: Pushed cleanly to remote Supabase and verified with `npx supabase db lint --linked` (0 errors). Added `midjob_verified_at TIMESTAMPTZ`, `midjob_selfie_path TEXT`, `midjob_geo_ok BOOLEAN`, `payment_eligible BOOLEAN DEFAULT FALSE`, and `pause_events JSONB DEFAULT '[]'` to `job_assignments`. Added `'selfie_midjob'` to `evidence_kind` enum. Created RPC `check_job_geofence(p_job_id, p_lat, p_lng)` calculating PostGIS distance and evaluating against `COALESCE(geofence_radius_m, 150)`. Created RPC `record_verified_start` (checks status `arrived`, updates to `in_progress_verified`, logs start coordinates/time, inserts `Start Work (Verified)` event in `assignment_events`). Created RPC `record_midjob_check` (updates midjob check fields, inserts `Mid-Shift Check Verified` event). Created RPC `record_verified_completion` (updates to `completed`, records final duration in `elapsed_seconds`, flags `payment_eligible = true`, inserts `Work Completed` event).
+  - **Edge Function `assignment-verify`**: Created, documented in `docs/EDGE_FUNCTIONS.md`, and deployed live to Supabase (`npx supabase functions deploy assignment-verify`).
+    - Handled actions: `start`, `mid_job`, `completion`.
+    - Mock-location detection: Evaluates `is_mocked` flag; logs severe entry to `fraud_flags` (`rule_key: 'mock_location_detected'`, severity `high`, status `investigating`); rejects start immediately with `mock_location_rejected`.
+    - PostGIS geofence check: Calls `check_job_geofence`; if outside radius, rejects with `out_of_geofence` providing distance and radius; if distance > 1000m (e.g., from sofa across town), logs `out_of_radius_start` to `fraud_flags`.
+    - Verified start: Enforces prerequisite status `arrived` (from P4.8 scan); checks worker selfie against `face_profiles` and logs to `verification_attempts`; calls `record_verified_start` advancing status to `in_progress_verified` only when both employer scan and worker selfie/GPS checks pass.
+    - Mid-job verification: Enforces `in_progress_verified`; verifies midpoint selfie/GPS or employer confirmation; calls `record_midjob_check`.
+    - Completion: Enforces `in_progress_verified` or `arrived`; accepts completion selfie and optional work photos; uploads to private `job-evidence` bucket; inserts records into `job_evidence`; stops timer and marks `payment_eligible = true`.
+  - **Flutter Presentation & State**:
+    - `VerifyPresenceScreen` (`/jobs/verify-presence/:id`): Face check screen with front camera selfie capture, GPS geofence check with live distance meters indicator, plain-language error bottom sheets with "Get Help" modal, and simulation switcher (`At Site`, `Sofa Across Town [5.2km]`, `Mocked GPS`).
+    - `JobLiveTimerCard` (`lib/features/job_execution/presentation/widgets/job_live_timer_card.dart`): Server-authoritative timer widget with live ticking duration (`HH:mm:ss`), green pulsing indicator, start/end timestamps, and completed duration badge displayed on both worker and provider devices.
+    - `MidJobDialog` (`lib/features/job_execution/presentation/mid_job_dialog.dart`): High-value job check modal triggered when agreed wage >= `midjob_check_value_paise` (₹2,000 threshold) supporting midpoint selfie or employer confirmation.
+    - `JobCompletionScreen` (`/jobs/completion/:id`): Completion selfie capture, private work-result photo gallery uploaded to `job-evidence` bucket under `${userId}/...`, location logging, and submission.
+    - `ActiveJobScreen`: Integrated live timer card, mid-job verification banner, updated primary action flows for worker and provider, and employer completion confirmation modal.
+  - **Localization & Quality**: Added 27 keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`) verified via `dart run tool/check_l10n.dart` (749 keys each, 100% complete) and regenerated via `flutter gen-l10n`. Added comprehensive tests in `test/job_verification_test.dart` (8/8 tests passed). Full test suite: 336/336 tests passed cleanly (`flutter test`). Static analysis: `flutter analyze` 0 issues.
+
 ---
 
 ## Manual steps pending
@@ -185,7 +202,7 @@
         ```
      5. When the MIUI confirmation dialog appears on the phone screen asking *"Install via USB?"*, tap **Install**.
 2. **Deploy Updated Edge Functions (remaining when ready)**:
-   Run the following commands using Supabase CLI (note: `qr-issue` and `qr-verify` are already deployed):
+   Run the following commands using Supabase CLI (note: `qr-issue`, `qr-verify`, and `assignment-verify` are already deployed):
    ```bash
    npx supabase functions deploy face-enroll
    npx supabase functions deploy face-verify
@@ -196,6 +213,7 @@
 
 ## Known issues
 - **Profile & Auth Foreign Key Cascade vs D11 Retention (To be fixed in P5.1 migration)**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`, and financial/order tables (`wallets`, `payouts`, `orders`, `group_orders`, `group_order_members`, `disputes`, `dispute_evidence`, `job_assignments`, `job_evidence`, `ratings_reviews`) referencing `profiles(id)` with `ON DELETE CASCADE`. Calling `auth.admin.deleteUser` cascades through `auth.users -> profiles -> child tables`, erasing financial audit trails and breaking D11. The P5.1 migration must alter these foreign key constraints (e.g., remove cascade on `profiles.id` so scrubbed tombstone profiles survive, or move records to snapshot columns with `ON DELETE SET NULL`) and re-verify that account deletion never fails and re-registration with the same phone number works cleanly.
-- **Phase 4.9**: Two-step verified start (selfie + GPS match, OTP fallback, timer) is the planned next step.
+- **Phase 5.1**: Escrow fund holding, wallet balance, and payout management is the planned next step.
 - **Phase 9 (Admin Console)**: Admin console is built in a separate web/desktop project and is out of scope for this Flutter app.
+
 

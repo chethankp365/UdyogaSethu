@@ -29,5 +29,6 @@ All Edge Functions are located in `supabase/functions/` and use common helpers f
 | `mandi-sync` | Syncs latest Mandi crop prices from Agmarknet / Government API | Service JWT / Cron trigger | `MANDI_API_KEY` | Phase 7 (Farmer Hub) |
 | `ai-assist` | Gemini-powered voice and text AI assistant for multilingual queries | User JWT (`Bearer <token>`) | `GEMINI_API_KEY`, `GEMINI_MODEL` | Phase 8 (AI Assistant & Voice) |
 | `masked-call` | Sets up privacy-masked call connection between provider and worker | User JWT (`Bearer <token>`) | `EXOTEL_API_KEY`, `EXOTEL_API_TOKEN`, `EXOTEL_SID` | Phase 4 (Communication & Privacy) |
+| `assignment-verify` | Two-step verified start (selfie + PostGIS geofence), mock location detection, mid-job check, and completion with evidence | User JWT (`Bearer <token>`) | None (PostGIS + internal RPCs) | Phase 4.9 (Done) |
 
 > **Note**: Only `ai-assist` invokes Gemini API using `GEMINI_API_KEY` and `GEMINI_MODEL`.

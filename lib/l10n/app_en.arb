@@ -862,5 +862,44 @@
   "actionShowTicket": "Show QR Ticket",
   "actionScanWorkerQr": "Scan Worker QR",
   "openSettings": "Open Settings",
-  "bookingCodeCopied": "Booking code copied to clipboard"
+  "bookingCodeCopied": "Booking code copied to clipboard",
+  "verifyYourPresence": "Verify Your Presence",
+  "verifyPresenceSubtitle": "Face match and site geofence check required before start",
+  "gpsPerimeterCheck": "GPS Site Geofence Check",
+  "withinPerimeter": "Within Job Site Geofence",
+  "outsidePerimeter": "Outside Job Site Geofence",
+  "distanceFromSite": "Distance from site: {distance}m (Allowed: {radius}m)",
+  "@distanceFromSite": {
+    "placeholders": {
+      "distance": { "type": "String" },
+      "radius": { "type": "String" }
+    }
+  },
+  "mockLocationDetected": "Mock / Fake GPS detected. Start refused and logged for review.",
+  "faceSelfieCheck": "Front-Camera Face Check",
+  "takeSelfieBtn": "Take Verification Selfie",
+  "retakeSelfieBtn": "Retake Selfie",
+  "verifyAndStartJob": "Verify Presence & Start Job",
+  "verificationFailed": "Verification Refused",
+  "outOfGeofenceMessage": "You appear to be {distance}m away from the job site. You must be within {radius}m to start.",
+  "@outOfGeofenceMessage": {
+    "placeholders": {
+      "distance": { "type": "String" },
+      "radius": { "type": "String" }
+    }
+  },
+  "getHelpOrSupport": "Get Help / Support",
+  "completionTitle": "Job Completion & Evidence",
+  "completionSubtitle": "Submit completion selfie and optional work photos to verify finish",
+  "workResultPhotos": "Work Evidence Photos (Private)",
+  "addWorkPhoto": "Add Photo",
+  "completeAndSubmit": "Submit Completion & Stop Timer",
+  "midJobCheckTitle": "Mid-Job Verification Required",
+  "midJobCheckSubtitle": "High-value job safety check (wage >= ₹2,000)",
+  "midJobConfirmSelfie": "Take Mid-Shift Selfie",
+  "midJobCustomerConfirm": "Confirm Worker On-Site",
+  "timerTitle": "Live Work Timer",
+  "timerRunning": "Timer Running",
+  "timerPaused": "Timer Paused",
+  "elapsedTime": "Elapsed Time"
 }

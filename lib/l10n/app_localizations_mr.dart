@@ -2371,4 +2371,94 @@ class AppLocalizationsMr extends AppLocalizations {
 
   @override
   String get bookingCodeCopied => 'बुकिंग कोड कॉपी केला';
+
+  @override
+  String get verifyYourPresence => 'तुमची उपस्थिती पडताळा';
+
+  @override
+  String get verifyPresenceSubtitle =>
+      'काम सुरू करण्यापूर्वी चेहरा जुळणी आणि कार्यस्थळ जिओफेन्स तपासणी आवश्यक आहे';
+
+  @override
+  String get gpsPerimeterCheck => 'जीपीएस कार्यस्थळ जिओफेन्स तपासणी';
+
+  @override
+  String get withinPerimeter => 'कार्यस्थळ सीमेच्या आत';
+
+  @override
+  String get outsidePerimeter => 'कार्यस्थळ सीमेच्या बाहेर';
+
+  @override
+  String distanceFromSite(String distance, String radius) {
+    return 'कार्यस्थळापासून अंतर: $distanceमी (मान्य: $radiusमी)';
+  }
+
+  @override
+  String get mockLocationDetected =>
+      'बनावट / मॉक जीपीएस आढळले. काम सुरू करणे नाकारले आणि चौकशीसाठी नोंदवले.';
+
+  @override
+  String get faceSelfieCheck => 'समोरील कॅमेरा चेहरा तपासणी';
+
+  @override
+  String get takeSelfieBtn => 'पडताळणी सेल्फी घ्या';
+
+  @override
+  String get retakeSelfieBtn => 'पुन्हा सेल्फी घ्या';
+
+  @override
+  String get verifyAndStartJob => 'उपस्थिती पडताळा आणि काम सुरू करा';
+
+  @override
+  String get verificationFailed => 'पडताळणी नाकारली';
+
+  @override
+  String outOfGeofenceMessage(String distance, String radius) {
+    return 'तुम्ही कार्यस्थळापासून $distanceमी दूर आहात. सुरू करण्यासाठी $radiusमी च्या आत असणे आवश्यक आहे.';
+  }
+
+  @override
+  String get getHelpOrSupport => 'मदत मिळवा';
+
+  @override
+  String get completionTitle => 'काम पूर्ण आणि पुरावा';
+
+  @override
+  String get completionSubtitle =>
+      'समाप्तीची पडताळणी करण्यासाठी सेल्फी आणि कामाचे फोटो जमा करा';
+
+  @override
+  String get workResultPhotos => 'कामाचे पुरावे फोटो (खाजगी)';
+
+  @override
+  String get addWorkPhoto => 'फोटो जोडा';
+
+  @override
+  String get completeAndSubmit => 'काम पूर्ण जमा करा आणि टायमर थांबवा';
+
+  @override
+  String get midJobCheckTitle => 'मध्यंतरी पडताळणी आवश्यक';
+
+  @override
+  String get midJobCheckSubtitle =>
+      'उच्च मूल्य काम सुरक्षा तपासणी (मजुरी >= ₹२,०००)';
+
+  @override
+  String get midJobConfirmSelfie => 'मध्यंतरी सेल्फी घ्या';
+
+  @override
+  String get midJobCustomerConfirm =>
+      'कामगार कामाच्या ठिकाणी असल्याची खात्री करा';
+
+  @override
+  String get timerTitle => 'थेट काम टायमर';
+
+  @override
+  String get timerRunning => 'टायमर चालू आहे';
+
+  @override
+  String get timerPaused => 'टायमर थांबवला आहे';
+
+  @override
+  String get elapsedTime => 'झालेला वेळ';
 }

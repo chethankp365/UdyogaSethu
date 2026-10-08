@@ -9,6 +9,7 @@ import 'package:udyogasethu/features/job_execution/data/job_execution_repository
 import 'package:udyogasethu/features/job_execution/domain/active_job_detail.dart';
 import 'package:udyogasethu/features/job_execution/domain/assignment_event_item.dart';
 import 'package:udyogasethu/features/job_execution/domain/job_ticket.dart';
+import 'package:udyogasethu/features/job_execution/domain/job_verification.dart';
 import 'package:udyogasethu/features/job_execution/domain/worker_schedule_item.dart';
 import 'package:udyogasethu/features/job_execution/presentation/assignment_timeline_widget.dart';
 import 'package:udyogasethu/features/job_execution/presentation/active_job_screen.dart';
@@ -113,6 +114,77 @@ class FakeJobExecutionRepository implements JobExecutionRepository {
       isVerifiedBadge: true,
       jobTitle: 'Electrician Repair',
     );
+  }
+
+  @override
+  Future<JobGeofenceStatus> checkJobGeofence({required String jobId, required double lat, required double lng}) async {
+    return const JobGeofenceStatus(
+      distanceMeters: 45.0,
+      radiusMeters: 150,
+      withinGeofence: true,
+    );
+  }
+
+  @override
+  Future<JobVerificationResult> verifyJobStart({
+    required String assignmentId,
+    required double lat,
+    required double lng,
+    required bool isMocked,
+    List<double>? embedding,
+    String? selfiePath,
+  }) async {
+    if (isMocked) {
+      return JobVerificationResult.error(
+        code: 'mock_location_rejected',
+        message: 'Mock location detected',
+        isMockedRejected: true,
+      );
+    }
+    return JobVerificationResult.successStart(
+      status: 'in_progress_verified',
+      distanceMeters: 45.0,
+    );
+  }
+
+  @override
+  Future<JobVerificationResult> verifyMidJobCheck({
+    required String assignmentId,
+    double? lat,
+    double? lng,
+    bool? isMocked,
+    String? selfiePath,
+  }) async {
+    return JobVerificationResult.successMidJob(
+      status: 'in_progress_verified',
+      distanceMeters: 45.0,
+    );
+  }
+
+  @override
+  Future<JobVerificationResult> completeJob({
+    required String assignmentId,
+    double? lat,
+    double? lng,
+    bool? isMocked,
+    String? selfiePath,
+    List<String>? workPhotos,
+    bool isCustomerConfirmed = false,
+  }) async {
+    return JobVerificationResult.successCompletion(
+      status: 'completed',
+      elapsedSeconds: 7200,
+      paymentEligible: true,
+    );
+  }
+
+  @override
+  Future<String> uploadJobEvidence({
+    required String assignmentId,
+    required List<int> fileBytes,
+    required String fileName,
+  }) async {
+    return 'evidence/test_$fileName';
   }
 }
 

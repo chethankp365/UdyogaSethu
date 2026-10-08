@@ -2396,4 +2396,94 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get bookingCodeCopied => 'முன்பதிவு குறியீடு நகலெடுக்கப்பட்டது';
+
+  @override
+  String get verifyYourPresence => 'உங்கள் இருப்பை சரிபார்க்கவும்';
+
+  @override
+  String get verifyPresenceSubtitle =>
+      'தொடங்குவதற்கு முன் முக பொருத்தம் மற்றும் தள புவி எல்லை சரிபார்ப்பு தேவை';
+
+  @override
+  String get gpsPerimeterCheck => 'ஜிபிஎஸ் பணித்தள புவி எல்லை சரிபார்ப்பு';
+
+  @override
+  String get withinPerimeter => 'பணித்தள எல்லைக்குள் உள்ளது';
+
+  @override
+  String get outsidePerimeter => 'பணித்தள எல்லைக்கு வெளியே உள்ளது';
+
+  @override
+  String distanceFromSite(String distance, String radius) {
+    return 'தளத்திலிருந்து தூரம்: $distanceமீ (அனுமதிக்கப்பட்டது: $radiusமீ)';
+  }
+
+  @override
+  String get mockLocationDetected =>
+      'போலி ஜிபிஎஸ் கண்டறியப்பட்டது. வேலை தொடங்குவது மறுக்கப்பட்டு மதிப்பாய்வுக்காக பதிவு செய்யப்பட்டது.';
+
+  @override
+  String get faceSelfieCheck => 'முன் கேமரா முக சரிபார்ப்பு';
+
+  @override
+  String get takeSelfieBtn => 'சரிபார்ப்பு செல்ஃபி எடுக்கவும்';
+
+  @override
+  String get retakeSelfieBtn => 'மீண்டும் செல்ஃபி எடுக்கவும்';
+
+  @override
+  String get verifyAndStartJob => 'இருப்பை சரிபார்த்து வேலையைத் தொடங்கவும்';
+
+  @override
+  String get verificationFailed => 'சரிபார்ப்பு மறுக்கப்பட்டது';
+
+  @override
+  String outOfGeofenceMessage(String distance, String radius) {
+    return 'நீங்கள் பணித்தளத்திலிருந்து $distanceமீ தொலைவில் உள்ளீர்கள். தொடங்க $radiusமீ எல்லைக்குள் இருக்க வேண்டும்.';
+  }
+
+  @override
+  String get getHelpOrSupport => 'உதவி பெறவும்';
+
+  @override
+  String get completionTitle => 'பணி நிறைவு மற்றும் சான்றுகள்';
+
+  @override
+  String get completionSubtitle =>
+      'நிறைவை சரிபார்க்க செல்ஃபி மற்றும் பணி புகைப்படங்களை சமர்ப்பிக்கவும்';
+
+  @override
+  String get workResultPhotos => 'பணி ஆதார புகைப்படங்கள் (தனியார்)';
+
+  @override
+  String get addWorkPhoto => 'புகைப்படம் சேர்க்கவும்';
+
+  @override
+  String get completeAndSubmit => 'நிறைவை சமர்ப்பித்து டைமரை நிறுத்தவும்';
+
+  @override
+  String get midJobCheckTitle => 'இடைக்கால பணி சரிபார்ப்பு தேவை';
+
+  @override
+  String get midJobCheckSubtitle =>
+      'உயர் மதிப்பு பணி பாதுகாப்பு சரிபார்ப்பு (ஊதியம் >= ₹2,000)';
+
+  @override
+  String get midJobConfirmSelfie => 'இடைக்கால செல்ஃபி எடுக்கவும்';
+
+  @override
+  String get midJobCustomerConfirm =>
+      'பணியாளர் தளத்தில் இருப்பதை உறுதிப்படுத்தவும்';
+
+  @override
+  String get timerTitle => 'நேரடி வேலை டைமர்';
+
+  @override
+  String get timerRunning => 'டைமர் இயங்குகிறது';
+
+  @override
+  String get timerPaused => 'டைமர் இடைநிறுத்தப்பட்டுள்ளது';
+
+  @override
+  String get elapsedTime => 'கடந்த நேரம்';
 }

@@ -2375,4 +2375,93 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get bookingCodeCopied => 'বুকিং কোড কপি করা হয়েছে';
+
+  @override
+  String get verifyYourPresence => 'আপনার উপস্থিতি যাচাই করুন';
+
+  @override
+  String get verifyPresenceSubtitle =>
+      'কাজ শুরু করার আগে মুখমণ্ডল মেলানো এবং সাইট জিওফেন্স পরীক্ষা আবশ্যক';
+
+  @override
+  String get gpsPerimeterCheck => 'জিপিএস কাজের সাইট জিওফেন্স পরীক্ষা';
+
+  @override
+  String get withinPerimeter => 'কাজের সাইটের সীমানার মধ্যে';
+
+  @override
+  String get outsidePerimeter => 'কাজের সাইটের সীমানার বাইরে';
+
+  @override
+  String distanceFromSite(String distance, String radius) {
+    return 'কাজের জায়গা থেকে দূরত্ব: $distanceমি (অনুমোদিত: $radiusমি)';
+  }
+
+  @override
+  String get mockLocationDetected =>
+      'নকল / মক জিপিএস সনাক্ত করা হয়েছে। কাজ শুরু প্রত্যাখ্যান করা হয়েছে এবং পর্যালোচনার জন্য নথিভুক্ত করা হয়েছে।';
+
+  @override
+  String get faceSelfieCheck => 'সামনের ক্যামেরা মুখমণ্ডল যাচাই';
+
+  @override
+  String get takeSelfieBtn => 'যাচাইকরণ সেলফি তুলুন';
+
+  @override
+  String get retakeSelfieBtn => 'আবার সেলফি তুলুন';
+
+  @override
+  String get verifyAndStartJob => 'উপস্থিতি যাচাই করুন এবং কাজ শুরু করুন';
+
+  @override
+  String get verificationFailed => 'যাচাইকরণ প্রত্যাখ্যাত';
+
+  @override
+  String outOfGeofenceMessage(String distance, String radius) {
+    return 'আপনি কাজের সাইট থেকে $distanceমি দূরে আছেন। শুরু করতে আপনাকে $radiusমি এর মধ্যে থাকতে হবে।';
+  }
+
+  @override
+  String get getHelpOrSupport => 'সহায়তা পান';
+
+  @override
+  String get completionTitle => 'কাজ সমাপ্তি এবং প্রমাণ';
+
+  @override
+  String get completionSubtitle =>
+      'সমাপ্তি যাচাইয়ের জন্য সেলফি এবং কাজের ছবি জমা দিন';
+
+  @override
+  String get workResultPhotos => 'কাজের প্রমাণ ছবি (ব্যক্তিগত)';
+
+  @override
+  String get addWorkPhoto => 'ছবি যোগ করুন';
+
+  @override
+  String get completeAndSubmit => 'সমাপ্তি জমা দিন এবং টাইমার থামান';
+
+  @override
+  String get midJobCheckTitle => 'কাজের মধ্যবর্তী যাচাইকরণ প্রয়োজন';
+
+  @override
+  String get midJobCheckSubtitle =>
+      'উচ্চ মূল্যের কাজের নিরাপত্তা পরীক্ষা (মজুরি >= ₹২,০০০)';
+
+  @override
+  String get midJobConfirmSelfie => 'মধ্যবর্তী সেলফি তুলুন';
+
+  @override
+  String get midJobCustomerConfirm => 'কর্মী সাইটে আছেন তা নিশ্চিত করুন';
+
+  @override
+  String get timerTitle => 'লাইভ কাজের টাইমার';
+
+  @override
+  String get timerRunning => 'টাইমার চলছে';
+
+  @override
+  String get timerPaused => 'টাইমার থামানো হয়েছে';
+
+  @override
+  String get elapsedTime => 'অতিক্রান্ত সময়';
 }

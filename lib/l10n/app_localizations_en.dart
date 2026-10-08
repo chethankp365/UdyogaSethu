@@ -2375,4 +2375,93 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bookingCodeCopied => 'Booking code copied to clipboard';
+
+  @override
+  String get verifyYourPresence => 'Verify Your Presence';
+
+  @override
+  String get verifyPresenceSubtitle =>
+      'Face match and site geofence check required before start';
+
+  @override
+  String get gpsPerimeterCheck => 'GPS Site Geofence Check';
+
+  @override
+  String get withinPerimeter => 'Within Job Site Geofence';
+
+  @override
+  String get outsidePerimeter => 'Outside Job Site Geofence';
+
+  @override
+  String distanceFromSite(String distance, String radius) {
+    return 'Distance from site: ${distance}m (Allowed: ${radius}m)';
+  }
+
+  @override
+  String get mockLocationDetected =>
+      'Mock / Fake GPS detected. Start refused and logged for review.';
+
+  @override
+  String get faceSelfieCheck => 'Front-Camera Face Check';
+
+  @override
+  String get takeSelfieBtn => 'Take Verification Selfie';
+
+  @override
+  String get retakeSelfieBtn => 'Retake Selfie';
+
+  @override
+  String get verifyAndStartJob => 'Verify Presence & Start Job';
+
+  @override
+  String get verificationFailed => 'Verification Refused';
+
+  @override
+  String outOfGeofenceMessage(String distance, String radius) {
+    return 'You appear to be ${distance}m away from the job site. You must be within ${radius}m to start.';
+  }
+
+  @override
+  String get getHelpOrSupport => 'Get Help / Support';
+
+  @override
+  String get completionTitle => 'Job Completion & Evidence';
+
+  @override
+  String get completionSubtitle =>
+      'Submit completion selfie and optional work photos to verify finish';
+
+  @override
+  String get workResultPhotos => 'Work Evidence Photos (Private)';
+
+  @override
+  String get addWorkPhoto => 'Add Photo';
+
+  @override
+  String get completeAndSubmit => 'Submit Completion & Stop Timer';
+
+  @override
+  String get midJobCheckTitle => 'Mid-Job Verification Required';
+
+  @override
+  String get midJobCheckSubtitle =>
+      'High-value job safety check (wage >= ₹2,000)';
+
+  @override
+  String get midJobConfirmSelfie => 'Take Mid-Shift Selfie';
+
+  @override
+  String get midJobCustomerConfirm => 'Confirm Worker On-Site';
+
+  @override
+  String get timerTitle => 'Live Work Timer';
+
+  @override
+  String get timerRunning => 'Timer Running';
+
+  @override
+  String get timerPaused => 'Timer Paused';
+
+  @override
+  String get elapsedTime => 'Elapsed Time';
 }

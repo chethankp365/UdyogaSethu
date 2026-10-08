@@ -37,6 +37,8 @@ class ActiveJobDetail {
   final bool workerVerified;
   final double? workerLat;
   final double? workerLng;
+  final DateTime? midjobVerifiedAt;
+  final bool paymentEligible;
 
   const ActiveJobDetail({
     required this.assignmentId,
@@ -50,6 +52,8 @@ class ActiveJobDetail {
     this.startedAt,
     this.endedAt,
     this.elapsedSeconds,
+    this.midjobVerifiedAt,
+    this.paymentEligible = false,
     required this.jobTitle,
     this.jobDescription,
     required this.startAt,
@@ -103,6 +107,10 @@ class ActiveJobDetail {
       startedAt: json['started_at'] != null ? DateTime.tryParse(json['started_at'].toString()) : null,
       endedAt: json['ended_at'] != null ? DateTime.tryParse(json['ended_at'].toString()) : null,
       elapsedSeconds: (json['elapsed_seconds'] as num?)?.toInt(),
+      midjobVerifiedAt: json['midjob_verified_at'] != null
+          ? DateTime.tryParse(json['midjob_verified_at'].toString())
+          : null,
+      paymentEligible: json['payment_eligible'] as bool? ?? false,
       jobTitle: json['job_title'] as String? ?? json['title'] as String? ?? 'General Work',
       jobDescription: json['job_description'] as String? ?? json['description'] as String?,
       startAt: json['start_at'] != null
@@ -137,6 +145,8 @@ class ActiveJobDetail {
     DateTime? startedAt,
     DateTime? endedAt,
     int? elapsedSeconds,
+    DateTime? midjobVerifiedAt,
+    bool? paymentEligible,
   }) {
     final newStatus = status ?? this.status;
     return ActiveJobDetail(
@@ -151,6 +161,8 @@ class ActiveJobDetail {
       startedAt: startedAt ?? this.startedAt,
       endedAt: endedAt ?? this.endedAt,
       elapsedSeconds: elapsedSeconds ?? this.elapsedSeconds,
+      midjobVerifiedAt: midjobVerifiedAt ?? this.midjobVerifiedAt,
+      paymentEligible: paymentEligible ?? this.paymentEligible,
       jobTitle: jobTitle,
       jobDescription: jobDescription,
       startAt: startAt,

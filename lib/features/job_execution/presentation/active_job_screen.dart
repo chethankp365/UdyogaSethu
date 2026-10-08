@@ -14,6 +14,8 @@ import 'package:udyogasethu/features/job_execution/data/job_execution_repository
 import 'package:udyogasethu/features/job_execution/domain/active_job_detail.dart';
 import 'package:udyogasethu/features/job_execution/domain/assignment_event_item.dart';
 import 'package:udyogasethu/features/job_execution/presentation/assignment_timeline_widget.dart';
+import 'package:udyogasethu/features/job_execution/presentation/mid_job_dialog.dart';
+import 'package:udyogasethu/features/job_execution/presentation/widgets/job_live_timer_card.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class ActiveJobScreen extends ConsumerStatefulWidget {
@@ -191,6 +193,24 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
               _buildStatusBanner(context, detail, l10n),
               const SizedBox(height: 16),
 
+              // Server-authoritative Live Timer (when job is in progress or completed)
+              if (detail.stage == AssignmentStage.jobInProgress || detail.startedAt != null) ...[
+                JobLiveTimerCard(
+                  startedAt: detail.startedAt,
+                  endedAt: detail.endedAt,
+                  serverElapsedSeconds: detail.elapsedSeconds,
+                  isCompleted: detail.stage == AssignmentStage.completed ||
+                      detail.stage == AssignmentStage.paymentReleased,
+                ),
+                const SizedBox(height: 16),
+              ],
+
+              // Mid-Job Verification Banner (High-value job check >= ₹2,000)
+              if (detail.stage == AssignmentStage.jobInProgress && detail.agreedWagePaise >= 200000) ...[
+                _buildMidJobSection(context, detail, isProvider, l10n),
+                const SizedBox(height: 16),
+              ],
+
               // 2. The Big Primary Action (Normal vs Simple Mode)
               _buildPrimaryActionSection(context, detail, isProvider, isSimpleMode, l10n),
               const SizedBox(height: 20),
@@ -356,14 +376,14 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
           break;
         case AssignmentStage.workerArrived:
         case AssignmentStage.verificationCompleted:
-          primaryText = l10n?.actionStartWork ?? 'Start Work';
-          primaryIcon = Icons.play_arrow_rounded;
-          onPrimaryPressed = () => _handleTransition(detail, 'in_progress_verified');
+          primaryText = l10n?.verifyYourPresence ?? 'Verify Presence (Face & GPS)';
+          primaryIcon = Icons.verified_user_rounded;
+          onPrimaryPressed = () => context.push('/jobs/verify-presence/${detail.assignmentId}');
           break;
         case AssignmentStage.jobInProgress:
-          primaryText = l10n?.actionCompleteJob ?? 'Complete Job';
+          primaryText = l10n?.actionCompleteJob ?? 'Complete Job & Submit Evidence';
           primaryIcon = Icons.task_alt_rounded;
-          onPrimaryPressed = () => _handleTransition(detail, 'completed');
+          onPrimaryPressed = () => context.push('/jobs/completion/${detail.assignmentId}');
           break;
         case AssignmentStage.completed:
           primaryText = l10n?.actionAwaitingPayment ?? 'Awaiting Payment Release';
@@ -396,6 +416,10 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
           onPrimaryPressed = () => context.push('/jobs/attendance-scan?assignment_id=${detail.assignmentId}');
           break;
         case AssignmentStage.workerArrived:
+          primaryText = 'Awaiting Worker Selfie Verification';
+          primaryIcon = Icons.hourglass_top_rounded;
+          onPrimaryPressed = null;
+          break;
         case AssignmentStage.verificationCompleted:
           primaryText = l10n?.actionStartWork ?? 'Verify & Start Work';
           primaryIcon = Icons.play_arrow_rounded;
@@ -404,7 +428,7 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
         case AssignmentStage.jobInProgress:
           primaryText = l10n?.actionConfirmCompletion ?? 'Confirm Job Completion';
           primaryIcon = Icons.task_alt_rounded;
-          onPrimaryPressed = () => _handleTransition(detail, 'completed');
+          onPrimaryPressed = () => _showProviderCompletionDialog(context, detail);
           break;
         case AssignmentStage.completed:
           primaryText = l10n?.actionReleasePayment ?? 'Release Payment';
@@ -888,6 +912,199 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
         setState(() => _isActionInProgress = false);
       }
     }
+  }
+
+  Widget _buildMidJobSection(
+    BuildContext context,
+    ActiveJobDetail detail,
+    bool isProvider,
+    AppLocalizations? l10n,
+  ) {
+    final isDone = detail.midjobVerifiedAt != null;
+
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: isDone ? const Color(0xFFF0FDF4) : const Color(0xFFFFFBEB),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: isDone ? const Color(0xFF86EFAC) : const Color(0xFFFCD34D),
+          width: 1.5,
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: isDone ? const Color(0xFFDCFCE7) : const Color(0xFFFEF3C7),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              isDone ? Icons.verified_rounded : Icons.shield_outlined,
+              color: isDone ? const Color(0xFF16A34A) : const Color(0xFFD97706),
+              size: 22,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  isDone
+                      ? (l10n?.midJobCheckTitle ?? 'Mid-Shift Verification Completed')
+                      : (l10n?.midJobCheckTitle ?? 'Mid-Job Verification Required'),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                    color: isDone ? const Color(0xFF15803D) : const Color(0xFFB45309),
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  isDone
+                      ? 'Attendance & site presence verified for ₹${detail.agreedWageRupees} wage.'
+                      : 'Wage exceeds ₹2,000 threshold. Midpoint check ensures job safety.',
+                  style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
+                ),
+              ],
+            ),
+          ),
+          if (!isDone) ...[
+            const SizedBox(width: 8),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFD97706),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              ),
+              onPressed: () async {
+                final ok = await MidJobDialog.show(
+                  context,
+                  assignmentId: detail.assignmentId,
+                  isCustomer: isProvider,
+                );
+                if (ok == true && mounted) {
+                  ref.invalidate(activeJobDetailProvider(widget.assignmentId));
+                }
+              },
+              child: const Text('Verify'),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  void _showProviderCompletionDialog(BuildContext context, ActiveJobDetail detail) {
+    final l10n = AppLocalizations.of(context);
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: const BoxDecoration(
+                    color: AppColors.paleMint,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.check_circle_outline_rounded,
+                      color: AppColors.headerGreenDark, size: 36),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  l10n?.actionConfirmCompletion ?? 'Confirm Job Completion',
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Has the worker completed all assigned work to your satisfaction? You can confirm directly or scan their ticket QR again.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 13, color: AppColors.textMuted),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.headerGreenDark,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    icon: const Icon(Icons.task_alt_rounded),
+                    label: const Text('Confirm Completion (Release Eligible)',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    onPressed: () async {
+                      final messenger = ScaffoldMessenger.of(context);
+                      Navigator.pop(ctx);
+                      try {
+                        setState(() => _isActionInProgress = true);
+                        await ref.read(jobExecutionRepositoryProvider).completeJob(
+                              assignmentId: detail.assignmentId,
+                              isCustomerConfirmed: true,
+                            );
+                        ref.invalidate(activeJobDetailProvider(widget.assignmentId));
+                        if (mounted) {
+                          messenger.showSnackBar(
+                            const SnackBar(
+                              backgroundColor: Color(0xFF0D6548),
+                              content: Text('Job marked completed! Payment is flagged eligible for release.'),
+                            ),
+                          );
+                        }
+                      } catch (e) {
+                        if (mounted) {
+                          messenger.showSnackBar(
+                            SnackBar(content: Text('Completion failed: $e'), backgroundColor: Colors.red),
+                          );
+                        }
+                      } finally {
+                        if (mounted) setState(() => _isActionInProgress = false);
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.headerGreenDark,
+                      side: const BorderSide(color: AppColors.headerGreenDark),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    icon: const Icon(Icons.qr_code_scanner_rounded),
+                    label: const Text('Scan Worker QR Ticket Again'),
+                    onPressed: () {
+                      Navigator.pop(ctx);
+                      context.push('/jobs/attendance-scan?assignment_id=${detail.assignmentId}');
+                    },
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: const Text('Cancel'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void _showHelpSheet(BuildContext context) {

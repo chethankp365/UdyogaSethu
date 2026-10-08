@@ -4441,6 +4441,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Booking code copied to clipboard'**
   String get bookingCodeCopied;
+
+  /// No description provided for @verifyYourPresence.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Your Presence'**
+  String get verifyYourPresence;
+
+  /// No description provided for @verifyPresenceSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Face match and site geofence check required before start'**
+  String get verifyPresenceSubtitle;
+
+  /// No description provided for @gpsPerimeterCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'GPS Site Geofence Check'**
+  String get gpsPerimeterCheck;
+
+  /// No description provided for @withinPerimeter.
+  ///
+  /// In en, this message translates to:
+  /// **'Within Job Site Geofence'**
+  String get withinPerimeter;
+
+  /// No description provided for @outsidePerimeter.
+  ///
+  /// In en, this message translates to:
+  /// **'Outside Job Site Geofence'**
+  String get outsidePerimeter;
+
+  /// No description provided for @distanceFromSite.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance from site: {distance}m (Allowed: {radius}m)'**
+  String distanceFromSite(String distance, String radius);
+
+  /// No description provided for @mockLocationDetected.
+  ///
+  /// In en, this message translates to:
+  /// **'Mock / Fake GPS detected. Start refused and logged for review.'**
+  String get mockLocationDetected;
+
+  /// No description provided for @faceSelfieCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Front-Camera Face Check'**
+  String get faceSelfieCheck;
+
+  /// No description provided for @takeSelfieBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Verification Selfie'**
+  String get takeSelfieBtn;
+
+  /// No description provided for @retakeSelfieBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Retake Selfie'**
+  String get retakeSelfieBtn;
+
+  /// No description provided for @verifyAndStartJob.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Presence & Start Job'**
+  String get verifyAndStartJob;
+
+  /// No description provided for @verificationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification Refused'**
+  String get verificationFailed;
+
+  /// No description provided for @outOfGeofenceMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You appear to be {distance}m away from the job site. You must be within {radius}m to start.'**
+  String outOfGeofenceMessage(String distance, String radius);
+
+  /// No description provided for @getHelpOrSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Help / Support'**
+  String get getHelpOrSupport;
+
+  /// No description provided for @completionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Completion & Evidence'**
+  String get completionTitle;
+
+  /// No description provided for @completionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit completion selfie and optional work photos to verify finish'**
+  String get completionSubtitle;
+
+  /// No description provided for @workResultPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Evidence Photos (Private)'**
+  String get workResultPhotos;
+
+  /// No description provided for @addWorkPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Photo'**
+  String get addWorkPhoto;
+
+  /// No description provided for @completeAndSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Completion & Stop Timer'**
+  String get completeAndSubmit;
+
+  /// No description provided for @midJobCheckTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Mid-Job Verification Required'**
+  String get midJobCheckTitle;
+
+  /// No description provided for @midJobCheckSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'High-value job safety check (wage >= ₹2,000)'**
+  String get midJobCheckSubtitle;
+
+  /// No description provided for @midJobConfirmSelfie.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Mid-Shift Selfie'**
+  String get midJobConfirmSelfie;
+
+  /// No description provided for @midJobCustomerConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Worker On-Site'**
+  String get midJobCustomerConfirm;
+
+  /// No description provided for @timerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Live Work Timer'**
+  String get timerTitle;
+
+  /// No description provided for @timerRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Timer Running'**
+  String get timerRunning;
+
+  /// No description provided for @timerPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Timer Paused'**
+  String get timerPaused;
+
+  /// No description provided for @elapsedTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Elapsed Time'**
+  String get elapsedTime;
 }
 
 class _AppLocalizationsDelegate

@@ -62,6 +62,8 @@ import 'package:udyogasethu/features/job_execution/presentation/active_job_scree
 import 'package:udyogasethu/features/job_execution/presentation/attendance_scanner_screen.dart';
 import 'package:udyogasethu/features/job_execution/presentation/job_ticket_screen.dart';
 import 'package:udyogasethu/features/job_execution/presentation/worker_schedule_screen.dart';
+import 'package:udyogasethu/features/job_execution/presentation/verify_presence_screen.dart';
+import 'package:udyogasethu/features/job_execution/presentation/job_completion_screen.dart';
 
 /// RouterNotifier notifies [GoRouter] when session state changes without recreating the router.
 class RouterNotifier extends ChangeNotifier {
@@ -598,6 +600,20 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final id = state.uri.queryParameters['assignment_id'];
           return AttendanceScannerScreen(initialAssignmentId: id);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.verifyPresence,
+        builder: (context, state) {
+          final id = state.pathParameters['id'] ?? '';
+          return VerifyPresenceScreen(assignmentId: id);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.jobCompletion,
+        builder: (context, state) {
+          final id = state.pathParameters['id'] ?? '';
+          return JobCompletionScreen(assignmentId: id);
         },
       ),
       GoRoute(

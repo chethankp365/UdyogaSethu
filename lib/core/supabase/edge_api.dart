@@ -300,6 +300,34 @@ class EdgeApiClient {
     if (assignmentId != null) body['assignment_id'] = assignmentId;
     return _invoke('masked-call', body: body);
   }
+
+  /// Two-step verified start, mid-job check, and completion with evidence.
+  Future<Map<String, dynamic>> assignmentVerify({
+    required String assignmentId,
+    required String action,
+    double? lat,
+    double? lng,
+    bool? isMocked,
+    List<double>? embedding,
+    String? selfiePath,
+    List<String>? workPhotos,
+    String? note,
+    bool? customerConfirmed,
+  }) async {
+    final body = <String, dynamic>{
+      'assignment_id': assignmentId,
+      'action': action,
+    };
+    if (lat != null) body['lat'] = lat;
+    if (lng != null) body['lng'] = lng;
+    if (isMocked != null) body['is_mocked'] = isMocked;
+    if (embedding != null) body['embedding'] = embedding;
+    if (selfiePath != null) body['selfie_path'] = selfiePath;
+    if (workPhotos != null) body['work_photos'] = workPhotos;
+    if (note != null) body['note'] = note;
+    if (customerConfirmed != null) body['customer_confirmed'] = customerConfirmed;
+    return _invoke('assignment-verify', body: body);
+  }
 }
 
 /// Riverpod provider for [EdgeApiClient].
