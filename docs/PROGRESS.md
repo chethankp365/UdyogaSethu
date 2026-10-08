@@ -49,7 +49,7 @@
 - [x] **P4.4**: Provider: post a job and manage applicants (Status: Done | Created migration `0380_provider_jobs_management.sql` (applied to live Supabase DB) with `post_provider_job`, `update_provider_job`, `get_provider_jobs`, `get_job_applicants`, `update_provider_job_status`, and enhanced `respond_to_application` creating hired assignments, decrementing available slots, transitioning full jobs to filled, and dispatching in-app notifications. Built domain models `ProviderJob`, `JobApplicant`, and `JobPostDraft` with `suggest_wage_band` benchmark checks. Built data repository `ProviderJobsRepository` with offline table fallback and realtime channel. Built 11-step `PostJobWizardScreen` with fair wage band warning (warns without blocking), duration/time pickers, slot counters, payment mode selection, interactive OpenStreetMap pin & geofence circle preview, and publish flow. Built `JobApplicantsScreen` with slot progress counter, worker cards (photo, verification badge, rating, distance, skills, languages), profile sheet, and actions (Hire with slot decrement, Shortlist, Reject, Chat stub). Updated `ProviderHomeScreen` with profile header, quick actions, My Jobs segmented tabs (Open, Filled, Completed) with dynamic slot counters, and job actions (Edit, Pause/Resume, Cancel with consequence warning). Added routes `/provider/jobs/new`, `/provider/jobs/:id/applicants`, `/provider/jobs/:id/edit`. Added 95 localization keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`). Clean `flutter analyze` with 0 issues and 242/242 passing tests in `flutter test`)
 - [x] **P4.5**: Provider hub, worker search and worker profile (Status: Done)
 - [x] **P4.6**: Direct booking flow with unverified-worker notice and job protection (Status: Done)
-- [ ] **P4.7**: Job timeline, active job screen, schedule and route ETA (Status: Todo)
+- [x] **P4.7**: Job timeline, active job screen, schedule and route ETA (Status: Done | Built `RoutingService` with public OSRM client and straight-line Haversine fallback; `AssignmentTimelineWidget` with Supabase Realtime channel stream for 9 canonical assignment stages; `ActiveJobScreen` with status banner, one big next action, Simple Mode huge card with TTS narration via `flutter_tts`, route map with polylines, and "Open in Maps" external launcher; `WorkerScheduleScreen` with Day/Week view, schedule strip, and travel time warning chips; Supabase migration `0420_assignment_timeline_p47.sql` with realtime triggers and RPCs `advance_assignment_stage`, `get_active_job_details`, `get_worker_schedule`; 35 keys across all 8 ARB languages; clean analysis and 8 automated tests in `test/job_execution_test.dart`)
 - [ ] **P4.8**: QR job ticket and employer attendance scan (Status: Todo)
 - [ ] **P4.9**: Two-step verified start, timer, mid-job check, completion and evidence (Status: Todo)
 - [ ] **P4.10**: Smart no-show recovery (Status: Todo)
@@ -143,17 +143,40 @@
   - **Recurring Services (`RecurringBookingsScreen`)**: Schedule management interface listing active weekly/monthly bookings with Pause/Resume, Skip Next Date, and Cancel actions.
   - **Routing & Integration**: Added `/provider/booking` (`AppRoutes.providerBooking`) and `/provider/recurring-bookings` (`AppRoutes.recurringBookings`). Linked "Book Now" button on `WorkerProfileScreen` and "Recurring Services" card on `ProviderHomeScreen`.
   - **Localization**: 100% complete across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`) with 650 keys each, validated via `tool/check_l10n.dart`.
+  - **Localization**: 100% complete across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`) with 650 keys each, validated via `tool/check_l10n.dart`.
   - **Testing & Quality**: Built `test/direct_hire_recurring_test.dart` (5/5 passing tests). Full test suite: 253/253 passing tests across 41 test files in `flutter test`. 0 issues in `flutter analyze`).
+
+- [x] **P4.1 - P4.6 Fix and Polish Pass**: Root Cause Fixes for Seeker Home 42703, Job Visibility, Provider Hub & Zero-Overflow UI (Status: Done |
+  - **Database Migration `0410_fix_polish_p4.sql`**: Pushed to live Supabase project and validated via `npx supabase db lint --linked` (0 errors). Added `jobs.suitable_for seeker_type[]` with GIN index, `jobs.is_demo BOOLEAN` with B-tree index, and `provider_profiles.is_verified_badge BOOLEAN`. Backfilled existing real jobs to all three types (`{informal,student,part_time}`). Marked seed demo jobs `is_demo = true`. Excluded demo jobs from all worker queries (`recommended_jobs`, `nearby_jobs`, `get_job_detail`). Updated `apply_to_job` and `request_worker` with server-side audience matching. Gated seed in `seed_demo.sql`. Added SQL verification test suite `supabase/tests/p4_visibility_tests.sql` (100% pass on remote DB).
+  - **Post Job Wizard Audience Step**: Added required Step 2 "Target Workers" ("Who is this job for?") with multi-select cards for Informal, Student, and Part-Time workers with tailored hints and validation.
+  - **Provider Hub Polish**: Renamed "Scan Farm QR" quick action to "Scan QR" (opens `/trust/scan-verify` across all 8 languages). Replaced hardcoded booking demo fallback (`BOOK-7842`, `Commercial Electrical Repair`, `Chethan Kumar`) with real DB query via `get_provider_active_booking` and friendly empty state card (`_buildEmptyBookingCard`). Verified on-demand local workers section excludes logged-in user, non-workers, and unverified profiles (`where((w) => w.isVerifiedBadge)`), showing real distance ("Location not set" fallback) and actual rates. TabBar made scrollable (`isScrollable: true, tabAlignment: TabAlignment.start`) to eliminate tab label truncation. Replaced crowded header language selector with clean modal translation icon button.
+  - **Profile Photos & Avatar Pipeline**: Enhanced `UserAvatar` with immediate local preview bytes (`imageBytes`), background upload spinner overlay (`isLoading`), and clean uppercase initials fallback. Integrated across provider, seeker, and farmer wizards, review steps, headers, home screens, worker cards, applicant cards, and ID cards. Repositories compress and upload photos to `avatars/{uid}/` with upsert, updating `profiles.avatar_path` and returning public URLs.
+  - **Layout Overflows Elimination**: Replaced rigid horizontal rows with `Wrap` for camera/gallery button pairs in all wizards. Wrapped text titles, subtitle details, and booking rows in `Expanded` or `Flexible` with `overflow: TextOverflow.ellipsis`. Wrapped wage and currency figures in `FittedBox(fit: BoxFit.scaleDown)`.
+  - **Testing & Verification**: Created `test/layout_overflow_test.dart` testing 360dp and 412dp screen widths across text scale factors 1.0, 1.3, and 1.6 in 5 languages (60/60 tests passed with zero RenderFlex overflows). Full test suite: 313/313 tests passed cleanly (`flutter test`). Static analysis: `flutter analyze` 0 issues. Debug APK: built successfully (`build\app\outputs\flutter-apk\app-debug.apk`).
+
+- [x] **P4.7**: Job timeline, active job screen, schedule and route ETA (Status: Done |
+  - **Database Migration `0420_assignment_timeline_p47.sql`**: Pushed to live Supabase project and validated via `npx supabase db lint --linked` (0 errors). Added `verification_completed` to `assignment_status` enum. Enabled REPLICA IDENTITY FULL and Realtime publication on `assignment_events` and `job_assignments`. Added trigger `trg_job_assignment_status_event` ensuring direct SQL updates automatically write an `assignment_events` row and notify listeners in real-time. Added RPCs `advance_assignment_stage`, `get_active_job_details`, and `get_worker_schedule` (with lead/lag travel gap calculation).
+  - **RoutingService & Map Integration**: Created `RoutingService` in `lib/core/services/routing_service.dart` querying public OSRM router (`router.project-osrm.org`) with 5-second timeout, rate limit documentation in `docs/DECISIONS.md`, and straight-line Haversine fallback (~25 km/h urban speed). Includes `openExternalMaps` intent launcher using `geo:` and `google.navigation:` URIs.
+  - **AssignmentTimelineWidget**: Reusable timeline widget across Seeker and Provider roles in `lib/features/job_execution/presentation/assignment_timeline_widget.dart` streaming `assignment_events` in real-time across all 9 canonical stages: Request Created, Accepted, Ticket Issued, Worker Arrived, Verification Completed, Job In Progress, Completed, Payment Released, Dispute Raised.
+  - **ActiveJobScreen**: Dual-role execution screen (`/jobs/active/:id`) with status banner, dynamic next action button, counterpart contact details, embedded OpenStreetMap route map, and "Open in Maps" action. Includes **Simple Mode** (accessible huge 76dp+ card with high contrast icon and spoken audio feedback using `flutter_tts` for: Accept Job, Start Work, Complete Job, Ask for Help).
+  - **WorkerScheduleScreen**: Schedule view (`/seeker/schedule`) with Day and Week modes, 7-day horizontal date selector, upcoming assignment cards, SQL overlap prevention, and amber warning chip when the gap between two consecutive jobs is shorter than the estimated travel time.
+  - **Localization & Quality**: Added 35 keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`) verified via `tool/check_l10n.dart` (700 keys each). Added automated tests in `test/job_execution_test.dart` (8 tests covering routing, fallbacks, timeline, active job screen, schedule, and travel warnings). 0 issues in `flutter analyze`. 321/321 tests passing in `flutter test`.
 
 ---
 
 ## Manual steps pending
-1. **Apply Strict Audience Filtering Migration**:
-   - Open Supabase SQL Editor and execute `supabase/migrations/0360_strict_audience_filtering.sql` to install audience filtering on `recommended_jobs` and `apply_to_job` RPCs.
-   - *(Optional for testing)*: Execute `supabase/dev/sample_jobs.sql` to populate sample student, informal, and part-time jobs (and `supabase/dev/remove_sample_jobs.sql` when done testing).
-2. **Apply Audience and Consent RPCs Migration (if not yet applied)**:
-   - Open Supabase SQL Editor and execute `supabase/migrations/0350_audience_and_jobs_rules.sql`.
-3. **Deploy Updated Edge Functions**:
+1. **Phone Installation (Xiaomi / MIUI USB Security Permission)**:
+   - Your connected phone (`2201116SG`, Redmi Note 11) returned `INSTALL_FAILED_USER_RESTRICTED: Install canceled by user` during ADB installation.
+   - On Xiaomi / MIUI / HyperOS devices, USB installation must be permitted:
+     1. Open phone **Settings** -> **Additional settings** -> **Developer options**.
+     2. Ensure **Install via USB** is toggled **ON** (MIUI requires an active SIM card and Mi Account sign-in to toggle this setting).
+     3. Ensure **USB debugging (Security settings)** is enabled if prompted.
+     4. Then run the following command in PowerShell to install the freshly built APK:
+        ```powershell
+        & "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" -s db11f242e5b0 install -r "build\app\outputs\flutter-apk\app-debug.apk"
+        ```
+     5. When the MIUI confirmation dialog appears on the phone screen asking *"Install via USB?"*, tap **Install**.
+2. **Deploy Updated Edge Functions (when ready)**:
    Run the following commands using Supabase CLI:
    ```bash
    npx supabase functions deploy qr-issue
@@ -167,6 +190,6 @@
 
 ## Known issues
 - **Profile & Auth Foreign Key Cascade vs D11 Retention (To be fixed in P5.1 migration)**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`, and financial/order tables (`wallets`, `payouts`, `orders`, `group_orders`, `group_order_members`, `disputes`, `dispute_evidence`, `job_assignments`, `job_evidence`, `ratings_reviews`) referencing `profiles(id)` with `ON DELETE CASCADE`. Calling `auth.admin.deleteUser` cascades through `auth.users -> profiles -> child tables`, erasing financial audit trails and breaking D11. The P5.1 migration must alter these foreign key constraints (e.g., remove cascade on `profiles.id` so scrubbed tombstone profiles survive, or move records to snapshot columns with `ON DELETE SET NULL`) and re-verify that account deletion never fails and re-registration with the same phone number works cleanly.
-- **Phase 4.7**: Job timeline, active job screen, schedule and route ETA is the planned next step.
+- **Phase 4.8**: QR job ticket and employer attendance scan is the planned next step.
 - **Phase 9 (Admin Console)**: Admin console is built in a separate web/desktop project and is out of scope for this Flutter app.
 

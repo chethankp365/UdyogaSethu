@@ -124,13 +124,39 @@ This document records key design, architectural, role model, and implementation 
   * **Persistence**: Selection is persisted in `assignments.protection_selected` and `direct_hire_metadata->>'protection_selected'`.
   * **Booking Pass Ticket**: Upon confirmation via `request_worker` RPC, the provider receives a perforated Booking Pass Ticket showing booking code and "Waiting for worker" status.
 
----
+* **D-SUITABLE-FOR — Job Visibility by Worker Type & Demo Jobs Separation**:
+  * **Schema Migration (0410)**: Added `jobs.suitable_for seeker_type[] NOT NULL DEFAULT '{informal,student,part_time}'` with GIN index. Added `jobs.is_demo BOOLEAN NOT NULL DEFAULT false` with B-tree index. Added `provider_profiles.is_verified_badge BOOLEAN NOT NULL DEFAULT false`.
+  * **Demo Jobs Exclusion**: Excluded all `is_demo = true` jobs from worker-facing queries (`recommended_jobs`, `nearby_jobs`, GPS map, search, and job detail lists). Seed demo jobs created in P1.7 are flagged `is_demo = true` and gated in `seed_demo.sql` behind an explicit boolean flag (`v_seed_demo_jobs := false`).
+  * **Provider Post Job Wizard (Step 2)**: Added required "Target Workers" step ("Who is this job for?") with multi-select cards for Informal, Student, and Part-Time workers, with tailored hints and required selection validation.
+  * **Server-Side Enforcement**: `recommended_jobs`, `nearby_jobs`, and `apply_to_job` enforce `jobs.suitable_for @> ARRAY[worker_type]` in PostgreSQL. Workers only see and can only apply for jobs matching their active `seeker_type`.
+  * **Realtime Sync**: `SeekerHomeController` subscribes to Supabase Realtime channel on table `jobs`, reflecting newly posted or updated provider jobs instantly without app restart.
 
-## Known Issues & Pre-Launch Security Requirements
+* **D-PROVIDER-HUB-CLEANUP — Provider Hub Scan QR, Real Bookings & Overflow Prevention**:
+  * **Scan QR Quick Action**: Renamed quick action from "Scan Farm QR" to "Scan QR" across all 8 languages (`hubActionScanQr`). Routes to `AppRoutes.scanVerify` (`/trust/scan-verify`) for worker ID and job ticket validation. Farm produce scanning remains reserved for Phase 6.
+  * **Confirmed Booking Integrity**: The Confirmed Booking card displays strictly real assignments of the logged-in provider queried via `get_provider_active_booking`. If no active booking exists in the database, renders a friendly empty state card (`_buildEmptyBookingCard`). Removed repository demo fallback (`BOOK-7842`, `Commercial Electrical Repair`, `Chethan Kumar`).
+  * **Verified Local Workers Filter**: The "Verified on-demand local workers" section excludes the logged-in provider, excludes non-worker accounts, filters strictly for `is_verified_badge == true` (100% Aadhaar verified), and displays real distance ("Location not set" fallback when coordinates are absent) and actual rates.
+  * **Header & Tabs Ergonomics**: Category TabBar configured with `isScrollable: true` and `tabAlignment: TabAlignment.start` to eliminate label truncation ("Workers & Servi", "Farm Produc"). Compact language switcher replaced with a clean translation icon button opening a bottom modal sheet, avoiding header crowding across screen sizes.
 
-* **KI-01 — Mock Face Matcher (`FACE_MATCHER=mock`) Security Boundary**:
-  * **Development Only**: The mock face matcher mode (`FACE_MATCHER=mock`) automatically passes by default (returning similarity `0.92`) unless the first vector element is negative, and mock unit tests supply client-side embeddings.
-  * **Pre-Launch Requirement**: The mock matcher MUST NEVER be enabled in production environments. Before public launch, the production `face-verify` Edge Function must calculate face similarity server-side from the uploaded selfie image against the enrolled reference image (or via a certified vendor API). `face-verify` must NEVER trust client-supplied face embeddings or similarity scores.
+* **D-AVATAR-PIPELINE — Unified Avatar Pipeline with Local Preview & Initials Fallback**:
+  * **Immediate Local Preview**: When an avatar photo is captured from camera or chosen from gallery in provider, seeker, or farmer wizards, raw bytes are immediately displayed in the UI via `UserAvatar(imageBytes: bytes)` while background upload occurs.
+  * **Upload & Storage**: Image bytes are compressed and uploaded to `avatars/{uid}/` with upsert enabled. Repositories update `profiles.avatar_path` in the database and return the public storage URL (`client.storage.from('avatars').getPublicUrl(path)`).
+  * **Unified Display**: `UserAvatar` widget utilizes `CachedNetworkImage` with progress placeholder, image loading spinner overlay during upload, and clean uppercase 1-2 letter initials fallback (`getInitials`) on load error or null path.
+  * **Consistency Across Screens**: The resolved avatar appears across wizard steps (photo picker and step 5/7 review), header profile buttons, home screens, worker profile cards, applicant cards, job detail screens, and digital ID card.
+
+* **D-LAYOUT-OVERFLOW-ELIMINATION — Zero Overflow Policy across Screen Sizes and Text Scales**:
+  * **Resolution Pattern**: Replaced rigid horizontal `Row` layouts with `Wrap(alignment: WrapAlignment.center, spacing: 8, runSpacing: 8)` for camera/gallery button pairs in all wizards. Wrapped text titles and subtitle details in `Expanded` or `Flexible` with `overflow: TextOverflow.ellipsis`. Wrapped currency and wage labels in `FittedBox(fit: BoxFit.scaleDown)`.
+  * **Testing Rigor**: Verified zero yellow-and-black RenderFlex overflows across 360dp and 412dp screen widths, with text scale factors 1.0, 1.3, and 1.6 in English, Kannada, Hindi, Tamil, and Telugu via automated widget test suite `test/layout_overflow_test.dart` (60 passing tests).
+
+* **D-ROUTING-AND-JOB-EXECUTION — OSRM Routing, Straight-Line Fallback, Realtime Timeline & Simple Mode**:
+  * **RoutingService Implementation**: Uses the public OpenStreetMap OSRM routing API (`https://router.project-osrm.org/route/v1/driving/...`) with a 5-second timeout and GeoJSON polyline decoding.
+  * **Rate Limiting & Straight-Line Fallback**: The public OSRM server is free and rate-limited. In case of network errors, timeouts, or HTTP 429 rate limiting, a straight-line Haversine fallback is automatically computed with an estimated urban driving speed of 25 km/h (~2.4 min/km). In compliance with the AGENTS.md Honesty Rule, straight-line estimates are explicitly badged with an amber "Demo mode: Straight-line" chip in the UI.
+  * **External Maps Intent**: Route section includes an "Open in Maps" button launching external turn-by-turn navigation via `url_launcher` (`https://www.google.com/maps/dir/?api=1&destination=...` or generic `geo:` intent).
+  * **Realtime Lifecycle Timeline**: `AssignmentTimelineWidget` subscribes to Supabase Realtime on `assignment_events` table for the active assignment. Renders the 9 canonical stages: Request Created, Accepted, Ticket Issued, Worker Arrived, Verification Completed, Job In Progress, Completed, Payment Released, and Dispute Raised.
+  * **Status Change SQL Trigger**: PostgreSQL trigger `trg_job_assignment_status_event` on table `job_assignments` automatically logs an `assignment_events` entry whenever `job_assignments.status` changes, guaranteeing live phone timeline updates even when status is updated directly via SQL queries.
+  * **Active Job Screen with Simple Mode**: Supports both Worker and Provider counterparties. In Simple Mode (`profiles.simple_mode` / `UserSettings.simpleMode`), the primary action is enlarged to a huge gradient card (76dp+ min height, 36dp icons, 20sp bold text) with a spoken TTS audio label via `flutter_tts` ("Accept Job", "Start Work", "Complete Job", "Ask for Help").
+  * **Worker Schedule with Travel Warning**: Day and Week calendar views with SQL conflict checks. Displays a prominent amber warning chip whenever the time gap between consecutive assignments is shorter than the estimated travel time.
+
+
 
 
 

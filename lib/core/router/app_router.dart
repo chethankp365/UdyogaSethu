@@ -58,6 +58,8 @@ import 'package:udyogasethu/features/seeker/presentation/map/nearby_jobs_map_scr
 import 'package:udyogasethu/features/seeker/presentation/seeker_home_screen.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_jobs_screen.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_wizard_screen.dart';
+import 'package:udyogasethu/features/job_execution/presentation/active_job_screen.dart';
+import 'package:udyogasethu/features/job_execution/presentation/worker_schedule_screen.dart';
 
 /// RouterNotifier notifies [GoRouter] when session state changes without recreating the router.
 class RouterNotifier extends ChangeNotifier {
@@ -570,6 +572,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             preloadedJob: preloaded,
           );
         },
+      ),
+      GoRoute(
+        path: AppRoutes.activeJob,
+        builder: (context, state) {
+          final id = state.pathParameters['id'] ?? '';
+          return ActiveJobScreen(assignmentId: id);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.workerSchedule,
+        builder: (context, state) => const WorkerScheduleScreen(),
       ),
       GoRoute(
         path: AppRoutes.providerJobNew,

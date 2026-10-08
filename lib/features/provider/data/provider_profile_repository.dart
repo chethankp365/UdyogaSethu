@@ -186,7 +186,17 @@ class SupabaseProviderProfileRepository implements ProviderProfileRepository {
             fileOptions: const FileOptions(upsert: true),
           );
 
-      return path;
+      try {
+        await _client.from('profiles').update({
+          'avatar_path': path,
+          'updated_at': DateTime.now().toIso8601String(),
+        }).eq('id', userId);
+      } catch (dbErr) {
+        AppLogger.w('Failed to update profiles.avatar_path in DB: $dbErr');
+      }
+
+      final publicUrl = _client.storage.from('avatars').getPublicUrl(path);
+      return publicUrl;
     } catch (e, stack) {
       AppLogger.e('Error uploading avatar photo', e, stack);
       throw const AppException.unknown('Failed to upload profile photo');

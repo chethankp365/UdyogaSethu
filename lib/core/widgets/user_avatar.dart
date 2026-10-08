@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,19 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/errors/app_exception.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 
-/// Cached Signed URL entry with expiration timestamp.
-class SignedUrlCacheEntry {
-  final String url;
-  final DateTime expiresAt;
-
-  SignedUrlCacheEntry(this.url, this.expiresAt);
-
-  bool get isExpired => DateTime.now().isAfter(expiresAt);
-}
-
-final Map<String, SignedUrlCacheEntry> _avatarUrlCache = {};
-
-/// Riverpod family provider for resolving storage paths to signed URLs with caching & refresh.
+/// Riverpod family provider for resolving storage paths to public URLs with caching.
 final avatarUrlProvider = FutureProvider.family<String?, String?>((ref, avatarPath) async {
   if (avatarPath == null || avatarPath.trim().isEmpty) {
     return null;
@@ -30,46 +19,20 @@ final avatarUrlProvider = FutureProvider.family<String?, String?>((ref, avatarPa
     return path;
   }
 
-  // Check cache for valid non-expired signed URL (buffer 5 minutes)
-  final cached = _avatarUrlCache[path];
-  if (cached != null && cached.expiresAt.isAfter(DateTime.now().add(const Duration(minutes: 5)))) {
-    return cached.url;
-  }
-
-  // Generate signed URL via Supabase Storage
+  // avatars bucket is public read: resolve directly via getPublicUrl
   try {
-    SupabaseClient? client;
-    try {
-      if (Supabase.instance.isInitialized) {
-        client = Supabase.instance.client;
+    if (Supabase.instance.isInitialized) {
+      final cleanPath = path.startsWith('avatars/') ? path.substring('avatars/'.length) : path;
+      final pubUrl = Supabase.instance.client.storage.from('avatars').getPublicUrl(cleanPath);
+      if (pubUrl.isNotEmpty) {
+        return pubUrl;
       }
-    } catch (_) {}
-
-    if (client != null && !client.rest.url.contains('dummy.supabase.co')) {
-      final signedUrl = await client.storage
-          .from('avatars')
-          .createSignedUrl(path, 3600); // 1 hour validity
-
-      // Cache for 50 minutes
-      _avatarUrlCache[path] = SignedUrlCacheEntry(
-        signedUrl,
-        DateTime.now().add(const Duration(minutes: 50)),
-      );
-
-      return signedUrl;
     }
   } catch (e) {
     if (kDebugMode) {
-      AppLogger.w('Failed to generate signed URL for avatarPath="$path": $e');
+      AppLogger.w('Failed to get public URL for avatarPath="$path": $e');
     }
   }
-
-  // Fallback to public URL or raw path
-  try {
-    if (Supabase.instance.isInitialized) {
-      return Supabase.instance.client.storage.from('avatars').getPublicUrl(path);
-    }
-  } catch (_) {}
 
   return path;
 });
@@ -98,6 +61,9 @@ class UserAvatar extends ConsumerWidget {
   final IconData? fallbackIcon;
   final VoidCallback? onTap;
 
+  final Uint8List? imageBytes;
+  final bool isLoading;
+
   const UserAvatar({
     super.key,
     required this.avatarPath,
@@ -107,6 +73,8 @@ class UserAvatar extends ConsumerWidget {
     this.textColor,
     this.fallbackIcon,
     this.onTap,
+    this.imageBytes,
+    this.isLoading = false,
   });
 
   @override
@@ -116,46 +84,90 @@ class UserAvatar extends ConsumerWidget {
     final bg = backgroundColor ?? AppColors.headerGreenDark.withAlpha(38);
     final textCol = textColor ?? AppColors.headerGreenDark;
 
-    Widget avatarWidget = avatarAsync.when(
-      data: (url) {
-        if (url != null && url.isNotEmpty) {
-          return CircleAvatar(
-            radius: radius,
-            backgroundColor: bg,
-            child: ClipOval(
-              child: Image.network(
-                url,
-                width: radius * 2,
-                height: radius * 2,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  if (kDebugMode) {
-                    AppLogger.e('UserAvatar Image.network failed for url="$url" (path="$avatarPath"): $error', error, stackTrace);
-                  }
-                  return _buildInitialsFallback(initials, bg, textCol);
-                },
-              ),
-            ),
-          );
-        }
-        return _buildInitialsFallback(initials, bg, textCol);
-      },
-      loading: () => CircleAvatar(
+    Widget avatarWidget;
+    if (imageBytes != null && imageBytes!.isNotEmpty) {
+      avatarWidget = CircleAvatar(
         radius: radius,
         backgroundColor: bg,
-        child: SizedBox(
-          width: radius / 2,
-          height: radius / 2,
-          child: CircularProgressIndicator(strokeWidth: 2, color: textCol),
+        child: ClipOval(
+          child: Image.memory(
+            imageBytes!,
+            width: radius * 2,
+            height: radius * 2,
+            fit: BoxFit.cover,
+          ),
         ),
-      ),
-      error: (err, stack) {
-        if (kDebugMode) {
-          AppLogger.e('UserAvatar avatarUrlProvider error for path="$avatarPath": $err', err, stack);
-        }
-        return _buildInitialsFallback(initials, bg, textCol);
-      },
-    );
+      );
+    } else {
+      avatarWidget = avatarAsync.when(
+        data: (url) {
+          if (url != null && url.isNotEmpty) {
+            return CircleAvatar(
+              radius: radius,
+              backgroundColor: bg,
+              child: ClipOval(
+                child: CachedNetworkImage(
+                  imageUrl: url,
+                  width: radius * 2,
+                  height: radius * 2,
+                  fit: BoxFit.cover,
+                  placeholder: (context, _) => SizedBox(
+                    width: radius / 2,
+                    height: radius / 2,
+                    child: Center(
+                      child: CircularProgressIndicator(strokeWidth: 2, color: textCol),
+                    ),
+                  ),
+                  errorWidget: (context, _, error) {
+                    return _buildInitialsFallback(initials, bg, textCol);
+                  },
+                ),
+              ),
+            );
+          }
+          return _buildInitialsFallback(initials, bg, textCol);
+        },
+        loading: () => CircleAvatar(
+          radius: radius,
+          backgroundColor: bg,
+          child: SizedBox(
+            width: radius / 2,
+            height: radius / 2,
+            child: CircularProgressIndicator(strokeWidth: 2, color: textCol),
+          ),
+        ),
+        error: (err, stack) {
+          if (kDebugMode) {
+            AppLogger.e('UserAvatar avatarUrlProvider error for path="$avatarPath": $err', err, stack);
+          }
+          return _buildInitialsFallback(initials, bg, textCol);
+        },
+      );
+    }
+
+    if (isLoading) {
+      avatarWidget = Stack(
+        alignment: Alignment.center,
+        children: [
+          avatarWidget,
+          Container(
+            width: radius * 2,
+            height: radius * 2,
+            decoration: const BoxDecoration(
+              color: Colors.black38,
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: SizedBox(
+                width: radius / 2,
+                height: radius / 2,
+                child: const CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
 
     if (onTap != null) {
       avatarWidget = GestureDetector(

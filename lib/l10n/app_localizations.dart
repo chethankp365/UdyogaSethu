@@ -2780,6 +2780,84 @@ abstract class AppLocalizations {
   /// **'Category & Title'**
   String get postJobStep1;
 
+  /// No description provided for @postJobStepAudience.
+  ///
+  /// In en, this message translates to:
+  /// **'Target Workers'**
+  String get postJobStepAudience;
+
+  /// No description provided for @postJobAudienceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Who is this job for?'**
+  String get postJobAudienceTitle;
+
+  /// No description provided for @postJobAudienceSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select matching worker categories who can see and apply for this job.'**
+  String get postJobAudienceSubtitle;
+
+  /// No description provided for @postJobAudienceInformal.
+  ///
+  /// In en, this message translates to:
+  /// **'Informal / Daily-wage Worker'**
+  String get postJobAudienceInformal;
+
+  /// No description provided for @postJobAudienceInformalHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Day labourers, masons, loaders, construction, field hands'**
+  String get postJobAudienceInformalHint;
+
+  /// No description provided for @postJobAudienceStudent.
+  ///
+  /// In en, this message translates to:
+  /// **'Student'**
+  String get postJobAudienceStudent;
+
+  /// No description provided for @postJobAudienceStudentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'College students looking for short, flexible evening or weekend tasks'**
+  String get postJobAudienceStudentHint;
+
+  /// No description provided for @postJobAudiencePartTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Part-time / Flexible Worker'**
+  String get postJobAudiencePartTime;
+
+  /// No description provided for @postJobAudiencePartTimeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Workers available for partial shifts or flexible timing'**
+  String get postJobAudiencePartTimeHint;
+
+  /// No description provided for @postJobAudienceRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select at least one worker type'**
+  String get postJobAudienceRequired;
+
+  /// No description provided for @hubConfirmedBookingEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No active bookings'**
+  String get hubConfirmedBookingEmptyTitle;
+
+  /// No description provided for @hubConfirmedBookingEmptyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your confirmed worker assignments and live tracking will appear here.'**
+  String get hubConfirmedBookingEmptyDesc;
+
+  /// No description provided for @hubLocationNotSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Location not set'**
+  String get hubLocationNotSet;
+
   /// No description provided for @postJobStep2.
   ///
   /// In en, this message translates to:
@@ -3236,11 +3314,11 @@ abstract class AppLocalizations {
   /// **'Daily milk deliveries and weekly organic vegetable baskets straight to your doorstep coming in Phase 6.'**
   String get hubSubscriptionsComingSoonDesc;
 
-  /// No description provided for @hubActionScanFarmQr.
+  /// No description provided for @hubActionScanQr.
   ///
   /// In en, this message translates to:
-  /// **'Scan Farm QR'**
-  String get hubActionScanFarmQr;
+  /// **'Scan QR'**
+  String get hubActionScanQr;
 
   /// No description provided for @hubActionNoShowHelp.
   ///
@@ -4009,6 +4087,228 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Demo mode'**
   String get demoModeBadge;
+
+  /// No description provided for @timelineTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Assignment Lifecycle Timeline'**
+  String get timelineTitle;
+
+  /// No description provided for @timelineLiveDot.
+  ///
+  /// In en, this message translates to:
+  /// **'LIVE'**
+  String get timelineLiveDot;
+
+  /// No description provided for @timelineDisputeActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Dispute Raised Under Mediation'**
+  String get timelineDisputeActive;
+
+  /// No description provided for @timelineDisputeSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolution team is reviewing job evidence and logs.'**
+  String get timelineDisputeSub;
+
+  /// No description provided for @timelineCurrentBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get timelineCurrentBadge;
+
+  /// No description provided for @stageRequestCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Created'**
+  String get stageRequestCreated;
+
+  /// No description provided for @stageAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted'**
+  String get stageAccepted;
+
+  /// No description provided for @stageTicketIssued.
+  ///
+  /// In en, this message translates to:
+  /// **'Ticket Issued'**
+  String get stageTicketIssued;
+
+  /// No description provided for @stageWorkerArrived.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker Arrived'**
+  String get stageWorkerArrived;
+
+  /// No description provided for @stageVerificationCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification Completed'**
+  String get stageVerificationCompleted;
+
+  /// No description provided for @stageJobInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Job In Progress'**
+  String get stageJobInProgress;
+
+  /// No description provided for @stageCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get stageCompleted;
+
+  /// No description provided for @stagePaymentReleased.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Released'**
+  String get stagePaymentReleased;
+
+  /// No description provided for @stageDisputeRaised.
+  ///
+  /// In en, this message translates to:
+  /// **'Dispute Raised'**
+  String get stageDisputeRaised;
+
+  /// No description provided for @activeJobTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Job Execution'**
+  String get activeJobTitle;
+
+  /// No description provided for @actionAcceptJob.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept Job'**
+  String get actionAcceptJob;
+
+  /// No description provided for @actionWorkerArrived.
+  ///
+  /// In en, this message translates to:
+  /// **'I Have Arrived'**
+  String get actionWorkerArrived;
+
+  /// No description provided for @actionStartWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Work'**
+  String get actionStartWork;
+
+  /// No description provided for @actionCompleteJob.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Job'**
+  String get actionCompleteJob;
+
+  /// No description provided for @actionAwaitingPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Awaiting Payment Release'**
+  String get actionAwaitingPayment;
+
+  /// No description provided for @actionJobFinished.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Fully Completed'**
+  String get actionJobFinished;
+
+  /// No description provided for @actionDisputeMediation.
+  ///
+  /// In en, this message translates to:
+  /// **'In Dispute Review'**
+  String get actionDisputeMediation;
+
+  /// No description provided for @actionWaitingAcceptance.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for Worker to Accept'**
+  String get actionWaitingAcceptance;
+
+  /// No description provided for @actionConfirmArrival.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Worker Arrival'**
+  String get actionConfirmArrival;
+
+  /// No description provided for @actionConfirmCompletion.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Job Completion'**
+  String get actionConfirmCompletion;
+
+  /// No description provided for @actionReleasePayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Release Payment'**
+  String get actionReleasePayment;
+
+  /// No description provided for @actionPaymentDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Settled'**
+  String get actionPaymentDone;
+
+  /// No description provided for @actionAskForHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask for Help'**
+  String get actionAskForHelp;
+
+  /// No description provided for @actionDispute.
+  ///
+  /// In en, this message translates to:
+  /// **'Raise Dispute'**
+  String get actionDispute;
+
+  /// No description provided for @simpleModeSpokenLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to Speak & Execute'**
+  String get simpleModeSpokenLabel;
+
+  /// No description provided for @routeAndEtaTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Route & Travel ETA'**
+  String get routeAndEtaTitle;
+
+  /// No description provided for @openInMapsBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Open in Maps'**
+  String get openInMapsBtn;
+
+  /// No description provided for @demoModeChip.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo mode'**
+  String get demoModeChip;
+
+  /// No description provided for @scheduleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker Schedule & Travel'**
+  String get scheduleTitle;
+
+  /// No description provided for @scheduleDayView.
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get scheduleDayView;
+
+  /// No description provided for @scheduleWeekView.
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get scheduleWeekView;
+
+  /// No description provided for @scheduleWeeklyTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Week Projected Earnings'**
+  String get scheduleWeeklyTotal;
 }
 
 class _AppLocalizationsDelegate

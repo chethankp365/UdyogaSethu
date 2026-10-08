@@ -73,6 +73,8 @@ class SupabaseProviderJobsRepository implements ProviderJobsRepository {
               addressText: row['address_text']?.toString(),
               geofenceRadiusM: (row['geofence_radius_m'] as num?)?.toInt() ?? 150,
               status: row['status']?.toString() ?? 'open',
+              suitableFor: (row['suitable_for'] as List?)?.map((e) => e.toString()).toList() ??
+                  const ['informal', 'student', 'part_time'],
               createdAt: row['created_at'] != null
                   ? DateTime.tryParse(row['created_at'].toString()) ?? DateTime.now()
                   : DateTime.now(),
@@ -150,6 +152,7 @@ class SupabaseProviderJobsRepository implements ProviderJobsRepository {
         'p_location_lat': draft.latitude,
         'p_location_lng': draft.longitude,
         'p_geofence_radius_m': draft.geofenceRadiusM,
+        'p_suitable_for': draft.suitableFor,
       });
 
       return res?.toString() ?? '';
@@ -180,6 +183,7 @@ class SupabaseProviderJobsRepository implements ProviderJobsRepository {
         'p_location_lat': draft.latitude,
         'p_location_lng': draft.longitude,
         'p_geofence_radius_m': draft.geofenceRadiusM,
+        'p_suitable_for': draft.suitableFor,
       });
 
       return res == true;

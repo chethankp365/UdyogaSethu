@@ -45,7 +45,7 @@ class SupabaseSeekerJobsRepository implements SeekerJobsRepository {
       // 1. Fetch Job Applications (Applied segment)
       final apps = await _client
           .from('job_applications')
-          .select('*, jobs!job_id(title, wage_paise, start_at, est_duration_minutes, address_text, profiles!provider_id(full_name, is_verified_badge), service_categories(slug, icon))')
+          .select('*, jobs!job_id(title, wage_paise, start_at, est_duration_minutes, address_text, profiles!provider_id(full_name), service_categories(slug, icon))')
           .eq('worker_id', uid)
           .order('created_at', ascending: false);
 
@@ -59,7 +59,7 @@ class SupabaseSeekerJobsRepository implements SeekerJobsRepository {
           jobId: a['job_id'] as String,
           title: job['title'] as String? ?? 'General Work',
           providerName: provider?['full_name'] as String? ?? 'Verified Employer',
-          providerVerified: provider?['is_verified_badge'] as bool? ?? true,
+          providerVerified: true,
           wagePaise: (job['wage_paise'] as num?)?.toInt() ?? 60000,
           startAt: job['start_at'] != null ? DateTime.parse(job['start_at']) : DateTime.now(),
           estDurationMinutes: (job['est_duration_minutes'] as num?)?.toInt() ?? 480,
@@ -75,7 +75,7 @@ class SupabaseSeekerJobsRepository implements SeekerJobsRepository {
       // 2. Fetch Job Assignments (Requests, Accepted, Active, Completed)
       final assigns = await _client
           .from('job_assignments')
-          .select('*, jobs!job_id(title, wage_paise, start_at, est_duration_minutes, address_text, profiles!provider_id(full_name, is_verified_badge), service_categories(slug, icon))')
+          .select('*, jobs!job_id(title, wage_paise, start_at, est_duration_minutes, address_text, profiles!provider_id(full_name), service_categories(slug, icon))')
           .eq('worker_id', uid)
           .order('created_at', ascending: false);
 
@@ -104,7 +104,7 @@ class SupabaseSeekerJobsRepository implements SeekerJobsRepository {
           jobId: asg['job_id'] as String,
           title: job['title'] as String? ?? 'Direct Work Booking',
           providerName: provider?['full_name'] as String? ?? 'Verified Employer',
-          providerVerified: provider?['is_verified_badge'] as bool? ?? true,
+          providerVerified: true,
           wagePaise: (asg['agreed_wage_paise'] as num?)?.toInt() ?? (job['wage_paise'] as num?)?.toInt() ?? 75000,
           startAt: job['start_at'] != null ? DateTime.parse(job['start_at']) : DateTime.now(),
           estDurationMinutes: (job['est_duration_minutes'] as num?)?.toInt() ?? 240,

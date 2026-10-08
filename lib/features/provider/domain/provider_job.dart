@@ -21,6 +21,7 @@ class ProviderJob {
   final String? addressText;
   final int geofenceRadiusM;
   final String status; // 'draft', 'open', 'filled', 'closed', 'cancelled'
+  final List<String> suitableFor; // 'informal', 'student', 'part_time'
   final DateTime createdAt;
   final int applicantCount;
   final int hiredCount;
@@ -45,6 +46,7 @@ class ProviderJob {
     this.addressText,
     this.geofenceRadiusM = 150,
     this.status = 'open',
+    this.suitableFor = const ['informal', 'student', 'part_time'],
     required this.createdAt,
     this.applicantCount = 0,
     this.hiredCount = 0,
@@ -100,6 +102,9 @@ class ProviderJob {
       addressText: json['address_text'] as String?,
       geofenceRadiusM: (json['geofence_radius_m'] as num?)?.toInt() ?? 150,
       status: json['status'] as String? ?? 'open',
+      suitableFor: json['suitable_for'] is List
+          ? (json['suitable_for'] as List).map((e) => e.toString()).toList()
+          : const ['informal', 'student', 'part_time'],
       createdAt: json['created_at'] != null
           ? DateTime.tryParse(json['created_at'].toString()) ?? DateTime.now()
           : DateTime.now(),
@@ -129,6 +134,7 @@ class ProviderJob {
       'address_text': addressText,
       'geofence_radius_m': geofenceRadiusM,
       'status': status,
+      'suitable_for': suitableFor,
       'created_at': createdAt.toIso8601String(),
       'applicant_count': applicantCount,
       'hired_count': hiredCount,

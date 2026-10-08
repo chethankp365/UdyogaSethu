@@ -34,14 +34,19 @@ class _SeekerJobsScreenState extends ConsumerState<SeekerJobsScreen> {
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh_rounded),
-            tooltip: 'Refresh',
-            onPressed: () => ref.read(seekerJobsControllerProvider.notifier).loadJobs(),
+            icon: const Icon(Icons.calendar_month_outlined),
+            tooltip: 'Schedule & Travel',
+            onPressed: () => context.push(AppRoutes.workerSchedule),
           ),
           IconButton(
             icon: const Icon(Icons.map_outlined),
             tooltip: 'GPS Map',
             onPressed: () => context.push(AppRoutes.seekerMap),
+          ),
+          IconButton(
+            icon: const Icon(Icons.refresh_rounded),
+            tooltip: 'Refresh',
+            onPressed: () => ref.read(seekerJobsControllerProvider.notifier).loadJobs(),
           ),
         ],
       ),
@@ -282,7 +287,13 @@ class _SeekerJobsScreenState extends ConsumerState<SeekerJobsScreen> {
       elevation: 0.5,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
-        onTap: () => context.push('/job/${item.jobId}'),
+        onTap: () {
+          if (segment == SeekerJobSegment.active || segment == SeekerJobSegment.accepted) {
+            context.push('/jobs/active/${item.id}');
+          } else {
+            context.push('/job/${item.jobId}');
+          }
+        },
         borderRadius: BorderRadius.circular(16),
         child: Padding(
           padding: const EdgeInsets.all(14),

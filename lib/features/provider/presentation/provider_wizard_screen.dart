@@ -12,6 +12,7 @@ import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/widgets/app_button.dart';
 import 'package:udyogasethu/core/widgets/compact_language_selector.dart';
 import 'package:udyogasethu/core/widgets/info_banner.dart';
+import 'package:udyogasethu/core/widgets/user_avatar.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_wizard_controller.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_wizard_controller.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
@@ -25,6 +26,8 @@ class ProviderWizardScreen extends ConsumerStatefulWidget {
 
 class _ProviderWizardScreenState extends ConsumerState<ProviderWizardScreen> {
   final _picker = ImagePicker();
+  Uint8List? _localAvatarBytes;
+  ImageSource? _lastPickedSource;
 
   @override
   Widget build(BuildContext context) {
@@ -242,28 +245,26 @@ class _ProviderWizardScreenState extends ConsumerState<ProviderWizardScreen> {
         Center(
           child: Column(
             children: [
-              CircleAvatar(
+              UserAvatar(
+                avatarPath: draft.avatarPath ?? draft.avatarUrl,
+                imageBytes: _localAvatarBytes,
+                name: draft.fullName,
                 radius: 54,
-                backgroundColor: AppColors.headerGreenDark.withValues(alpha: 0.1),
-                backgroundImage: draft.avatarUrl != null && draft.avatarUrl!.isNotEmpty
-                    ? NetworkImage(draft.avatarUrl!)
-                    : null,
-                child: draft.avatarUrl == null || draft.avatarUrl!.isEmpty
-                    ? const Icon(Icons.person_rounded, size: 54, color: AppColors.headerGreenDark)
-                    : null,
+                isLoading: state.isSaving,
               ),
               const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 8,
+                runSpacing: 8,
                 children: [
                   OutlinedButton.icon(
-                    onPressed: () => _pickAndUploadPhoto(ImageSource.camera),
+                    onPressed: state.isSaving ? null : () => _pickAndUploadPhoto(ImageSource.camera),
                     icon: const Icon(Icons.camera_alt_rounded, size: 18),
                     label: Text(l10n.takePhotoCamera),
                   ),
-                  const SizedBox(width: 8),
                   OutlinedButton.icon(
-                    onPressed: () => _pickAndUploadPhoto(ImageSource.gallery),
+                    onPressed: state.isSaving ? null : () => _pickAndUploadPhoto(ImageSource.gallery),
                     icon: const Icon(Icons.photo_library_rounded, size: 18),
                     label: Text(l10n.chooseGallery),
                   ),
@@ -271,7 +272,13 @@ class _ProviderWizardScreenState extends ConsumerState<ProviderWizardScreen> {
               ),
               if (state.uploadError != null) ...[
                 const SizedBox(height: 8),
-                Text(state.uploadError!, style: const TextStyle(color: AppColors.errorRed, fontSize: 13)),
+                Text(state.uploadError!, style: const TextStyle(color: AppColors.errorRed, fontSize: 13), textAlign: TextAlign.center),
+                const SizedBox(height: 4),
+                TextButton.icon(
+                  onPressed: state.isSaving ? null : _retryUpload,
+                  icon: const Icon(Icons.refresh_rounded, size: 16),
+                  label: Text(l10n.retry),
+                ),
               ],
             ],
           ),
@@ -883,17 +890,11 @@ class _ProviderWizardScreenState extends ConsumerState<ProviderWizardScreen> {
               children: [
                 Row(
                   children: [
-                    CircleAvatar(
+                    UserAvatar(
+                      avatarPath: draft.avatarPath ?? draft.avatarUrl,
+                      imageBytes: _localAvatarBytes,
+                      name: draft.fullName,
                       radius: 30,
-                      backgroundColor: AppColors.headerGreenDark.withValues(alpha: 0.1),
-                      backgroundImage: draft.avatarUrl != null ? NetworkImage(draft.avatarUrl!) : null,
-                      child: draft.avatarUrl == null
-                          ? Icon(
-                              draft.isHousehold ? Icons.home_rounded : Icons.business_rounded,
-                              size: 30,
-                              color: AppColors.headerGreenDark,
-                            )
-                          : null,
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -1104,13 +1105,32 @@ class _ProviderWizardScreenState extends ConsumerState<ProviderWizardScreen> {
   }
 
   Future<void> _pickAndUploadPhoto(ImageSource source) async {
+    _lastPickedSource = source;
     try {
       final XFile? file = await _picker.pickImage(source: source, maxWidth: 600, imageQuality: 80);
       if (file != null) {
         final Uint8List bytes = await file.readAsBytes();
+        setState(() {
+          _localAvatarBytes = bytes;
+        });
         final filename = 'avatar_${DateTime.now().millisecondsSinceEpoch}.jpg';
         await ref.read(providerWizardProvider.notifier).uploadAvatarBytes(bytes, filename);
       }
-    } catch (_) {}
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to pick photo: $e')),
+        );
+      }
+    }
+  }
+
+  Future<void> _retryUpload() async {
+    if (_localAvatarBytes != null) {
+      final filename = 'avatar_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      await ref.read(providerWizardProvider.notifier).uploadAvatarBytes(_localAvatarBytes!, filename);
+    } else if (_lastPickedSource != null) {
+      _pickAndUploadPhoto(_lastPickedSource!);
+    }
   }
 }

@@ -262,6 +262,28 @@ final seekerRecommendedJobsProvider =
     uid = Supabase.instance.client.auth.currentUser?.id;
   } catch (_) {}
 
+  // Realtime subscription on jobs table: updates feed live when provider posts/updates a job
+  try {
+    if (Supabase.instance.isInitialized) {
+      final channel = Supabase.instance.client
+          .channel('seeker-feed-realtime-${uid ?? "guest"}')
+          .onPostgresChanges(
+            event: PostgresChangeEvent.all,
+            schema: 'public',
+            table: 'jobs',
+            callback: (_) {
+              ref.invalidateSelf();
+            },
+          )
+          .subscribe();
+      ref.onDispose(() {
+        channel.unsubscribe();
+      });
+    }
+  } catch (e) {
+    AppLogger.w('Failed to subscribe to seeker feed realtime: $e');
+  }
+
   final targetUid = uid ?? '00000000-0000-0000-0000-000000000000';
   final seekerType = profileAsync.value?.seekerType ?? 'informal';
 

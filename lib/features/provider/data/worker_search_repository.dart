@@ -121,7 +121,7 @@ class SupabaseWorkerSearchRepository implements WorkerSearchRepository {
   Future<ProviderActiveBooking?> getActiveBooking({String? providerId}) async {
     final client = _safeClient;
     if (client == null) {
-      return ProviderActiveBooking.demoBooking();
+      return null;
     }
 
     try {
@@ -132,13 +132,12 @@ class SupabaseWorkerSearchRepository implements WorkerSearchRepository {
       if (res is Map && res.isNotEmpty) {
         return ProviderActiveBooking.fromJson(Map<String, dynamic>.from(res));
       }
-      // Demo fallback if no active booking row exists in DB
-      return ProviderActiveBooking.demoBooking();
+      return null;
     } catch (e) {
       if (kDebugMode) {
         debugPrint('[WorkerSearchRepository] Error fetching active booking: $e');
       }
-      return ProviderActiveBooking.demoBooking();
+      return null;
     }
   }
 

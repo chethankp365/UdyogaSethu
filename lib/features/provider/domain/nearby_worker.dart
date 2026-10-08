@@ -152,11 +152,11 @@ class NearbyWorker {
       final rupees = (hourlyRatePaise! / 100).round();
       return '₹$rupees/hr';
     }
-    return '₹750/day';
+    return 'Rate on request';
   }
 
   String get formattedDistance {
-    if (distanceM == null) return 'Nearby';
+    if (distanceM == null || distanceM! <= 0) return 'Location not set';
     if (distanceM! < 1000) {
       return '${distanceM!.round()} m away';
     }

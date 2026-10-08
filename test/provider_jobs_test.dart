@@ -449,11 +449,18 @@ void main() {
       await tester.enterText(find.byType(TextField).first, 'Site Helper Needed');
       await tester.pumpAndSettle();
 
-      // Advance to Step 2
+      // Advance to Step 2 (Target Workers)
       await tester.tap(find.text('Next'));
       await tester.pumpAndSettle();
 
-      // Step 2: Wages & Schedule
+      expect(find.text('Target Workers'), findsWidgets);
+      expect(find.text('Who is this job for?'), findsOneWidget);
+
+      // Advance to Step 3 (Wages & Schedule)
+      await tester.tap(find.text('Next'));
+      await tester.pumpAndSettle();
+
+      // Step 3: Wages & Schedule
       expect(find.text('Wages & Schedule'), findsWidgets);
       expect(find.text('Wage Type'), findsOneWidget);
       expect(find.text('Fair Wage Band: ₹650 - ₹900 / day'), findsOneWidget);

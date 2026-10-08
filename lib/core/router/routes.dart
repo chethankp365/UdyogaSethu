@@ -64,6 +64,8 @@ class AppRoutes {
   static const String wallet = '/wallet';
   static const String jobDetail = '/job/:id';
   static const String produceDetail = '/produce/:id';
+  static const String activeJob = '/jobs/active/:id';
+  static const String workerSchedule = '/seeker/schedule';
 
   // Debug Routes (gated under kDebugMode)
   static const String devGallery = '/dev/gallery';

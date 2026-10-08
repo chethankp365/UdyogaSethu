@@ -85,10 +85,10 @@ class SupabaseSeekerHomeRepository implements SeekerHomeRepository {
       // Zero tolerance: trade jobs NEVER show to students; student gigs NEVER show to informal
       final filteredList = rawList.where((job) {
         if (isStudentOrPartTime) {
-          if (tradeCategorySlugs.contains(job.categorySlug)) return false;
+          if (tradeCategorySlugs.contains(job.categorySlug) && !job.isStudentFriendly) return false;
           return studentCategorySlugs.contains(job.categorySlug) || job.isStudentFriendly;
         } else {
-          if (studentCategorySlugs.contains(job.categorySlug)) return false;
+          if (studentCategorySlugs.contains(job.categorySlug) && !job.isStudentFriendly) return false;
           return true;
         }
       }).toList();

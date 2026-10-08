@@ -95,6 +95,7 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
 
     final steps = [
       l10n.postJobStep1,
+      l10n.postJobStepAudience,
       l10n.postJobStep2,
       l10n.postJobStep3,
       l10n.postJobStep4,
@@ -201,12 +202,14 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
       case 0:
         return _buildStep1CategoryAndTitle(draft, categoriesAsync, l10n);
       case 1:
-        return _buildStep2WagesAndSchedule(draft, l10n);
+        return _buildStepAudience(draft, l10n);
       case 2:
-        return _buildStep3SlotsAndPayment(draft, l10n);
+        return _buildStep2WagesAndSchedule(draft, l10n);
       case 3:
-        return _buildStep4RequirementsAndLocation(draft, l10n);
+        return _buildStep3SlotsAndPayment(draft, l10n);
       case 4:
+        return _buildStep4RequirementsAndLocation(draft, l10n);
+      case 5:
       default:
         return _buildStep5Preview(draft, l10n);
     }
@@ -287,7 +290,158 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
     );
   }
 
-  // STEP 2: Wages & Schedule
+  // STEP 2: Who is this job for? (Target Workers)
+  Widget _buildStepAudience(JobPostDraft draft, AppLocalizations l10n) {
+    final notifier = ref.read(postJobWizardProvider.notifier);
+
+    final audiences = [
+      (
+        id: 'informal',
+        title: l10n.postJobAudienceInformal,
+        hint: l10n.postJobAudienceInformalHint,
+        icon: Icons.handyman_rounded,
+        color: AppColors.headerGreenDark,
+      ),
+      (
+        id: 'student',
+        title: l10n.postJobAudienceStudent,
+        hint: l10n.postJobAudienceStudentHint,
+        icon: Icons.school_rounded,
+        color: Colors.blue.shade700,
+      ),
+      (
+        id: 'part_time',
+        title: l10n.postJobAudiencePartTime,
+        hint: l10n.postJobAudiencePartTimeHint,
+        icon: Icons.schedule_rounded,
+        color: AppColors.amberOrange,
+      ),
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.postJobAudienceTitle,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: AppColors.headerGreenDark),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          l10n.postJobAudienceSubtitle,
+          style: const TextStyle(fontSize: 13, color: AppColors.textMuted),
+        ),
+        const SizedBox(height: 16),
+        ...audiences.map((aud) {
+          final isSelected = draft.suitableFor.contains(aud.id);
+          return Card(
+            elevation: isSelected ? 2 : 1,
+            margin: const EdgeInsets.only(bottom: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+              side: BorderSide(
+                color: isSelected ? aud.color : Colors.grey.shade300,
+                width: isSelected ? 2 : 1,
+              ),
+            ),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(14),
+              onTap: () {
+                final current = List<String>.from(draft.suitableFor);
+                if (isSelected) {
+                  current.remove(aud.id);
+                } else {
+                  current.add(aud.id);
+                }
+                notifier.setSuitableFor(current);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: (isSelected ? aud.color : Colors.grey.shade200).withValues(alpha: 0.15),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(aud.icon, color: isSelected ? aud.color : Colors.grey.shade600, size: 24),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  aud.title,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    color: isSelected ? AppColors.textDark : AppColors.textMuted,
+                                  ),
+                                ),
+                              ),
+                              Checkbox(
+                                value: isSelected,
+                                activeColor: aud.color,
+                                onChanged: (val) {
+                                  final current = List<String>.from(draft.suitableFor);
+                                  if (val == true) {
+                                    if (!current.contains(aud.id)) current.add(aud.id);
+                                  } else {
+                                    current.remove(aud.id);
+                                  }
+                                  notifier.setSuitableFor(current);
+                                },
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            aud.hint,
+                            style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }),
+        if (draft.suitableFor.isEmpty) ...[
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.red.shade50,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.red.shade300),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.error_outline_rounded, size: 16, color: Colors.red.shade700),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    l10n.postJobAudienceRequired,
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.red.shade700),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  // STEP 3: Wages & Schedule
   Widget _buildStep2WagesAndSchedule(JobPostDraft draft, AppLocalizations l10n) {
     final notifier = ref.read(postJobWizardProvider.notifier);
 
@@ -747,6 +901,17 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
             _buildPreviewRow('Materials', draft.materialsProvided ? 'Provided by Employer' : 'Worker must bring tools'),
             _buildPreviewRow('Site Address', draft.addressText.isNotEmpty ? draft.addressText : 'Bengaluru Site'),
             _buildPreviewRow('Geofence Radius', '${draft.geofenceRadiusM} meters'),
+            _buildPreviewRow(
+              'Target Workers',
+              draft.suitableFor.isEmpty
+                  ? 'None selected'
+                  : draft.suitableFor.map((s) {
+                      if (s == 'informal') return l10n.postJobAudienceInformal;
+                      if (s == 'student') return l10n.postJobAudienceStudent;
+                      if (s == 'part_time') return l10n.postJobAudiencePartTime;
+                      return s;
+                    }).join(', '),
+            ),
             const Divider(height: 24),
             Wrap(
               spacing: 8,
@@ -788,9 +953,17 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(label, style: const TextStyle(color: AppColors.textMuted, fontSize: 13)),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.textDark)),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              value,
+              textAlign: TextAlign.end,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.textDark),
+            ),
+          ),
         ],
       ),
     );
@@ -886,7 +1059,19 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
               onPressed: _isPublishing
                   ? null
                   : () async {
-                      if (draft.currentStep < 4) {
+                      if (draft.currentStep == 0 && draft.title.trim().isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Please enter a job title')),
+                        );
+                        return;
+                      }
+                      if (draft.currentStep == 1 && draft.suitableFor.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(l10n.postJobAudienceRequired)),
+                        );
+                        return;
+                      }
+                      if (draft.currentStep < 5) {
                         notifier.nextStep();
                       } else {
                         // PUBLISH
@@ -920,7 +1105,7 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
               child: _isPublishing
                   ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                   : Text(
-                      draft.currentStep < 4
+                      draft.currentStep < 5
                           ? 'Next'
                           : isEditing
                               ? l10n.postJobSaveEditButton

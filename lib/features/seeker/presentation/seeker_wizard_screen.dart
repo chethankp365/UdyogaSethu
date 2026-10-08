@@ -12,6 +12,7 @@ import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/widgets/app_button.dart';
 import 'package:udyogasethu/core/widgets/compact_language_selector.dart';
 import 'package:udyogasethu/core/widgets/info_banner.dart';
+import 'package:udyogasethu/core/widgets/user_avatar.dart';
 import 'package:udyogasethu/features/seeker/domain/seeker_profile_draft.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_wizard_controller.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
@@ -25,6 +26,8 @@ class SeekerWizardScreen extends ConsumerStatefulWidget {
 
 class _SeekerWizardScreenState extends ConsumerState<SeekerWizardScreen> {
   final _picker = ImagePicker();
+  Uint8List? _localAvatarBytes;
+  ImageSource? _lastPickedSource;
 
   @override
   Widget build(BuildContext context) {
@@ -235,29 +238,21 @@ class _SeekerWizardScreenState extends ConsumerState<SeekerWizardScreen> {
         Center(
           child: Column(
             children: [
-              Stack(
-                alignment: Alignment.bottomRight,
-                children: [
-                  CircleAvatar(
-                    radius: 54,
-                    backgroundColor: AppColors.paleMint,
-                    backgroundImage: (draft.avatarUrl != null && draft.avatarUrl!.isNotEmpty)
-                        ? NetworkImage(draft.avatarUrl!)
-                        : null,
-                    child: state.isSaving
-                        ? const CircularProgressIndicator()
-                        : (draft.avatarUrl == null || draft.avatarUrl!.isEmpty)
-                            ? const Icon(Icons.person, size: 60, color: AppColors.headerGreenDark)
-                            : null,
-                  ),
-                ],
+              UserAvatar(
+                avatarPath: draft.avatarPath ?? draft.avatarUrl,
+                imageBytes: _localAvatarBytes,
+                name: draft.fullName,
+                radius: 54,
+                isLoading: state.isSaving,
               ),
               const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 8,
+                runSpacing: 8,
                 children: [
                   OutlinedButton.icon(
-                    onPressed: () => _pickAndUploadPhoto(ref, ImageSource.camera),
+                    onPressed: state.isSaving ? null : () => _pickAndUploadPhoto(ref, ImageSource.camera),
                     icon: const Icon(Icons.camera_alt, size: 18, color: AppColors.headerGreenDark),
                     label: Text(l10n.takePhotoCamera, style: const TextStyle(fontSize: 13, color: AppColors.headerGreenDark)),
                     style: OutlinedButton.styleFrom(
@@ -265,9 +260,8 @@ class _SeekerWizardScreenState extends ConsumerState<SeekerWizardScreen> {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
                   ),
-                  const SizedBox(width: 8),
                   OutlinedButton.icon(
-                    onPressed: () => _pickAndUploadPhoto(ref, ImageSource.gallery),
+                    onPressed: state.isSaving ? null : () => _pickAndUploadPhoto(ref, ImageSource.gallery),
                     icon: const Icon(Icons.photo_library, size: 18, color: AppColors.headerGreenDark),
                     label: Text(l10n.chooseGallery, style: const TextStyle(fontSize: 13, color: AppColors.headerGreenDark)),
                     style: OutlinedButton.styleFrom(
@@ -291,6 +285,12 @@ class _SeekerWizardScreenState extends ConsumerState<SeekerWizardScreen> {
                     style: const TextStyle(color: AppColors.sosRed, fontSize: 11, fontFamily: 'monospace'),
                   ),
                 ],
+                const SizedBox(height: 4),
+                TextButton.icon(
+                  onPressed: state.isSaving ? null : () => _retryUpload(ref),
+                  icon: const Icon(Icons.refresh_rounded, size: 16),
+                  label: Text(l10n.retry),
+                ),
               ],
             ],
           ),
@@ -363,6 +363,7 @@ class _SeekerWizardScreenState extends ConsumerState<SeekerWizardScreen> {
   }
 
   Future<void> _pickAndUploadPhoto(WidgetRef ref, ImageSource source) async {
+    _lastPickedSource = source;
     try {
       final file = await _picker.pickImage(
         source: source,
@@ -371,6 +372,9 @@ class _SeekerWizardScreenState extends ConsumerState<SeekerWizardScreen> {
       );
       if (file != null) {
         final bytes = await file.readAsBytes();
+        setState(() {
+          _localAvatarBytes = bytes;
+        });
         final filename = 'avatar_${DateTime.now().millisecondsSinceEpoch}.jpg';
         await ref
             .read(seekerWizardProvider.notifier)
@@ -378,6 +382,17 @@ class _SeekerWizardScreenState extends ConsumerState<SeekerWizardScreen> {
       }
     } catch (e) {
       ref.read(seekerWizardProvider.notifier).setUploadError(e.toString());
+    }
+  }
+
+  Future<void> _retryUpload(WidgetRef ref) async {
+    if (_localAvatarBytes != null) {
+      final filename = 'avatar_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      await ref
+          .read(seekerWizardProvider.notifier)
+          .uploadAvatarPhoto(_localAvatarBytes!, filename);
+    } else if (_lastPickedSource != null) {
+      _pickAndUploadPhoto(ref, _lastPickedSource!);
     }
   }
 
@@ -1344,15 +1359,11 @@ class _SeekerWizardScreenState extends ConsumerState<SeekerWizardScreen> {
               children: [
                 Row(
                   children: [
-                    CircleAvatar(
+                    UserAvatar(
+                      avatarPath: draft.avatarPath ?? draft.avatarUrl,
+                      imageBytes: _localAvatarBytes,
+                      name: draft.fullName,
                       radius: 36,
-                      backgroundColor: AppColors.paleMint,
-                      backgroundImage: (draft.avatarUrl != null && draft.avatarUrl!.isNotEmpty)
-                          ? NetworkImage(draft.avatarUrl!)
-                          : null,
-                      child: (draft.avatarUrl == null || draft.avatarUrl!.isEmpty)
-                          ? const Icon(Icons.person, size: 40, color: AppColors.headerGreenDark)
-                          : null,
                     ),
                     const SizedBox(width: 16),
                     Expanded(

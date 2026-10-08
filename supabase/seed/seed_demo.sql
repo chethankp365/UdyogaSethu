@@ -41,6 +41,7 @@ DECLARE
   v_as1 UUID := '66666666-6666-4666-8666-666666666601';
 
   v_w_s1 UUID; v_w_p3 UUID;
+  v_seed_demo_jobs BOOLEAN := false; -- Explicit flag required to create demo jobs
 BEGIN
   -- 1. Create tracking table demo_users
   CREATE TABLE IF NOT EXISTS public.demo_users (
@@ -168,14 +169,16 @@ BEGIN
     (v_c_load,  'loader',        'inventory_2',  12, '{"en":"Loader", "kn":"ಲೋಡರ್", "hi":"लोडर", "te":"ಲೋಡರ್", "ta":"சுமை தூக்குಬವರ್"}'::jsonb)
   ON CONFLICT (id) DO UPDATE SET names = EXCLUDED.names;
 
-  -- 5. Seed Open Jobs
-  INSERT INTO public.jobs (id, provider_id, category_id, title, description, wage_type, wage_paise, est_duration_minutes, start_at, slots_total, slots_filled, materials_provided, payment_mode, location, address_text, status) VALUES
-    (v_j1, v_p3, v_c_elec,  'Commercial Electrician Helper', 'Sai Electricals requires an experienced electrician for wiring installation at HSR commercial complex.', 'daily', 88000, 480, NOW() + INTERVAL '1 day', 2, 0, true, 'escrow', 'POINT(77.6446 12.9121)'::geography, 'Sai Electricals Shop 12, HSR Sector 1', 'open'),
-    (v_j2, v_p3, v_c_const, 'Construction Helper', 'Sharma Builders site helper needed for concrete mixing and material transport at Koramangala site.', 'daily', 70000, 480, NOW() + INTERVAL '1 day', 4, 1, true, 'escrow', 'POINT(77.6245 12.9352)'::geography, 'Sharma Builders Site #45, Koramangala 4th Block', 'open'),
-    (v_j3, v_p1, v_c_plumb, 'Home Plumbing Leakage Repair', 'Dr. Anand Sharma residence needs leak repair and bathroom fixture installation.', 'daily', 91000, 360, NOW() + INTERVAL '2 days', 1, 0, false, 'escrow', 'POINT(77.5938 12.9250)'::geography, 'Residence #102, 4th Main, Jayanagar 4th Block', 'open'),
-    (v_j4, v_p2, v_c_paint, 'Interior Wall Painting Assistant', 'Reddy Villa interior painting assistant needed for 2-day home refresh project.', 'daily', 75000, 480, NOW() + INTERVAL '3 days', 2, 0, true, 'escrow', 'POINT(77.6245 12.9352)'::geography, 'Reddy Villa #88, 5th Block, Koramangala', 'open'),
-    (v_j5, v_p3, v_c_deliv, 'E-Commerce Delivery Assistant', 'Express delivery assistant required for local parcel dispatch and package sorting in Koramangala.', 'daily', 60000, 480, NOW() + INTERVAL '1 day', 3, 0, true, 'upi', 'POINT(77.6245 12.9352)'::geography, 'Express Hub, 80 Feet Road, Koramangala', 'open')
-  ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, wage_paise = EXCLUDED.wage_paise;
+  -- 5. Seed Open Jobs (Only created if v_seed_demo_jobs is explicitly true; flagged as is_demo = true)
+  IF v_seed_demo_jobs THEN
+    INSERT INTO public.jobs (id, provider_id, category_id, title, description, wage_type, wage_paise, est_duration_minutes, start_at, slots_total, slots_filled, materials_provided, payment_mode, location, address_text, suitable_for, is_demo, status) VALUES
+      (v_j1, v_p3, v_c_elec,  'Commercial Electrician Helper', 'Sai Electricals requires an experienced electrician for wiring installation at HSR commercial complex.', 'daily', 88000, 480, NOW() + INTERVAL '1 day', 2, 0, true, 'escrow', 'POINT(77.6446 12.9121)'::geography, 'Sai Electricals Shop 12, HSR Sector 1', ARRAY['informal']::public.seeker_type[], true, 'open'),
+      (v_j2, v_p3, v_c_const, 'Construction Helper', 'Sharma Builders site helper needed for concrete mixing and material transport at Koramangala site.', 'daily', 70000, 480, NOW() + INTERVAL '1 day', 4, 1, true, 'escrow', 'POINT(77.6245 12.9352)'::geography, 'Sharma Builders Site #45, Koramangala 4th Block', ARRAY['informal']::public.seeker_type[], true, 'open'),
+      (v_j3, v_p1, v_c_plumb, 'Home Plumbing Leakage Repair', 'Dr. Anand Sharma residence needs leak repair and bathroom fixture installation.', 'daily', 91000, 360, NOW() + INTERVAL '2 days', 1, 0, false, 'escrow', 'POINT(77.5938 12.9250)'::geography, 'Residence #102, 4th Main, Jayanagar 4th Block', ARRAY['informal']::public.seeker_type[], true, 'open'),
+      (v_j4, v_p2, v_c_paint, 'Interior Wall Painting Assistant', 'Reddy Villa interior painting assistant needed for 2-day home refresh project.', 'daily', 75000, 480, NOW() + INTERVAL '3 days', 2, 0, true, 'escrow', 'POINT(77.6245 12.9352)'::geography, 'Reddy Villa #88, 5th Block, Koramangala', ARRAY['informal']::public.seeker_type[], true, 'open'),
+      (v_j5, v_p3, v_c_deliv, 'E-Commerce Delivery Assistant', 'Express delivery assistant required for local parcel dispatch and package sorting in Koramangala.', 'daily', 60000, 480, NOW() + INTERVAL '1 day', 3, 0, true, 'upi', 'POINT(77.6245 12.9352)'::geography, 'Express Hub, 80 Feet Road, Koramangala', ARRAY['informal', 'student', 'part_time']::public.seeker_type[], true, 'open')
+    ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, wage_paise = EXCLUDED.wage_paise, is_demo = true;
+  END IF;
 
   -- 6. Seed Produce Listings (Prices in paise)
   INSERT INTO public.produce_listings (id, farmer_id, name, category, description, price_paise, unit, stock_qty, status, location) VALUES

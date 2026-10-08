@@ -1499,6 +1499,51 @@ class AppLocalizationsTa extends AppLocalizations {
   String get postJobStep1 => 'Category & Title';
 
   @override
+  String get postJobStepAudience => 'இலக்கு தொழிலாளர்கள்';
+
+  @override
+  String get postJobAudienceTitle => 'இந்த வேலை யாருக்கானது?';
+
+  @override
+  String get postJobAudienceSubtitle =>
+      'இந்த வேலையைப் பார்க்கவும் விண்ணப்பிக்கவும் பொருத்தமான தொழிலாளர் வகைகளைத் தேர்ந்தெடுக்கவும்.';
+
+  @override
+  String get postJobAudienceInformal => 'தினக்கூலி / அமைப்புசாரா தொழிலாளி';
+
+  @override
+  String get postJobAudienceInformalHint =>
+      'தினக்கூலிகள், கட்டுமானம், ஏற்றுதல், வீட்டு உதவியாளர்கள்';
+
+  @override
+  String get postJobAudienceStudent => 'மாணவர்';
+
+  @override
+  String get postJobAudienceStudentHint =>
+      'மாலை அல்லது வார இறுதி குறுகிய பணிகளைத் தேடும் கல்லூரி மாணவர்கள்';
+
+  @override
+  String get postJobAudiencePartTime => 'பகுதி நேர / நெகிழ்வான தொழிலாளி';
+
+  @override
+  String get postJobAudiencePartTimeHint =>
+      'குறைந்த நேர ஷிப்ட் அல்லது நெகிழ்வான வேலை நேரத்தை விரும்பும் தொழிலாளர்கள்';
+
+  @override
+  String get postJobAudienceRequired =>
+      'குறைந்தது ஒரு தொழிலாளர் வகையையாவது தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get hubConfirmedBookingEmptyTitle => 'செயலில் உள்ள முன்பதிவுகள் இல்லை';
+
+  @override
+  String get hubConfirmedBookingEmptyDesc =>
+      'உறுதிசெய்யப்பட்ட தொழிலாளர் பணிகள் மற்றும் கண்காணிப்பு இங்கே தோன்றும்.';
+
+  @override
+  String get hubLocationNotSet => 'இடம் அமைக்கப்படவில்லை';
+
+  @override
   String get postJobStep2 => 'Wages & Schedule';
 
   @override
@@ -1758,7 +1803,7 @@ class AppLocalizationsTa extends AppLocalizations {
       'Daily milk deliveries and weekly organic vegetable baskets straight to your doorstep coming in Phase 6.';
 
   @override
-  String get hubActionScanFarmQr => 'Scan Farm QR';
+  String get hubActionScanQr => 'QR-ஐ ஸ்கேன் செய்';
 
   @override
   String get hubActionNoShowHelp => 'No-Show Help';
@@ -2168,4 +2213,115 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get demoModeBadge => 'டெமோ பயன்முறை';
+
+  @override
+  String get timelineTitle => 'வேலை முன்னேற்ற காலக்கோடு';
+
+  @override
+  String get timelineLiveDot => 'நேரலை';
+
+  @override
+  String get timelineDisputeActive => 'சர்ச்சை பரிசீலனையில் உள்ளது';
+
+  @override
+  String get timelineDisputeSub => 'மத்தியஸ்த குழு ஆதாரங்களை ஆய்வு செய்கிறது.';
+
+  @override
+  String get timelineCurrentBadge => 'தற்போதைய';
+
+  @override
+  String get stageRequestCreated => 'கோரிக்கை உருவாக்கப்பட்டது';
+
+  @override
+  String get stageAccepted => 'ஏற்றுக்கொள்ளப்பட்டது';
+
+  @override
+  String get stageTicketIssued => 'டிக்கெட் வழங்கப்பட்டது';
+
+  @override
+  String get stageWorkerArrived => 'பணியாளர் வந்துவிட்டார்';
+
+  @override
+  String get stageVerificationCompleted => 'சரிபார்ப்பு முடிந்தது';
+
+  @override
+  String get stageJobInProgress => 'வேலை நடைபெறுகிறது';
+
+  @override
+  String get stageCompleted => 'முடிந்தது';
+
+  @override
+  String get stagePaymentReleased => 'பணம் விடுவிக்கப்பட்டது';
+
+  @override
+  String get stageDisputeRaised => 'சர்ச்சை எழுப்பப்பட்டது';
+
+  @override
+  String get activeJobTitle => 'செயலில் உள்ள வேலை முன்னேற்றம்';
+
+  @override
+  String get actionAcceptJob => 'வேலையை ஏற்றுக்கொள்';
+
+  @override
+  String get actionWorkerArrived => 'நான் வந்துவிட்டேன்';
+
+  @override
+  String get actionStartWork => 'வேலையைத் தொடங்கு';
+
+  @override
+  String get actionCompleteJob => 'வேலையை முடி';
+
+  @override
+  String get actionAwaitingPayment => 'பணம் விடுவிப்பிற்காக காத்திருக்கிறது';
+
+  @override
+  String get actionJobFinished => 'வேலை முழுமையாக முடிந்தது';
+
+  @override
+  String get actionDisputeMediation => 'சர்ச்சை ஆய்வில் உள்ளது';
+
+  @override
+  String get actionWaitingAcceptance => 'பணியாளர் ஏற்புக்காக காத்திருக்கிறது';
+
+  @override
+  String get actionConfirmArrival => 'வருகையை உறுதிப்படுத்து';
+
+  @override
+  String get actionConfirmCompletion => 'வேலை முடிவை உறுதிப்படுத்து';
+
+  @override
+  String get actionReleasePayment => 'பணத்தை விடுவி';
+
+  @override
+  String get actionPaymentDone => 'பணம் செலுத்தப்பட்டது';
+
+  @override
+  String get actionAskForHelp => 'உதவி கேளுங்கள்';
+
+  @override
+  String get actionDispute => 'சர்ச்சையை எழுப்பு';
+
+  @override
+  String get simpleModeSpokenLabel => 'பேசவும் இயக்கவும் தட்டவும்';
+
+  @override
+  String get routeAndEtaTitle => 'பாதை மற்றும் பயண நேரம்';
+
+  @override
+  String get openInMapsBtn => 'வரைபடத்தில் திற';
+
+  @override
+  String get demoModeChip => 'டெமோ பயன்முறை';
+
+  @override
+  String get scheduleTitle => 'பணியாளர் அட்டவணை மற்றும் பயணம்';
+
+  @override
+  String get scheduleDayView => 'நாள்';
+
+  @override
+  String get scheduleWeekView => 'வாரம்';
+
+  @override
+  String get scheduleWeeklyTotal => 'வாரத்தின் மதிப்பிடப்பட்ட வருமானம்';
 }

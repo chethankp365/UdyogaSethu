@@ -4,9 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/config/env.dart';
+import 'package:udyogasethu/core/l10n/locale_controller.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
-import 'package:udyogasethu/core/widgets/compact_language_selector.dart';
 import 'package:udyogasethu/core/widgets/user_avatar.dart';
 import 'package:udyogasethu/features/provider/domain/nearby_worker.dart';
 import 'package:udyogasethu/features/provider/domain/provider_active_booking.dart';
@@ -59,6 +59,56 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
     super.dispose();
   }
 
+  void _showLanguageModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) {
+        final currentLocale = ref.watch(localeProvider);
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  child: Text('Select Language / ಭಾಷೆ ಆಯ್ಕೆಮಾಡಿ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                ),
+                const Divider(),
+                Flexible(
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: AppLanguages.all.map((lang) {
+                      final isSelected = currentLocale.languageCode == lang.code;
+                      return ListTile(
+                        leading: CircleAvatar(
+                          radius: 16,
+                          backgroundColor: isSelected ? AppColors.headerGreenDark : AppColors.paleMint,
+                          child: Text(
+                            lang.countryCode,
+                            style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: isSelected ? Colors.white : AppColors.headerGreenDark),
+                          ),
+                        ),
+                        title: Text('${lang.nativeName} (${lang.englishName})', style: TextStyle(fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
+                        trailing: isSelected ? const Icon(Icons.check_circle_rounded, color: AppColors.headerGreenDark) : null,
+                        onTap: () {
+                          ref.read(localeProvider.notifier).setLocale(lang.code);
+                          Navigator.of(ctx).pop();
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -80,6 +130,11 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
         title: const Text('Provider Home', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
         actions: [
           IconButton(
+            icon: const Icon(Icons.translate_rounded),
+            tooltip: 'Language',
+            onPressed: () => _showLanguageModal(context),
+          ),
+          IconButton(
             icon: const Icon(Icons.shopping_cart_outlined),
             tooltip: 'Cart',
             onPressed: () {
@@ -94,7 +149,6 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
               tooltip: 'Switch Role',
               onPressed: () => context.push(AppRoutes.devRole),
             ),
-          const CompactLanguageSelector(),
           IconButton(
             icon: const Icon(Icons.logout_rounded),
             tooltip: 'Logout',
@@ -160,7 +214,7 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
                           error: (err, _) => const SizedBox.shrink(),
                           data: (booking) => booking != null
                               ? _buildActiveBookingCard(context, booking, l10n)
-                              : const SizedBox.shrink(),
+                              : _buildEmptyBookingCard(context, l10n),
                         ),
 
                         const SizedBox(height: 20),
@@ -277,6 +331,8 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
       ),
       child: TabBar(
         controller: _hubTabController,
+        isScrollable: true,
+        tabAlignment: TabAlignment.start,
         indicatorColor: AppColors.headerGreenDark,
         indicatorWeight: 3,
         labelColor: AppColors.headerGreenDark,
@@ -431,21 +487,13 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
   Widget _buildQuickActions(BuildContext context, AppLocalizations l10n) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildActionIcon(
           icon: Icons.qr_code_scanner_rounded,
-          label: l10n.hubActionScanFarmQr,
+          label: l10n.hubActionScanQr,
           color: AppColors.headerGreenDark,
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (ctx) => AlertDialog(
-                title: Text(l10n.hubActionScanFarmQr),
-                content: const Text('Scan Farm Produce Traceability QR Code.\nFarmer origin and pesticide testing certificate scanner enabled in Phase 6.'),
-                actions: [TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('OK'))],
-              ),
-            );
-          },
+          onTap: () => context.push(AppRoutes.scanVerify),
         ),
         _buildActionIcon(
           icon: Icons.support_agent_rounded,
@@ -488,31 +536,75 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
     required Color color,
     required VoidCallback onTap,
   }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        width: 80,
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Column(
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 2),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: color.withValues(alpha: 0.3)),
+                ),
+                child: Icon(icon, color: color, size: 24),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                label,
+                style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textDark),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyBookingCard(BuildContext context, AppLocalizations l10n) {
+    return Card(
+      elevation: 1,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        child: Row(
           children: [
             Container(
-              width: 50,
-              height: 50,
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-                border: Border.all(color: color.withValues(alpha: 0.3)),
+                color: AppColors.paleMint,
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: color, size: 24),
+              child: const Icon(Icons.assignment_turned_in_outlined, color: AppColors.headerGreenDark, size: 28),
             ),
-            const SizedBox(height: 6),
-            Text(
-              label,
-              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textDark),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.hubConfirmedBookingEmptyTitle,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.textDark),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    l10n.hubConfirmedBookingEmptyDesc,
+                    style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -527,14 +619,20 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(color: AppColors.headerGreenDark.withValues(alpha: 0.3)),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      child: InkWell(
+        onTap: () => context.push('/jobs/active/${booking.assignmentId}'),
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             // Top Row: CONFIRMED BOOKING • CODE | Scheduled Shift
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 8,
+              runSpacing: 4,
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -565,13 +663,14 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
             const SizedBox(height: 4),
 
             // Worker Name & Verification Check
-            Row(
+            Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 6,
               children: [
                 Text(
                   'Worker: ${booking.workerName}',
                   style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textDark),
                 ),
-                const SizedBox(width: 4),
                 if (booking.workerVerified)
                   const Text('(Aadhaar Verified ✓)', style: TextStyle(fontSize: 11, color: AppColors.headerGreenDark, fontWeight: FontWeight.bold)),
               ],
@@ -583,10 +682,20 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
             Row(
               children: [
                 const Icon(Icons.location_on_outlined, size: 14, color: AppColors.textMuted),
-                const SizedBox(width: 2),
-                Text(booking.addressText, style: const TextStyle(fontSize: 12, color: AppColors.textMuted)),
+                const SizedBox(width: 4),
+                Expanded(
+                  child: Text(
+                    booking.addressText.isNotEmpty ? booking.addressText : l10n.hubLocationNotSet,
+                    style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
                 const SizedBox(width: 8),
-                Text('• ${booking.formattedEscrowWage}', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.headerGreenDark)),
+                Text(
+                  '• ${booking.formattedEscrowWage}',
+                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.headerGreenDark),
+                ),
               ],
             ),
 
@@ -636,6 +745,7 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
           ],
         ),
       ),
+      ),
     );
   }
 
@@ -651,26 +761,28 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.hubVerifiedWorkersTitle,
-                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, letterSpacing: 0.5, color: AppColors.textDark),
-                ),
-                const SizedBox(height: 2),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: AppColors.paleMint,
-                    borderRadius: BorderRadius.circular(4),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.hubVerifiedWorkersTitle,
+                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, letterSpacing: 0.5, color: AppColors.textDark),
                   ),
-                  child: Text(
-                    l10n.hub100AadhaarVerified,
-                    style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.headerGreenDark),
+                  const SizedBox(height: 2),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: AppColors.paleMint,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      l10n.hub100AadhaarVerified,
+                      style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.headerGreenDark),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             TextButton.icon(
               onPressed: () => context.push(AppRoutes.providerWorkers),
@@ -687,7 +799,9 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
           loading: () => const Center(child: Padding(padding: EdgeInsets.all(16), child: CircularProgressIndicator())),
           error: (err, _) => Text('Error loading workers: $err'),
           data: (workers) {
-            if (workers.isEmpty) {
+            // Exclude unverified workers from the 100% Aadhaar verified section
+            final verifiedList = workers.where((w) => w.isVerifiedBadge).toList();
+            if (verifiedList.isEmpty) {
               return const Card(
                 child: Padding(
                   padding: EdgeInsets.all(16),
@@ -696,7 +810,7 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
               );
             }
 
-            final displayWorkers = workers.take(3).toList();
+            final displayWorkers = verifiedList.take(3).toList();
             return Column(
               children: displayWorkers.map((w) {
                 return Card(
@@ -727,14 +841,20 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(w.headline, style: const TextStyle(fontSize: 12, color: AppColors.textMuted)),
+                        Text(w.headline, style: const TextStyle(fontSize: 12, color: AppColors.textMuted), maxLines: 1, overflow: TextOverflow.ellipsis),
                         const SizedBox(height: 2),
-                        Row(
+                        Wrap(
+                          spacing: 8,
+                          crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
-                            const Icon(Icons.star_rounded, size: 14, color: AppColors.amberOrange),
-                            const SizedBox(width: 2),
-                            Text('${w.ratingAvg.toStringAsFixed(1)} • ${w.formattedDistance}', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
-                            const SizedBox(width: 8),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.star_rounded, size: 14, color: AppColors.amberOrange),
+                                const SizedBox(width: 2),
+                                Text('${w.ratingAvg.toStringAsFixed(1)} • ${w.formattedDistance}', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
+                              ],
+                            ),
                             Text(w.formattedRate, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.headerGreenDark)),
                           ],
                         ),

@@ -153,6 +153,7 @@ class PostJobWizardNotifier extends Notifier<JobPostDraft> {
       studentsOk: job.studentsOk,
       addressText: job.addressText ?? '',
       geofenceRadiusM: job.geofenceRadiusM,
+      suitableFor: job.suitableFor,
       currentStep: 0,
     );
     if (job.categoryId != null) {
@@ -165,7 +166,7 @@ class PostJobWizardNotifier extends Notifier<JobPostDraft> {
   }
 
   void nextStep() {
-    if (state.currentStep < 4) {
+    if (state.currentStep < 5) {
       state = state.copyWith(currentStep: state.currentStep + 1);
     }
   }
@@ -174,6 +175,10 @@ class PostJobWizardNotifier extends Notifier<JobPostDraft> {
     if (state.currentStep > 0) {
       state = state.copyWith(currentStep: state.currentStep - 1);
     }
+  }
+
+  void setSuitableFor(List<String> types) {
+    state = state.copyWith(suitableFor: types);
   }
 
   Future<void> setCategory(String categoryId, String categoryName) async {

@@ -1501,6 +1501,51 @@ class AppLocalizationsKn extends AppLocalizations {
   String get postJobStep1 => 'ವರ್ಗ ಮತ್ತು ಶೀರ್ಷಿಕೆ';
 
   @override
+  String get postJobStepAudience => 'ಗುರಿ ಕಾರ್ಮಿಕರು';
+
+  @override
+  String get postJobAudienceTitle => 'ಈ ಕೆಲಸ ಯಾರಿಗೆ ಸೂಕ್ತವಾಗಿದೆ?';
+
+  @override
+  String get postJobAudienceSubtitle =>
+      'ಈ ಕೆಲಸವನ್ನು ನೋಡಲು ಮತ್ತು ಅರ್ಜಿ ಸಲ್ಲಿಸಲು ಸೂಕ್ತವಾದ ಕಾರ್ಮಿಕ ವರ್ಗಗಳನ್ನು ಆಯ್ಕೆಮಾಡಿ.';
+
+  @override
+  String get postJobAudienceInformal => 'ದೈನಂದಿನ ಕೂಲಿ / ಅಸಂಘಟಿತ ಕಾರ್ಮಿಕ';
+
+  @override
+  String get postJobAudienceInformalHint =>
+      'ದೈನಂದಿನ ಕೂಲಿಗಳು, ಕಟ್ಟಡ ನಿರ್ಮಾಣ, ಲೋಡಿಂಗ್, ಮನೆಗೆಲಸ';
+
+  @override
+  String get postJobAudienceStudent => 'ವಿದ್ಯಾರ್ಥಿ';
+
+  @override
+  String get postJobAudienceStudentHint =>
+      'ಸಂಜೆ ಅಥವಾ ವಾರಾಂತ್ಯದ ಹೊಂದಿಕೊಳ್ಳುವ ಗಿಗ್‌ಗಳನ್ನು ಹುಡುಕುವ ಕಾಲೇಜು ವಿದ್ಯಾರ್ಥಿಗಳು';
+
+  @override
+  String get postJobAudiencePartTime => 'ಅರೆಕಾಲಿಕ / ಹೊಂದಿಕೊಳ್ಳುವ ಕಾರ್ಮಿಕ';
+
+  @override
+  String get postJobAudiencePartTimeHint =>
+      'ಕಡಿಮೆ ಅವಧಿಯ ಪಾಳಿಗಳು ಅಥವಾ ಹೊಂದಿಕೊಳ್ಳುವ ವೇಳಾಪಟ್ಟಿಗಳನ್ನು ಬಯಸುವ ಕಾರ್ಮಿಕರು';
+
+  @override
+  String get postJobAudienceRequired =>
+      'ದಯವಿಟ್ಟು ಕನಿಷ್ಠ ಒಂದು ಕಾರ್ಮಿಕ ವರ್ಗವನ್ನು ಆಯ್ಕೆಮಾಡಿ';
+
+  @override
+  String get hubConfirmedBookingEmptyTitle => 'ಯಾವುದೇ ಸಕ್ರಿಯ ಬುಕಿಂಗ್‌ಗಳಿಲ್ಲ';
+
+  @override
+  String get hubConfirmedBookingEmptyDesc =>
+      'ನಿಮ್ಮ ದೃಢೀಕರಿಸಿದ ಕಾರ್ಮಿಕ ನಿಯೋಜನೆಗಳು ಮತ್ತು ಟ್ರ್ಯಾಕಿಂಗ್ ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ.';
+
+  @override
+  String get hubLocationNotSet => 'ಸ್ಥಳ ನಿಗದಿಪಡಿಸಿಲ್ಲ';
+
+  @override
   String get postJobStep2 => 'ಕೂಲಿ ಮತ್ತು ವೇಳಾಪಟ್ಟಿ';
 
   @override
@@ -1762,7 +1807,7 @@ class AppLocalizationsKn extends AppLocalizations {
       'ಪ್ರತಿದಿನ ಶುದ್ಧ ಹಾಲು ಮತ್ತು ವಾರಕ್ಕೊಮ್ಮೆ ಸಾವಯವ ತರಕಾರಿ ಬುಟ್ಟಿಗಳು ಮನೆಬಾಗಿಲಿಗೆ ಲಭ್ಯವಾಗಲಿವೆ.';
 
   @override
-  String get hubActionScanFarmQr => 'ಕೃಷಿ QR ಸ್ಕ್ಯಾನ್';
+  String get hubActionScanQr => 'QR ಸ್ಕ್ಯಾನ್';
 
   @override
   String get hubActionNoShowHelp => 'ಗೈರುಹಾಜರಿ ಸಹಾಯ';
@@ -2170,4 +2215,117 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get demoModeBadge => 'ಡೆಮೊ ಮೋಡ್';
+
+  @override
+  String get timelineTitle => 'ಕಾರ್ಯ ಹಂತಗಳ ಕಾಲಮಿತಿ';
+
+  @override
+  String get timelineLiveDot => 'ಲೈವ್';
+
+  @override
+  String get timelineDisputeActive => 'ವಿವಾದ ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ';
+
+  @override
+  String get timelineDisputeSub =>
+      'ಮಧ್ಯಸ್ಥಿಕೆ ತಂಡವು ಸಾಕ್ಷ್ಯಗಳನ್ನು ಪರಿಶೀಲಿಸುತ್ತಿದೆ.';
+
+  @override
+  String get timelineCurrentBadge => 'ಪ್ರಸ್ತುತ';
+
+  @override
+  String get stageRequestCreated => 'ವಿನಂತಿ ಸೃಷ್ಟಿಸಲಾಗಿದೆ';
+
+  @override
+  String get stageAccepted => 'ಸ್ವೀಕರಿಸಲಾಗಿದೆ';
+
+  @override
+  String get stageTicketIssued => 'ಟಿಕೆಟ್ ನೀಡಲಾಗಿದೆ';
+
+  @override
+  String get stageWorkerArrived => 'ಕಾರ್ಮಿಕರು ಆಗಮಿಸಿದ್ದಾರೆ';
+
+  @override
+  String get stageVerificationCompleted => 'ಪರಿಶೀಲನೆ ಪೂರ್ಣಗೊಂಡಿದೆ';
+
+  @override
+  String get stageJobInProgress => 'ಕೆಲಸ ಪ್ರಗತಿಯಲ್ಲಿದೆ';
+
+  @override
+  String get stageCompleted => 'ಪೂರ್ಣಗೊಂಡಿದೆ';
+
+  @override
+  String get stagePaymentReleased => 'ಪಾವತಿ ಬಿಡುಗಡೆ ಮಾಡಲಾಗಿದೆ';
+
+  @override
+  String get stageDisputeRaised => 'ವಿವಾದ ದಾಖಲಿಸಲಾಗಿದೆ';
+
+  @override
+  String get activeJobTitle => 'ಸಕ್ರಿಯ ಉದ್ಯೋಗ ಪ್ರಗತಿ';
+
+  @override
+  String get actionAcceptJob => 'ಕೆಲಸ ಸ್ವೀಕರಿಸಿ';
+
+  @override
+  String get actionWorkerArrived => 'ನಾನು ತಲುಪಿದ್ದೇನೆ';
+
+  @override
+  String get actionStartWork => 'ಕೆಲಸ ಪ್ರಾರಂಭಿಸಿ';
+
+  @override
+  String get actionCompleteJob => 'ಕೆಲಸ ಪೂರ್ಣಗೊಳಿಸಿ';
+
+  @override
+  String get actionAwaitingPayment => 'ಪಾವತಿ ಬಿಡುಗಡೆಗೆ ಕಾಯಲಾಗುತ್ತಿದೆ';
+
+  @override
+  String get actionJobFinished => 'ಕೆಲಸ ಸಂಪೂರ್ಣ ಮುಗಿದಿದೆ';
+
+  @override
+  String get actionDisputeMediation => 'ವಿವಾದ ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ';
+
+  @override
+  String get actionWaitingAcceptance => 'ಕಾರ್ಮಿಕರ ಸ್ವೀಕಾರಕ್ಕೆ ಕಾಯಲಾಗುತ್ತಿದೆ';
+
+  @override
+  String get actionConfirmArrival => 'ಆಗಮನ ದೃಢೀಕರಿಸಿ';
+
+  @override
+  String get actionConfirmCompletion => 'ಕೆಲಸ ಪೂರ್ಣತೆ ದೃಢೀಕರಿಸಿ';
+
+  @override
+  String get actionReleasePayment => 'ಪಾವತಿ ಬಿಡುಗಡೆ ಮಾಡಿ';
+
+  @override
+  String get actionPaymentDone => 'ಪಾವತಿ ಇತ್ಯರ್ಥವಾಗಿದೆ';
+
+  @override
+  String get actionAskForHelp => 'ಸಹಾಯ ಕೇಳಿ';
+
+  @override
+  String get actionDispute => 'ವಿವಾದ ದಾಖಲಿಸಿ';
+
+  @override
+  String get simpleModeSpokenLabel =>
+      'ಮಾತನಾಡಲು ಮತ್ತು ಕಾರ್ಯಗತಗೊಳಿಸಲು ಟ್ಯಾಪ್ ಮಾಡಿ';
+
+  @override
+  String get routeAndEtaTitle => 'ಮಾರ್ಗ ಮತ್ತು ಪ್ರಯಾಣ ಸಮಯ';
+
+  @override
+  String get openInMapsBtn => 'ನಕ್ಷೆಯಲ್ಲಿ ತೆರೆಯಿರಿ';
+
+  @override
+  String get demoModeChip => 'ಡೆಮೊ ಮೋಡ್';
+
+  @override
+  String get scheduleTitle => 'ಕಾರ್ಮಿಕರ ವೇಳಾಪಟ್ಟಿ ಮತ್ತು ಪ್ರಯಾಣ';
+
+  @override
+  String get scheduleDayView => 'ದಿನ';
+
+  @override
+  String get scheduleWeekView => 'ವಾರ';
+
+  @override
+  String get scheduleWeeklyTotal => 'ವಾರದ ಅಂದಾಜು ಗಳಿಕೆ';
 }

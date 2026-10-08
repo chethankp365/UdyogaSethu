@@ -1483,6 +1483,50 @@ class AppLocalizationsMr extends AppLocalizations {
   String get postJobStep1 => 'Category & Title';
 
   @override
+  String get postJobStepAudience => 'लक्षित कामगार';
+
+  @override
+  String get postJobAudienceTitle => 'हे काम कोणासाठी आहे?';
+
+  @override
+  String get postJobAudienceSubtitle =>
+      'या कामासाठी अर्ज करू शकणाऱ्या योग्य कामगारांचे प्रकार निवडा.';
+
+  @override
+  String get postJobAudienceInformal => 'दैनिक मजुरी / असंघटित कामगार';
+
+  @override
+  String get postJobAudienceInformalHint =>
+      'दैनिक मजूर, बांधकाम, लोडिंग, घरगुती कामगार';
+
+  @override
+  String get postJobAudienceStudent => 'विद्यार्थी';
+
+  @override
+  String get postJobAudienceStudentHint =>
+      'संध्याकाळच्या किंवा शनिवार-रविवारच्या लवचिक कामासाठी कॉलेज विद्यार्थी';
+
+  @override
+  String get postJobAudiencePartTime => 'अर्धवेळ / लवचिक कामगार';
+
+  @override
+  String get postJobAudiencePartTimeHint =>
+      'कमी शिफ्ट किंवा लवचिक वेळेत काम करणारे कामगार';
+
+  @override
+  String get postJobAudienceRequired => 'कृपया किमान एक कामगार प्रकार निवडा';
+
+  @override
+  String get hubConfirmedBookingEmptyTitle => 'कोणतेही सक्रिय बुकिंग नाही';
+
+  @override
+  String get hubConfirmedBookingEmptyDesc =>
+      'तुमची पुष्टी केलेली बुकिंग आणि ट्रॅकिंग येथे दिसेल.';
+
+  @override
+  String get hubLocationNotSet => 'स्थान सेट केलेले नाही';
+
+  @override
   String get postJobStep2 => 'Wages & Schedule';
 
   @override
@@ -1742,7 +1786,7 @@ class AppLocalizationsMr extends AppLocalizations {
       'Daily milk deliveries and weekly organic vegetable baskets straight to your doorstep coming in Phase 6.';
 
   @override
-  String get hubActionScanFarmQr => 'Scan Farm QR';
+  String get hubActionScanQr => 'QR स्कॅन';
 
   @override
   String get hubActionNoShowHelp => 'No-Show Help';
@@ -2144,5 +2188,117 @@ class AppLocalizationsMr extends AppLocalizations {
   String get recurringStatusCancelled => 'Cancelled';
 
   @override
-  String get demoModeBadge => 'Demo mode';
+  String get demoModeBadge => 'डेमो मोड';
+
+  @override
+  String get timelineTitle => 'काम प्रगती टाइमलाइन';
+
+  @override
+  String get timelineLiveDot => 'थेट';
+
+  @override
+  String get timelineDisputeActive => 'वाद पुनरावलोकनाखाली आहे';
+
+  @override
+  String get timelineDisputeSub => 'मध्यस्थी पथक पुराव्यांची तपासणी करत आहे.';
+
+  @override
+  String get timelineCurrentBadge => 'सध्याचे';
+
+  @override
+  String get stageRequestCreated => 'विनंती तयार केली';
+
+  @override
+  String get stageAccepted => 'स्वीकारले';
+
+  @override
+  String get stageTicketIssued => 'तिकीट जारी केले';
+
+  @override
+  String get stageWorkerArrived => 'कामगार पोहोचले';
+
+  @override
+  String get stageVerificationCompleted => 'सत्यापन पूर्ण झाले';
+
+  @override
+  String get stageJobInProgress => 'काम चालू आहे';
+
+  @override
+  String get stageCompleted => 'पूर्ण झाले';
+
+  @override
+  String get stagePaymentReleased => 'पेमेंट जारी केले';
+
+  @override
+  String get stageDisputeRaised => 'वाद नोंदवला';
+
+  @override
+  String get activeJobTitle => 'सक्रिय काम प्रगती';
+
+  @override
+  String get actionAcceptJob => 'काम स्वीकारा';
+
+  @override
+  String get actionWorkerArrived => 'मी पोहोचलो आहे';
+
+  @override
+  String get actionStartWork => 'काम सुरू करा';
+
+  @override
+  String get actionCompleteJob => 'काम पूर्ण करा';
+
+  @override
+  String get actionAwaitingPayment => 'पेमेंट जारी होण्याची प्रतीक्षा';
+
+  @override
+  String get actionJobFinished => 'काम पूर्ण झाले';
+
+  @override
+  String get actionDisputeMediation => 'वाद पुनरावलोकन';
+
+  @override
+  String get actionWaitingAcceptance => 'कामगाराच्या मंजुरीची प्रतीक्षा';
+
+  @override
+  String get actionConfirmArrival => 'आगमन निश्चित करा';
+
+  @override
+  String get actionConfirmCompletion => 'काम पूर्ण झाल्याची खात्री करा';
+
+  @override
+  String get actionReleasePayment => 'पेमेंट जारी करा';
+
+  @override
+  String get actionPaymentDone => 'पेमेंट पूर्ण झाले';
+
+  @override
+  String get actionAskForHelp => 'मदत मागा';
+
+  @override
+  String get actionDispute => 'वाद नोंदवा';
+
+  @override
+  String get simpleModeSpokenLabel =>
+      'बोलण्यासाठी आणि कार्यान्वित करण्यासाठी टॅप करा';
+
+  @override
+  String get routeAndEtaTitle => 'मार्ग आणि प्रवास वेळ';
+
+  @override
+  String get openInMapsBtn => 'नकाशात उघडा';
+
+  @override
+  String get demoModeChip => 'डेमो मोड';
+
+  @override
+  String get scheduleTitle => 'कामगारांचे वेळापत्रक आणि प्रवास';
+
+  @override
+  String get scheduleDayView => 'दिवस';
+
+  @override
+  String get scheduleWeekView => 'आठवडा';
+
+  @override
+  String get scheduleWeeklyTotal => 'आठवड्याची अंदाजे कमाई';
 }

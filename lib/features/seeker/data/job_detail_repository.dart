@@ -47,7 +47,7 @@ class SupabaseJobDetailRepository implements JobDetailRepository {
       try {
         final row = await _client
             .from('jobs')
-            .select('*, profiles!provider_id(full_name, avatar_url, is_verified_badge), service_categories(name, slug, icon)')
+            .select('*, profiles!provider_id(full_name, avatar_path), service_categories(name, slug, icon)')
             .eq('id', jobId)
             .maybeSingle();
 
@@ -59,8 +59,8 @@ class SupabaseJobDetailRepository implements JobDetailRepository {
             id: row['id'] as String,
             providerId: row['provider_id'] as String? ?? '',
             providerName: profile?['full_name'] as String? ?? 'Verified Employer',
-            providerAvatar: profile?['avatar_url'] as String?,
-            providerVerified: profile?['is_verified_badge'] as bool? ?? true,
+            providerAvatar: profile?['avatar_path'] as String?,
+            providerVerified: true,
             title: row['title'] as String? ?? 'Work Opportunity',
             description: row['description'] as String? ?? '',
             categoryName: cat?['name'] as String? ?? 'General Work',

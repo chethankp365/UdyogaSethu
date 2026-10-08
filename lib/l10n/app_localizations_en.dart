@@ -1486,6 +1486,51 @@ class AppLocalizationsEn extends AppLocalizations {
   String get postJobStep1 => 'Category & Title';
 
   @override
+  String get postJobStepAudience => 'Target Workers';
+
+  @override
+  String get postJobAudienceTitle => 'Who is this job for?';
+
+  @override
+  String get postJobAudienceSubtitle =>
+      'Select matching worker categories who can see and apply for this job.';
+
+  @override
+  String get postJobAudienceInformal => 'Informal / Daily-wage Worker';
+
+  @override
+  String get postJobAudienceInformalHint =>
+      'Day labourers, masons, loaders, construction, field hands';
+
+  @override
+  String get postJobAudienceStudent => 'Student';
+
+  @override
+  String get postJobAudienceStudentHint =>
+      'College students looking for short, flexible evening or weekend tasks';
+
+  @override
+  String get postJobAudiencePartTime => 'Part-time / Flexible Worker';
+
+  @override
+  String get postJobAudiencePartTimeHint =>
+      'Workers available for partial shifts or flexible timing';
+
+  @override
+  String get postJobAudienceRequired =>
+      'Please select at least one worker type';
+
+  @override
+  String get hubConfirmedBookingEmptyTitle => 'No active bookings';
+
+  @override
+  String get hubConfirmedBookingEmptyDesc =>
+      'Your confirmed worker assignments and live tracking will appear here.';
+
+  @override
+  String get hubLocationNotSet => 'Location not set';
+
+  @override
   String get postJobStep2 => 'Wages & Schedule';
 
   @override
@@ -1745,7 +1790,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Daily milk deliveries and weekly organic vegetable baskets straight to your doorstep coming in Phase 6.';
 
   @override
-  String get hubActionScanFarmQr => 'Scan Farm QR';
+  String get hubActionScanQr => 'Scan QR';
 
   @override
   String get hubActionNoShowHelp => 'No-Show Help';
@@ -2148,4 +2193,116 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get demoModeBadge => 'Demo mode';
+
+  @override
+  String get timelineTitle => 'Assignment Lifecycle Timeline';
+
+  @override
+  String get timelineLiveDot => 'LIVE';
+
+  @override
+  String get timelineDisputeActive => 'Dispute Raised Under Mediation';
+
+  @override
+  String get timelineDisputeSub =>
+      'Resolution team is reviewing job evidence and logs.';
+
+  @override
+  String get timelineCurrentBadge => 'Current';
+
+  @override
+  String get stageRequestCreated => 'Request Created';
+
+  @override
+  String get stageAccepted => 'Accepted';
+
+  @override
+  String get stageTicketIssued => 'Ticket Issued';
+
+  @override
+  String get stageWorkerArrived => 'Worker Arrived';
+
+  @override
+  String get stageVerificationCompleted => 'Verification Completed';
+
+  @override
+  String get stageJobInProgress => 'Job In Progress';
+
+  @override
+  String get stageCompleted => 'Completed';
+
+  @override
+  String get stagePaymentReleased => 'Payment Released';
+
+  @override
+  String get stageDisputeRaised => 'Dispute Raised';
+
+  @override
+  String get activeJobTitle => 'Active Job Execution';
+
+  @override
+  String get actionAcceptJob => 'Accept Job';
+
+  @override
+  String get actionWorkerArrived => 'I Have Arrived';
+
+  @override
+  String get actionStartWork => 'Start Work';
+
+  @override
+  String get actionCompleteJob => 'Complete Job';
+
+  @override
+  String get actionAwaitingPayment => 'Awaiting Payment Release';
+
+  @override
+  String get actionJobFinished => 'Job Fully Completed';
+
+  @override
+  String get actionDisputeMediation => 'In Dispute Review';
+
+  @override
+  String get actionWaitingAcceptance => 'Waiting for Worker to Accept';
+
+  @override
+  String get actionConfirmArrival => 'Confirm Worker Arrival';
+
+  @override
+  String get actionConfirmCompletion => 'Confirm Job Completion';
+
+  @override
+  String get actionReleasePayment => 'Release Payment';
+
+  @override
+  String get actionPaymentDone => 'Payment Settled';
+
+  @override
+  String get actionAskForHelp => 'Ask for Help';
+
+  @override
+  String get actionDispute => 'Raise Dispute';
+
+  @override
+  String get simpleModeSpokenLabel => 'Tap to Speak & Execute';
+
+  @override
+  String get routeAndEtaTitle => 'Route & Travel ETA';
+
+  @override
+  String get openInMapsBtn => 'Open in Maps';
+
+  @override
+  String get demoModeChip => 'Demo mode';
+
+  @override
+  String get scheduleTitle => 'Worker Schedule & Travel';
+
+  @override
+  String get scheduleDayView => 'Day';
+
+  @override
+  String get scheduleWeekView => 'Week';
+
+  @override
+  String get scheduleWeeklyTotal => 'Week Projected Earnings';
 }

@@ -229,12 +229,15 @@ class _JobDetailScreenState extends ConsumerState<JobDetailScreen> {
                       // Provider Name with Verified Tick
                       Row(
                         children: [
-                          Text(
-                            job.providerName,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.textMuted,
+                          Flexible(
+                            child: Text(
+                              job.providerName,
+                              style: const TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.textMuted,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           if (job.providerVerified) ...[
@@ -514,13 +517,21 @@ class _JobDetailScreenState extends ConsumerState<JobDetailScreen> {
   }
 
   Widget _buildSpecItem(IconData icon, String text, String label) {
-    return Column(
-      children: [
-        Icon(icon, color: AppColors.headerGreenDark, size: 20),
-        const SizedBox(height: 4),
-        Text(text, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.textDark)),
-        Text(label, style: const TextStyle(fontSize: 10, color: AppColors.textMuted)),
-      ],
+    return Expanded(
+      child: Column(
+        children: [
+          Icon(icon, color: AppColors.headerGreenDark, size: 20),
+          const SizedBox(height: 4),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(text, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.textDark)),
+          ),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(label, style: const TextStyle(fontSize: 10, color: AppColors.textMuted)),
+          ),
+        ],
+      ),
     );
   }
 
@@ -532,8 +543,15 @@ class _JobDetailScreenState extends ConsumerState<JobDetailScreen> {
           Icon(icon, size: 18, color: AppColors.textMuted),
           const SizedBox(width: 10),
           Text(title, style: const TextStyle(fontSize: 13, color: AppColors.textMuted)),
-          const Spacer(),
-          Text(value, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              value,
+              textAlign: TextAlign.end,
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.textDark),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
         ],
       ),
     );

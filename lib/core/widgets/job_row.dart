@@ -336,12 +336,15 @@ class JobRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  job.formattedWage,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF0D6548),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    job.formattedWage,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF0D6548),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 6),
