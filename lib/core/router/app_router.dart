@@ -59,6 +59,8 @@ import 'package:udyogasethu/features/seeker/presentation/seeker_home_screen.dart
 import 'package:udyogasethu/features/seeker/presentation/seeker_jobs_screen.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_wizard_screen.dart';
 import 'package:udyogasethu/features/job_execution/presentation/active_job_screen.dart';
+import 'package:udyogasethu/features/job_execution/presentation/attendance_scanner_screen.dart';
+import 'package:udyogasethu/features/job_execution/presentation/job_ticket_screen.dart';
 import 'package:udyogasethu/features/job_execution/presentation/worker_schedule_screen.dart';
 
 /// RouterNotifier notifies [GoRouter] when session state changes without recreating the router.
@@ -583,6 +585,20 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.workerSchedule,
         builder: (context, state) => const WorkerScheduleScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.jobTicket,
+        builder: (context, state) {
+          final id = state.pathParameters['id'] ?? '';
+          return JobTicketScreen(assignmentId: id);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.attendanceScan,
+        builder: (context, state) {
+          final id = state.uri.queryParameters['assignment_id'];
+          return AttendanceScannerScreen(initialAssignmentId: id);
+        },
       ),
       GoRoute(
         path: AppRoutes.providerJobNew,

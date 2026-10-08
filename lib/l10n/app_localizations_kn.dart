@@ -2328,4 +2328,75 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get scheduleWeeklyTotal => 'ವಾರದ ಅಂದಾಜು ಗಳಿಕೆ';
+
+  @override
+  String get ticketScreenTitle => 'ಡಿಜಿಟಲ್ ಉದ್ಯೋಗ ಟಿಕೆಟ್';
+
+  @override
+  String get refreshTicketTooltip => 'ಟಿಕೆಟ್ ಕ್ಯೂಆರ್ ರಿಫ್ರೆಶ್ ಮಾಡಿ';
+
+  @override
+  String get ticketOfflineNotice =>
+      'ಭದ್ರತಾ ಟೋಕನ್ ನವೀಕರಿಸಲು ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕ ಅಗತ್ಯವಿದೆ. ದಯವಿಟ್ಟು ಮಾಲೀಕರು ಸ್ಕ್ಯಾನ್ ಮಾಡುವ ಮೊದಲು ಸಂಪರ್ಕಿಸಿ.';
+
+  @override
+  String get ticketBookingPassHeader => 'ಬುಕಿಂಗ್ ಪಾಸ್';
+
+  @override
+  String get ticketScanInstructions =>
+      'ಸ್ಥಳಕ್ಕೆ ತಲುಪಿದ ತಕ್ಷಣ ಈ ಕ್ಯೂಆರ್ ಪಾಸ್ ಅನ್ನು ನಿಮ್ಮ ಮಾಲೀಕರಿಗೆ ತೋರಿಸಿ';
+
+  @override
+  String get ticketAutoRefreshesIn => 'ನವೀಕರಣಗೊಳ್ಳುತ್ತದೆ ಇನ್ನಷ್ಟೇ';
+
+  @override
+  String get ticketReplayShieldTitle => 'ಮರುಬಳಕೆ ರಕ್ಷಣೆ ಸಕ್ರಿಯವಾಗಿದೆ';
+
+  @override
+  String get ticketReplayShieldBody =>
+      'ಈ ಭದ್ರತಾ ಪಾಸ್ ಕೇವಲ ಒಮ್ಮೆ ಮಾತ್ರ ಬಳಕೆಯಾಗಬಲ್ಲದು ಮತ್ತು ಪ್ರತಿ 2 ನಿಮಿಷಕ್ಕೊಮ್ಮೆ ಬದಲಾಗುತ್ತದೆ. ಸ್ಕ್ರೀನ್‌ಶಾಟ್‌ಗಳನ್ನು ಮರುಬಳಕೆ ಮಾಡಲು ಸಾಧ್ಯವಿಲ್ಲ.';
+
+  @override
+  String get attendanceScannerTitle => 'ಕೆಲಸಗಾರರ ಕ್ಯೂಆರ್ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ';
+
+  @override
+  String get attendanceScannerInstructions =>
+      'ಹಾಜರಾತಿಯನ್ನು ದಾಖಲಿಸಲು ಕೆಲಸಗಾರರ ಡಿಜಿಟಲ್ ಕ್ಯೂಆರ್ ಕೋಡ್ ಅನ್ನು ಫ್ರೇಮ್‌ನಲ್ಲಿ ಜೋಡಿಸಿ.';
+
+  @override
+  String get ticketReplayRefusedTitle => 'ಮರುಬಳಕೆ ನಿರಾಕರಿಸಲಾಗಿದೆ';
+
+  @override
+  String get ticketExpiredTitle => 'ಟಿಕೆಟ್ ಅವಧಿ ಮೀರಿದೆ';
+
+  @override
+  String get attendanceScanFailedTitle => 'ಹಾಜರಾತಿ ಸ್ಕ್ಯಾನ್ ವಿಫಲವಾಗಿದೆ';
+
+  @override
+  String get attendanceConfirmedTitle => 'ಹಾಜರಾತಿ ದೃಢೀಕರಿಸಲಾಗಿದೆ!';
+
+  @override
+  String get workerMarkedArrived =>
+      'ಕೆಲಸಗಾರರು ಸ್ಥಳಕ್ಕೆ ತಲುಪಿದ್ದಾರೆ ಎಂದು ಗುರುತಿಸಲಾಗಿದೆ';
+
+  @override
+  String get scanAgain => 'ಮತ್ತೆ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ';
+
+  @override
+  String get scanDone => 'ಮುಗಿಯಿತು';
+
+  @override
+  String get viewActiveJob => 'ಸಕ್ರಿಯ ಉದ್ಯೋಗವನ್ನು ನೋಡಿ';
+
+  @override
+  String get actionShowTicket => 'ಕ್ಯೂಆರ್ ಟಿಕೆಟ್ ತೋರಿಸಿ';
+
+  @override
+  String get actionScanWorkerQr => 'ಕೆಲಸಗಾರರ ಕ್ಯೂಆರ್ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ';
+
+  @override
+  String get openSettings => 'ಸೆಟ್ಟಿಂಗ್ಸ್ ತೆರೆಯಿರಿ';
+
+  @override
+  String get bookingCodeCopied => 'ಬುಕಿಂಗ್ ಕೋಡ್ ನಕಲಿಸಲಾಗಿದೆ';
 }

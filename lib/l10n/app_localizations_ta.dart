@@ -2324,4 +2324,76 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get scheduleWeeklyTotal => 'வாரத்தின் மதிப்பிடப்பட்ட வருமானம்';
+
+  @override
+  String get ticketScreenTitle => 'டிஜிட்டல் வேலை டிக்கெட்';
+
+  @override
+  String get refreshTicketTooltip => 'டிக்கெட் QR-ஐ புதுப்பிக்கவும்';
+
+  @override
+  String get ticketOfflineNotice =>
+      'பாதுகாப்பு டோக்கனை புதுப்பிக்க இணைய இணைப்பு தேவை. முதலாளி ஸ்கேன் செய்வதற்கு முன் இணைக்கவும்.';
+
+  @override
+  String get ticketBookingPassHeader => 'முன்பதிவு பாஸ்';
+
+  @override
+  String get ticketScanInstructions =>
+      'பணிக்கு வந்தவுடன் இந்த QR பாஸை உங்கள் முதலாளியிடம் காட்டவும்';
+
+  @override
+  String get ticketAutoRefreshesIn => 'புதுப்பிக்கப்படும்';
+
+  @override
+  String get ticketReplayShieldTitle =>
+      'மறுபயன்பாட்டு பாதுகாப்பு இயக்கப்பட்டது';
+
+  @override
+  String get ticketReplayShieldBody =>
+      'இந்த பாதுகாப்பு பாஸ் ஒரு முறை மட்டுமே செல்லுபடியாகும், மேலும் ஒவ்வொரு 2 நிமிடங்களுக்கும் மாறும். ஸ்கிரீன்ஷாட்களை மீண்டும் பயன்படுத்த முடியாது.';
+
+  @override
+  String get attendanceScannerTitle => 'பணியாளர் QR-ஐ ஸ்கேன் செய்யவும்';
+
+  @override
+  String get attendanceScannerInstructions =>
+      'வருகையை பதிவு செய்ய பணியாளரின் டிஜிட்டல் டிக்கெட் QR குறியீட்டை சட்டத்திற்குள் வைக்கவும்.';
+
+  @override
+  String get ticketReplayRefusedTitle => 'மறுபயன்பாடு நிராகரிக்கப்பட்டது';
+
+  @override
+  String get ticketExpiredTitle => 'டிக்கெட் காலாவதியானது';
+
+  @override
+  String get attendanceScanFailedTitle => 'வருகை ஸ்கேன் தோல்வியடைந்தது';
+
+  @override
+  String get attendanceConfirmedTitle => 'வருகை உறுதி செய்யப்பட்டது!';
+
+  @override
+  String get workerMarkedArrived =>
+      'பணியாளர் பணி இடத்திற்கு வந்துவிட்டதாக குறிக்கப்பட்டது';
+
+  @override
+  String get scanAgain => 'மீண்டும் ஸ்கேன் செய்';
+
+  @override
+  String get scanDone => 'முடிந்தது';
+
+  @override
+  String get viewActiveJob => 'செயலில் உள்ள வேலையைப் பார்க்கவும்';
+
+  @override
+  String get actionShowTicket => 'QR டிக்கெட்டை காட்டவும்';
+
+  @override
+  String get actionScanWorkerQr => 'பணியாளர் QR-ஐ ஸ்கேன் செய்யவும்';
+
+  @override
+  String get openSettings => 'அமைப்புகளைத் திறக்கவும்';
+
+  @override
+  String get bookingCodeCopied => 'முன்பதிவு குறியீடு நகலெடுக்கப்பட்டது';
 }

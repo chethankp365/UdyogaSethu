@@ -4309,6 +4309,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Week Projected Earnings'**
   String get scheduleWeeklyTotal;
+
+  /// No description provided for @ticketScreenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Digital Job Ticket'**
+  String get ticketScreenTitle;
+
+  /// No description provided for @refreshTicketTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh Ticket QR'**
+  String get refreshTicketTooltip;
+
+  /// No description provided for @ticketOfflineNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Online connection required to refresh security token. Please reconnect before employer scan.'**
+  String get ticketOfflineNotice;
+
+  /// No description provided for @ticketBookingPassHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'BOOKING PASS'**
+  String get ticketBookingPassHeader;
+
+  /// No description provided for @ticketScanInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Present this QR pass to your employer upon site arrival'**
+  String get ticketScanInstructions;
+
+  /// No description provided for @ticketAutoRefreshesIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Refreshes in'**
+  String get ticketAutoRefreshesIn;
+
+  /// No description provided for @ticketReplayShieldTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Replay Protection Enabled'**
+  String get ticketReplayShieldTitle;
+
+  /// No description provided for @ticketReplayShieldBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This dynamic security pass is single-use and auto-refreshes every 2 minutes. Screenshots cannot be replayed or scanned more than once.'**
+  String get ticketReplayShieldBody;
+
+  /// No description provided for @attendanceScannerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Worker QR'**
+  String get attendanceScannerTitle;
+
+  /// No description provided for @attendanceScannerInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Align worker\'s digital ticket QR code within the frame to verify arrival.'**
+  String get attendanceScannerInstructions;
+
+  /// No description provided for @ticketReplayRefusedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Replay Refused'**
+  String get ticketReplayRefusedTitle;
+
+  /// No description provided for @ticketExpiredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ticket Expired'**
+  String get ticketExpiredTitle;
+
+  /// No description provided for @attendanceScanFailedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance Scan Failed'**
+  String get attendanceScanFailedTitle;
+
+  /// No description provided for @attendanceConfirmedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance Confirmed!'**
+  String get attendanceConfirmedTitle;
+
+  /// No description provided for @workerMarkedArrived.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker marked as Arrived on site'**
+  String get workerMarkedArrived;
+
+  /// No description provided for @scanAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Again'**
+  String get scanAgain;
+
+  /// No description provided for @scanDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get scanDone;
+
+  /// No description provided for @viewActiveJob.
+  ///
+  /// In en, this message translates to:
+  /// **'View Active Job'**
+  String get viewActiveJob;
+
+  /// No description provided for @actionShowTicket.
+  ///
+  /// In en, this message translates to:
+  /// **'Show QR Ticket'**
+  String get actionShowTicket;
+
+  /// No description provided for @actionScanWorkerQr.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Worker QR'**
+  String get actionScanWorkerQr;
+
+  /// No description provided for @openSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get openSettings;
+
+  /// No description provided for @bookingCodeCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking code copied to clipboard'**
+  String get bookingCodeCopied;
 }
 
 class _AppLocalizationsDelegate

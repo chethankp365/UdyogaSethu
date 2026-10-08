@@ -70,6 +70,11 @@ class PublicVerificationResult {
   final DateTime? verifiedAt;
   final String? errorCode;
   final String? errorMessage;
+  final String? purpose;
+  final String? assignmentId;
+  final String? bookingCode;
+  final String? workerName;
+  final String? jobTitle;
 
   const PublicVerificationResult({
     required this.valid,
@@ -84,13 +89,18 @@ class PublicVerificationResult {
     this.verifiedAt,
     this.errorCode,
     this.errorMessage,
+    this.purpose,
+    this.assignmentId,
+    this.bookingCode,
+    this.workerName,
+    this.jobTitle,
   });
 
   factory PublicVerificationResult.fromJson(Map<String, dynamic> json) {
     return PublicVerificationResult(
       valid: json['valid'] == true,
-      nameInitial: json['name_initial'] as String? ?? 'U.',
-      displayId: json['display_id'] as String? ?? 'UDY2026****',
+      nameInitial: json['name_initial'] as String? ?? (json['worker_name'] != null ? '${json['worker_name'][0]}.' : 'U.'),
+      displayId: json['display_id'] as String? ?? json['booking_code'] as String? ?? 'UDY2026****',
       isVerifiedBadge: json['is_verified_badge'] == true,
       level: (json['level'] as num?)?.toInt() ?? 1,
       levelName: json['level_name'] as String? ?? 'Starter',
@@ -98,6 +108,11 @@ class PublicVerificationResult {
       faceVerifiedAt: json['face_verified_at'] != null ? DateTime.tryParse(json['face_verified_at'].toString()) : null,
       trainingVerifiedAt: json['training_verified_at'] != null ? DateTime.tryParse(json['training_verified_at'].toString()) : null,
       verifiedAt: json['verified_at'] != null ? DateTime.tryParse(json['verified_at'].toString()) : null,
+      purpose: json['purpose'] as String?,
+      assignmentId: json['assignment_id'] as String?,
+      bookingCode: json['booking_code'] as String?,
+      workerName: json['worker_name'] as String?,
+      jobTitle: json['job_title'] as String?,
     );
   }
 

@@ -2300,4 +2300,75 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get scheduleWeeklyTotal => 'सप्ताह की अनुमानित कमाई';
+
+  @override
+  String get ticketScreenTitle => 'डिजिटल कार्य टिकट';
+
+  @override
+  String get refreshTicketTooltip => 'टिकट क्यूआर रीफ्रेश करें';
+
+  @override
+  String get ticketOfflineNotice =>
+      'सुरक्षा टोकन रीफ्रेश करने के लिए इंटरनेट कनेक्शन आवश्यक है। कृपया नियोक्ता के स्कैन करने से पहले पुनः कनेक्ट करें।';
+
+  @override
+  String get ticketBookingPassHeader => 'बुकिंग पास';
+
+  @override
+  String get ticketScanInstructions =>
+      'कार्यस्थल पर पहुंचने पर यह क्यूआर पास अपने नियोक्ता को दिखाएं';
+
+  @override
+  String get ticketAutoRefreshesIn => 'रीफ्रेश होगा';
+
+  @override
+  String get ticketReplayShieldTitle => 'रीप्ले सुरक्षा सक्षम';
+
+  @override
+  String get ticketReplayShieldBody =>
+      'यह सुरक्षा पास एकल उपयोग है और हर 2 मिनट में बदलता है। स्क्रीनशॉट को दोबारा स्कैन नहीं किया जा सकता।';
+
+  @override
+  String get attendanceScannerTitle => 'श्रमिक क्यूआर स्कैन करें';
+
+  @override
+  String get attendanceScannerInstructions =>
+      'उपस्थिति दर्ज करने के लिए श्रमिक के डिजिटल टिकट क्यूआर कोड को फ्रेम में रखें।';
+
+  @override
+  String get ticketReplayRefusedTitle => 'रीप्ले अस्वीकृत';
+
+  @override
+  String get ticketExpiredTitle => 'टिकट समाप्त हो गया';
+
+  @override
+  String get attendanceScanFailedTitle => 'उपस्थिति स्कैन विफल';
+
+  @override
+  String get attendanceConfirmedTitle => 'उपस्थिति की पुष्टि हो गई!';
+
+  @override
+  String get workerMarkedArrived =>
+      'श्रमिक को कार्यस्थल पर पहुंचा हुआ चिन्हित किया गया';
+
+  @override
+  String get scanAgain => 'फिर से स्कैन करें';
+
+  @override
+  String get scanDone => 'पूर्ण';
+
+  @override
+  String get viewActiveJob => 'सक्रिय कार्य देखें';
+
+  @override
+  String get actionShowTicket => 'क्यूआर टिकट दिखाएं';
+
+  @override
+  String get actionScanWorkerQr => 'श्रमिक क्यूआर स्कैन करें';
+
+  @override
+  String get openSettings => 'सेटिंग्स खोलें';
+
+  @override
+  String get bookingCodeCopied => 'बुकिंग कोड क्लिपबोर्ड पर कॉपी किया गया';
 }

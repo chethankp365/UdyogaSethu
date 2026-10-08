@@ -2305,4 +2305,74 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scheduleWeeklyTotal => 'Week Projected Earnings';
+
+  @override
+  String get ticketScreenTitle => 'Digital Job Ticket';
+
+  @override
+  String get refreshTicketTooltip => 'Refresh Ticket QR';
+
+  @override
+  String get ticketOfflineNotice =>
+      'Online connection required to refresh security token. Please reconnect before employer scan.';
+
+  @override
+  String get ticketBookingPassHeader => 'BOOKING PASS';
+
+  @override
+  String get ticketScanInstructions =>
+      'Present this QR pass to your employer upon site arrival';
+
+  @override
+  String get ticketAutoRefreshesIn => 'Refreshes in';
+
+  @override
+  String get ticketReplayShieldTitle => 'Replay Protection Enabled';
+
+  @override
+  String get ticketReplayShieldBody =>
+      'This dynamic security pass is single-use and auto-refreshes every 2 minutes. Screenshots cannot be replayed or scanned more than once.';
+
+  @override
+  String get attendanceScannerTitle => 'Scan Worker QR';
+
+  @override
+  String get attendanceScannerInstructions =>
+      'Align worker\'s digital ticket QR code within the frame to verify arrival.';
+
+  @override
+  String get ticketReplayRefusedTitle => 'Replay Refused';
+
+  @override
+  String get ticketExpiredTitle => 'Ticket Expired';
+
+  @override
+  String get attendanceScanFailedTitle => 'Attendance Scan Failed';
+
+  @override
+  String get attendanceConfirmedTitle => 'Attendance Confirmed!';
+
+  @override
+  String get workerMarkedArrived => 'Worker marked as Arrived on site';
+
+  @override
+  String get scanAgain => 'Scan Again';
+
+  @override
+  String get scanDone => 'Done';
+
+  @override
+  String get viewActiveJob => 'View Active Job';
+
+  @override
+  String get actionShowTicket => 'Show QR Ticket';
+
+  @override
+  String get actionScanWorkerQr => 'Scan Worker QR';
+
+  @override
+  String get openSettings => 'Open Settings';
+
+  @override
+  String get bookingCodeCopied => 'Booking code copied to clipboard';
 }

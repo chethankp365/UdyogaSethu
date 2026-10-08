@@ -8,6 +8,7 @@ class AppColors {
   // Primary Brand Greens
   static const Color headerGreenDark = Color(0xFF0D6548);
   static const Color headerGreenGradientEnd = Color(0xFF064E3B);
+  static const Color emeraldPrimary = Color(0xFF0D6548);
   static const Color primaryTeal = Color(0xFF00875A);
   static const Color emerald = Color(0xFF10B981);
   static const Color paleMint = Color(0xFFE6F4EA);

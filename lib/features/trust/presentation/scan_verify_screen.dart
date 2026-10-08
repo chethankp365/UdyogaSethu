@@ -367,7 +367,9 @@ class _ScanVerifyScreenState extends ConsumerState<ScanVerifyScreen> with Widget
 
                     Text(
                       isValid
-                          ? (isBadge ? 'UdyogaSethu Verified Worker' : 'Registered Worker (Unverified)')
+                          ? (res.purpose == 'ticket'
+                              ? 'Attendance Confirmed • Worker Arrived'
+                              : (isBadge ? 'UdyogaSethu Verified Worker' : 'Registered Worker (Unverified)'))
                           : 'Verification Rejected',
                       style: TextStyle(
                         fontSize: 18,
@@ -391,34 +393,71 @@ class _ScanVerifyScreenState extends ConsumerState<ScanVerifyScreen> with Widget
                         textAlign: TextAlign.center,
                       ),
                     ] else ...[
-                      const Text(
-                        'Public Credential Status (Zero Personal Data Shared)',
-                        style: TextStyle(fontSize: 11, color: AppColors.textMuted),
+                      Text(
+                        res.purpose == 'ticket'
+                            ? 'Attendance recorded on site at ${res.verifiedAt != null ? res.verifiedAt!.toLocal().toString().split('.').first : "just now"}'
+                            : 'Public Credential Status (Zero Personal Data Shared)',
+                        style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
                       ),
                       const SizedBox(height: 16),
                       const Divider(height: 1),
                       const SizedBox(height: 16),
 
-                      // Public Non-PII Fields
-                      _buildInfoRow('Worker Name', '${res.nameInitial} (Verified Initial)'),
-                      _buildInfoRow('Public ID', res.displayId),
-                      _buildInfoRow('Skill Level', 'Level ${res.level} • ${res.levelName}'),
-                      _buildInfoRow(
-                        'Verified Badge',
-                        isBadge ? 'Active ✓' : 'Incomplete',
-                        color: isBadge ? Colors.green : Colors.amber.shade800,
-                      ),
-                      if (res.kycVerifiedAt != null)
-                        _buildInfoRow('eKYC Verified', res.kycVerifiedAt!.toLocal().toString().split(' ').first),
-                      if (res.faceVerifiedAt != null)
-                        _buildInfoRow('Face Liveness', res.faceVerifiedAt!.toLocal().toString().split(' ').first),
-                      if (res.trainingVerifiedAt != null)
-                        _buildInfoRow('Safety Training', res.trainingVerifiedAt!.toLocal().toString().split(' ').first),
+                      if (res.purpose == 'ticket') ...[
+                        if (res.workerName != null)
+                          _buildInfoRow('Worker Name', res.workerName!),
+                        if (res.bookingCode != null)
+                          _buildInfoRow('Booking Code', res.bookingCode!),
+                        if (res.jobTitle != null)
+                          _buildInfoRow('Job Title', res.jobTitle!),
+                        _buildInfoRow(
+                          'Status',
+                          'Arrived on Site ✓',
+                          color: AppColors.emeraldPrimary,
+                        ),
+                      ] else ...[
+                        // Public Non-PII Fields
+                        _buildInfoRow('Worker Name', '${res.nameInitial} (Verified Initial)'),
+                        _buildInfoRow('Public ID', res.displayId),
+                        _buildInfoRow('Skill Level', 'Level ${res.level} • ${res.levelName}'),
+                        _buildInfoRow(
+                          'Verified Badge',
+                          isBadge ? 'Active ✓' : 'Incomplete',
+                          color: isBadge ? Colors.green : Colors.amber.shade800,
+                        ),
+                        if (res.kycVerifiedAt != null)
+                          _buildInfoRow('eKYC Verified', res.kycVerifiedAt!.toLocal().toString().split(' ').first),
+                        if (res.faceVerifiedAt != null)
+                          _buildInfoRow('Face Liveness', res.faceVerifiedAt!.toLocal().toString().split(' ').first),
+                        if (res.trainingVerifiedAt != null)
+                          _buildInfoRow('Safety Training', res.trainingVerifiedAt!.toLocal().toString().split(' ').first),
+                      ],
                     ],
                   ],
                 ),
               ),
               const SizedBox(height: 20),
+
+              if (res.purpose == 'ticket' && res.assignmentId != null) ...[
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      _resetScanner();
+                      Navigator.of(context).pushNamed('/jobs/active/${res.assignmentId}');
+                    },
+                    icon: const Icon(Icons.arrow_forward),
+                    label: const Text('Open Active Job Screen'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.emeraldPrimary,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+              ],
 
               // Scan Again Button
               SizedBox(
@@ -426,7 +465,7 @@ class _ScanVerifyScreenState extends ConsumerState<ScanVerifyScreen> with Widget
                 child: ElevatedButton.icon(
                   onPressed: _resetScanner,
                   icon: const Icon(Icons.qr_code_scanner_rounded),
-                  label: const Text('Scan Another Worker ID'),
+                  label: const Text('Scan Another Code'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.headerGreenDark,
                     foregroundColor: Colors.white,

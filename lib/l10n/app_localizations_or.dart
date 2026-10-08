@@ -2308,4 +2308,74 @@ class AppLocalizationsOr extends AppLocalizations {
 
   @override
   String get scheduleWeeklyTotal => 'ସପ୍ତାହର ଆନୁମାନିକ ଆୟ';
+
+  @override
+  String get ticketScreenTitle => 'ଡିଜିଟାଲ୍ କାର୍ଯ୍ୟ ଟିକେଟ୍';
+
+  @override
+  String get refreshTicketTooltip => 'ଟିକେଟ୍ କ୍ୟୁଆର୍ ରିଫ୍ରେସ୍ କରନ୍ତୁ';
+
+  @override
+  String get ticketOfflineNotice =>
+      'ସୁରକ୍ଷା ଟୋକନ୍ ରିଫ୍ରେସ୍ ପାଇଁ ଇଣ୍ଟରନେଟ୍ ଆବଶ୍ୟକ। ଦୟାକରି ସ୍କାନ୍ ପୂର୍ବରୁ ପୁନଃ ସଂଯୋଗ କରନ୍ତୁ।';
+
+  @override
+  String get ticketBookingPassHeader => 'ବୁକିଂ ପାସ୍';
+
+  @override
+  String get ticketScanInstructions =>
+      'କାର୍ଯ୍ୟସ୍ଥଳରେ ପହଞ୍ଚିବା ପରେ ଏହି କ୍ୟୁଆର୍ ପାସ୍ ନିଯୁକ୍ତିଦାତାଙ୍କୁ ଦେଖାନ୍ତୁ';
+
+  @override
+  String get ticketAutoRefreshesIn => 'ରିଫ୍ରେସ୍ ହେବ';
+
+  @override
+  String get ticketReplayShieldTitle => 'ରିପ୍ଲେ ସୁରକ୍ଷା ସକ୍ରିୟ';
+
+  @override
+  String get ticketReplayShieldBody =>
+      'ଏହି ସୁରକ୍ଷା ପାସ୍ କେବଳ ଥରେ ବ୍ୟବହାରଯୋଗ୍ୟ ଏବଂ ପ୍ରତି ୨ ମିନିଟରେ ବଦଳିଥାଏ। ସ୍କ୍ରିନସଟ୍ ପୁନଃ ବ୍ୟବହାର ହୋଇପାରିବ ନାହିଁ।';
+
+  @override
+  String get attendanceScannerTitle => 'ଶ୍ରମିକ କ୍ୟୁଆର୍ ସ୍କାନ୍ କରନ୍ତୁ';
+
+  @override
+  String get attendanceScannerInstructions =>
+      'ଉପସ୍ଥିତି ଦର୍ଜ କରିବା ପାଇଁ ଶ୍ରମିକଙ୍କ ଡିଜିଟାଲ୍ ଟିକେଟ୍ କ୍ୟୁଆର୍ କୋଡ୍ ଫ୍ରେମ୍ ଭିତରେ ରଖନ୍ତୁ।';
+
+  @override
+  String get ticketReplayRefusedTitle => 'ରିପ୍ଲେ ପ୍ରତ୍ୟାଖ୍ୟାନ କରାଯାଇଛି';
+
+  @override
+  String get ticketExpiredTitle => 'ଟିକେଟ୍ ଅବଧି ସମାପ୍ତ';
+
+  @override
+  String get attendanceScanFailedTitle => 'ଉପସ୍ଥିତି ସ୍କାନ୍ ବିଫଳ';
+
+  @override
+  String get attendanceConfirmedTitle => 'ଉପସ୍ଥିତି ନିଶ୍ଚିତ ହୋଇଛି!';
+
+  @override
+  String get workerMarkedArrived => 'ଶ୍ରମିକ ପହଞ୍ଚିଥିବା ଚିହ୍ନିତ ହୋଇଛନ୍ତି';
+
+  @override
+  String get scanAgain => 'ପୁଣି ସ୍କାନ୍ କରନ୍ତୁ';
+
+  @override
+  String get scanDone => 'ସମ୍ପନ୍ନ';
+
+  @override
+  String get viewActiveJob => 'ସକ୍ରିୟ କାର୍ଯ୍ୟ ଦେଖନ୍ତୁ';
+
+  @override
+  String get actionShowTicket => 'କ୍ୟୁଆର୍ ଟିକେଟ୍ ଦେଖାନ୍ତୁ';
+
+  @override
+  String get actionScanWorkerQr => 'ଶ୍ରମିକ କ୍ୟୁଆର୍ ସ୍କାନ୍ କରନ୍ତୁ';
+
+  @override
+  String get openSettings => 'ସେଟିଙ୍ଗସ୍ ଖୋଲନ୍ତୁ';
+
+  @override
+  String get bookingCodeCopied => 'ବୁକିଂ କୋଡ୍ କପି ହୋଇଛି';
 }

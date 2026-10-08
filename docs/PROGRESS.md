@@ -160,7 +160,15 @@
   - **AssignmentTimelineWidget**: Reusable timeline widget across Seeker and Provider roles in `lib/features/job_execution/presentation/assignment_timeline_widget.dart` streaming `assignment_events` in real-time across all 9 canonical stages: Request Created, Accepted, Ticket Issued, Worker Arrived, Verification Completed, Job In Progress, Completed, Payment Released, Dispute Raised.
   - **ActiveJobScreen**: Dual-role execution screen (`/jobs/active/:id`) with status banner, dynamic next action button, counterpart contact details, embedded OpenStreetMap route map, and "Open in Maps" action. Includes **Simple Mode** (accessible huge 76dp+ card with high contrast icon and spoken audio feedback using `flutter_tts` for: Accept Job, Start Work, Complete Job, Ask for Help).
   - **WorkerScheduleScreen**: Schedule view (`/seeker/schedule`) with Day and Week modes, 7-day horizontal date selector, upcoming assignment cards, SQL overlap prevention, and amber warning chip when the gap between two consecutive jobs is shorter than the estimated travel time.
-  - **Localization & Quality**: Added 35 keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`) verified via `tool/check_l10n.dart` (700 keys each). Added automated tests in `test/job_execution_test.dart` (8 tests covering routing, fallbacks, timeline, active job screen, schedule, and travel warnings). 0 issues in `flutter analyze`. 321/321 tests passing in `flutter test`.
+- [x] **P4.8**: QR job ticket and employer attendance scan (Status: Done | Features #40, #41)
+  - **Database Migrations `0430_qr_ticket_attendance.sql` & `0431_ticket_attendance_caller.sql`**: Pushed to remote Supabase database and verified with `npx supabase db lint --linked` (0 errors). Added `used BOOLEAN`, `used_at TIMESTAMPTZ`, and `assignment_id UUID` columns to `qr_tokens` table. Added index on `attendance_logs(token_id)` and `qr_tokens(assignment_id)`. Added `qr_ticket_expiry_seconds` (120s) setting to `admin_settings`. Created RPC `get_job_ticket_details` returning full booking pass metadata (booking code, job title, agreed wage, payment mode, worker avatar/name, verified badge, employer name, address, coordinates). Created RPC `record_ticket_attendance` logging employer GPS check-in to `attendance_logs`, updating assignment status to `arrived`, inserting `Worker Arrived` event in `assignment_events`, and logging scanning employer ID.
+  - **Edge Functions `qr-issue` & `qr-verify`**: Updated and deployed to live Supabase project (`npx supabase functions deploy qr-issue`, `npx supabase functions deploy qr-verify`).
+    - `qr-issue`: Validates caller is assigned worker; checks status is `ticket_issued` (or advances from `accepted`); generates signed HMAC-SHA256 token with `assignment_id`, `jti`, and 120s expiry; saves unconsumed token (`used: false`) in `qr_tokens`.
+    - `qr-verify`: Validates caller is job provider; checks HMAC signature with function secret; checks token expiry; verifies assignment ownership; checks status `ticket_issued`; verifies arrival within 2-hour window before start time; checks replay status (`tokenRecord.used` and `attendance_logs`); records attendance log with employer GPS; marks `used: true`; calls `record_ticket_attendance` (status `arrived`); notifies worker; returns verified worker information.
+  - **JobTicketScreen (`/jobs/ticket/:id`)**: BookMyShow-style ticket pass with perforated dashed cutout notches, booking pass header, copyable booking code, status chip, worker avatar with verified badge, job title, employer name, date/time, address with map launcher (`RoutingService.openExternalMaps`). Dynamic QR pass with circular countdown ring auto-refreshing every 100 seconds. Replay protection security shield banner. Offline caching via `SharedPreferences` displaying last token expiry time and amber connection notice.
+  - **AttendanceScannerScreen (`/jobs/attendance-scan`) & ScanVerifyScreen**: Real mobile scanner with torch toggle, camera switcher, green viewfinder frame, provider GPS capture, confirmation bottom sheet showing worker photo/name/verified badge before arrival, and instant rejection sheet for expired or replayed QR tokens. Debug panel in `kDebugMode` for single-device test simulation.
+  - **ActiveJobScreen Integration**: Added "Show QR Ticket" primary action for workers and "Scan Worker QR" for providers during `accepted` and `ticket_issued` stages, with direct AppBar QR button shortcut.
+  - **Localization & Quality**: Added 22 keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`) verified via `tool/check_l10n.dart` (722 keys each, 100% complete) and regenerated via `flutter gen-l10n`. Added unit & widget tests in `test/job_ticket_test.dart` (7/7 tests passed). Full test suite: 328/328 tests passed cleanly (`flutter test`). Static analysis: `flutter analyze` 0 issues.
 
 ---
 
@@ -176,11 +184,9 @@
         & "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" -s db11f242e5b0 install -r "build\app\outputs\flutter-apk\app-debug.apk"
         ```
      5. When the MIUI confirmation dialog appears on the phone screen asking *"Install via USB?"*, tap **Install**.
-2. **Deploy Updated Edge Functions (when ready)**:
-   Run the following commands using Supabase CLI:
+2. **Deploy Updated Edge Functions (remaining when ready)**:
+   Run the following commands using Supabase CLI (note: `qr-issue` and `qr-verify` are already deployed):
    ```bash
-   npx supabase functions deploy qr-issue
-   npx supabase functions deploy qr-verify
    npx supabase functions deploy face-enroll
    npx supabase functions deploy face-verify
    npx supabase functions deploy kyc-start
@@ -190,6 +196,6 @@
 
 ## Known issues
 - **Profile & Auth Foreign Key Cascade vs D11 Retention (To be fixed in P5.1 migration)**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`, and financial/order tables (`wallets`, `payouts`, `orders`, `group_orders`, `group_order_members`, `disputes`, `dispute_evidence`, `job_assignments`, `job_evidence`, `ratings_reviews`) referencing `profiles(id)` with `ON DELETE CASCADE`. Calling `auth.admin.deleteUser` cascades through `auth.users -> profiles -> child tables`, erasing financial audit trails and breaking D11. The P5.1 migration must alter these foreign key constraints (e.g., remove cascade on `profiles.id` so scrubbed tombstone profiles survive, or move records to snapshot columns with `ON DELETE SET NULL`) and re-verify that account deletion never fails and re-registration with the same phone number works cleanly.
-- **Phase 4.8**: QR job ticket and employer attendance scan is the planned next step.
+- **Phase 4.9**: Two-step verified start (selfie + GPS match, OTP fallback, timer) is the planned next step.
 - **Phase 9 (Admin Console)**: Admin console is built in a separate web/desktop project and is out of scope for this Flutter app.
 

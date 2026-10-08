@@ -65,6 +65,8 @@ class AppRoutes {
   static const String jobDetail = '/job/:id';
   static const String produceDetail = '/produce/:id';
   static const String activeJob = '/jobs/active/:id';
+  static const String jobTicket = '/jobs/ticket/:id';
+  static const String attendanceScan = '/jobs/attendance-scan';
   static const String workerSchedule = '/seeker/schedule';
 
   // Debug Routes (gated under kDebugMode)

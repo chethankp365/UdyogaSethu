@@ -140,6 +140,17 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
             },
           ),
           IconButton(
+            icon: Icon(isProvider ? Icons.qr_code_scanner_rounded : Icons.qr_code_rounded),
+            tooltip: isProvider ? (l10n?.actionScanWorkerQr ?? 'Scan Worker QR') : (l10n?.actionShowTicket ?? 'Show QR Ticket'),
+            onPressed: () {
+              if (isProvider) {
+                context.push('/jobs/attendance-scan?assignment_id=${widget.assignmentId}');
+              } else {
+                context.push('/jobs/ticket/${widget.assignmentId}');
+              }
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.refresh_rounded),
             tooltip: 'Refresh',
             onPressed: () {
@@ -339,9 +350,9 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
           break;
         case AssignmentStage.accepted:
         case AssignmentStage.ticketIssued:
-          primaryText = l10n?.actionWorkerArrived ?? 'I Have Arrived';
-          primaryIcon = Icons.pin_drop_rounded;
-          onPrimaryPressed = () => _handleTransition(detail, 'arrived');
+          primaryText = l10n?.actionShowTicket ?? 'Show QR Ticket';
+          primaryIcon = Icons.qr_code_rounded;
+          onPrimaryPressed = () => context.push('/jobs/ticket/${detail.assignmentId}');
           break;
         case AssignmentStage.workerArrived:
         case AssignmentStage.verificationCompleted:
@@ -380,9 +391,9 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
           break;
         case AssignmentStage.accepted:
         case AssignmentStage.ticketIssued:
-          primaryText = l10n?.actionConfirmArrival ?? 'Confirm Worker Arrival';
-          primaryIcon = Icons.pin_drop_rounded;
-          onPrimaryPressed = () => _handleTransition(detail, 'arrived');
+          primaryText = l10n?.actionScanWorkerQr ?? 'Scan Worker QR';
+          primaryIcon = Icons.qr_code_scanner_rounded;
+          onPrimaryPressed = () => context.push('/jobs/attendance-scan?assignment_id=${detail.assignmentId}');
           break;
         case AssignmentStage.workerArrived:
         case AssignmentStage.verificationCompleted:

@@ -2318,4 +2318,75 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get scheduleWeeklyTotal => 'వారం అంచనా ఆదాయం';
+
+  @override
+  String get ticketScreenTitle => 'డిజిటల్ పని టిక్కెట్';
+
+  @override
+  String get refreshTicketTooltip => 'టిక్కెట్ క్యూఆర్ రీఫ్రెష్ చేయండి';
+
+  @override
+  String get ticketOfflineNotice =>
+      'సెక్యూరిటీ టోకెన్ రీఫ్రెష్ చేయడానికి ఇంటర్నెట్ కనెక్షన్ అవసరం. దయచేసి యజమాని స్కాన్ చేయడానికి ముందు కనెక్ట్ అవ్వండి.';
+
+  @override
+  String get ticketBookingPassHeader => 'బుకింగ్ పాస్';
+
+  @override
+  String get ticketScanInstructions =>
+      'పని ప్రదేశానికి చేరుకున్నప్పుడు ఈ క్యూఆర్ పాస్‌ను మీ యజమానికి చూపించండి';
+
+  @override
+  String get ticketAutoRefreshesIn => 'రీఫ్రెష్ అవుతుంది';
+
+  @override
+  String get ticketReplayShieldTitle => 'రీప్లే రక్షణ సక్రియంగా ఉంది';
+
+  @override
+  String get ticketReplayShieldBody =>
+      'ఈ భద్రతా పాస్ ఒక్కసారి మాత్రమే ఉపయోగించబడుతుంది మరియు ప్రతి 2 నిమిషాలకు మారుతుంది. స్క్రీన్‌షాట్‌లు మళ్లీ చెల్లవు.';
+
+  @override
+  String get attendanceScannerTitle => 'కార్మికుడి క్యూఆర్ స్కాన్ చేయండి';
+
+  @override
+  String get attendanceScannerInstructions =>
+      'హాజరును నమోదు చేయడానికి కార్మికుడి డిజిటల్ టిక్కెట్ క్యూఆర్ కోడ్‌ను ఫ్రేమ్‌లో ఉంచండి.';
+
+  @override
+  String get ticketReplayRefusedTitle => 'రీప్లే నిరాకరించబడింది';
+
+  @override
+  String get ticketExpiredTitle => 'టిక్కెట్ గడువు ముగిసింది';
+
+  @override
+  String get attendanceScanFailedTitle => 'హాజరు స్కాన్ విఫలమైంది';
+
+  @override
+  String get attendanceConfirmedTitle => 'హాజరు ధృవీకరించబడింది!';
+
+  @override
+  String get workerMarkedArrived =>
+      'కార్మికుడు పని స్థలానికి చేరుకున్నట్లు గుర్తించబడింది';
+
+  @override
+  String get scanAgain => 'మళ్లీ స్కాన్ చేయండి';
+
+  @override
+  String get scanDone => 'పూర్తయింది';
+
+  @override
+  String get viewActiveJob => 'క్రియాశీల పనిని చూడండి';
+
+  @override
+  String get actionShowTicket => 'క్యూఆర్ టిక్కెట్ చూపించండి';
+
+  @override
+  String get actionScanWorkerQr => 'కార్మికుడి క్యూఆర్ స్కాన్ చేయండి';
+
+  @override
+  String get openSettings => 'సెట్టింగ్‌లను తెరవండి';
+
+  @override
+  String get bookingCodeCopied => 'బుకింగ్ కోడ్ కాపీ చేయబడింది';
 }

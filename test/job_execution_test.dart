@@ -8,6 +8,7 @@ import 'package:udyogasethu/core/services/routing_service.dart';
 import 'package:udyogasethu/features/job_execution/data/job_execution_repository.dart';
 import 'package:udyogasethu/features/job_execution/domain/active_job_detail.dart';
 import 'package:udyogasethu/features/job_execution/domain/assignment_event_item.dart';
+import 'package:udyogasethu/features/job_execution/domain/job_ticket.dart';
 import 'package:udyogasethu/features/job_execution/domain/worker_schedule_item.dart';
 import 'package:udyogasethu/features/job_execution/presentation/assignment_timeline_widget.dart';
 import 'package:udyogasethu/features/job_execution/presentation/active_job_screen.dart';
@@ -70,6 +71,49 @@ class FakeJobExecutionRepository implements JobExecutionRepository {
   @override
   Future<List<WorkerScheduleItem>> fetchWorkerSchedule(String workerId, {DateTime? startDate, DateTime? endDate}) async =>
       schedule;
+
+  @override
+  Future<JobTicketData> fetchJobTicket(String assignmentId) async {
+    return JobTicketData(
+      assignmentId: assignmentId,
+      bookingCode: 'BOOK-TEST78',
+      status: 'ticket_issued',
+      jobId: 'job-1',
+      jobTitle: 'Electrician Repair',
+      categoryName: 'Electrician',
+      categoryIcon: 'flash_on',
+      startAt: DateTime.now(),
+      estDurationMinutes: 120,
+      agreedWagePaise: 80000,
+      wageType: 'daily',
+      paymentMode: 'escrow',
+      workerId: 'worker-1',
+      workerName: 'Chethan',
+      isWorkerVerified: true,
+      providerId: 'provider-1',
+      providerName: 'Employer',
+    );
+  }
+
+  @override
+  Future<Map<String, dynamic>> refreshTicketQr(String assignmentId) async {
+    return {
+      'qr_token': 'TEST_TOKEN',
+      'expires_in_seconds': 120,
+    };
+  }
+
+  @override
+  Future<AttendanceScanResult> verifyAttendanceScan({required String qrToken, double? lat, double? lng}) async {
+    return const AttendanceScanResult(
+      valid: true,
+      purpose: 'ticket',
+      status: 'arrived',
+      workerName: 'Chethan',
+      isVerifiedBadge: true,
+      jobTitle: 'Electrician Repair',
+    );
+  }
 }
 
 void main() {

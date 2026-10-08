@@ -2301,4 +2301,74 @@ class AppLocalizationsMr extends AppLocalizations {
 
   @override
   String get scheduleWeeklyTotal => 'आठवड्याची अंदाजे कमाई';
+
+  @override
+  String get ticketScreenTitle => 'डिजिटल जॉब तिकीट';
+
+  @override
+  String get refreshTicketTooltip => 'तिकीट क्यूआर रीफ्रेश करा';
+
+  @override
+  String get ticketOfflineNotice =>
+      'सुरक्षा टोकन रीफ्रेश करण्यासाठी इंटरनेट आवश्यक आहे. कृपया स्कॅन करण्यापूर्वी पुन्हा कनेक्ट व्हा.';
+
+  @override
+  String get ticketBookingPassHeader => 'बुकिंग पास';
+
+  @override
+  String get ticketScanInstructions =>
+      'कामाच्या ठिकाणी आल्यावर हा क्यूआर पास मालकाला दाखवा';
+
+  @override
+  String get ticketAutoRefreshesIn => 'रीफ्रेश होईल';
+
+  @override
+  String get ticketReplayShieldTitle => 'रीप्ले संरक्षण सक्षम';
+
+  @override
+  String get ticketReplayShieldBody =>
+      'हा सुरक्षा पास एकल वापराचा असून दर २ मिनिटांनी बदलतो. स्क्रीनशॉट पुन्हा वापरता येत नाही.';
+
+  @override
+  String get attendanceScannerTitle => 'कामगार क्यूआर स्कॅन करा';
+
+  @override
+  String get attendanceScannerInstructions =>
+      'हजेरी नोंदवण्यासाठी कामगाराचा डिजिटल तिकीट क्यूआर कोड फ्रेममध्ये ठेवा.';
+
+  @override
+  String get ticketReplayRefusedTitle => 'रीप्ले नाकारला';
+
+  @override
+  String get ticketExpiredTitle => 'तिकीट संपले';
+
+  @override
+  String get attendanceScanFailedTitle => 'हजेरी स्कॅन अयशस्वी';
+
+  @override
+  String get attendanceConfirmedTitle => 'हजेरी नोंदवली गेली!';
+
+  @override
+  String get workerMarkedArrived => 'कामगार कामावर आल्याची नोंद झाली';
+
+  @override
+  String get scanAgain => 'पुन्हा स्कॅन करा';
+
+  @override
+  String get scanDone => 'पूर्ण';
+
+  @override
+  String get viewActiveJob => 'सक्रिय काम पहा';
+
+  @override
+  String get actionShowTicket => 'क्यूआर तिकीट दाखवा';
+
+  @override
+  String get actionScanWorkerQr => 'कामगार क्यूआर स्कॅन करा';
+
+  @override
+  String get openSettings => 'सेटिंग्ज उघडा';
+
+  @override
+  String get bookingCodeCopied => 'बुकिंग कोड कॉपी केला';
 }
