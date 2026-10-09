@@ -5,6 +5,7 @@ import 'package:udyogasethu/core/supabase/supabase_service.dart';
 import 'package:udyogasethu/features/marketplace/data/orders_repository.dart';
 import 'package:udyogasethu/features/marketplace/domain/cart_item.dart';
 import 'package:udyogasethu/features/marketplace/domain/delivery_slot.dart';
+import 'package:udyogasethu/features/marketplace/domain/order_timeline_event.dart';
 import 'package:udyogasethu/features/marketplace/domain/produce_marketplace_item.dart';
 import 'package:udyogasethu/features/marketplace/domain/produce_order.dart';
 import 'package:udyogasethu/features/marketplace/presentation/cart_screen.dart';
@@ -382,5 +383,54 @@ class FakeOrdersRepository implements OrdersRepository {
       )
     ];
   }
+
+  @override
+  Future<ProduceOrder?> getOrderDetails(String orderId) async => null;
+
+  @override
+  Stream<ProduceOrder?> watchOrder(String orderId) => const Stream.empty();
+
+  @override
+  Stream<List<OrderTimelineEvent>> watchOrderEvents(String orderId) =>
+      const Stream.empty();
+
+  @override
+  Future<List<ProduceOrder>> getFarmerOrders({String? status}) async => [];
+
+  @override
+  Stream<List<ProduceOrder>> watchFarmerOrders({String? status}) =>
+      const Stream.empty();
+
+  @override
+  Future<List<ProduceOrder>> getCustomerOrders() async => [];
+
+  @override
+  Stream<List<ProduceOrder>> watchCustomerOrders() => const Stream.empty();
+
+  @override
+  Future<Map<String, dynamic>> updateOrderStatus({
+    required String orderId,
+    required String status,
+    String? pin,
+    String? notes,
+  }) async =>
+      {'status': status, 'order_id': orderId};
+
+  @override
+  Future<void> submitOrderReview({
+    required String orderId,
+    required String targetId,
+    required int stars,
+    required List<String> tags,
+    String? comment,
+  }) async {}
+
+  @override
+  Future<void> createOrderDispute({
+    required String orderId,
+    required String againstId,
+    required String issueType,
+    required String details,
+  }) async {}
 }
 

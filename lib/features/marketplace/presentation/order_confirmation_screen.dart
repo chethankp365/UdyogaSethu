@@ -130,21 +130,43 @@ class OrderConfirmationScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 32),
+            const SizedBox(height: 24),
+
+            // Track Order Primary Button
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  context.push(AppRoutes.orderTrackingWithId(orderId));
+                },
+                icon: const Icon(Icons.track_changes),
+                label: Text(l10n?.trackOrderButton ?? 'Track Order Live'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF0D6548),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 10),
 
             // Return to marketplace
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton.icon(
+              height: 48,
+              child: OutlinedButton.icon(
                 onPressed: () {
                   context.go(AppRoutes.providerHome);
                 },
                 icon: const Icon(Icons.storefront),
                 label: Text(l10n?.backToMarketplace ?? 'Back to Produce Marketplace'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF0D6548),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: const Color(0xFF0D6548),
+                  side: const BorderSide(color: Color(0xFF0D6548)),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),

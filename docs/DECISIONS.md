@@ -304,4 +304,20 @@ This document records key design, architectural, role model, and implementation 
     * When a cart contains items from multiple farmers, `place_order` groups items by `farmer_id` and creates one independent `orders` record per farmer with its own sequential `order_code`.
   * **Mock Reward Credits / Discount Function**:
     * SQL function `calculate_order_discount(customer_id, subtotal_paise, use_rewards)` calculates up to 5% reward credit redemption (capped at ₹50) applied directly in database math.
-
+* **D59 — Order Lifecycle Tracking, PIN Verification, Escrow Settlement & Farmer Order Board**:
+  * **Order Progression Pipeline & Realtime Updates**:
+    * Order lifecycle flows across 7 canonical statuses: `pending` (Order Placed) -> `accepted` (Farmer Accepted) -> `packed` (Packed & Weighed) -> `out_for_delivery` / `ready_for_pickup` -> `delivered` (Delivered & Verified), with terminal exception branches `cancelled` (Escrow Refunded) and `disputed` (Escrow Frozen).
+    * `orders` and `order_events` published to `supabase_realtime`, streamed via `orderDetailsStreamProvider` and `orderEventsStreamProvider` for real-time reactivity without polling.
+  * **4-Digit Handover PIN Verification**:
+    * `place_order` atomically generates a secure 4-digit `delivery_pin` stored on `orders`.
+    * Customer views PIN on `/orders/tracking/:id` and shares with farmer or delivery driver upon physical handoff.
+    * Farmer enters PIN in `FarmerOrderBoardScreen` modal to cryptographically verify completion before status is updated to `delivered`. Alternatively, customer can tap direct confirmation on tracking screen for contactless handoff.
+  * **Escrow Settlement & Wallet Invariant (P5.3 Parity)**:
+    * Order creation automatically creates a `payments` escrow record (`ref_type = 'order'`) and holds funds via `hold_escrow`.
+    * On `delivered`, `update_order_status` triggers `release_escrow(p_payment_id)`. Farmer wallet balance increases by `net_paise = total_paise - fee_paise` while platform fee is routed to platform revenue. Invariant verified: *After Delivered, the farmer wallet shows the amount minus the platform fee.*
+    * On `cancelled`, `update_order_status` triggers `refund_escrow(p_payment_id)`, refunding full held escrow to customer wallet, releasing reserved stock (`reserved_qty`), and restoring slot capacity (`delivery_slots.used`).
+  * **Produce Reviews & Quality Dispute Escalation**:
+    * Reviews reuse P4.11 (`ratings_reviews`) with produce quality tags (`Fresh Produce`, `Good Quality`, `Farm Fresh`, `Accurate Weight`, `Naturally Ripened`, `Value for Money`).
+    * Disputes freeze escrow release immediately, change status to `disputed`, and insert dispute claim into `disputes` table with produce failure categories (`Damaged Produce`, `Spoiled / Rotten`, `Wrong Item`, `Weight / Quantity Mismatch`).
+  * **1-Tap Reorder**:
+    * Customer orders screen and tracking screen provide 1-tap "Reorder", which re-populates active cart state via `CartNotifier.addOrderItems`.

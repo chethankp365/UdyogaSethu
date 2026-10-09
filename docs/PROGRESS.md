@@ -550,6 +550,59 @@
     - `flutter analyze`: clean with 0 issues.
     - Debug APK built successfully (`build\app\outputs\flutter-apk\app-debug.apk`).
 
+### Phase 6.6: Order Tracking and Farmer Order Management (Spec #25, #33)
+- **Status**: Completed (2026-10-09)
+- **Files created / updated**:
+  - `supabase/migrations/0560_order_lifecycle_tracking.sql` (Pushed to remote Supabase via `npx supabase db push`)
+  - `lib/features/marketplace/domain/order_timeline_event.dart`
+  - `lib/features/marketplace/domain/produce_order.dart`
+  - `lib/features/marketplace/data/orders_repository.dart`
+  - `lib/features/marketplace/presentation/widgets/order_timeline_widget.dart`
+  - `lib/features/marketplace/presentation/widgets/rate_produce_order_dialog.dart`
+  - `lib/features/marketplace/presentation/widgets/raise_order_dispute_dialog.dart`
+  - `lib/features/marketplace/presentation/order_tracking_screen.dart`
+  - `lib/features/marketplace/presentation/customer_orders_screen.dart`
+  - `lib/features/farmer/presentation/farmer_order_board_screen.dart`
+  - `lib/features/marketplace/presentation/order_confirmation_screen.dart`
+  - `lib/features/farmer/presentation/farmer_home_screen.dart`
+  - `lib/features/marketplace/presentation/cart_screen.dart`
+  - `lib/core/router/routes.dart`
+  - `lib/core/router/app_router.dart`
+  - `tool/update_p66_l10n.dart`
+  - `lib/l10n/app_{en,kn,hi,te,ta,mr,bn,or}.arb` (1,152 localization keys across all 8 languages)
+  - `test/order_tracking_and_farmer_board_test.dart`
+  - `docs/DECISIONS.md` (Decision D59)
+  - `docs/PROGRESS.md`
+- **What was built**:
+  - **7 Canonical Order Statuses & Timeline Progression**:
+    - Live order status pipeline: `pending` (Placed) -> `accepted` (Farmer Accepted) -> `packed` (Packed & Weighed) -> `out_for_delivery` / `ready_for_pickup` -> `delivered` (Delivered & Verified), with terminal states `cancelled` (Escrow Refunded) and `disputed` (Escrow Frozen).
+    - Reusable `OrderTimelineWidget` displaying real-time stage progression, pulsing live dot, status pills, stage descriptions, and cancellation/dispute notices.
+  - **Farmer Order Board (`/farmer/orders`)**:
+    - 4 Kanban tabs: `Incoming` (`pending`), `Packing` (`accepted`), `Dispatch` (`packed`), and `Completed` (`out_for_delivery`, `delivered`, `cancelled`).
+    - Farmer actions: 1-tap "Accept Order" (decrements physical stock and notifies packing), "Decline Order" (releases reserved stock & refunds escrow), "Mark as Packed", "Out for Delivery / Ready for Pickup", and "Complete Delivery / Pickup" (opens PIN verification modal).
+  - **Delivery / Pickup Handover PIN Verification**:
+    - Atomic 4-digit PIN generated upon order creation.
+    - Customer views PIN on `/orders/tracking/:id` and shares with farmer or driver upon physical handoff.
+    - Farmer verifies PIN in modal before marking delivered, or customer taps direct confirmation button upon handoff.
+  - **Escrow Settlement Parity (P5.3) & Invariant Check**:
+    - On delivery completion, `update_order_status` calls `release_escrow(payment_id)`, crediting farmer wallet balance net of platform fee: `amount_paise - platform_fee_paise`.
+    - Invariant strictly verified: *After Delivered, the farmer wallet shows the amount minus the platform fee.*
+    - On cancellation, `refund_escrow(payment_id)` refunds held escrow to customer wallet, releases stock, and restores slot capacity.
+  - **Produce Reviews & Quality Dispute Escalation**:
+    - Reviews dialog with produce quality tags (`Fresh Produce`, `Good Quality`, `Farm Fresh`, `Accurate Weight`, `Naturally Ripened`, `Value for Money`) saving to `ratings_reviews`.
+    - Dispute modal with produce categories (`Damaged Produce`, `Spoiled / Rotten`, `Wrong Item`, `Weight / Quantity Mismatch`), immediately freezing escrow release.
+  - **1-Tap Reorder**:
+    - Instant reorder action copying line items directly into `CartNotifier` from order history and tracking screens.
+- **Verification & Invariants**:
+  - `test/order_tracking_and_farmer_board_test.dart` (8 tests passing):
+    - Farmer wallet net release invariant (`sampleOrder.totalPaise - sampleOrder.feePaise == sampleOrder.netEarningsPaise`).
+    - Double-entry ledger settlement model (`escrowDebit == platformRevenue + farmerWalletCredit`).
+    - Handover PIN validation matching.
+    - 1-Tap Reorder cart populating.
+    - Overflow-free layout rendering on 360dp width at 1.6x text scale.
+  - All 438 tests across the repository pass cleanly (`flutter test`).
+  - `flutter analyze`: clean with 0 issues.
+
 ---
 
 ## Manual steps pending
@@ -567,7 +620,7 @@
 
 ## Known issues
 - **Profile & Auth Foreign Key Cascade vs D11 Retention**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`. The financial retention refactor will decouple `auth.users` deletion from audit records in an upcoming migration.
-- **Phase 6.6**: Farmer order lifecycle management (accept, pack, out for delivery, verify delivery PIN, buyer review) is the next planned step.
+- **Phase 6.7**: Produce subscriptions and recurring delivery (weekly milk/veggie baskets) is the next planned step.
 - **Phase 9 (Admin Console)**: Admin console is built in a separate web/desktop project and is out of scope for this Flutter app.
 
 

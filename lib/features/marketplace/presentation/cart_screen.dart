@@ -28,6 +28,11 @@ class CartScreen extends ConsumerWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.receipt_long, color: Color(0xFF0D6548)),
+            tooltip: 'My Orders',
+            onPressed: () => context.push(AppRoutes.customerOrders),
+          ),
           if (cartState.isNotEmpty)
             TextButton.icon(
               onPressed: () => _confirmClearCart(context, ref),

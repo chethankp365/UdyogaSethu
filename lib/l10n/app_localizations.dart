@@ -6635,6 +6635,396 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View Cart'**
   String get viewCart;
+
+  /// No description provided for @liveOrderTimeline.
+  ///
+  /// In en, this message translates to:
+  /// **'Live Order Timeline'**
+  String get liveOrderTimeline;
+
+  /// No description provided for @orderCancelledRefundedNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Order cancelled. Escrow payment has been refunded to your wallet.'**
+  String get orderCancelledRefundedNotice;
+
+  /// No description provided for @orderDisputeNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Dispute open. Escrow release is frozen pending resolution.'**
+  String get orderDisputeNotice;
+
+  /// No description provided for @orderStagePlaced.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Placed'**
+  String get orderStagePlaced;
+
+  /// No description provided for @orderStagePlacedSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Escrow funds held safely'**
+  String get orderStagePlacedSub;
+
+  /// No description provided for @orderStageAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted by Farmer'**
+  String get orderStageAccepted;
+
+  /// No description provided for @orderStageAcceptedSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Harvesting & sorting produce'**
+  String get orderStageAcceptedSub;
+
+  /// No description provided for @orderStagePacked.
+  ///
+  /// In en, this message translates to:
+  /// **'Packed & Weighed'**
+  String get orderStagePacked;
+
+  /// No description provided for @orderStagePackedSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Quality checked & prepared for dispatch'**
+  String get orderStagePackedSub;
+
+  /// No description provided for @orderStageReadyPickup.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready for Farm Pickup'**
+  String get orderStageReadyPickup;
+
+  /// No description provided for @orderStageReadyPickupSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Visit farm with your pickup code'**
+  String get orderStageReadyPickupSub;
+
+  /// No description provided for @orderStageOutForDelivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Out for Delivery'**
+  String get orderStageOutForDelivery;
+
+  /// No description provided for @orderStageOutForDeliverySub.
+  ///
+  /// In en, this message translates to:
+  /// **'On the way to your delivery address'**
+  String get orderStageOutForDeliverySub;
+
+  /// No description provided for @orderStagePickedUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Picked Up & Verified'**
+  String get orderStagePickedUp;
+
+  /// No description provided for @orderStageDelivered.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered & Verified'**
+  String get orderStageDelivered;
+
+  /// No description provided for @orderStageDeliveredSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Escrow released to farmer wallet'**
+  String get orderStageDeliveredSub;
+
+  /// No description provided for @statusReadyForPickup.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready for Pickup'**
+  String get statusReadyForPickup;
+
+  /// No description provided for @statusOutForDelivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Out for Delivery'**
+  String get statusOutForDelivery;
+
+  /// No description provided for @rateOrderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate Fresh Produce'**
+  String get rateOrderTitle;
+
+  /// No description provided for @selectProduceTags.
+  ///
+  /// In en, this message translates to:
+  /// **'Produce Quality Highlights:'**
+  String get selectProduceTags;
+
+  /// No description provided for @orderReviewHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us about the freshness, taste, and packaging...'**
+  String get orderReviewHint;
+
+  /// No description provided for @submitReviewButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Produce Review'**
+  String get submitReviewButton;
+
+  /// No description provided for @reportOrderIssue.
+  ///
+  /// In en, this message translates to:
+  /// **'Report Order Issue / Dispute'**
+  String get reportOrderIssue;
+
+  /// No description provided for @disputeEscrowFreezeNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Escrow fund release will be frozen until our support team verifies the produce quality issue.'**
+  String get disputeEscrowFreezeNotice;
+
+  /// No description provided for @selectIssueType.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Issue Category:'**
+  String get selectIssueType;
+
+  /// No description provided for @describeIssueDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe what happened:'**
+  String get describeIssueDetails;
+
+  /// No description provided for @disputeDetailsPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 2 kg tomatoes arrived crushed and leaking...'**
+  String get disputeDetailsPlaceholder;
+
+  /// No description provided for @submitDisputeCTA.
+  ///
+  /// In en, this message translates to:
+  /// **'Freeze Escrow & Open Dispute'**
+  String get submitDisputeCTA;
+
+  /// No description provided for @orderTrackingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Tracking'**
+  String get orderTrackingTitle;
+
+  /// No description provided for @confirmDeliveryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Delivery Receipt?'**
+  String get confirmDeliveryTitle;
+
+  /// No description provided for @confirmDeliveryPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Have you received your complete produce order in good condition? This will release the escrow payment to the farmer.'**
+  String get confirmDeliveryPrompt;
+
+  /// No description provided for @confirmReceivedButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, I Received It'**
+  String get confirmReceivedButton;
+
+  /// No description provided for @cancelOrderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Produce Order?'**
+  String get cancelOrderTitle;
+
+  /// No description provided for @cancelOrderPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to cancel this order? Any reserved stock will be released and held escrow will be refunded to your wallet.'**
+  String get cancelOrderPrompt;
+
+  /// No description provided for @noKeepOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'No, Keep Order'**
+  String get noKeepOrder;
+
+  /// No description provided for @yesCancelOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, Cancel Order'**
+  String get yesCancelOrder;
+
+  /// No description provided for @orderNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Order not found.'**
+  String get orderNotFound;
+
+  /// No description provided for @farmPickupCodeHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm Pickup Verification Code'**
+  String get farmPickupCodeHeader;
+
+  /// No description provided for @deliveryPinHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery Handover PIN'**
+  String get deliveryPinHeader;
+
+  /// No description provided for @showPickupCodeFarmerNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Show this 4-digit code to the farmer when picking up your crate.'**
+  String get showPickupCodeFarmerNote;
+
+  /// No description provided for @showDeliveryPinDriverNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Share this code with the driver upon delivery to verify handoff.'**
+  String get showDeliveryPinDriverNote;
+
+  /// No description provided for @estimatedArrivalHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated Arrival & Window'**
+  String get estimatedArrivalHeader;
+
+  /// No description provided for @orderItemsHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Items'**
+  String get orderItemsHeader;
+
+  /// No description provided for @totalAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Amount Paid:'**
+  String get totalAmount;
+
+  /// No description provided for @confirmDeliveryReceivedButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Order Received & Release Funds'**
+  String get confirmDeliveryReceivedButton;
+
+  /// No description provided for @releaseFundsNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Tapping confirm immediately releases funds from escrow to the farmer.'**
+  String get releaseFundsNotice;
+
+  /// No description provided for @reorderItemsButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Reorder All Items'**
+  String get reorderItemsButton;
+
+  /// No description provided for @rateProduceButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate Produce'**
+  String get rateProduceButton;
+
+  /// No description provided for @myFarmOrdersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Farm Produce Orders'**
+  String get myFarmOrdersTitle;
+
+  /// No description provided for @allOrdersFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'All Orders'**
+  String get allOrdersFilter;
+
+  /// No description provided for @activeFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get activeFilter;
+
+  /// No description provided for @completedFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered'**
+  String get completedFilter;
+
+  /// No description provided for @cancelledFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get cancelledFilter;
+
+  /// No description provided for @reorderButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Reorder'**
+  String get reorderButton;
+
+  /// No description provided for @noOrdersFoundTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Farm Orders Found'**
+  String get noOrdersFoundTitle;
+
+  /// No description provided for @noOrdersFoundSub.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not placed any produce orders in this view yet.'**
+  String get noOrdersFoundSub;
+
+  /// No description provided for @exploreProduceButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore Farm Produce'**
+  String get exploreProduceButton;
+
+  /// No description provided for @farmerOrderBoardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Farmer Order Board'**
+  String get farmerOrderBoardTitle;
+
+  /// No description provided for @trackOrderButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Track Order'**
+  String get trackOrderButton;
+
+  /// No description provided for @cancelOrderButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Order & Refund Escrow'**
+  String get cancelOrderButton;
+
+  /// No description provided for @disputeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Report Issue'**
+  String get disputeButton;
+
+  /// No description provided for @statusAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted'**
+  String get statusAccepted;
+
+  /// No description provided for @statusPacked.
+  ///
+  /// In en, this message translates to:
+  /// **'Packed'**
+  String get statusPacked;
+
+  /// No description provided for @statusDelivered.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered'**
+  String get statusDelivered;
+
+  /// No description provided for @statusDisputed.
+  ///
+  /// In en, this message translates to:
+  /// **'Disputed'**
+  String get statusDisputed;
 }
 
 class _AppLocalizationsDelegate

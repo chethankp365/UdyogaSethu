@@ -3552,4 +3552,212 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get viewCart => 'View Cart';
+
+  @override
+  String get liveOrderTimeline => 'Live Order Timeline';
+
+  @override
+  String get orderCancelledRefundedNotice =>
+      'Order cancelled. Escrow payment has been refunded to your wallet.';
+
+  @override
+  String get orderDisputeNotice =>
+      'Dispute open. Escrow release is frozen pending resolution.';
+
+  @override
+  String get orderStagePlaced => 'Order Placed';
+
+  @override
+  String get orderStagePlacedSub => 'Escrow funds held safely';
+
+  @override
+  String get orderStageAccepted => 'Accepted by Farmer';
+
+  @override
+  String get orderStageAcceptedSub => 'Harvesting & sorting produce';
+
+  @override
+  String get orderStagePacked => 'Packed & Weighed';
+
+  @override
+  String get orderStagePackedSub => 'Quality checked & prepared for dispatch';
+
+  @override
+  String get orderStageReadyPickup => 'Ready for Farm Pickup';
+
+  @override
+  String get orderStageReadyPickupSub => 'Visit farm with your pickup code';
+
+  @override
+  String get orderStageOutForDelivery => 'Out for Delivery';
+
+  @override
+  String get orderStageOutForDeliverySub =>
+      'On the way to your delivery address';
+
+  @override
+  String get orderStagePickedUp => 'Picked Up & Verified';
+
+  @override
+  String get orderStageDelivered => 'Delivered & Verified';
+
+  @override
+  String get orderStageDeliveredSub => 'Escrow released to farmer wallet';
+
+  @override
+  String get statusReadyForPickup => 'Ready for Pickup';
+
+  @override
+  String get statusOutForDelivery => 'Out for Delivery';
+
+  @override
+  String get rateOrderTitle => 'Rate Fresh Produce';
+
+  @override
+  String get selectProduceTags => 'Produce Quality Highlights:';
+
+  @override
+  String get orderReviewHint =>
+      'Tell us about the freshness, taste, and packaging...';
+
+  @override
+  String get submitReviewButton => 'Submit Produce Review';
+
+  @override
+  String get reportOrderIssue => 'Report Order Issue / Dispute';
+
+  @override
+  String get disputeEscrowFreezeNotice =>
+      'Escrow fund release will be frozen until our support team verifies the produce quality issue.';
+
+  @override
+  String get selectIssueType => 'Select Issue Category:';
+
+  @override
+  String get describeIssueDetails => 'Describe what happened:';
+
+  @override
+  String get disputeDetailsPlaceholder =>
+      'e.g. 2 kg tomatoes arrived crushed and leaking...';
+
+  @override
+  String get submitDisputeCTA => 'Freeze Escrow & Open Dispute';
+
+  @override
+  String get orderTrackingTitle => 'Order Tracking';
+
+  @override
+  String get confirmDeliveryTitle => 'Confirm Delivery Receipt?';
+
+  @override
+  String get confirmDeliveryPrompt =>
+      'Have you received your complete produce order in good condition? This will release the escrow payment to the farmer.';
+
+  @override
+  String get confirmReceivedButton => 'Yes, I Received It';
+
+  @override
+  String get cancelOrderTitle => 'Cancel Produce Order?';
+
+  @override
+  String get cancelOrderPrompt =>
+      'Are you sure you want to cancel this order? Any reserved stock will be released and held escrow will be refunded to your wallet.';
+
+  @override
+  String get noKeepOrder => 'No, Keep Order';
+
+  @override
+  String get yesCancelOrder => 'Yes, Cancel Order';
+
+  @override
+  String get orderNotFound => 'Order not found.';
+
+  @override
+  String get farmPickupCodeHeader => 'Farm Pickup Verification Code';
+
+  @override
+  String get deliveryPinHeader => 'Delivery Handover PIN';
+
+  @override
+  String get showPickupCodeFarmerNote =>
+      'Show this 4-digit code to the farmer when picking up your crate.';
+
+  @override
+  String get showDeliveryPinDriverNote =>
+      'Share this code with the driver upon delivery to verify handoff.';
+
+  @override
+  String get estimatedArrivalHeader => 'Estimated Arrival & Window';
+
+  @override
+  String get orderItemsHeader => 'Order Items';
+
+  @override
+  String get totalAmount => 'Total Amount Paid:';
+
+  @override
+  String get confirmDeliveryReceivedButton =>
+      'Confirm Order Received & Release Funds';
+
+  @override
+  String get releaseFundsNotice =>
+      'Tapping confirm immediately releases funds from escrow to the farmer.';
+
+  @override
+  String get reorderItemsButton => 'Reorder All Items';
+
+  @override
+  String get rateProduceButton => 'Rate Produce';
+
+  @override
+  String get myFarmOrdersTitle => 'My Farm Produce Orders';
+
+  @override
+  String get allOrdersFilter => 'All Orders';
+
+  @override
+  String get activeFilter => 'Active';
+
+  @override
+  String get completedFilter => 'Delivered';
+
+  @override
+  String get cancelledFilter => 'Cancelled';
+
+  @override
+  String get reorderButton => 'Reorder';
+
+  @override
+  String get noOrdersFoundTitle => 'No Farm Orders Found';
+
+  @override
+  String get noOrdersFoundSub =>
+      'You have not placed any produce orders in this view yet.';
+
+  @override
+  String get exploreProduceButton => 'Explore Farm Produce';
+
+  @override
+  String get farmerOrderBoardTitle => 'Farmer Order Board';
+
+  @override
+  String get trackOrderButton => 'Track Order';
+
+  @override
+  String get cancelOrderButton => 'Cancel Order & Refund Escrow';
+
+  @override
+  String get disputeButton => 'Report Issue';
+
+  @override
+  String get statusAccepted => 'Accepted';
+
+  @override
+  String get statusPacked => 'Packed';
+
+  @override
+  String get statusDelivered => 'Delivered';
+
+  @override
+  String get statusDisputed => 'Disputed';
 }

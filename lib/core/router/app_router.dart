@@ -61,6 +61,9 @@ import 'package:udyogasethu/features/marketplace/presentation/produce_detail_scr
 import 'package:udyogasethu/features/marketplace/presentation/cart_screen.dart';
 import 'package:udyogasethu/features/marketplace/presentation/order_checkout_wizard.dart';
 import 'package:udyogasethu/features/marketplace/presentation/order_confirmation_screen.dart';
+import 'package:udyogasethu/features/marketplace/presentation/order_tracking_screen.dart';
+import 'package:udyogasethu/features/marketplace/presentation/customer_orders_screen.dart';
+import 'package:udyogasethu/features/farmer/presentation/farmer_order_board_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/delivery_slots_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_home_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_wizard_screen.dart';
@@ -764,6 +767,21 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             orders: orders,
           );
         },
+      ),
+      GoRoute(
+        path: AppRoutes.orderTracking,
+        builder: (context, state) {
+          final id = state.pathParameters['id'] ?? '';
+          return OrderTrackingScreen(orderId: id);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.customerOrders,
+        builder: (context, state) => const CustomerOrdersScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.farmerOrders,
+        builder: (context, state) => const FarmerOrderBoardScreen(),
       ),
       GoRoute(
         path: AppRoutes.farmerDeliverySlots,

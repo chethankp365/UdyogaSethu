@@ -3549,4 +3549,203 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get viewCart => 'View Cart';
+
+  @override
+  String get liveOrderTimeline => 'লাইভ অর্ডার টাইমলাইন';
+
+  @override
+  String get orderCancelledRefundedNotice =>
+      'অর্ডার বাতিল হয়েছে। এসক্রো পেমেন্ট ফেরত দেওয়া হয়েছে।';
+
+  @override
+  String get orderDisputeNotice =>
+      'বিরোধ তদন্তাধীন। সমাধান না হওয়া পর্যন্ত পেমেন্ট স্থগিত।';
+
+  @override
+  String get orderStagePlaced => 'অর্ডার সম্পন্ন হয়েছে';
+
+  @override
+  String get orderStagePlacedSub => 'টাকা নিরাপদে জমা আছে';
+
+  @override
+  String get orderStageAccepted => 'কৃষক গ্রহণ করেছেন';
+
+  @override
+  String get orderStageAcceptedSub => 'ফসল তোলা ও বাছাই চলছে';
+
+  @override
+  String get orderStagePacked => 'প্যাক এবং ওজন করা হয়েছে';
+
+  @override
+  String get orderStagePackedSub => 'গুণমান পরীক্ষা সম্পন্ন';
+
+  @override
+  String get orderStageReadyPickup => 'পিকআপের জন্য প্রস্তুত';
+
+  @override
+  String get orderStageReadyPickupSub => 'পিকআপ কোড নিয়ে খামারে যান';
+
+  @override
+  String get orderStageOutForDelivery => 'ডেলিভারির জন্য বের হয়েছে';
+
+  @override
+  String get orderStageOutForDeliverySub => 'আপনার ঠিকানায় পৌঁছাচ্ছে';
+
+  @override
+  String get orderStagePickedUp => 'পিকআপ সম্পন্ন';
+
+  @override
+  String get orderStageDelivered => 'ডেলিভারি সম্পন্ন';
+
+  @override
+  String get orderStageDeliveredSub => 'কৃষককে পেমেন্ট প্রদান করা হয়েছে';
+
+  @override
+  String get statusReadyForPickup => 'পিকআপের জন্য প্রস্তুত';
+
+  @override
+  String get statusOutForDelivery => 'ডেলিভারির জন্য বের হয়েছে';
+
+  @override
+  String get rateOrderTitle => 'রেটিং দিন';
+
+  @override
+  String get selectProduceTags => 'পণ্যের গুণমান:';
+
+  @override
+  String get orderReviewHint => 'তাজাতা এবং প্যাকেজিং সম্পর্কে লিখুন...';
+
+  @override
+  String get submitReviewButton => 'মতামত জমা দিন';
+
+  @override
+  String get reportOrderIssue => 'অভিযোগ জানান';
+
+  @override
+  String get disputeEscrowFreezeNotice =>
+      'তদন্ত চলাকালীন পেমেন্ট স্থগিত থাকবে।';
+
+  @override
+  String get selectIssueType => 'সমস্যার ধরন বাছুন:';
+
+  @override
+  String get describeIssueDetails => 'বিস্তারিত লিখুন:';
+
+  @override
+  String get disputeDetailsPlaceholder => 'যেমন: ২ কেজি টমেটো নষ্ট এসেছে...';
+
+  @override
+  String get submitDisputeCTA => 'অভিযোগ নথিভুক্ত করুন';
+
+  @override
+  String get orderTrackingTitle => 'অর্ডার ট্র্যাকিং';
+
+  @override
+  String get confirmDeliveryTitle => 'ডেলিভারি নিশ্চিত করবেন?';
+
+  @override
+  String get confirmDeliveryPrompt =>
+      'পণ্য ঠিকঠাক পেয়েছেন কি? এটি কৃষককে টাকা প্রদান করবে।';
+
+  @override
+  String get confirmReceivedButton => 'হ্যাঁ, পেয়েছি';
+
+  @override
+  String get cancelOrderTitle => 'অর্ডার বাতিল করবেন?';
+
+  @override
+  String get cancelOrderPrompt => 'অর্ডার বাতিল করলে টাকা রিফান্ড হবে।';
+
+  @override
+  String get noKeepOrder => 'না, থাক';
+
+  @override
+  String get yesCancelOrder => 'হ্যাঁ, বাতিল করুন';
+
+  @override
+  String get orderNotFound => 'অর্ডার পাওয়া যায়নি।';
+
+  @override
+  String get farmPickupCodeHeader => 'পিকআপ কোড';
+
+  @override
+  String get deliveryPinHeader => 'ডেলিভারি পিন';
+
+  @override
+  String get showPickupCodeFarmerNote => 'কৃষককে এই ৪-সংখ্যার কোড দেখান।';
+
+  @override
+  String get showDeliveryPinDriverNote => 'ডেলিভারির সময় চালককে এই পিন বলুন।';
+
+  @override
+  String get estimatedArrivalHeader => 'আনুমানিক সময়';
+
+  @override
+  String get orderItemsHeader => 'অর্ডার আইটেম';
+
+  @override
+  String get totalAmount => 'মোট পরিশোধিত মূল্য:';
+
+  @override
+  String get confirmDeliveryReceivedButton => 'ডেলিভারি নিশ্চিত করে টাকা দিন';
+
+  @override
+  String get releaseFundsNotice => 'নিশ্চিত করলেই কৃষক টাকা পাবেন।';
+
+  @override
+  String get reorderItemsButton => 'আবার অর্ডার করুন';
+
+  @override
+  String get rateProduceButton => 'রেট করুন';
+
+  @override
+  String get myFarmOrdersTitle => 'আমার খামার অর্ডার';
+
+  @override
+  String get allOrdersFilter => 'সকল অর্ডার';
+
+  @override
+  String get activeFilter => 'সক্রিয়';
+
+  @override
+  String get completedFilter => 'সম্পন্ন';
+
+  @override
+  String get cancelledFilter => 'বাতিল';
+
+  @override
+  String get reorderButton => 'পুনরায় অর্ডার';
+
+  @override
+  String get noOrdersFoundTitle => 'কোন অর্ডার নেই';
+
+  @override
+  String get noOrdersFoundSub => 'এখনও কোন অর্ডার করা হয়নি।';
+
+  @override
+  String get exploreProduceButton => 'পণ্য দেখুন';
+
+  @override
+  String get farmerOrderBoardTitle => 'কৃষক অর্ডার বোর্ড';
+
+  @override
+  String get trackOrderButton => 'ট্র্যাক করুন';
+
+  @override
+  String get cancelOrderButton => 'অর্ডার বাতিল করুন এবং ফেরত পান';
+
+  @override
+  String get disputeButton => 'সমস্যার রিপোর্ট করুন';
+
+  @override
+  String get statusAccepted => 'গৃহীত';
+
+  @override
+  String get statusPacked => 'প্যাক করা হয়েছে';
+
+  @override
+  String get statusDelivered => 'ডেলিভার করা হয়েছে';
+
+  @override
+  String get statusDisputed => 'বিরোধপূর্ণ';
 }

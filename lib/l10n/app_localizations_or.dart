@@ -3554,4 +3554,204 @@ class AppLocalizationsOr extends AppLocalizations {
 
   @override
   String get viewCart => 'View Cart';
+
+  @override
+  String get liveOrderTimeline => 'ଲାଇଭ ଅର୍ଡର ଟାଇମଲାଇନ';
+
+  @override
+  String get orderCancelledRefundedNotice =>
+      'ଅର୍ଡର ବାତିଲ ହୋଇଛି। ଟଙ୍କା ଫେରସ୍ତ କରାଯାଇଛି।';
+
+  @override
+  String get orderDisputeNotice =>
+      'ବିବାଦ ଚାଲିଛି। ସମାଧାନ ପର୍ଯ୍ୟନ୍ତ ଟଙ୍କା ରଖାଯାଇଛି।';
+
+  @override
+  String get orderStagePlaced => 'ଅର୍ଡର ହୋଇଛି';
+
+  @override
+  String get orderStagePlacedSub => 'ଟଙ୍କା ସୁରକ୍ଷିତ ଅଛି';
+
+  @override
+  String get orderStageAccepted => 'ଚାଷୀ ଗ୍ରହଣ କଲେ';
+
+  @override
+  String get orderStageAcceptedSub => 'ଅମଳ ଏବଂ ସଜଡା ଚାଲିଛି';
+
+  @override
+  String get orderStagePacked => 'ପ୍ୟାକ ଏବଂ ଓଜନ ହୋଇଛି';
+
+  @override
+  String get orderStagePackedSub => 'ଯାଞ୍ଚ ସରିଛି';
+
+  @override
+  String get orderStageReadyPickup => 'ପିକଅପ ପାଇଁ ପ୍ରସ୍ତୁତ';
+
+  @override
+  String get orderStageReadyPickupSub => 'ପିକଅପ କୋଡ଼ ସହ ଚାଷ ଜମିକୁ ଯାଆନ୍ତୁ';
+
+  @override
+  String get orderStageOutForDelivery => 'ଡେଲିଭରି ପାଇଁ ବାହାରିଛି';
+
+  @override
+  String get orderStageOutForDeliverySub => 'ଆପଣଙ୍କ ଠିକଣାକୁ ଆସୁଛି';
+
+  @override
+  String get orderStagePickedUp => 'ପିକଅପ ହୋଇଛି';
+
+  @override
+  String get orderStageDelivered => 'ଡେଲିଭର ହୋଇଛି';
+
+  @override
+  String get orderStageDeliveredSub => 'ଚାଷୀଙ୍କୁ ଟଙ୍କା ଦିଆଗଲା';
+
+  @override
+  String get statusReadyForPickup => 'ପିକଅପ ପାଇଁ ପ୍ରସ୍ତୁତ';
+
+  @override
+  String get statusOutForDelivery => 'ଡେଲିଭରି ପାଇଁ ବାହାରିଛି';
+
+  @override
+  String get rateOrderTitle => 'ରେଟିଂ ଦିଅନ୍ତୁ';
+
+  @override
+  String get selectProduceTags => 'ଉତ୍ପାଦ ଗୁଣବତ୍ତା:';
+
+  @override
+  String get orderReviewHint => 'ତାଜାପଣ ଏବଂ ପ୍ୟାକିଂ ବିଷୟରେ ଲେଖନ୍ତୁ...';
+
+  @override
+  String get submitReviewButton => 'ମତାମତ ଦିଅନ୍ତୁ';
+
+  @override
+  String get reportOrderIssue => 'ଅଭିଯୋଗ କରନ୍ତୁ';
+
+  @override
+  String get disputeEscrowFreezeNotice => 'ତଦନ୍ତ ସରିବା ଯାଏଁ ଟଙ୍କା ଅଟକି ରହିବ।';
+
+  @override
+  String get selectIssueType => 'ସମସ୍ୟା ବାଛନ୍ତୁ:';
+
+  @override
+  String get describeIssueDetails => 'ବିସ୍ତୃତ ଭାବେ ଲେଖନ୍ତୁ:';
+
+  @override
+  String get disputeDetailsPlaceholder => 'ଯଥା: ୨ କିଲୋ ଟମାଟୋ ନଷ୍ଟ ହୋଇ ଆସିଛି...';
+
+  @override
+  String get submitDisputeCTA => 'ଅଭିଯୋଗ ଦାଖଲ କରନ୍ତୁ';
+
+  @override
+  String get orderTrackingTitle => 'ଅର୍ଡର ଟ୍ରାକିଂ';
+
+  @override
+  String get confirmDeliveryTitle => 'ଡେଲିଭରି ନିଶ୍ଚିତ କରିବେ?';
+
+  @override
+  String get confirmDeliveryPrompt =>
+      'ସବୁକିଛି ଠିକ ମିଳିଛି ତ? ଏହା ଚାଷୀଙ୍କୁ ଟଙ୍କା ଦେବ।';
+
+  @override
+  String get confirmReceivedButton => 'ହଁ, ପାଇଲି';
+
+  @override
+  String get cancelOrderTitle => 'ଅର୍ଡର ବାତିଲ କରିବେ?';
+
+  @override
+  String get cancelOrderPrompt => 'ଅର୍ଡର ବାତିଲ କଲେ ଟଙ୍କା ଫେରସ୍ତ ହେବ।';
+
+  @override
+  String get noKeepOrder => 'ନା, ଥାଉ';
+
+  @override
+  String get yesCancelOrder => 'ହଁ, ବାତିଲ କରନ୍ତୁ';
+
+  @override
+  String get orderNotFound => 'ଅର୍ଡର ମିଳିଲା ନାହିଁ।';
+
+  @override
+  String get farmPickupCodeHeader => 'ପିକଅପ କୋଡ଼';
+
+  @override
+  String get deliveryPinHeader => 'ଡେଲିଭରି ପିନ';
+
+  @override
+  String get showPickupCodeFarmerNote => 'ଚାଷୀଙ୍କୁ ଏହି ୪ ଅଙ୍କର କୋଡ଼ ଦେଖାନ୍ତୁ।';
+
+  @override
+  String get showDeliveryPinDriverNote =>
+      'ଡେଲିଭରି ବେଳେ ଡ୍ରାଇଭରଙ୍କୁ ଏହି କୋଡ଼ କୁହନ୍ତୁ।';
+
+  @override
+  String get estimatedArrivalHeader => 'ଆସିବା ସମୟ';
+
+  @override
+  String get orderItemsHeader => 'ଅର୍ଡର ସାମଗ୍ରୀ';
+
+  @override
+  String get totalAmount => 'ଦିଆଯାଇଥିବା ମୋଟ ଟଙ୍କା:';
+
+  @override
+  String get confirmDeliveryReceivedButton =>
+      'ଡେଲିଭରି ନିଶ୍ଚିତ କରି ଟଙ୍କା ଦିଅନ୍ତୁ';
+
+  @override
+  String get releaseFundsNotice => 'ନିଶ୍ଚିତ କଲେ ଚାଷୀଙ୍କୁ ଟଙ୍କା ମିଳିବ।';
+
+  @override
+  String get reorderItemsButton => 'ପୁଣି ଅର୍ଡର କରନ୍ତୁ';
+
+  @override
+  String get rateProduceButton => 'ରେଟିଂ ଦିଅନ୍ତୁ';
+
+  @override
+  String get myFarmOrdersTitle => 'ମୋର କୃଷି ଅର୍ଡର';
+
+  @override
+  String get allOrdersFilter => 'ସବୁ ଅର୍ଡର';
+
+  @override
+  String get activeFilter => 'ସକ୍ରିୟ';
+
+  @override
+  String get completedFilter => 'ଡେଲିଭର ହୋଇଛି';
+
+  @override
+  String get cancelledFilter => 'ବାତିଲ ହୋଇଛି';
+
+  @override
+  String get reorderButton => 'ପୁନଃ ଅର୍ଡର';
+
+  @override
+  String get noOrdersFoundTitle => 'କୌଣସି ଅର୍ଡର ନାହିଁ';
+
+  @override
+  String get noOrdersFoundSub => 'ଆପଣ ଏଯାଏଁ କୌଣସି ଅର୍ଡର କରିନାହାଁନ୍ତି।';
+
+  @override
+  String get exploreProduceButton => 'ସାମଗ୍ରୀ ଦେଖନ୍ତୁ';
+
+  @override
+  String get farmerOrderBoardTitle => 'ଚାଷୀ ଅର୍ଡର ବୋର୍ଡ';
+
+  @override
+  String get trackOrderButton => 'ଟ୍ରାକ କରନ୍ତୁ';
+
+  @override
+  String get cancelOrderButton => 'ଅର୍ଡର ବାତିଲ କରନ୍ତୁ ଏବଂ ରିଫଣ୍ଡ ପାଆନ୍ତୁ';
+
+  @override
+  String get disputeButton => 'ସମସ୍ୟା ରିପୋର୍ଟ କରନ୍ତୁ';
+
+  @override
+  String get statusAccepted => 'ଗ୍ରହଣ କରାଯାଇଛି';
+
+  @override
+  String get statusPacked => 'ପ୍ୟାକ୍ ହୋଇଛି';
+
+  @override
+  String get statusDelivered => 'ବିତରଣ କରାଯାଇଛି';
+
+  @override
+  String get statusDisputed => 'ବିବାଦୀୟ';
 }

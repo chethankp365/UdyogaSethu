@@ -3572,4 +3572,212 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get viewCart => 'కార్ట్ చూడండి';
+
+  @override
+  String get liveOrderTimeline => 'లైవ్ ఆర్డర్ టైమ్‌లైన్';
+
+  @override
+  String get orderCancelledRefundedNotice =>
+      'ఆర్డర్ రద్దు చేయబడింది. ఎస్క్రో చెల్లింపు మీ వాలెట్‌కు తిరిగి ఇవ్వబడింది.';
+
+  @override
+  String get orderDisputeNotice =>
+      'వివాదం పెండింగ్‌లో ఉంది. పరిష్కారం అయ్యే వరకు నిధుల విడుదల నిలిపివేయబడింది.';
+
+  @override
+  String get orderStagePlaced => 'ఆర్డర్ చేయబడింది';
+
+  @override
+  String get orderStagePlacedSub => 'ఎస్క్రో నిధులు సురక్షితంగా ఉన్నాయి';
+
+  @override
+  String get orderStageAccepted => 'రైతు అంగీకరించారు';
+
+  @override
+  String get orderStageAcceptedSub => 'కోత మరియు సార్టింగ్ జరుగుతోంది';
+
+  @override
+  String get orderStagePacked => 'ప్యాక్ & బరువు తూచబడింది';
+
+  @override
+  String get orderStagePackedSub => 'నాణ్యత తనిఖీ పూర్తయింది';
+
+  @override
+  String get orderStageReadyPickup => 'ఫార్మ్ పికప్ సిద్ధంగా ఉంది';
+
+  @override
+  String get orderStageReadyPickupSub =>
+      'మీ పికప్ కోడ్‌తో ఫార్మ్‌ను సందర్శించండి';
+
+  @override
+  String get orderStageOutForDelivery => 'డెలివరీకి బయలుదేరింది';
+
+  @override
+  String get orderStageOutForDeliverySub => 'మీ చిరునామాకు వస్తోంది';
+
+  @override
+  String get orderStagePickedUp => 'పికప్ పూర్తయింది';
+
+  @override
+  String get orderStageDelivered => 'డెలివరీ పూర్తయింది';
+
+  @override
+  String get orderStageDeliveredSub => 'రైతు వాలెట్‌కు నిధులు విడుదలయ్యాయి';
+
+  @override
+  String get statusReadyForPickup => 'పికప్‌కు సిద్ధం';
+
+  @override
+  String get statusOutForDelivery => 'డెలివరీకి బయలుదేరింది';
+
+  @override
+  String get rateOrderTitle => 'తాజా ఉత్పత్తులను రేట్ చేయండి';
+
+  @override
+  String get selectProduceTags => 'ఉత్పత్తి నాణ్యత ముఖ్యాంశాలు:';
+
+  @override
+  String get orderReviewHint =>
+      'తాజాదనం, రుచి మరియు ప్యాకింగ్ గురించి రాయండి...';
+
+  @override
+  String get submitReviewButton => 'సమీక్ష సమర్పించండి';
+
+  @override
+  String get reportOrderIssue => 'సమస్యను నివేదించండి';
+
+  @override
+  String get disputeEscrowFreezeNotice =>
+      'సమస్య పరిష్కారమయ్యే వరకు ఎస్క్రో విడుదల నిలిపివేయబడుతుంది.';
+
+  @override
+  String get selectIssueType => 'సమస్య వర్గాన్ని ఎంచుకోండి:';
+
+  @override
+  String get describeIssueDetails => 'ఏమి జరిగిందో వివరించండి:';
+
+  @override
+  String get disputeDetailsPlaceholder =>
+      'ఉదా: 2 కేజీల టమాటాలు పాడై వచ్చాయి...';
+
+  @override
+  String get submitDisputeCTA => 'ఎస్క్రో నిలిపివేసి వివాదం నమోదు చేయండి';
+
+  @override
+  String get orderTrackingTitle => 'ఆర్డర్ ట్రాకింగ్';
+
+  @override
+  String get confirmDeliveryTitle => 'డెలివరీ రసీదును నిర్ధారించాలా?';
+
+  @override
+  String get confirmDeliveryPrompt =>
+      'ఆర్డర్ సరైన స్థితిలో అందిందా? ఇది రైతుకు చెల్లింపును విడుదల చేస్తుంది.';
+
+  @override
+  String get confirmReceivedButton => 'అవును, అందింది';
+
+  @override
+  String get cancelOrderTitle => 'ఆర్డర్ రద్దు చేయాలా?';
+
+  @override
+  String get cancelOrderPrompt =>
+      'మీరు ఖచ్చితంగా రద్దు చేయాలనుకుంటున్నారా? నగదు రీఫండ్ అవుతుంది.';
+
+  @override
+  String get noKeepOrder => 'వద్దు, ఆర్డర్ ఉంచండి';
+
+  @override
+  String get yesCancelOrder => 'అవును, రద్దు చేయండి';
+
+  @override
+  String get orderNotFound => 'ఆర్డర్ కనుగొనబడలేదు.';
+
+  @override
+  String get farmPickupCodeHeader => 'ఫార్మ్ పికప్ ధృవీకరణ కోడ్';
+
+  @override
+  String get deliveryPinHeader => 'డెలివరీ హ్యాండోవర్ పిన్';
+
+  @override
+  String get showPickupCodeFarmerNote =>
+      'వస్తువులు తీసుకునేటప్పుడు రైతుకు ఈ 4 అంకెల కోడ్ చూపించండి.';
+
+  @override
+  String get showDeliveryPinDriverNote =>
+      'డెలివరీ తీసుకునేటప్పుడు డ్రైవర్‌కు ఈ కోడ్ చెప్పండి.';
+
+  @override
+  String get estimatedArrivalHeader => 'అంచనా రాక సమయం';
+
+  @override
+  String get orderItemsHeader => 'ఆర్డర్ అంశాలు';
+
+  @override
+  String get totalAmount => 'చెల్లించిన మొత్తం:';
+
+  @override
+  String get confirmDeliveryReceivedButton =>
+      'డెలివరీ నిర్ధారించి నిధులను విడుదల చేయండి';
+
+  @override
+  String get releaseFundsNotice =>
+      'నిర్ధారించగానే రైతుకు ఎస్క్రో నిధులు విడుదలవుతాయి.';
+
+  @override
+  String get reorderItemsButton => 'మళ్ళీ ఆర్డర్ చేయండి';
+
+  @override
+  String get rateProduceButton => 'రేట్ చేయండి';
+
+  @override
+  String get myFarmOrdersTitle => 'నా ఫార్మ్ ఆర్డర్లు';
+
+  @override
+  String get allOrdersFilter => 'అన్ని ఆర్డర్లు';
+
+  @override
+  String get activeFilter => 'క్రియాశీల';
+
+  @override
+  String get completedFilter => 'డెలివరీ అయినవి';
+
+  @override
+  String get cancelledFilter => 'రద్దు చేసినవి';
+
+  @override
+  String get reorderButton => 'రీఆర్డర్';
+
+  @override
+  String get noOrdersFoundTitle => 'ఆర్డర్లు లేవు';
+
+  @override
+  String get noOrdersFoundSub => 'మీరు ఇంకా ఎలాంటి ఆర్డర్లు చేయలేదు.';
+
+  @override
+  String get exploreProduceButton => 'ఉత్పత్తులను చూడండి';
+
+  @override
+  String get farmerOrderBoardTitle => 'రైతు ఆర్డర్ బోర్డు';
+
+  @override
+  String get trackOrderButton => 'ట్రాక్ చేయండి';
+
+  @override
+  String get cancelOrderButton =>
+      'ఆర్డర్ రద్దు చేయండి & ఎస్క్రో రీఫండ్ పొందండి';
+
+  @override
+  String get disputeButton => 'సమస్యను నివేదించండి';
+
+  @override
+  String get statusAccepted => 'స్వీకరించబడింది';
+
+  @override
+  String get statusPacked => 'ప్యాక్ చేయబడింది';
+
+  @override
+  String get statusDelivered => 'డెలివరీ చేయబడింది';
+
+  @override
+  String get statusDisputed => 'వివాదంలో ఉంది';
 }

@@ -83,6 +83,10 @@ class AppRoutes {
   static const String orderCheckout = '/orders/checkout';
   static const String orderConfirmation = '/orders/confirmation/:id';
   static String orderConfirmationWithId(String id) => '/orders/confirmation/$id';
+  static const String orderTracking = '/orders/tracking/:id';
+  static String orderTrackingWithId(String id) => '/orders/tracking/$id';
+  static const String customerOrders = '/orders/my-orders';
+  static const String farmerOrders = '/farmer/orders';
   static const String farmerDeliverySlots = '/farmer/delivery-slots';
 
   // Debug Routes (gated under kDebugMode)

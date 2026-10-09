@@ -443,6 +443,11 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
           ],
         ),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.receipt_long_rounded, color: Colors.white),
+            tooltip: 'Customer Orders',
+            onPressed: () => context.push(AppRoutes.farmerOrders),
+          ),
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert_rounded),
             tooltip: 'Options',
@@ -450,6 +455,8 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
               if (val == 'simulate_rain') {
                 ref.read(simulatedRainForecastProvider.notifier).toggle();
                 ref.invalidate(farmerWeatherAdvisoryProvider);
+              } else if (val == 'farmer_orders') {
+                context.push(AppRoutes.farmerOrders);
               } else if (val == 'delivery_slots') {
                 context.push(AppRoutes.farmerDeliverySlots);
               } else if (val == 'vendor_hub') {
@@ -477,6 +484,16 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
                     Text(
                       isRainSimulated ? 'Disable Rain Sim' : 'Simulate Rain Alert',
                     ),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'farmer_orders',
+                child: Row(
+                  children: [
+                    Icon(Icons.receipt_long_rounded, size: 20, color: Color(0xFF0D6548)),
+                    SizedBox(width: 8),
+                    Text('Incoming Customer Orders'),
                   ],
                 ),
               ),
