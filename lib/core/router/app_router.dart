@@ -56,7 +56,12 @@ import 'package:udyogasethu/features/payments/presentation/payment_checkout_scre
 import 'package:udyogasethu/features/payments/presentation/payment_status_screen.dart';
 import 'package:udyogasethu/features/verification/presentation/face_check_screen.dart';
 import 'package:udyogasethu/features/marketplace/domain/produce_marketplace_item.dart';
+import 'package:udyogasethu/features/marketplace/domain/produce_order.dart';
 import 'package:udyogasethu/features/marketplace/presentation/produce_detail_screen.dart';
+import 'package:udyogasethu/features/marketplace/presentation/cart_screen.dart';
+import 'package:udyogasethu/features/marketplace/presentation/order_checkout_wizard.dart';
+import 'package:udyogasethu/features/marketplace/presentation/order_confirmation_screen.dart';
+import 'package:udyogasethu/features/farmer/presentation/delivery_slots_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_home_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_wizard_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/post_job_wizard_screen.dart';
@@ -740,6 +745,29 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             item: item,
           );
         },
+      ),
+      GoRoute(
+        path: AppRoutes.cart,
+        builder: (context, state) => const CartScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.orderCheckout,
+        builder: (context, state) => const OrderCheckoutWizard(),
+      ),
+      GoRoute(
+        path: AppRoutes.orderConfirmation,
+        builder: (context, state) {
+          final id = state.pathParameters['id'] ?? '';
+          final orders = state.extra as List<ProduceOrder>?;
+          return OrderConfirmationScreen(
+            orderId: id,
+            orders: orders,
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.farmerDeliverySlots,
+        builder: (context, state) => const DeliverySlotsScreen(),
       ),
 
       // Debug Routes

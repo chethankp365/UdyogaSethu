@@ -289,4 +289,19 @@ This document records key design, architectural, role model, and implementation 
     * `ScanVerifyScreen` debug section provides "Test Scan Produce Lot QR" and "Paste QR Token" dialogs for complete single-phone validation.
   * **Simulation Honesty**:
     * Produce ordering triggers an instant order feedback labelled "(Demo mode)". Recorded in DECISIONS.md.
+* **D58 — Produce Order Stock & Slot Reservation Lifecycle, Concurrency & Checkout**:
+  * **Stock Reservation Strategy**:
+    * `place_order` reserves stock atomically under row-level lock (`FOR UPDATE` on `produce_listings`). Available stock is `(stock_qty - reserved_qty)`. If requested quantity exceeds available stock, the order is rejected immediately with an explicit error (`'Out of stock: <item>'`).
+    * Physical stock (`stock_qty`) is NOT decremented upon order placement; it is only decremented when the farmer formally accepts the order (`status -> accepted`), strictly adhering to P6.2.
+    * When the farmer accepts the order, trigger `trg_order_status_stock_and_slot_sync` confirms the reservation: `stock_qty = stock_qty - qty` and `reserved_qty = GREATEST(0, reserved_qty - qty)`.
+    * If the order is declined or cancelled before acceptance (`status -> cancelled`), the reservation is immediately released: `reserved_qty = GREATEST(0, reserved_qty - qty)`, and slot capacity is restored (`used = GREATEST(0, used - 1)`).
+  * **Delivery Slot Capacity Protection**:
+    * `place_order` locks the selected slot row (`FOR UPDATE` on `delivery_slots`) and checks `used < capacity`. If full, it rejects with `'Delivery slot is full'`.
+    * Upon successful order placement, `delivery_slots.used` is incremented atomically.
+  * **Authoritative Server-Side Pricing**:
+    * The client never passes unit prices or subtotals; `place_order` strictly fetches `price_paise` from `produce_listings`. Any client-supplied price parameters are completely ignored.
+  * **Multi-Farmer Cart Auto-Splitting**:
+    * When a cart contains items from multiple farmers, `place_order` groups items by `farmer_id` and creates one independent `orders` record per farmer with its own sequential `order_code`.
+  * **Mock Reward Credits / Discount Function**:
+    * SQL function `calculate_order_discount(customer_id, subtotal_paise, use_rewards)` calculates up to 5% reward credit redemption (capped at ₹50) applied directly in database math.
 

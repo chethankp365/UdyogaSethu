@@ -2,7 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:udyogasethu/core/router/routes.dart';
+import 'package:udyogasethu/features/marketplace/data/orders_repository.dart';
 import 'package:udyogasethu/features/marketplace/data/produce_marketplace_repository.dart';
 import 'package:udyogasethu/features/marketplace/domain/lot_traceability_data.dart';
 import 'package:udyogasethu/features/marketplace/domain/produce_marketplace_item.dart';
@@ -174,6 +177,44 @@ class _ProduceDetailScreenState extends ConsumerState<ProduceDetailScreen> {
             tooltip: 'Traceability',
             onPressed: _openTraceabilityModal,
           ),
+          Consumer(
+            builder: (ctx, r, _) {
+              final cart = r.watch(cartNotifierProvider);
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.shopping_cart_outlined),
+                    tooltip: 'Cart',
+                    onPressed: () => context.push(AppRoutes.cart),
+                  ),
+                  if (cart.isNotEmpty)
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        padding: const EdgeInsets.all(3),
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFEF4444),
+                          shape: BoxShape.circle,
+                        ),
+                        constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                        child: Text(
+                          '${cart.totalQuantity}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 9.5,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
+          const SizedBox(width: 4),
         ],
       ),
       body: Column(
@@ -557,49 +598,85 @@ class _ProduceDetailScreenState extends ConsumerState<ProduceDetailScreen> {
                 BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, -2)),
               ],
             ),
-            child: Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text('Total Estimated:', style: TextStyle(fontSize: 12, color: Color(0xFF64748B))),
-                    Text(
-                      '₹${totalAmount.round()}',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w900,
-                        color: Color(0xFF0D6548),
+            child: SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Expanded(
+                        child: Text('Total Estimated:', style: TextStyle(fontSize: 12, color: Color(0xFF64748B))),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF0D6548),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                    ),
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'Order placed for ${_selectedQty.toStringAsFixed(0)} ${item.unit} ${item.name}! (Demo mode)',
-                          ),
-                          backgroundColor: const Color(0xFF0D6548),
+                      const SizedBox(width: 8),
+                      Text(
+                        '₹${totalAmount.round()}',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xFF0D6548),
                         ),
-                      );
-                    },
-                    child: Text(
-                      l10n?.orderNow ?? 'Order Now',
-                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                    ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: Color(0xFF0D6548)),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                          onPressed: () {
+                            ref.read(cartNotifierProvider.notifier).addItem(item, quantity: _selectedQty);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  '${_selectedQty.toInt()} ${item.unit} ${item.name} ${l10n?.addedToCart ?? 'added to cart!'}',
+                                ),
+                                action: SnackBarAction(
+                                  label: l10n?.viewCart ?? 'View Cart',
+                                  textColor: Colors.white,
+                                  onPressed: () => context.push(AppRoutes.cart),
+                                ),
+                                duration: const Duration(seconds: 3),
+                                backgroundColor: const Color(0xFF0D6548),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            l10n?.cartTitle ?? 'Add to Cart',
+                            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF0D6548)),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF0D6548),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                          onPressed: () {
+                            ref.read(cartNotifierProvider.notifier).addItem(item, quantity: _selectedQty);
+                            context.push(AppRoutes.orderCheckout);
+                          },
+                          child: Text(
+                            l10n?.orderNow ?? 'Buy Now',
+                            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],

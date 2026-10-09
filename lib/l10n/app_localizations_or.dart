@@ -3353,4 +3353,205 @@ class AppLocalizationsOr extends AppLocalizations {
 
   @override
   String get orderNow => 'ବର୍ତ୍ତମାନ ଅର୍ଡର କରନ୍ତୁ';
+
+  @override
+  String get cartTitle => 'Shopping Cart';
+
+  @override
+  String get cartClear => 'Clear';
+
+  @override
+  String get clearCartConfirmTitle => 'Clear Cart?';
+
+  @override
+  String get clearCartConfirmBody =>
+      'Are you sure you want to remove all items from your cart?';
+
+  @override
+  String get cartEmptyTitle => 'Your Cart is Empty';
+
+  @override
+  String get cartEmptySubtitle =>
+      'Explore fresh organic vegetables, fruits, and dairy directly from local verified farmers.';
+
+  @override
+  String get exploreProduce => 'Explore Farm Produce';
+
+  @override
+  String get multiFarmerSplitNotice =>
+      'Items from multiple farmers will be placed as separate direct orders for fresh dispatch.';
+
+  @override
+  String get farmerOrderHeader => 'Direct Farm Order';
+
+  @override
+  String get subtotalLabel => 'Farm Order Subtotal';
+
+  @override
+  String get redeemRewardCredits => 'Reward Credits (Demo mode)';
+
+  @override
+  String get rewardDiscountDesc => 'Apply 5% loyalty discount (up to ₹50)';
+
+  @override
+  String get billSummary => 'Bill Summary';
+
+  @override
+  String get itemTotal => 'Items Total';
+
+  @override
+  String get rewardCreditsDiscount => 'Reward Discount';
+
+  @override
+  String get escrowProtectionBadge => 'Escrow Protection Guarantee';
+
+  @override
+  String get includedLabel => 'Included';
+
+  @override
+  String get totalPayable => 'Total Amount';
+
+  @override
+  String get proceedToCheckout => 'Checkout';
+
+  @override
+  String get checkoutTitle => 'Direct Farm Checkout';
+
+  @override
+  String get stepSlot => '1. Delivery Slot';
+
+  @override
+  String get stepAddress => '2. Address';
+
+  @override
+  String get stepPayment => '3. Payment';
+
+  @override
+  String get doorstepDelivery => 'Doorstep Delivery';
+
+  @override
+  String get farmPickup => 'Farm Pickup';
+
+  @override
+  String get selectDeliveryWindow =>
+      'Select your preferred harvest and arrival window';
+
+  @override
+  String get noSlotsAvailable => 'No active slots available for this farm.';
+
+  @override
+  String get slotSameDay => 'Same Day';
+
+  @override
+  String get slotNextDay => 'Next Day';
+
+  @override
+  String get slotPreOrder => 'Pre-Order';
+
+  @override
+  String get slotFullLabel => 'Slot Full (0 remaining)';
+
+  @override
+  String get slotsRemaining => 'slots available';
+
+  @override
+  String get farmPickupLocation => 'Farm Pickup Location';
+
+  @override
+  String get deliveryAddressHeader => 'Delivery Address';
+
+  @override
+  String get farmPickupNotice =>
+      'Pick up directly at the farm packhouse. Bring your order confirmation code.';
+
+  @override
+  String get fullAddressLabel => 'Street Address / Door No.';
+
+  @override
+  String get deliveryNotesLabel => 'Delivery instructions (Optional)';
+
+  @override
+  String get contactPhoneLabel => 'Contact Phone Number';
+
+  @override
+  String get paymentDemoModeNotice =>
+      'Demo mode — Simulated payment checkout with instant verification.';
+
+  @override
+  String get escrowProtectionTitle => '100% Escrow Protection Guarantee';
+
+  @override
+  String get escrowProtectionSubtitle =>
+      'Payment is held safely until you receive and verify produce quality.';
+
+  @override
+  String get paymentMethodHeader => 'Select Payment Method';
+
+  @override
+  String get itemsTotal => 'Items Total';
+
+  @override
+  String get rewardDiscount => 'Reward Discount';
+
+  @override
+  String get escrowFeeLabel => 'Escrow Protection Fee';
+
+  @override
+  String get backButton => 'Back';
+
+  @override
+  String get nextStep => 'Continue';
+
+  @override
+  String get confirmOrder => 'Place Order';
+
+  @override
+  String get orderConfirmedTitle => 'Order Confirmed';
+
+  @override
+  String get orderPlacedSuccessfully => 'Order Placed Successfully!';
+
+  @override
+  String get escrowProtectedHeader => 'Escrow Protected Payment';
+
+  @override
+  String get escrowProtectedNotice =>
+      'Your payment remains safely locked in platform escrow until you inspect and verify freshness upon delivery.';
+
+  @override
+  String get backToMarketplace => 'Back to Produce Marketplace';
+
+  @override
+  String get pendingFarmerConfirmation => 'Pending Farmer Confirmation';
+
+  @override
+  String get orderCodeLabel => 'Order Code';
+
+  @override
+  String get farmerDeliverySlotsTitle => 'Farm Delivery & Pickup Slots';
+
+  @override
+  String get addSlotButton => '+ Add Delivery Slot';
+
+  @override
+  String get noSlotsConfiguredTitle => 'No Delivery Slots Configured';
+
+  @override
+  String get noSlotsConfiguredSubtitle =>
+      'Create delivery or pickup windows so buyers can select convenient harvest delivery times.';
+
+  @override
+  String get createFirstSlot => 'Create First Slot';
+
+  @override
+  String get createDeliverySlotModalTitle => 'Add Delivery Window Slot';
+
+  @override
+  String get saveSlotButton => 'Save Delivery Slot';
+
+  @override
+  String get addedToCart => 'Added to Cart';
+
+  @override
+  String get viewCart => 'View Cart';
 }

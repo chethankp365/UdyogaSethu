@@ -450,6 +450,8 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
               if (val == 'simulate_rain') {
                 ref.read(simulatedRainForecastProvider.notifier).toggle();
                 ref.invalidate(farmerWeatherAdvisoryProvider);
+              } else if (val == 'delivery_slots') {
+                context.push(AppRoutes.farmerDeliverySlots);
               } else if (val == 'vendor_hub') {
                 context.push(AppRoutes.farmerVendorResources);
               } else if (val == 'resources_map') {
@@ -475,6 +477,16 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
                     Text(
                       isRainSimulated ? 'Disable Rain Sim' : 'Simulate Rain Alert',
                     ),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'delivery_slots',
+                child: Row(
+                  children: [
+                    Icon(Icons.access_time_filled_rounded, size: 20, color: Color(0xFF0D6548)),
+                    SizedBox(width: 8),
+                    Text('Delivery & Pickup Slots'),
                   ],
                 ),
               ),

@@ -79,6 +79,11 @@ class AppRoutes {
   static const String paymentStatus = '/payments/status';
   static const String earningsDashboard = '/earnings';
   static const String savingsGoals = '/earnings/savings-goals';
+  static const String cart = '/cart';
+  static const String orderCheckout = '/orders/checkout';
+  static const String orderConfirmation = '/orders/confirmation/:id';
+  static String orderConfirmationWithId(String id) => '/orders/confirmation/$id';
+  static const String farmerDeliverySlots = '/farmer/delivery-slots';
 
   // Debug Routes (gated under kDebugMode)
   static const String devGallery = '/dev/gallery';

@@ -3343,4 +3343,205 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get orderNow => 'अभी ऑर्डर करें';
+
+  @override
+  String get cartTitle => 'शॉपिंग कार्ट';
+
+  @override
+  String get cartClear => 'साफ़ करें';
+
+  @override
+  String get clearCartConfirmTitle => 'कार्ट साफ़ करें?';
+
+  @override
+  String get clearCartConfirmBody =>
+      'क्या आप वाकई अपने कार्ट से सभी सामान हटाना चाहते हैं?';
+
+  @override
+  String get cartEmptyTitle => 'आपकी कार्ट खाली है';
+
+  @override
+  String get cartEmptySubtitle =>
+      'स्थानीय सत्यापित किसानों से सीधे ताज़ा जैविक सब्जियां, फल और डेयरी उत्पाद देखें।';
+
+  @override
+  String get exploreProduce => 'कृषि उत्पाद देखें';
+
+  @override
+  String get multiFarmerSplitNotice =>
+      'ताज़ा डिलीवरी के लिए कई किसानों के सामान को अलग-अलग सीधे ऑर्डर के रूप में भेजा जाएगा।';
+
+  @override
+  String get farmerOrderHeader => 'सीधा फार्म ऑर्डर';
+
+  @override
+  String get subtotalLabel => 'फार्म ऑर्डर उप-योग';
+
+  @override
+  String get redeemRewardCredits => 'रिवॉर्ड क्रेडिट (डेमो मोड)';
+
+  @override
+  String get rewardDiscountDesc => '5% लॉयल्टी छूट लागू करें (₹50 तक)';
+
+  @override
+  String get billSummary => 'बिल सारांश';
+
+  @override
+  String get itemTotal => 'सामान का कुल';
+
+  @override
+  String get rewardCreditsDiscount => 'रिवॉर्ड छूट';
+
+  @override
+  String get escrowProtectionBadge => 'एस्क्रो सुरक्षा गारंटी';
+
+  @override
+  String get includedLabel => 'शामिल';
+
+  @override
+  String get totalPayable => 'कुल देय राशि';
+
+  @override
+  String get proceedToCheckout => 'चेकआउट';
+
+  @override
+  String get checkoutTitle => 'सीधा फार्म चेकआउट';
+
+  @override
+  String get stepSlot => '1. डिलीवरी स्लॉट';
+
+  @override
+  String get stepAddress => '2. पता';
+
+  @override
+  String get stepPayment => '3. भुगतान';
+
+  @override
+  String get doorstepDelivery => 'घर पर डिलीवरी';
+
+  @override
+  String get farmPickup => 'फार्म से पिकअप';
+
+  @override
+  String get selectDeliveryWindow => 'अपनी पसंदीदा फसल और डिलीवरी का समय चुनें';
+
+  @override
+  String get noSlotsAvailable =>
+      'इस फार्म के लिए कोई सक्रिय स्लॉट उपलब्ध नहीं है।';
+
+  @override
+  String get slotSameDay => 'उसी दिन';
+
+  @override
+  String get slotNextDay => 'अगले दिन';
+
+  @override
+  String get slotPreOrder => 'प्री-ऑर्डर';
+
+  @override
+  String get slotFullLabel => 'स्लॉट भर गया (0 शेष)';
+
+  @override
+  String get slotsRemaining => 'स्लॉट उपलब्ध';
+
+  @override
+  String get farmPickupLocation => 'फार्म पिकअप स्थान';
+
+  @override
+  String get deliveryAddressHeader => 'डिलीवरी का पता';
+
+  @override
+  String get farmPickupNotice =>
+      'सीधे फार्म पैकहाउस से पिकअप करें। अपना ऑर्डर कोड साथ लाएं।';
+
+  @override
+  String get fullAddressLabel => 'सड़क का पता / मकान नं.';
+
+  @override
+  String get deliveryNotesLabel => 'डिलीवरी निर्देश (वैकल्पिक)';
+
+  @override
+  String get contactPhoneLabel => 'संपर्क फोन नंबर';
+
+  @override
+  String get paymentDemoModeNotice =>
+      'डेमो मोड — त्वरित सत्यापन के साथ सिम्युलेटेड भुगतान।';
+
+  @override
+  String get escrowProtectionTitle => '100% एस्क्रो सुरक्षा गारंटी';
+
+  @override
+  String get escrowProtectionSubtitle =>
+      'डिलीवरी पर गुणवत्ता सत्यापित होने तक भुगतान सुरक्षित रखा जाता है।';
+
+  @override
+  String get paymentMethodHeader => 'भुगतान विधि चुनें';
+
+  @override
+  String get itemsTotal => 'सामान का कुल';
+
+  @override
+  String get rewardDiscount => 'रिवॉर्ड छूट';
+
+  @override
+  String get escrowFeeLabel => 'एस्क्रो सुरक्षा शुल्क';
+
+  @override
+  String get backButton => 'पीछे';
+
+  @override
+  String get nextStep => 'जारी रखें';
+
+  @override
+  String get confirmOrder => 'ऑर्डर दें';
+
+  @override
+  String get orderConfirmedTitle => 'ऑर्डर कन्फर्म हुआ';
+
+  @override
+  String get orderPlacedSuccessfully => 'ऑर्डर सफलतापूर्वक दिया गया!';
+
+  @override
+  String get escrowProtectedHeader => 'एस्क्रो सुरक्षित भुगतान';
+
+  @override
+  String get escrowProtectedNotice =>
+      'डिलीवरी पर ताज़गी सत्यापित करने तक आपका भुगतान सुरक्षित एस्क्रो में रहता है।';
+
+  @override
+  String get backToMarketplace => 'उत्पाद बाज़ार में वापस जाएं';
+
+  @override
+  String get pendingFarmerConfirmation => 'किसान पुष्टिकरण लंबित';
+
+  @override
+  String get orderCodeLabel => 'ऑर्डर कोड';
+
+  @override
+  String get farmerDeliverySlotsTitle => 'फार्म डिलीवरी और पिकअप स्लॉट';
+
+  @override
+  String get addSlotButton => '+ डिलीवरी स्लॉट जोड़ें';
+
+  @override
+  String get noSlotsConfiguredTitle => 'कोई डिलीवरी स्लॉट कॉन्फ़िगर नहीं है';
+
+  @override
+  String get noSlotsConfiguredSubtitle =>
+      'डिलीवरी विंडो बनाएं ताकि खरीदार सुविधाजनक फसल डिलीवरी समय चुन सकें।';
+
+  @override
+  String get createFirstSlot => 'पहला स्लॉट बनाएं';
+
+  @override
+  String get createDeliverySlotModalTitle => 'डिलीवरी विंडो स्लॉट जोड़ें';
+
+  @override
+  String get saveSlotButton => 'डिलीवरी स्लॉट सहेजें';
+
+  @override
+  String get addedToCart => 'कार्ट में जोड़ा गया';
+
+  @override
+  String get viewCart => 'कार्ट देखें';
 }

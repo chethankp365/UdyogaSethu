@@ -6251,6 +6251,390 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Order Now'**
   String get orderNow;
+
+  /// No description provided for @cartTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping Cart'**
+  String get cartTitle;
+
+  /// No description provided for @cartClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get cartClear;
+
+  /// No description provided for @clearCartConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Cart?'**
+  String get clearCartConfirmTitle;
+
+  /// No description provided for @clearCartConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to remove all items from your cart?'**
+  String get clearCartConfirmBody;
+
+  /// No description provided for @cartEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Cart is Empty'**
+  String get cartEmptyTitle;
+
+  /// No description provided for @cartEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore fresh organic vegetables, fruits, and dairy directly from local verified farmers.'**
+  String get cartEmptySubtitle;
+
+  /// No description provided for @exploreProduce.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore Farm Produce'**
+  String get exploreProduce;
+
+  /// No description provided for @multiFarmerSplitNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Items from multiple farmers will be placed as separate direct orders for fresh dispatch.'**
+  String get multiFarmerSplitNotice;
+
+  /// No description provided for @farmerOrderHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Direct Farm Order'**
+  String get farmerOrderHeader;
+
+  /// No description provided for @subtotalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm Order Subtotal'**
+  String get subtotalLabel;
+
+  /// No description provided for @redeemRewardCredits.
+  ///
+  /// In en, this message translates to:
+  /// **'Reward Credits (Demo mode)'**
+  String get redeemRewardCredits;
+
+  /// No description provided for @rewardDiscountDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply 5% loyalty discount (up to ₹50)'**
+  String get rewardDiscountDesc;
+
+  /// No description provided for @billSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Bill Summary'**
+  String get billSummary;
+
+  /// No description provided for @itemTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Items Total'**
+  String get itemTotal;
+
+  /// No description provided for @rewardCreditsDiscount.
+  ///
+  /// In en, this message translates to:
+  /// **'Reward Discount'**
+  String get rewardCreditsDiscount;
+
+  /// No description provided for @escrowProtectionBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Escrow Protection Guarantee'**
+  String get escrowProtectionBadge;
+
+  /// No description provided for @includedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Included'**
+  String get includedLabel;
+
+  /// No description provided for @totalPayable.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Amount'**
+  String get totalPayable;
+
+  /// No description provided for @proceedToCheckout.
+  ///
+  /// In en, this message translates to:
+  /// **'Checkout'**
+  String get proceedToCheckout;
+
+  /// No description provided for @checkoutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Direct Farm Checkout'**
+  String get checkoutTitle;
+
+  /// No description provided for @stepSlot.
+  ///
+  /// In en, this message translates to:
+  /// **'1. Delivery Slot'**
+  String get stepSlot;
+
+  /// No description provided for @stepAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'2. Address'**
+  String get stepAddress;
+
+  /// No description provided for @stepPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'3. Payment'**
+  String get stepPayment;
+
+  /// No description provided for @doorstepDelivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Doorstep Delivery'**
+  String get doorstepDelivery;
+
+  /// No description provided for @farmPickup.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm Pickup'**
+  String get farmPickup;
+
+  /// No description provided for @selectDeliveryWindow.
+  ///
+  /// In en, this message translates to:
+  /// **'Select your preferred harvest and arrival window'**
+  String get selectDeliveryWindow;
+
+  /// No description provided for @noSlotsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No active slots available for this farm.'**
+  String get noSlotsAvailable;
+
+  /// No description provided for @slotSameDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Same Day'**
+  String get slotSameDay;
+
+  /// No description provided for @slotNextDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Next Day'**
+  String get slotNextDay;
+
+  /// No description provided for @slotPreOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Pre-Order'**
+  String get slotPreOrder;
+
+  /// No description provided for @slotFullLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Slot Full (0 remaining)'**
+  String get slotFullLabel;
+
+  /// No description provided for @slotsRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'slots available'**
+  String get slotsRemaining;
+
+  /// No description provided for @farmPickupLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm Pickup Location'**
+  String get farmPickupLocation;
+
+  /// No description provided for @deliveryAddressHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery Address'**
+  String get deliveryAddressHeader;
+
+  /// No description provided for @farmPickupNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick up directly at the farm packhouse. Bring your order confirmation code.'**
+  String get farmPickupNotice;
+
+  /// No description provided for @fullAddressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Street Address / Door No.'**
+  String get fullAddressLabel;
+
+  /// No description provided for @deliveryNotesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery instructions (Optional)'**
+  String get deliveryNotesLabel;
+
+  /// No description provided for @contactPhoneLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Phone Number'**
+  String get contactPhoneLabel;
+
+  /// No description provided for @paymentDemoModeNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo mode — Simulated payment checkout with instant verification.'**
+  String get paymentDemoModeNotice;
+
+  /// No description provided for @escrowProtectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'100% Escrow Protection Guarantee'**
+  String get escrowProtectionTitle;
+
+  /// No description provided for @escrowProtectionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment is held safely until you receive and verify produce quality.'**
+  String get escrowProtectionSubtitle;
+
+  /// No description provided for @paymentMethodHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Payment Method'**
+  String get paymentMethodHeader;
+
+  /// No description provided for @itemsTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Items Total'**
+  String get itemsTotal;
+
+  /// No description provided for @rewardDiscount.
+  ///
+  /// In en, this message translates to:
+  /// **'Reward Discount'**
+  String get rewardDiscount;
+
+  /// No description provided for @escrowFeeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Escrow Protection Fee'**
+  String get escrowFeeLabel;
+
+  /// No description provided for @backButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get backButton;
+
+  /// No description provided for @nextStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get nextStep;
+
+  /// No description provided for @confirmOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Place Order'**
+  String get confirmOrder;
+
+  /// No description provided for @orderConfirmedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Confirmed'**
+  String get orderConfirmedTitle;
+
+  /// No description provided for @orderPlacedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Placed Successfully!'**
+  String get orderPlacedSuccessfully;
+
+  /// No description provided for @escrowProtectedHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Escrow Protected Payment'**
+  String get escrowProtectedHeader;
+
+  /// No description provided for @escrowProtectedNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Your payment remains safely locked in platform escrow until you inspect and verify freshness upon delivery.'**
+  String get escrowProtectedNotice;
+
+  /// No description provided for @backToMarketplace.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Produce Marketplace'**
+  String get backToMarketplace;
+
+  /// No description provided for @pendingFarmerConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Farmer Confirmation'**
+  String get pendingFarmerConfirmation;
+
+  /// No description provided for @orderCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Code'**
+  String get orderCodeLabel;
+
+  /// No description provided for @farmerDeliverySlotsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm Delivery & Pickup Slots'**
+  String get farmerDeliverySlotsTitle;
+
+  /// No description provided for @addSlotButton.
+  ///
+  /// In en, this message translates to:
+  /// **'+ Add Delivery Slot'**
+  String get addSlotButton;
+
+  /// No description provided for @noSlotsConfiguredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Delivery Slots Configured'**
+  String get noSlotsConfiguredTitle;
+
+  /// No description provided for @noSlotsConfiguredSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create delivery or pickup windows so buyers can select convenient harvest delivery times.'**
+  String get noSlotsConfiguredSubtitle;
+
+  /// No description provided for @createFirstSlot.
+  ///
+  /// In en, this message translates to:
+  /// **'Create First Slot'**
+  String get createFirstSlot;
+
+  /// No description provided for @createDeliverySlotModalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Delivery Window Slot'**
+  String get createDeliverySlotModalTitle;
+
+  /// No description provided for @saveSlotButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Delivery Slot'**
+  String get saveSlotButton;
+
+  /// No description provided for @addedToCart.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to Cart'**
+  String get addedToCart;
+
+  /// No description provided for @viewCart.
+  ///
+  /// In en, this message translates to:
+  /// **'View Cart'**
+  String get viewCart;
 }
 
 class _AppLocalizationsDelegate

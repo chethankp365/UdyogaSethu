@@ -3386,4 +3386,206 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get orderNow => 'இப்போது ஆர்டர் செய்';
+
+  @override
+  String get cartTitle => 'ஷாப்பிங் கார்ட்';
+
+  @override
+  String get cartClear => 'அழிக்க';
+
+  @override
+  String get clearCartConfirmTitle => 'கார்ட்டை அழிக்கவா?';
+
+  @override
+  String get clearCartConfirmBody =>
+      'உங்கள் கார்ட்டில் உள்ள அனைத்து பொருட்களையும் நீக்க விரும்புகிறீர்களா?';
+
+  @override
+  String get cartEmptyTitle => 'உங்கள் கார்ட் காலியாக உள்ளது';
+
+  @override
+  String get cartEmptySubtitle =>
+      'உள்ளூர் சரிபார்க்கப்பட்ட விவசாயிகளிடமிருந்து புதிய இயற்கை காய்கறிகள், பழங்கள் மற்றும் பால் பொருட்களைப் பார்க்கவும்.';
+
+  @override
+  String get exploreProduce => 'விவசாய விளைபொருட்களை ஆராய்க';
+
+  @override
+  String get multiFarmerSplitNotice =>
+      'புதிய விநியோகத்திற்காக பல விவசாயிகளின் பொருட்கள் தனித்தனி நேரடி ஆர்டர்களாக வைக்கப்படும்.';
+
+  @override
+  String get farmerOrderHeader => 'நேரடி பண்ணை ஆர்டர்';
+
+  @override
+  String get subtotalLabel => 'பண்ணை ஆர்டர் துணை மொத்தம்';
+
+  @override
+  String get redeemRewardCredits => 'வெகுமதி கிரெடிட்கள் (டெமோ பயன்முறை)';
+
+  @override
+  String get rewardDiscountDesc => '5% தள்ளுபடியைப் பயன்படுத்துங்கள் (₹50 வரை)';
+
+  @override
+  String get billSummary => 'பில் சுருக்கம்';
+
+  @override
+  String get itemTotal => 'பொருட்களின் மொத்தம்';
+
+  @override
+  String get rewardCreditsDiscount => 'வெகுமதி தள்ளுபடி';
+
+  @override
+  String get escrowProtectionBadge => 'எஸ்க்ரோ பாதுகாப்பு உத்தரவாதம்';
+
+  @override
+  String get includedLabel => 'சேர்க்கப்பட்டுள்ளது';
+
+  @override
+  String get totalPayable => 'மொத்த தொகை';
+
+  @override
+  String get proceedToCheckout => 'செக்அவுட்';
+
+  @override
+  String get checkoutTitle => 'நேரடி பண்ணை செக்அவுட்';
+
+  @override
+  String get stepSlot => '1. டெலிவரி நேரம்';
+
+  @override
+  String get stepAddress => '2. முகவரி';
+
+  @override
+  String get stepPayment => '3. கட்டணம்';
+
+  @override
+  String get doorstepDelivery => 'வீட்டு வாசல் டெலிவரி';
+
+  @override
+  String get farmPickup => 'பண்ணை பிக்கப்';
+
+  @override
+  String get selectDeliveryWindow =>
+      'உங்களுக்கு விருப்பமான அறுவடை மற்றும் டெலிவரி நேரத்தைத் தேர்வுசெய்க';
+
+  @override
+  String get noSlotsAvailable => 'இந்த பண்ணைக்கு நேரங்கள் கிடைக்கவில்லை.';
+
+  @override
+  String get slotSameDay => 'அதே நாள்';
+
+  @override
+  String get slotNextDay => 'அடுத்த நாள்';
+
+  @override
+  String get slotPreOrder => 'முன்பதிவு';
+
+  @override
+  String get slotFullLabel => 'நேரம் நிரம்பியது (0 மீதமுள்ளது)';
+
+  @override
+  String get slotsRemaining => 'நேரங்கள் உள்ளன';
+
+  @override
+  String get farmPickupLocation => 'பண்ணை பிக்கப் இடம்';
+
+  @override
+  String get deliveryAddressHeader => 'டெலிவரி முகவரி';
+
+  @override
+  String get farmPickupNotice =>
+      'பண்ணையிலிருந்து நேரடியாக பிக்கப் செய்யவும். உங்கள் ஆர்டர் குறியீட்டைக் கொண்டு வாருங்கள்.';
+
+  @override
+  String get fullAddressLabel => 'தெரு முகவரி / கதவு எண்';
+
+  @override
+  String get deliveryNotesLabel => 'டெலிவரி வழிமுறைகள் (விருப்பத்தேர்வு)';
+
+  @override
+  String get contactPhoneLabel => 'தொடர்பு தொலைபேசி எண்';
+
+  @override
+  String get paymentDemoModeNotice =>
+      'டெமோ பயன்முறை — உடனடி சரிபார்ப்புடன் கூடிய மாதிரி கட்டணம்.';
+
+  @override
+  String get escrowProtectionTitle => '100% எஸ்க்ரோ பாதுகாப்பு உத்தரவாதம்';
+
+  @override
+  String get escrowProtectionSubtitle =>
+      'டெலிவரியில் தரம் சரிபார்க்கப்படும் வரை கட்டணம் பாதுகாப்பாக வைக்கப்படும்.';
+
+  @override
+  String get paymentMethodHeader => 'கட்டண முறையைத் தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get itemsTotal => 'பொருட்களின் மொத்தம்';
+
+  @override
+  String get rewardDiscount => 'வெகுமதி தள்ளுபடி';
+
+  @override
+  String get escrowFeeLabel => 'எஸ்க்ரோ பாதுகாப்புக் கட்டணம்';
+
+  @override
+  String get backButton => 'பின்செல்';
+
+  @override
+  String get nextStep => 'தொடர்க';
+
+  @override
+  String get confirmOrder => 'ஆர்டர் செய்';
+
+  @override
+  String get orderConfirmedTitle => 'ஆர்டர் உறுதிப்படுத்தப்பட்டது';
+
+  @override
+  String get orderPlacedSuccessfully => 'ஆர்டர் வெற்றிகரமாக வைக்கப்பட்டது!';
+
+  @override
+  String get escrowProtectedHeader => 'எஸ்க்ரோ பாதுகாக்கப்பட்ட கட்டணம்';
+
+  @override
+  String get escrowProtectedNotice =>
+      'டெலிவரியின் போது புத்துணர்ச்சியை நீங்கள் சரிபார்க்கும் வரை உங்கள் கட்டணம் பாதுகாப்பாக இருக்கும்.';
+
+  @override
+  String get backToMarketplace => 'சந்தைக்குத் திரும்பு';
+
+  @override
+  String get pendingFarmerConfirmation =>
+      'விவசாயி உறுதிப்படுத்தல் நிலுவையில் உள்ளது';
+
+  @override
+  String get orderCodeLabel => 'ஆர்டர் குறியீடு';
+
+  @override
+  String get farmerDeliverySlotsTitle => 'பண்ணை டெலிவரி & பிக்கப் நேரங்கள்';
+
+  @override
+  String get addSlotButton => '+ டெலிவரி நேரத்தைச் சேர்';
+
+  @override
+  String get noSlotsConfiguredTitle => 'டெலிவரி நேரங்கள் அமைக்கப்படவில்லை';
+
+  @override
+  String get noSlotsConfiguredSubtitle =>
+      'வாங்குபவர்கள் வசதியான அறுவடை நேரத்தைத் தேர்ந்தெடுக்க டெலிவரி சாளரங்களை உருவாக்கவும்.';
+
+  @override
+  String get createFirstSlot => 'முதல் நேர சாளரத்தை உருவாக்கு';
+
+  @override
+  String get createDeliverySlotModalTitle => 'டெலிவரி நேர சாளரத்தைச் சேர்';
+
+  @override
+  String get saveSlotButton => 'டெலிவரி நேரத்தைச் சேமி';
+
+  @override
+  String get addedToCart => 'கார்ட்டில் சேர்க்கப்பட்டது';
+
+  @override
+  String get viewCart => 'கார்ட்டைப் பார்';
 }

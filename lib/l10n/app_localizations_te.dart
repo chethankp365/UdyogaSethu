@@ -3368,4 +3368,208 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get orderNow => 'ఇప్పుడే ఆర్డర్ చేయండి';
+
+  @override
+  String get cartTitle => 'షాపింగ్ కార్ట్';
+
+  @override
+  String get cartClear => 'క్లియర్ చేయండి';
+
+  @override
+  String get clearCartConfirmTitle => 'కార్ట్ క్లియర్ చేయాలా?';
+
+  @override
+  String get clearCartConfirmBody =>
+      'మీ కార్ట్ నుండి అన్ని వస్తువులను తీసివేయాలనుకుంటున్నారా?';
+
+  @override
+  String get cartEmptyTitle => 'మీ కార్ట్ ఖాళీగా ఉంది';
+
+  @override
+  String get cartEmptySubtitle =>
+      'స్థానిక ధృవీకరించబడిన రైతుల నుండి తాజా సేంద్రీయ కూరగాయలు, పండ్లు మరియు పాల ఉత్పత్తులను అన్వేషించండి.';
+
+  @override
+  String get exploreProduce => 'వ్యవసాయ ఉత్పత్తులను అన్వేషించండి';
+
+  @override
+  String get multiFarmerSplitNotice =>
+      'తాజా డెలివరీ కోసం బహుళ రైతుల వస్తువులు ప్రత్యేక ప్రత్యక్ష ఆర్డర్‌లుగా ఇవ్వబడతాయి.';
+
+  @override
+  String get farmerOrderHeader => 'ప్రత్యక్ష వ్యవసాయ ఆర్డర్';
+
+  @override
+  String get subtotalLabel => 'వ్యవసాయ ఆర్డర్ సబ్-టోటల్';
+
+  @override
+  String get redeemRewardCredits => 'రివార్డ్ క్రెడిట్‌లు (డెమో మోడ్)';
+
+  @override
+  String get rewardDiscountDesc =>
+      '5% లాయల్టీ తగ్గింపును వర్తింపజేయండి (₹50 వరకు)';
+
+  @override
+  String get billSummary => 'బిల్లు సారాంశం';
+
+  @override
+  String get itemTotal => 'వస్తువుల మొత్తం';
+
+  @override
+  String get rewardCreditsDiscount => 'రివార్డ్ తగ్గింపు';
+
+  @override
+  String get escrowProtectionBadge => 'ఎస్క్రో రక్షణ హామీ';
+
+  @override
+  String get includedLabel => 'చేర్చబడింది';
+
+  @override
+  String get totalPayable => 'మొత్తం చెల్లించవలసినది';
+
+  @override
+  String get proceedToCheckout => 'చెక్‌అవుట్';
+
+  @override
+  String get checkoutTitle => 'ప్రత్యక్ష వ్యవసాయ చెక్‌అవుట్';
+
+  @override
+  String get stepSlot => '1. డెలివరీ స్లాట్';
+
+  @override
+  String get stepAddress => '2. చిరునామా';
+
+  @override
+  String get stepPayment => '3. చెల్లింపు';
+
+  @override
+  String get doorstepDelivery => 'ఇంటి వద్దకే డెలివరీ';
+
+  @override
+  String get farmPickup => 'ఫామ్ నుండి పికప్';
+
+  @override
+  String get selectDeliveryWindow =>
+      'మీకు కావలసిన కోత మరియు డెలివరీ సమయాన్ని ఎంచుకోండి';
+
+  @override
+  String get noSlotsAvailable =>
+      'ఈ వ్యవసాయ క్షేత్రానికి సక్రియ స్లాట్‌లు లేవు.';
+
+  @override
+  String get slotSameDay => 'అదే రోజు';
+
+  @override
+  String get slotNextDay => 'మరుసటి రోజు';
+
+  @override
+  String get slotPreOrder => 'ముందస్తు ఆర్డర్';
+
+  @override
+  String get slotFullLabel => 'స్లాట్ నిండింది (0 మిగిలి ఉంది)';
+
+  @override
+  String get slotsRemaining => 'స్లాట్‌లు అందుబాటులో ఉన్నాయి';
+
+  @override
+  String get farmPickupLocation => 'ఫామ్ పికప్ స్థానం';
+
+  @override
+  String get deliveryAddressHeader => 'డెలివరీ చిరునామా';
+
+  @override
+  String get farmPickupNotice =>
+      'ఫామ్ ప్యాక్‌హౌస్ నుండి నేరుగా పికప్ చేయండి. మీ ఆర్డర్ కోడ్ తీసుకురండి.';
+
+  @override
+  String get fullAddressLabel => 'వీధి చిరునామా / ఇంటి నెం.';
+
+  @override
+  String get deliveryNotesLabel => 'డెలివరీ సూచనలు (ఐచ్ఛికం)';
+
+  @override
+  String get contactPhoneLabel => 'సంప్రదింపు ఫోన్ నంబర్';
+
+  @override
+  String get paymentDemoModeNotice =>
+      'డెమో మోడ్ — తక్షణ ధృవీకరణతో అనుకరణ చెల్లింపు.';
+
+  @override
+  String get escrowProtectionTitle => '100% ఎస్క్రో రక్షణ హామీ';
+
+  @override
+  String get escrowProtectionSubtitle =>
+      'డెలివరీ వద్ద నాణ్యత ధృవీకరించబడే వరకు చెల్లింపు సురక్షితంగా ఉంటుంది.';
+
+  @override
+  String get paymentMethodHeader => 'చెల్లింపు పద్ధతిని ఎంచుకోండి';
+
+  @override
+  String get itemsTotal => 'వస్తువుల మొత్తం';
+
+  @override
+  String get rewardDiscount => 'రివార్డ్ తగ్గింపు';
+
+  @override
+  String get escrowFeeLabel => 'ఎస్క్రో రక్షణ రుసుము';
+
+  @override
+  String get backButton => 'వెనుకకు';
+
+  @override
+  String get nextStep => 'కొనసాగించండి';
+
+  @override
+  String get confirmOrder => 'ఆర్డర్ చేయండి';
+
+  @override
+  String get orderConfirmedTitle => 'ఆర్డర్ నిర్ధారించబడింది';
+
+  @override
+  String get orderPlacedSuccessfully => 'ఆర్డర్ విజయవంతంగా ఉంచబడింది!';
+
+  @override
+  String get escrowProtectedHeader => 'ఎస్క్రో రక్షిత చెల్లింపు';
+
+  @override
+  String get escrowProtectedNotice =>
+      'డెలివరీ సమయంలో తాజాదనాన్ని ధృవీకరించే వరకు మీ చెల్లింపు సురక్షిత ఎస్క్రోలో ఉంటుంది.';
+
+  @override
+  String get backToMarketplace => 'మార్కెట్‌ప్లేస్‌కి తిరిగి వెళ్లండి';
+
+  @override
+  String get pendingFarmerConfirmation => 'రైతు నిర్ధారణ పెండింగ్‌లో ఉంది';
+
+  @override
+  String get orderCodeLabel => 'ఆర్డర్ కోడ్';
+
+  @override
+  String get farmerDeliverySlotsTitle => 'ఫామ్ డెలివరీ మరియు పికప్ స్లాట్‌లు';
+
+  @override
+  String get addSlotButton => '+ డెలివరీ స్లాట్‌ను జోడించండి';
+
+  @override
+  String get noSlotsConfiguredTitle => 'డెలివరీ స్లాట్‌లు కాన్ఫిగర్ చేయబడలేదు';
+
+  @override
+  String get noSlotsConfiguredSubtitle =>
+      'కొనుగోలుదారులు అనుకూలమైన కోత సమయాన్ని ఎంచుకోవడానికి డెలివరీ విండోలను సృష్టించండి.';
+
+  @override
+  String get createFirstSlot => 'మొదటి స్లాట్ సృష్టించండి';
+
+  @override
+  String get createDeliverySlotModalTitle =>
+      'డెలివరీ విండో స్లాట్‌ను జోడించండి';
+
+  @override
+  String get saveSlotButton => 'డెలివరీ స్లాట్‌ను సేవ్ చేయండి';
+
+  @override
+  String get addedToCart => 'కార్ట్‌కి జోడించబడింది';
+
+  @override
+  String get viewCart => 'కార్ట్ చూడండి';
 }

@@ -504,6 +504,52 @@
     - Full test suite passing (420+ tests).
     - `flutter analyze`: clean with 0 issues.
 
+- [x] **P6.5 Guided Order Flow (Cart, Slots, Concurrency, Checkout & Confirmation)**:
+  - **Cart Architecture & State Management**:
+    - Built `CartItem`, `FarmerCartGroup`, and `CartState` with stock tracking, subtotal calculation, and auto-splitting across farmers (`lib/features/marketplace/domain/cart_item.dart`).
+    - Implemented `CartNotifier` extending Riverpod `Notifier<CartState>` with state methods: `addItem`, `updateQuantity`, `removeItem`, `toggleRewardCredits`, `selectSlot`, and `clear`.
+    - Built `CartScreen` (`/cart`, Screen in Provider/Marketplace) featuring:
+      - Sticky bottom checkout bar with item count and subtotal.
+      - Farmer-grouped produce list with per-farmer subtotal cards.
+      - Stock-constrained quantity stepper (`clamp(1.0, maxStock)`).
+      - Multi-farmer split advisory notice explaining separate direct farmer dispatches.
+      - Loyalty / reward credits discount toggle ("Demo mode").
+      - Empty state with direct "Explore Farm Produce" CTA.
+  - **Slot Manager & Farmer Area Slot Management**:
+    - Built `DeliverySlot` domain model with mode badges (`sameDay`, `nextDay`, `preOrder`), capacity calculation, and freshness window notes (`delivery_slot.dart`).
+    - Created `DeliverySlotsScreen` (`/farmer/delivery-slots`) in the Farmer area for farmers to define delivery and pickup windows with capacity meters and interactive modal creation sheet.
+    - Linked "Delivery & Pickup Slots" shortcut from Farmer Listings screen and Farmer Home quick links.
+  - **Guided 3-Step Checkout Wizard & Confirmation**:
+    - Built `OrderCheckoutWizard` (`/orders/checkout`) featuring:
+      - Step 1 (Slots & Fulfilment): Doorstep delivery vs Farm pickup switch; farmer slot picker with mode badges and capacity indicators.
+      - Step 2 (Address & Contact): Street address, landmark, and delivery instructions.
+      - Step 3 (Payment & Escrow Protection): Payment method selection (UPI, Card, NetBanking, COD) with platform escrow guarantee toggle.
+    - Built `OrderConfirmationScreen` (`/orders/confirmation/:id`):
+      - Sequential order codes (`ORD-YYMMDD-XXXXXX`) with 1-tap copy to clipboard.
+      - Escrow security guarantee badge.
+      - Multi-farmer order overview showing individual farmer direct orders.
+      - Direct navigation back to Provider Hub / Marketplace.
+  - **Atomic SQL Function & Row-Level Locking (`place_order`)**:
+    - Authored migration `0550_orders_cart_slots.sql` pushed to remote Supabase via `npx supabase db push`.
+    - `place_order` performs atomic row-level locking (`FOR UPDATE` on `produce_listings` and `delivery_slots`).
+    - Authoritative server pricing: completely ignores client-submitted prices; prices fetched strictly from database.
+    - Reserves stock atomically: checks `(stock_qty - reserved_qty) >= requested_qty`.
+    - Capacity check: checks `used < capacity` on `delivery_slots`.
+    - Auto-splits multi-farmer carts into 1 order per farmer.
+    - Trigger `trg_order_status_stock_and_slot_sync`: physical stock (`stock_qty`) is NOT decremented upon order placement; decrements only upon farmer acceptance (`status -> accepted`), strictly adhering to P6.2 and D58. Decline/cancellation releases reservation.
+  - **Concurrency & Invariant Verification**:
+    - Created test script `supabase/tests/orders_concurrency_tests.sql` verifying:
+      - Test 1 (Oversell Protection): Last unit cannot be ordered by two clients simultaneously; second fails with "Out of stock".
+      - Test 2 (Overbook Protection): Full delivery slot cannot be overbooked; fails with "Delivery slot is full".
+      - Test 3 (Price Integrity): Client cannot forge prices; database calculates exact price.
+      - Test 4 (Multi-Farmer Split): 2 farmers in cart produces 2 distinct orders atomically.
+      - Test 5 (Reservation Lifecycle): Physical stock drops only on farmer accept; releases on cancel.
+    - 9 Flutter tests in `test/orders_cart_slots_test.dart` and 8 tests in `test/produce_marketplace_and_traceability_test.dart` passing.
+    - Full test suite passed (429+ tests).
+    - Responsive layout verified at 360dp width and 1.6x text scale with 0 RenderFlex overflow issues.
+    - `flutter analyze`: clean with 0 issues.
+    - Debug APK built successfully (`build\app\outputs\flutter-apk\app-debug.apk`).
+
 ---
 
 ## Manual steps pending
@@ -521,7 +567,7 @@
 
 ## Known issues
 - **Profile & Auth Foreign Key Cascade vs D11 Retention**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`. The financial retention refactor will decouple `auth.users` deletion from audit records in an upcoming migration.
-- **Phase 6.5**: Farmer orders, delivery verification and buyer review is the next planned step.
+- **Phase 6.6**: Farmer order lifecycle management (accept, pack, out for delivery, verify delivery PIN, buyer review) is the next planned step.
 - **Phase 9 (Admin Console)**: Admin console is built in a separate web/desktop project and is out of scope for this Flutter app.
 
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/farmer/data/farmer_listings_repository.dart';
 import 'package:udyogasethu/features/farmer/domain/produce_listing_model.dart';
@@ -141,6 +143,13 @@ class _FarmerListingsScreenState extends ConsumerState<FarmerListingsScreen> {
           ),
         ),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.access_time_rounded, color: Colors.white),
+            tooltip: 'Delivery Slots',
+            onPressed: () {
+              context.push(AppRoutes.farmerDeliverySlots);
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.refresh_rounded, color: Colors.white),
             tooltip: 'Refresh',

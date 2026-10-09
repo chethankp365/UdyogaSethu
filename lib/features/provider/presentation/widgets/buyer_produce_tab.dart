@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/farmer/domain/produce_listing_model.dart';
+import 'package:udyogasethu/features/marketplace/data/orders_repository.dart';
 import 'package:udyogasethu/features/marketplace/data/produce_marketplace_repository.dart';
 import 'package:udyogasethu/features/marketplace/domain/lot_traceability_data.dart';
 import 'package:udyogasethu/features/marketplace/domain/produce_filters.dart';
@@ -180,25 +183,59 @@ class _BuyerProduceTabState extends ConsumerState<BuyerProduceTab> {
 
                 const SizedBox(height: 16),
 
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF064E3B),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                  onPressed: () {
-                    Navigator.of(ctx).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Direct order for ${orderQty.toStringAsFixed(0)} ${item.unit} sent to ${item.farmerName}! (Demo mode)',
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: Color(0xFF064E3B)),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
-                        backgroundColor: const Color(0xFF064E3B),
+                        onPressed: () {
+                          Navigator.of(ctx).pop();
+                          ref.read(cartNotifierProvider.notifier).addItem(item, quantity: orderQty);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                '${orderQty.toStringAsFixed(0)} ${item.unit} ${item.name} ${l10n?.addedToCart ?? 'added to cart!'}',
+                              ),
+                              action: SnackBarAction(
+                                label: l10n?.viewCart ?? 'View Cart',
+                                textColor: Colors.white,
+                                onPressed: () => context.push(AppRoutes.cart),
+                              ),
+                              backgroundColor: const Color(0xFF064E3B),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          l10n?.cartTitle ?? 'Add to Cart',
+                          style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF064E3B)),
+                        ),
                       ),
-                    );
-                  },
-                  child: const Text('Confirm Produce Request (Demo mode)', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF064E3B),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                        onPressed: () {
+                          Navigator.of(ctx).pop();
+                          ref.read(cartNotifierProvider.notifier).addItem(item, quantity: orderQty);
+                          context.push(AppRoutes.orderCheckout);
+                        },
+                        child: Text(
+                          l10n?.proceedToCheckout ?? 'Checkout Direct',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -357,6 +394,56 @@ class _BuyerProduceTabState extends ConsumerState<BuyerProduceTab> {
                         _isMapView ? Icons.view_list_rounded : Icons.map_rounded,
                         color: _isMapView ? Colors.white : const Color(0xFF475569),
                         size: 20,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(width: 8),
+
+                  // 4. Shopping Cart Button
+                  InkWell(
+                    onTap: () => context.push(AppRoutes.cart),
+                    borderRadius: BorderRadius.circular(14),
+                    child: Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          const Icon(Icons.shopping_cart_outlined, color: Color(0xFF0D6548), size: 20),
+                          Consumer(
+                            builder: (ctx, ref, _) {
+                              final cart = ref.watch(cartNotifierProvider);
+                              if (cart.isEmpty) return const SizedBox.shrink();
+                              return Positioned(
+                                top: 6,
+                                right: 6,
+                                child: Container(
+                                  padding: const EdgeInsets.all(3),
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFFEF4444),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                                  child: Text(
+                                    '${cart.totalQuantity}',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 9.5,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ),
