@@ -889,5 +889,60 @@
   "timerTitle": "লাইভ কাজের টাইমার",
   "timerRunning": "টাইমার চলছে",
   "timerPaused": "টাইমার থামানো হয়েছে",
-  "elapsedTime": "অতিক্রান্ত সময়"
+  "elapsedTime": "অতিক্রান্ত সময়",
+  "smartNoShowEngineHeader": "স্মার্ট নো-শো রিকভারি ইঞ্জিন",
+  "arrivalGraceExpiredAlert": "⚠️ আগমনের গ্রেস পিরিয়ড শেষ হয়েছে",
+  "workerHasNotArrivedTitle": "কর্মী আসেননি",
+  "workerHasNotArrivedSubtitle": "{workerName} {jobTitle} কাজের জন্য নির্ধারিত সময়ের চেয়ে {minutesLate} মিনিট দেরিতে আছেন।",
+  "@workerHasNotArrivedSubtitle": {
+    "placeholders": {
+      "workerName": {
+        "type": "String"
+      },
+      "minutesLate": {
+        "type": "int"
+      },
+      "jobTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "wait10MinutesAction": "10 মিনিট অপেক্ষা করুন",
+  "callWorkerDirectlyAction": "📞 কর্মীকে সরাসরি কল করুন",
+  "findSmartReplacementAction": "⚡ স্মার্ট বিকল্প কর্মী খুঁজুন",
+  "gracePeriodExtendedMsg": "+10 মিনিট অপেক্ষার সময় যোগ করা হয়েছে। টাইমার থামানো হয়েছে।",
+  "maskedCallDemoMsg": "কল করা হচ্ছে... (ডেমো মোড: মাস্কড কল P7.2 এ আসবে)",
+  "replacementBookedMsg": "{workerName}-এর সাথে বিকল্প কর্মী বুক করা হয়েছে! মূল কর্মীকে নো-শো চিহ্নিত করা হয়েছে।",
+  "@replacementBookedMsg": {
+    "placeholders": {
+      "workerName": {
+        "type": "String"
+      }
+    }
+  },
+  "rankedReplacementsTitle": "র‌্যাঙ্কযুক্ত নিকটবর্তী কর্মী",
+  "noReplacementsFoundMsg": "বর্তমানে কাছাকাছি কোনো বিকল্প কর্মী উপলব্ধ নেই।",
+  "requestReplacementOneTap": "বিকল্প অনুরোধ করুন (১-ট্যাপ)",
+  "smartNoShowTrustNote": "নো-শোতে শূন্য জরিমানা ফেরত। বিকল্প কর্মীদের ব্যাকগ্রাউন্ড যাচাইকৃত।",
+  "openRecoveryEngineAction": "নো-শো রিকভারি ইঞ্জিন খুলুন",
+  "runningLateQuestionAction": "দেরি হচ্ছে? আগমনের সময় জানান",
+  "runningLateReportedBadge": "দেরির তথ্য জানানো হয়েছে (+{minutes}মি)। টাইমার স্থগিত।",
+  "@runningLateReportedBadge": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "runningLateDialogTitle": "দেরি হচ্ছে?",
+  "runningLateDialogSubtitle": "আপনার প্রত্যাশিত বিলম্ব নির্বাচন করুন। এটি নিয়োগকর্তাকে অবহিত করবে এবং গ্রেস টাইমার একবার স্থগিত করবে।",
+  "sendEtaAction": "ETA পাঠান",
+  "runningLateSuccessMsg": "+{minutes} মিনিট বিলম্বের তথ্য পাঠানো হয়েছে। নিয়োগকর্তা অবহিত।",
+  "@runningLateSuccessMsg": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  }
 }

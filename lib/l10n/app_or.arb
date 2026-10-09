@@ -889,5 +889,60 @@
   "timerTitle": "ଲାଇଭ୍ କାର୍ଯ୍ୟ ଟାଇମର୍",
   "timerRunning": "ଟାଇମର୍ ଚାଲୁଅଛି",
   "timerPaused": "ଟାଇମର୍ ବନ୍ଦ ଅଛି",
-  "elapsedTime": "ଅତିବାହିତ ସମୟ"
+  "elapsedTime": "ଅତିବାହିତ ସମୟ",
+  "smartNoShowEngineHeader": "ସ୍ମାର୍ଟ ନୋ-ଶୋ ରିକଭରୀ ଇଞ୍ଜିନ",
+  "arrivalGraceExpiredAlert": "⚠️ ଆଗମନ ରିହାତି ସମୟ ସମାପ୍ତ",
+  "workerHasNotArrivedTitle": "ଶ୍ରମିକ ଆସିନାହାଁନ୍ତି",
+  "workerHasNotArrivedSubtitle": "{workerName} {jobTitle} ପାଇଁ ଧାର୍ଯ୍ୟ ସମୟଠାରୁ {minutesLate} ମିନିଟ୍ ବିଳମ୍ବରେ ଅଛନ୍ତି।",
+  "@workerHasNotArrivedSubtitle": {
+    "placeholders": {
+      "workerName": {
+        "type": "String"
+      },
+      "minutesLate": {
+        "type": "int"
+      },
+      "jobTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "wait10MinutesAction": "10 ମିନିଟ୍ ଅପେକ୍ଷା କରନ୍ତୁ",
+  "callWorkerDirectlyAction": "📞 ଶ୍ରମିକଙ୍କୁ ସିଧାସଳଖ କଲ୍ କରନ୍ତୁ",
+  "findSmartReplacementAction": "⚡ ସ୍ମାର୍ଟ ବିକଳ୍ପ ଶ୍ରମିକ ଖୋଜନ୍ତୁ",
+  "gracePeriodExtendedMsg": "+10 ମିନିଟ୍ ଅପେକ୍ଷା ସମୟ ଯୋଡ଼ାଗଲା। ଟାଇମର୍ ବନ୍ଦ ରହିଛି।",
+  "maskedCallDemoMsg": "କଲ୍ କରାଯାଉଛି... (ଡେମୋ ମୋଡ୍: ମାସ୍କଡ୍ କଲ୍ P7.2 ରେ ଆସିବ)",
+  "replacementBookedMsg": "{workerName} ଙ୍କ ସହିତ ବିକଳ୍ପ ବୁକ୍ ହେଲା! ମୂଳକୁ ନୋ-ଶୋ ଚିହ୍ନିତ କରାଗଲା।",
+  "@replacementBookedMsg": {
+    "placeholders": {
+      "workerName": {
+        "type": "String"
+      }
+    }
+  },
+  "rankedReplacementsTitle": "ନିକଟସ୍ଥ ଯୋଗ୍ୟ ଶ୍ରମିକ ତାଲିକା",
+  "noReplacementsFoundMsg": "ବର୍ତ୍ତମାନ କୌଣସି ନିକଟସ୍ଥ ବିକଳ୍ପ ଶ୍ରମିକ ଉପଲବ୍ଧ ନାହାଁନ୍ତି।",
+  "requestReplacementOneTap": "ବିକଳ୍ପ ଅନୁରୋଧ କରନ୍ତୁ (1-ଟ୍ୟାପ୍)",
+  "smartNoShowTrustNote": "ନୋ-ଶୋ ରେ ସମ୍ପୂର୍ଣ୍ଣ ଫେରସ୍ତ। ବିକଳ୍ପ ଶ୍ରମିକମାନଙ୍କ ପୃଷ୍ଠଭୂମି ଯାଞ୍ଚ ହୋଇଛି।",
+  "openRecoveryEngineAction": "ନୋ-ଶୋ ରିକଭରୀ ଇଞ୍ଜିନ ଖୋଲନ୍ତୁ",
+  "runningLateQuestionAction": "ଡେରି ହେଉଛି କି? ETA ଜଣାନ୍ତୁ",
+  "runningLateReportedBadge": "ବିଳମ୍ବ ବିଷୟରେ ଜଣାଇ ଦିଆଗଲା (+{minutes}ମି)। ଟାଇମର୍ ବନ୍ଦ ରହିଛି।",
+  "@runningLateReportedBadge": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "runningLateDialogTitle": "ବିଳମ୍ବ ହେଉଛି କି?",
+  "runningLateDialogSubtitle": "ଆପଣଙ୍କ ସମ୍ଭାବ୍ୟ ବିଳମ୍ବ ସମୟ ବାଛନ୍ତୁ। ଏହା ନିୟୋକ୍ତାଙ୍କୁ ଜଣାଇବ ଏବଂ ଟାଇମର୍‌କୁ ଥରେ ବନ୍ଦ ରଖିବ।",
+  "sendEtaAction": "ETA ପଠାନ୍ତୁ",
+  "runningLateSuccessMsg": "+{minutes} ମିନିଟ୍ ବିଳମ୍ବ ଜଣାଇ ଦିଆଗଲା। ନିୟୋକ୍ତାଙ୍କୁ ସୂଚନା ମିଳିଲା।",
+  "@runningLateSuccessMsg": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  }
 }

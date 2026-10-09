@@ -871,8 +871,12 @@
   "distanceFromSite": "Distance from site: {distance}m (Allowed: {radius}m)",
   "@distanceFromSite": {
     "placeholders": {
-      "distance": { "type": "String" },
-      "radius": { "type": "String" }
+      "distance": {
+        "type": "String"
+      },
+      "radius": {
+        "type": "String"
+      }
     }
   },
   "mockLocationDetected": "Mock / Fake GPS detected. Start refused and logged for review.",
@@ -884,8 +888,12 @@
   "outOfGeofenceMessage": "You appear to be {distance}m away from the job site. You must be within {radius}m to start.",
   "@outOfGeofenceMessage": {
     "placeholders": {
-      "distance": { "type": "String" },
-      "radius": { "type": "String" }
+      "distance": {
+        "type": "String"
+      },
+      "radius": {
+        "type": "String"
+      }
     }
   },
   "getHelpOrSupport": "Get Help / Support",
@@ -901,5 +909,60 @@
   "timerTitle": "Live Work Timer",
   "timerRunning": "Timer Running",
   "timerPaused": "Timer Paused",
-  "elapsedTime": "Elapsed Time"
+  "elapsedTime": "Elapsed Time",
+  "smartNoShowEngineHeader": "SMART NO-SHOW RECOVERY ENGINE",
+  "arrivalGraceExpiredAlert": "⚠️ ARRIVAL GRACE PERIOD EXPIRED",
+  "workerHasNotArrivedTitle": "Worker Has Not Arrived",
+  "workerHasNotArrivedSubtitle": "{workerName} is {minutesLate} minutes past the scheduled arrival time for {jobTitle}.",
+  "@workerHasNotArrivedSubtitle": {
+    "placeholders": {
+      "workerName": {
+        "type": "String"
+      },
+      "minutesLate": {
+        "type": "int"
+      },
+      "jobTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "wait10MinutesAction": "Wait 10 Minutes",
+  "callWorkerDirectlyAction": "📞 Call Worker Directly",
+  "findSmartReplacementAction": "⚡ Find Smart Replacement Worker",
+  "gracePeriodExtendedMsg": "Added +10 minutes wait grace. Timer paused.",
+  "maskedCallDemoMsg": "Dialing worker... (Demo mode: Masked call arrives in P7.2)",
+  "replacementBookedMsg": "Replacement booked with {workerName}! Original marked as no-show.",
+  "@replacementBookedMsg": {
+    "placeholders": {
+      "workerName": {
+        "type": "String"
+      }
+    }
+  },
+  "rankedReplacementsTitle": "RANKED NEARBY WORKERS",
+  "noReplacementsFoundMsg": "No nearby replacement candidates available right now.",
+  "requestReplacementOneTap": "Request Replacement (1-Tap)",
+  "smartNoShowTrustNote": "Zero-penalty refund on no-shows. Replacement workers are background-screened.",
+  "openRecoveryEngineAction": "Open No-Show Recovery Engine",
+  "runningLateQuestionAction": "Running late? Tap to share ETA",
+  "runningLateReportedBadge": "Reported running late (+{minutes}m). Timer paused.",
+  "@runningLateReportedBadge": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "runningLateDialogTitle": "Running Late?",
+  "runningLateDialogSubtitle": "Select your expected arrival delay. This notifies your employer and pauses the arrival grace timer once.",
+  "sendEtaAction": "Send ETA",
+  "runningLateSuccessMsg": "Reported +{minutes} minutes ETA. Employer notified.",
+  "@runningLateSuccessMsg": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  }
 }

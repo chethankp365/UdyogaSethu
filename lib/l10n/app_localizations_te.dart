@@ -2479,4 +2479,86 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get elapsedTime => 'గడిచిన సమయం';
+
+  @override
+  String get smartNoShowEngineHeader => 'స్మార్ట్ నో-షో రికవరీ ఇంజిన్';
+
+  @override
+  String get arrivalGraceExpiredAlert => '⚠️ రాక గ్రేస్ పీరియడ్ ముగిసింది';
+
+  @override
+  String get workerHasNotArrivedTitle => 'కార్మికుడు రాలేదు';
+
+  @override
+  String workerHasNotArrivedSubtitle(
+    String workerName,
+    int minutesLate,
+    String jobTitle,
+  ) {
+    return '$workerName $jobTitle కోసం నిర్ణీత సమయానికి $minutesLate నిమిషాలు ఆలస్యంగా ఉన్నారు.';
+  }
+
+  @override
+  String get wait10MinutesAction => '10 నిమిషాలు వేచి ఉండండి';
+
+  @override
+  String get callWorkerDirectlyAction => '📞 కార్మికుడికి నేరుగా కాల్ చేయండి';
+
+  @override
+  String get findSmartReplacementAction =>
+      '⚡ స్మార్ట్ ప్రత్యామ్నాయ కార్మికుడిని కనుగొనండి';
+
+  @override
+  String get gracePeriodExtendedMsg =>
+      '+10 నిమిషాల నిరీక్షణ సమయం జోడించబడింది. టైమర్ పాజ్ చేయబడింది.';
+
+  @override
+  String get maskedCallDemoMsg =>
+      'కాల్ చేయబడుతోంది... (డెమో మోడ్: మాస్క్డ్ కాల్ P7.2 లో వస్తుంది)';
+
+  @override
+  String replacementBookedMsg(String workerName) {
+    return '$workerNameతో ప్రత్యామ్నాయం బుక్ చేయబడింది! అసలు బుకింగ్ నో-షోగా గుర్తించబడింది.';
+  }
+
+  @override
+  String get rankedReplacementsTitle => 'ర్యాంక్ పొందిన సమీప కార్మికులు';
+
+  @override
+  String get noReplacementsFoundMsg =>
+      'ప్రస్తుతం సమీపంలో ప్రత్యామ్నాయ కార్మికులు ఎవరూ అందుబాటులో లేరు.';
+
+  @override
+  String get requestReplacementOneTap =>
+      'ప్రత్యామ్నాయాన్ని అభ్యర్థించండి (1-ట్యాప్)';
+
+  @override
+  String get smartNoShowTrustNote =>
+      'నో-షోపై పూర్తి వాపసు. ప్రత్యామ్నాయ కార్మికుల నేపథ్యం పరిశీలించబడింది.';
+
+  @override
+  String get openRecoveryEngineAction => 'నో-షో రికవరీ ఇంజిన్ తెరవండి';
+
+  @override
+  String get runningLateQuestionAction => 'ఆలస్యమవుతోందా? ETA పంచుకోండి';
+
+  @override
+  String runningLateReportedBadge(int minutes) {
+    return 'ఆలస్యం నివేదించబడింది (+$minutesని). టైమర్ పాజ్ చేయబడింది.';
+  }
+
+  @override
+  String get runningLateDialogTitle => 'ఆలస్యమవుతోందా?';
+
+  @override
+  String get runningLateDialogSubtitle =>
+      'మీ అంచనా ఆలస్యాన్ని ఎంచుకోండి. ఇది యజమానికి తెలియజేస్తుంది మరియు టైమర్‌ను ఒకసారి పాజ్ చేస్తుంది.';
+
+  @override
+  String get sendEtaAction => 'ETA పంపండి';
+
+  @override
+  String runningLateSuccessMsg(int minutes) {
+    return '+$minutes నిమిషాల ఆలస్యం నివేదించబడింది. యజమానికి తెలియజేయబడింది.';
+  }
 }

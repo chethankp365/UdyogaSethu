@@ -2464,4 +2464,84 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get elapsedTime => 'অতিক্রান্ত সময়';
+
+  @override
+  String get smartNoShowEngineHeader => 'স্মার্ট নো-শো রিকভারি ইঞ্জিন';
+
+  @override
+  String get arrivalGraceExpiredAlert => '⚠️ আগমনের গ্রেস পিরিয়ড শেষ হয়েছে';
+
+  @override
+  String get workerHasNotArrivedTitle => 'কর্মী আসেননি';
+
+  @override
+  String workerHasNotArrivedSubtitle(
+    String workerName,
+    int minutesLate,
+    String jobTitle,
+  ) {
+    return '$workerName $jobTitle কাজের জন্য নির্ধারিত সময়ের চেয়ে $minutesLate মিনিট দেরিতে আছেন।';
+  }
+
+  @override
+  String get wait10MinutesAction => '10 মিনিট অপেক্ষা করুন';
+
+  @override
+  String get callWorkerDirectlyAction => '📞 কর্মীকে সরাসরি কল করুন';
+
+  @override
+  String get findSmartReplacementAction => '⚡ স্মার্ট বিকল্প কর্মী খুঁজুন';
+
+  @override
+  String get gracePeriodExtendedMsg =>
+      '+10 মিনিট অপেক্ষার সময় যোগ করা হয়েছে। টাইমার থামানো হয়েছে।';
+
+  @override
+  String get maskedCallDemoMsg =>
+      'কল করা হচ্ছে... (ডেমো মোড: মাস্কড কল P7.2 এ আসবে)';
+
+  @override
+  String replacementBookedMsg(String workerName) {
+    return '$workerName-এর সাথে বিকল্প কর্মী বুক করা হয়েছে! মূল কর্মীকে নো-শো চিহ্নিত করা হয়েছে।';
+  }
+
+  @override
+  String get rankedReplacementsTitle => 'র‌্যাঙ্কযুক্ত নিকটবর্তী কর্মী';
+
+  @override
+  String get noReplacementsFoundMsg =>
+      'বর্তমানে কাছাকাছি কোনো বিকল্প কর্মী উপলব্ধ নেই।';
+
+  @override
+  String get requestReplacementOneTap => 'বিকল্প অনুরোধ করুন (১-ট্যাপ)';
+
+  @override
+  String get smartNoShowTrustNote =>
+      'নো-শোতে শূন্য জরিমানা ফেরত। বিকল্প কর্মীদের ব্যাকগ্রাউন্ড যাচাইকৃত।';
+
+  @override
+  String get openRecoveryEngineAction => 'নো-শো রিকভারি ইঞ্জিন খুলুন';
+
+  @override
+  String get runningLateQuestionAction => 'দেরি হচ্ছে? আগমনের সময় জানান';
+
+  @override
+  String runningLateReportedBadge(int minutes) {
+    return 'দেরির তথ্য জানানো হয়েছে (+$minutesমি)। টাইমার স্থগিত।';
+  }
+
+  @override
+  String get runningLateDialogTitle => 'দেরি হচ্ছে?';
+
+  @override
+  String get runningLateDialogSubtitle =>
+      'আপনার প্রত্যাশিত বিলম্ব নির্বাচন করুন। এটি নিয়োগকর্তাকে অবহিত করবে এবং গ্রেস টাইমার একবার স্থগিত করবে।';
+
+  @override
+  String get sendEtaAction => 'ETA পাঠান';
+
+  @override
+  String runningLateSuccessMsg(int minutes) {
+    return '+$minutes মিনিট বিলম্বের তথ্য পাঠানো হয়েছে। নিয়োগকর্তা অবহিত।';
+  }
 }

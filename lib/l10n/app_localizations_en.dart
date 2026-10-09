@@ -2464,4 +2464,84 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get elapsedTime => 'Elapsed Time';
+
+  @override
+  String get smartNoShowEngineHeader => 'SMART NO-SHOW RECOVERY ENGINE';
+
+  @override
+  String get arrivalGraceExpiredAlert => '⚠️ ARRIVAL GRACE PERIOD EXPIRED';
+
+  @override
+  String get workerHasNotArrivedTitle => 'Worker Has Not Arrived';
+
+  @override
+  String workerHasNotArrivedSubtitle(
+    String workerName,
+    int minutesLate,
+    String jobTitle,
+  ) {
+    return '$workerName is $minutesLate minutes past the scheduled arrival time for $jobTitle.';
+  }
+
+  @override
+  String get wait10MinutesAction => 'Wait 10 Minutes';
+
+  @override
+  String get callWorkerDirectlyAction => '📞 Call Worker Directly';
+
+  @override
+  String get findSmartReplacementAction => '⚡ Find Smart Replacement Worker';
+
+  @override
+  String get gracePeriodExtendedMsg =>
+      'Added +10 minutes wait grace. Timer paused.';
+
+  @override
+  String get maskedCallDemoMsg =>
+      'Dialing worker... (Demo mode: Masked call arrives in P7.2)';
+
+  @override
+  String replacementBookedMsg(String workerName) {
+    return 'Replacement booked with $workerName! Original marked as no-show.';
+  }
+
+  @override
+  String get rankedReplacementsTitle => 'RANKED NEARBY WORKERS';
+
+  @override
+  String get noReplacementsFoundMsg =>
+      'No nearby replacement candidates available right now.';
+
+  @override
+  String get requestReplacementOneTap => 'Request Replacement (1-Tap)';
+
+  @override
+  String get smartNoShowTrustNote =>
+      'Zero-penalty refund on no-shows. Replacement workers are background-screened.';
+
+  @override
+  String get openRecoveryEngineAction => 'Open No-Show Recovery Engine';
+
+  @override
+  String get runningLateQuestionAction => 'Running late? Tap to share ETA';
+
+  @override
+  String runningLateReportedBadge(int minutes) {
+    return 'Reported running late (+${minutes}m). Timer paused.';
+  }
+
+  @override
+  String get runningLateDialogTitle => 'Running Late?';
+
+  @override
+  String get runningLateDialogSubtitle =>
+      'Select your expected arrival delay. This notifies your employer and pauses the arrival grace timer once.';
+
+  @override
+  String get sendEtaAction => 'Send ETA';
+
+  @override
+  String runningLateSuccessMsg(int minutes) {
+    return 'Reported +$minutes minutes ETA. Employer notified.';
+  }
 }

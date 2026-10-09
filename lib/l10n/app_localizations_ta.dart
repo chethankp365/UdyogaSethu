@@ -2486,4 +2486,87 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get elapsedTime => 'கடந்த நேரம்';
+
+  @override
+  String get smartNoShowEngineHeader => 'ஸ்மார்ட் நோ-ஷோ மீட்பு என்ஜின்';
+
+  @override
+  String get arrivalGraceExpiredAlert => '⚠️ வருகை சலுகைக் காலம் முடிந்தது';
+
+  @override
+  String get workerHasNotArrivedTitle => 'பணியாளர் வரவில்லை';
+
+  @override
+  String workerHasNotArrivedSubtitle(
+    String workerName,
+    int minutesLate,
+    String jobTitle,
+  ) {
+    return '$workerName $jobTitle பணிக்காக திட்டமிடப்பட்ட நேரத்தை விட $minutesLate நிமிடங்கள் தாமதமாக உள்ளார்.';
+  }
+
+  @override
+  String get wait10MinutesAction => '10 நிமிடங்கள் காத்திருங்கள்';
+
+  @override
+  String get callWorkerDirectlyAction => '📞 பணியாளரை நேரடியாக அழைக்கவும்';
+
+  @override
+  String get findSmartReplacementAction =>
+      '⚡ ஸ்மார்ட் மாற்றுப் பணியாளரைக் கண்டறியவும்';
+
+  @override
+  String get gracePeriodExtendedMsg =>
+      '+10 நிமிடங்கள் காத்திருப்பு சலுகை சேர்க்கப்பட்டது. டைமர் இடைநிறுத்தப்பட்டது.';
+
+  @override
+  String get maskedCallDemoMsg =>
+      'அழைக்கப்படுகிறது... (டெமோ பயன்முறை: முகமூடி அழைப்பு P7.2 இல் வரும்)';
+
+  @override
+  String replacementBookedMsg(String workerName) {
+    return '$workerName உடன் மாற்றுப் பணியாளர் புக் செய்யப்பட்டார்! முந்தையவர் வரவில்லை எனக் குறிக்கப்பட்டது.';
+  }
+
+  @override
+  String get rankedReplacementsTitle =>
+      'வரிசைப்படுத்தப்பட்ட அருகிலுள்ள பணியாளர்கள்';
+
+  @override
+  String get noReplacementsFoundMsg =>
+      'தற்போது அருகில் மாற்றுப் பணியாளர்கள் யாரும் கிடைக்கவில்லை.';
+
+  @override
+  String get requestReplacementOneTap =>
+      'மாற்றுப் பணியாளரைக் கோருங்கள் (1-தட்டல்)';
+
+  @override
+  String get smartNoShowTrustNote =>
+      'நோ-ஷோ ஏற்பட்டால் முழு பணத்தைத் திரும்பப் பெறுதல். மாற்றுப் பணியாளர்கள் சரிபார்க்கப்பட்டவர்கள்.';
+
+  @override
+  String get openRecoveryEngineAction => 'நோ-ஷோ மீட்பு என்ஜினைத் திறக்கவும்';
+
+  @override
+  String get runningLateQuestionAction => 'தாமதமாகிறதா? ETA பகிர தட்டவும்';
+
+  @override
+  String runningLateReportedBadge(int minutes) {
+    return 'தாமதம் தெரிவிக்கப்பட்டது (+$minutesநி). டைமர் இடைநிறுத்தப்பட்டது.';
+  }
+
+  @override
+  String get runningLateDialogTitle => 'தாமதமாகிறதா?';
+
+  @override
+  String get runningLateDialogSubtitle =>
+      'உங்கள் எதிர்பார்க்கப்படும் தாமதத்தைத் தேர்ந்தெடுக்கவும். இது முதலாளிக்குத் தெரிவிக்கும் மற்றும் டைமரை ஒருமுறை இடைநிறுத்தும்.';
+
+  @override
+  String get sendEtaAction => 'ETA அனுப்பவும்';
+
+  @override
+  String runningLateSuccessMsg(int minutes) {
+    return '+$minutes நிமிடங்கள் தாமதம் தெரிவிக்கப்பட்டது. முதலாளிக்கு அறிவிக்கப்பட்டது.';
+  }
 }

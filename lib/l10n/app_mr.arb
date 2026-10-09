@@ -889,5 +889,60 @@
   "timerTitle": "थेट काम टायमर",
   "timerRunning": "टायमर चालू आहे",
   "timerPaused": "टायमर थांबवला आहे",
-  "elapsedTime": "झालेला वेळ"
+  "elapsedTime": "झालेला वेळ",
+  "smartNoShowEngineHeader": "स्मार्ट नो-शो रिकव्हरी इंजिन",
+  "arrivalGraceExpiredAlert": "⚠️ आगमन सवलत कालावधी संपला",
+  "workerHasNotArrivedTitle": "कामगार पोहोचलेला नाही",
+  "workerHasNotArrivedSubtitle": "{workerName} {jobTitle} कामासाठी ठरलेल्या वेळेपेक्षा {minutesLate} मिनिटे उशिरा आहेत.",
+  "@workerHasNotArrivedSubtitle": {
+    "placeholders": {
+      "workerName": {
+        "type": "String"
+      },
+      "minutesLate": {
+        "type": "int"
+      },
+      "jobTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "wait10MinutesAction": "10 मिनिटे थांबा",
+  "callWorkerDirectlyAction": "📞 कामगाराला थेट कॉल करा",
+  "findSmartReplacementAction": "⚡ स्मार्ट पर्यायी कामगार शोधा",
+  "gracePeriodExtendedMsg": "+10 मिनिटे प्रतीक्षा वेळ जोडली. टायमर थांबवला.",
+  "maskedCallDemoMsg": "कॉल केला जात आहे... (डेमो मोड: मास्क केलेला कॉल P7.2 मध्ये येईल)",
+  "replacementBookedMsg": "{workerName} सह पर्यायी बुकिंग झाले! मूळ बुकिंग नो-शो म्हणून चिन्हांकित.",
+  "@replacementBookedMsg": {
+    "placeholders": {
+      "workerName": {
+        "type": "String"
+      }
+    }
+  },
+  "rankedReplacementsTitle": "क्रमवारी लावलेले जवळचे कामगार",
+  "noReplacementsFoundMsg": "सध्या जवळ कोणताही पर्यायी कामगार उपलब्ध नाही.",
+  "requestReplacementOneTap": "पर्यायी कामगार विनंती करा (1-टॅप)",
+  "smartNoShowTrustNote": "नो-शो वर शून्य-दंड परतावा. पर्यायी कामगारांची पार्श्वभूमी तपासलेली आहे.",
+  "openRecoveryEngineAction": "नो-शो रिकव्हरी इंजिन उघडा",
+  "runningLateQuestionAction": "उशीर होतोय? आगमन वेळ शेअर करा",
+  "runningLateReportedBadge": "उशिरा पोहोचण्याची नोंद केली (+{minutes}मि). टायमर थांबवला.",
+  "@runningLateReportedBadge": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "runningLateDialogTitle": "उशीर होतोय का?",
+  "runningLateDialogSubtitle": "तुमचा अपेक्षित उशीर निवडा. यामुळे मालकाला कळवले जाईल आणि ग्रेस टायमर एकदा थांबवला जाईल.",
+  "sendEtaAction": "ETA पाठवा",
+  "runningLateSuccessMsg": "+{minutes} मिनिटे उशीर कळवला. मालकाला सूचना दिली.",
+  "@runningLateSuccessMsg": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  }
 }

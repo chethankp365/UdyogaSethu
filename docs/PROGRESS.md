@@ -50,9 +50,9 @@
 - [x] **P4.5**: Provider hub, worker search and worker profile (Status: Done)
 - [x] **P4.6**: Direct booking flow with unverified-worker notice and job protection (Status: Done)
 - [x] **P4.7**: Job timeline, active job screen, schedule and route ETA (Status: Done | Built `RoutingService` with public OSRM client and straight-line Haversine fallback; `AssignmentTimelineWidget` with Supabase Realtime channel stream for 9 canonical assignment stages; `ActiveJobScreen` with status banner, one big next action, Simple Mode huge card with TTS narration via `flutter_tts`, route map with polylines, and "Open in Maps" external launcher; `WorkerScheduleScreen` with Day/Week view, schedule strip, and travel time warning chips; Supabase migration `0420_assignment_timeline_p47.sql` with realtime triggers and RPCs `advance_assignment_stage`, `get_active_job_details`, `get_worker_schedule`; 35 keys across all 8 ARB languages; clean analysis and 8 automated tests in `test/job_execution_test.dart`)
-- [ ] **P4.8**: QR job ticket and employer attendance scan (Status: Todo)
-- [ ] **P4.9**: Two-step verified start, timer, mid-job check, completion and evidence (Status: Todo)
-- [ ] **P4.10**: Smart no-show recovery (Status: Todo)
+- [x] **P4.8**: QR job ticket and employer attendance scan (Status: Done)
+- [x] **P4.9**: Two-step verified start, timer, mid-job check, completion and evidence (Status: Done)
+- [x] **P4.10**: Smart no-show recovery (Status: Done | Feature #48)
 - [ ] **P4.11**: Ratings, reviews, favourites, rebooking and disputes (Status: Todo)
 
 ## Phase 5 (Money: wallet, payments and escrow-style protection)
@@ -186,6 +186,28 @@
     - `JobCompletionScreen` (`/jobs/completion/:id`): Completion selfie capture, private work-result photo gallery uploaded to `job-evidence` bucket under `${userId}/...`, location logging, and submission.
     - `ActiveJobScreen`: Integrated live timer card, mid-job verification banner, updated primary action flows for worker and provider, and employer completion confirmation modal.
   - **Localization & Quality**: Added 27 keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`) verified via `dart run tool/check_l10n.dart` (749 keys each, 100% complete) and regenerated via `flutter gen-l10n`. Added comprehensive tests in `test/job_verification_test.dart` (8/8 tests passed). Full test suite: 336/336 tests passed cleanly (`flutter test`). Static analysis: `flutter analyze` 0 issues.
+
+- [x] **P4.10**: Smart no-show recovery (Status: Done | Feature #48)
+  - **Database Migrations (`0450_no_show_recovery.sql`, `0451_no_show_fix.sql`, `0452_find_replacement_fix.sql`, `0453_worker_skills_user_id.sql`, `0454_skills_names_column.sql`)**:
+    - Added columns to `job_assignments`: `extended_grace_minutes`, `late_notified_at`, `running_late_eta_minutes`, `running_late_reported_at`, `no_show_timer_paused`.
+    - Created idempotent RPC `check_no_show_assignments()` scanning assignments in `ticket_issued` whose start time + grace period (15m default from `admin_settings`) has passed without arrival. Idempotently marks late in `assignment_events`, logs `late_notified_at`, and notifies both provider and worker once via `notifications`.
+    - Created RPC `extend_wait(assignment_id, minutes)` adding grace to `extended_grace_minutes`, logging `grace_extended`, notifying worker, and resetting `late_notified_at`.
+    - Created RPC `report_running_late(assignment_id, eta_minutes)` pausing no-show timer once, setting `no_show_timer_paused = true`, recording `running_late_reported_at`, and notifying provider.
+    - Created RPC `find_replacement(assignment_id)` / `find_replacement_candidates(assignment_id)` ranking nearby available workers by skill match, verification, rating, and distance (excluding late worker).
+    - Created RPC `confirm_replacement(assignment_id, replacement_worker_id)` marking original assignment as `no_show`, triggering escrow refund path (`refund_escrow`), creating new replacement assignment (`replaced_by` link), sending notifications, and automatically creating a `fraud_flags` entry (`rule_key: 'excessive_no_shows'`) when a worker accumulates 3 no-shows within 30 days.
+    - Scheduled with `pg_cron` (`* * * * *`) when extension is active.
+  - **Edge Function `no-show-check`**:
+    - Created and deployed live to Supabase (`npx supabase functions deploy no-show-check`). Runs idempotent `check_no_show_assignments()` with service-role credentials.
+  - **Flutter Presentation & State**:
+    - `ReplacementCandidate` domain model with distance formatting, ratings, and skills.
+    - `ActiveJobDetail` enhanced with `extendedGraceMinutes`, `lateNotifiedAt`, `runningLateEtaMinutes`, `runningLateReportedAt`, `noShowTimerPaused`, `replacedBy`, and getters `isLate` and `minutesPastScheduledArrival`.
+    - `WorkerNotArrivedSheet` (`lib/features/job_execution/presentation/widgets/worker_not_arrived_sheet.dart`): Provider dark-panel modal sheet (`#0B132B`) with "Wait 10 Minutes", "Call Worker Directly" (Demo mode banner), and "Find Smart Replacement Worker" showing ranked nearby candidates with 1-tap request action.
+    - `RunningLateDialog` (`lib/features/job_execution/presentation/widgets/running_late_dialog.dart`): Worker modal to choose ETA delay (+10m, +15m, +30m, +45m) and notify provider, pausing timer once.
+    - `ActiveJobScreen`: Integrated 15s periodic no-show background checker, auto-popup of `WorkerNotArrivedSheet` for provider when worker is late, urgent recovery alert banner, and worker "Running late?" action chip.
+    - Simulation & Teardown scripts: `supabase/dev/simulate_late_assignment.sql` and `supabase/dev/cleanup_late_assignment.sql`.
+  - **Localization & Quality**:
+    - Added 21 keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`) verified via `dart run tool/check_l10n.dart` (770 keys each, 100% complete) and regenerated via `flutter gen-l10n`.
+    - Added comprehensive test suite in `test/no_show_recovery_test.dart` (5/5 tests passed). Full test suite: 341/341 tests passed cleanly (`flutter test`). Static analysis: `flutter analyze` 0 issues.
 
 ---
 

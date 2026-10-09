@@ -156,6 +156,16 @@ This document records key design, architectural, role model, and implementation 
   * **Active Job Screen with Simple Mode**: Supports both Worker and Provider counterparties. In Simple Mode (`profiles.simple_mode` / `UserSettings.simpleMode`), the primary action is enlarged to a huge gradient card (76dp+ min height, 36dp icons, 20sp bold text) with a spoken TTS audio label via `flutter_tts` ("Accept Job", "Start Work", "Complete Job", "Ask for Help").
   * **Worker Schedule with Travel Warning**: Day and Week calendar views with SQL conflict checks. Displays a prominent amber warning chip whenever the time gap between consecutive assignments is shorter than the estimated travel time.
 
+* **D48 — Smart No-Show Recovery Engine, Replacement Matching & Masked Call Simulation**:
+  * **Idempotent Automatic Cron Engine**: Every minute, `check_no_show_assignments()` scans `job_assignments` in `ticket_issued` status where start time plus grace period (`no_show_grace_minutes` from `admin_settings`, default 15m) plus any extended wait and worker ETA has passed without arrival. Idempotently logs a single `late_arrival_warning` in `assignment_events`, records `late_notified_at`, and notifies both provider and worker once via `notifications`.
+  * **Provider Recovery Actions**: When past scheduled arrival, provider receives dark-panel sheet (`#0B132B`) with:
+    1. **Wait 10 Minutes**: calls `extend_wait(assignment, 10)` which adds grace to `extended_grace_minutes`, logs `grace_extended` event, notifies worker, and pauses the timer.
+    2. **Call Worker Directly**: initiates private masked call. As per AGENTS.md honesty rules, marked with amber "Demo mode: Masked call arrives in P7.2".
+    3. **Find Smart Replacement Worker**: calls `find_replacement(assignment)` ranking nearby available workers by skill match, verification, rating, and distance (excluding late worker). Tapping candidate triggers `confirm_replacement` (marks original as `no_show`, creates new assignment with `replaced_by` link, triggers escrow refund path for original, and notifies parties).
+  * **Worker Running Late Action**: Worker side displays a "Running late?" action with delay options (+10m, +15m, +30m, +45m) calling `report_running_late(assignment, eta)`. Pauses no-show timer once, sets `no_show_timer_paused = true`, and notifies provider.
+  * **Fraud Flags Rule**: 3 no-shows within 30 days automatically creates an `open` row in `fraud_flags` with `rule_key: 'excessive_no_shows'` and severity `high` for admin review.
+
+
 
 
 

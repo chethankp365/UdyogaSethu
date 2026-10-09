@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -16,6 +17,8 @@ import 'package:udyogasethu/features/job_execution/domain/assignment_event_item.
 import 'package:udyogasethu/features/job_execution/presentation/assignment_timeline_widget.dart';
 import 'package:udyogasethu/features/job_execution/presentation/mid_job_dialog.dart';
 import 'package:udyogasethu/features/job_execution/presentation/widgets/job_live_timer_card.dart';
+import 'package:udyogasethu/features/job_execution/presentation/widgets/running_late_dialog.dart';
+import 'package:udyogasethu/features/job_execution/presentation/widgets/worker_not_arrived_sheet.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class ActiveJobScreen extends ConsumerStatefulWidget {
@@ -38,12 +41,31 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
   bool _isLoadingRoute = true;
   bool _isActionInProgress = false;
   bool? _overrideSimpleMode;
+  bool _hasShownNoShowSheet = false;
+  Timer? _noShowCheckTimer;
 
   @override
   void initState() {
     super.initState();
     _initTts();
     _fetchRoute();
+    _startNoShowChecker();
+  }
+
+  void _startNoShowChecker() {
+    _checkNoShow();
+    _noShowCheckTimer = Timer.periodic(const Duration(seconds: 15), (_) {
+      _checkNoShow();
+    });
+  }
+
+  Future<void> _checkNoShow() async {
+    try {
+      await ref.read(jobExecutionRepositoryProvider).checkNoShowAssignments();
+      if (mounted) {
+        ref.invalidate(activeJobDetailProvider(widget.assignmentId));
+      }
+    } catch (_) {}
   }
 
   Future<void> _initTts() async {
@@ -99,6 +121,7 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
 
   @override
   void dispose() {
+    _noShowCheckTimer?.cancel();
     _tts.stop();
     super.dispose();
   }
@@ -186,12 +209,40 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
           ),
         ),
         data: (detail) {
+          // Auto-trigger No-Show Sheet once for Provider when worker is late
+          if (isProvider && detail.isLate && !_hasShownNoShowSheet && mounted) {
+            _hasShownNoShowSheet = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) {
+                WorkerNotArrivedSheet.show(
+                  context,
+                  jobDetail: detail,
+                  onActionCompleted: () {
+                    ref.invalidate(activeJobDetailProvider(widget.assignmentId));
+                  },
+                );
+              }
+            });
+          }
+
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
               // 1. Status Banner with Pulsing Live Dot
               _buildStatusBanner(context, detail, l10n),
               const SizedBox(height: 16),
+
+              // Provider No-Show Alert Banner (when late or late_notified_at is set)
+              if (isProvider && (detail.isLate || detail.lateNotifiedAt != null) && detail.status == 'ticket_issued') ...[
+                _buildProviderNoShowBanner(context, detail, l10n),
+                const SizedBox(height: 16),
+              ],
+
+              // Worker-side "Running late?" action banner
+              if (!isProvider && (detail.stage == AssignmentStage.accepted || detail.stage == AssignmentStage.ticketIssued) && detail.arrivedAt == null) ...[
+                _buildWorkerRunningLateSection(context, detail, l10n),
+                const SizedBox(height: 16),
+              ],
 
               // Server-authoritative Live Timer (when job is in progress or completed)
               if (detail.stage == AssignmentStage.jobInProgress || detail.startedAt != null) ...[
@@ -1163,6 +1214,184 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildProviderNoShowBanner(
+    BuildContext context,
+    ActiveJobDetail detail,
+    AppLocalizations? l10n,
+  ) {
+    final minsLate = detail.minutesPastScheduledArrival;
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0B132B),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFEF4444).withValues(alpha: 0.6)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.15),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFEF4444),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.warning_amber_rounded, color: Colors.white, size: 18),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n?.arrivalGraceExpiredAlert ?? '⚠️ ARRIVAL GRACE PERIOD EXPIRED',
+                      style: const TextStyle(
+                        color: Color(0xFFF87171),
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.6,
+                      ),
+                    ),
+                    Text(
+                      l10n?.workerHasNotArrivedTitle ?? 'Worker Has Not Arrived',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            l10n?.workerHasNotArrivedSubtitle(
+                  detail.workerName,
+                  minsLate > 0 ? minsLate : 15,
+                  detail.jobTitle,
+                ) ??
+                '${detail.workerName} is ${minsLate > 0 ? minsLate : 15} minutes past arrival time.',
+            style: const TextStyle(color: Color(0xFFCBD5E1), fontSize: 12.5),
+          ),
+          const SizedBox(height: 12),
+          ElevatedButton.icon(
+            onPressed: () {
+              WorkerNotArrivedSheet.show(
+                context,
+                jobDetail: detail,
+                onActionCompleted: () {
+                  ref.invalidate(activeJobDetailProvider(widget.assignmentId));
+                },
+              );
+            },
+            icon: const Icon(Icons.flash_on_rounded, size: 18),
+            label: Text(
+              l10n?.openRecoveryEngineAction ?? 'Open No-Show Recovery Engine',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.accentOrange,
+              foregroundColor: Colors.white,
+              minimumSize: const Size.fromHeight(40),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWorkerRunningLateSection(
+    BuildContext context,
+    ActiveJobDetail detail,
+    AppLocalizations? l10n,
+  ) {
+    final alreadyReported = detail.runningLateReportedAt != null;
+
+    if (alreadyReported) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: const Color(0xFFECFDF5),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFF10B981).withValues(alpha: 0.5)),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.check_circle_rounded, color: Color(0xFF047857), size: 18),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                l10n?.runningLateReportedBadge(detail.runningLateEtaMinutes ?? 15) ??
+                    'Reported running late (+${detail.runningLateEtaMinutes ?? 15}m). Timer paused.',
+                style: const TextStyle(
+                  color: Color(0xFF047857),
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFFBEB),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFF59E0B).withValues(alpha: 0.4)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.access_time_rounded, color: Color(0xFFD97706), size: 20),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              l10n?.runningLateQuestionAction ?? 'Running late? Tap to share ETA',
+              style: const TextStyle(
+                color: Color(0xFF92400E),
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              RunningLateDialog.show(
+                context,
+                assignmentId: detail.assignmentId,
+                onReported: () {
+                  ref.invalidate(activeJobDetailProvider(widget.assignmentId));
+                },
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFD97706),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              minimumSize: const Size(60, 34),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            child: const Text('Share ETA', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -2469,4 +2469,84 @@ class AppLocalizationsOr extends AppLocalizations {
 
   @override
   String get elapsedTime => 'ଅତିବାହିତ ସମୟ';
+
+  @override
+  String get smartNoShowEngineHeader => 'ସ୍ମାର୍ଟ ନୋ-ଶୋ ରିକଭରୀ ଇଞ୍ଜିନ';
+
+  @override
+  String get arrivalGraceExpiredAlert => '⚠️ ଆଗମନ ରିହାତି ସମୟ ସମାପ୍ତ';
+
+  @override
+  String get workerHasNotArrivedTitle => 'ଶ୍ରମିକ ଆସିନାହାଁନ୍ତି';
+
+  @override
+  String workerHasNotArrivedSubtitle(
+    String workerName,
+    int minutesLate,
+    String jobTitle,
+  ) {
+    return '$workerName $jobTitle ପାଇଁ ଧାର୍ଯ୍ୟ ସମୟଠାରୁ $minutesLate ମିନିଟ୍ ବିଳମ୍ବରେ ଅଛନ୍ତି।';
+  }
+
+  @override
+  String get wait10MinutesAction => '10 ମିନିଟ୍ ଅପେକ୍ଷା କରନ୍ତୁ';
+
+  @override
+  String get callWorkerDirectlyAction => '📞 ଶ୍ରମିକଙ୍କୁ ସିଧାସଳଖ କଲ୍ କରନ୍ତୁ';
+
+  @override
+  String get findSmartReplacementAction => '⚡ ସ୍ମାର୍ଟ ବିକଳ୍ପ ଶ୍ରମିକ ଖୋଜନ୍ତୁ';
+
+  @override
+  String get gracePeriodExtendedMsg =>
+      '+10 ମିନିଟ୍ ଅପେକ୍ଷା ସମୟ ଯୋଡ଼ାଗଲା। ଟାଇମର୍ ବନ୍ଦ ରହିଛି।';
+
+  @override
+  String get maskedCallDemoMsg =>
+      'କଲ୍ କରାଯାଉଛି... (ଡେମୋ ମୋଡ୍: ମାସ୍କଡ୍ କଲ୍ P7.2 ରେ ଆସିବ)';
+
+  @override
+  String replacementBookedMsg(String workerName) {
+    return '$workerName ଙ୍କ ସହିତ ବିକଳ୍ପ ବୁକ୍ ହେଲା! ମୂଳକୁ ନୋ-ଶୋ ଚିହ୍ନିତ କରାଗଲା।';
+  }
+
+  @override
+  String get rankedReplacementsTitle => 'ନିକଟସ୍ଥ ଯୋଗ୍ୟ ଶ୍ରମିକ ତାଲିକା';
+
+  @override
+  String get noReplacementsFoundMsg =>
+      'ବର୍ତ୍ତମାନ କୌଣସି ନିକଟସ୍ଥ ବିକଳ୍ପ ଶ୍ରମିକ ଉପଲବ୍ଧ ନାହାଁନ୍ତି।';
+
+  @override
+  String get requestReplacementOneTap => 'ବିକଳ୍ପ ଅନୁରୋଧ କରନ୍ତୁ (1-ଟ୍ୟାପ୍)';
+
+  @override
+  String get smartNoShowTrustNote =>
+      'ନୋ-ଶୋ ରେ ସମ୍ପୂର୍ଣ୍ଣ ଫେରସ୍ତ। ବିକଳ୍ପ ଶ୍ରମିକମାନଙ୍କ ପୃଷ୍ଠଭୂମି ଯାଞ୍ଚ ହୋଇଛି।';
+
+  @override
+  String get openRecoveryEngineAction => 'ନୋ-ଶୋ ରିକଭରୀ ଇଞ୍ଜିନ ଖୋଲନ୍ତୁ';
+
+  @override
+  String get runningLateQuestionAction => 'ଡେରି ହେଉଛି କି? ETA ଜଣାନ୍ତୁ';
+
+  @override
+  String runningLateReportedBadge(int minutes) {
+    return 'ବିଳମ୍ବ ବିଷୟରେ ଜଣାଇ ଦିଆଗଲା (+$minutesମି)। ଟାଇମର୍ ବନ୍ଦ ରହିଛି।';
+  }
+
+  @override
+  String get runningLateDialogTitle => 'ବିଳମ୍ବ ହେଉଛି କି?';
+
+  @override
+  String get runningLateDialogSubtitle =>
+      'ଆପଣଙ୍କ ସମ୍ଭାବ୍ୟ ବିଳମ୍ବ ସମୟ ବାଛନ୍ତୁ। ଏହା ନିୟୋକ୍ତାଙ୍କୁ ଜଣାଇବ ଏବଂ ଟାଇମର୍‌କୁ ଥରେ ବନ୍ଦ ରଖିବ।';
+
+  @override
+  String get sendEtaAction => 'ETA ପଠାନ୍ତୁ';
+
+  @override
+  String runningLateSuccessMsg(int minutes) {
+    return '+$minutes ମିନିଟ୍ ବିଳମ୍ବ ଜଣାଇ ଦିଆଗଲା। ନିୟୋକ୍ତାଙ୍କୁ ସୂଚନା ମିଳିଲା।';
+  }
 }

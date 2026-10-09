@@ -39,6 +39,12 @@ class ActiveJobDetail {
   final double? workerLng;
   final DateTime? midjobVerifiedAt;
   final bool paymentEligible;
+  final int extendedGraceMinutes;
+  final DateTime? lateNotifiedAt;
+  final int? runningLateEtaMinutes;
+  final DateTime? runningLateReportedAt;
+  final bool noShowTimerPaused;
+  final String? replacedBy;
 
   const ActiveJobDetail({
     required this.assignmentId,
@@ -54,6 +60,12 @@ class ActiveJobDetail {
     this.elapsedSeconds,
     this.midjobVerifiedAt,
     this.paymentEligible = false,
+    this.extendedGraceMinutes = 0,
+    this.lateNotifiedAt,
+    this.runningLateEtaMinutes,
+    this.runningLateReportedAt,
+    this.noShowTimerPaused = false,
+    this.replacedBy,
     required this.jobTitle,
     this.jobDescription,
     required this.startAt,
@@ -93,6 +105,18 @@ class ActiveJobDetail {
     return '$hours h $mins m';
   }
 
+  bool get isLate {
+    if (status != 'ticket_issued' || arrivedAt != null) return false;
+    final effectiveGrace = 15 + extendedGraceMinutes + (runningLateEtaMinutes ?? 0);
+    final deadline = startAt.add(Duration(minutes: effectiveGrace));
+    return DateTime.now().isAfter(deadline);
+  }
+
+  int get minutesPastScheduledArrival {
+    final diff = DateTime.now().difference(startAt).inMinutes;
+    return diff > 0 ? diff : 0;
+  }
+
   factory ActiveJobDetail.fromJson(Map<String, dynamic> json) {
     final statusStr = json['status'] as String? ?? 'requested';
     return ActiveJobDetail(
@@ -111,6 +135,16 @@ class ActiveJobDetail {
           ? DateTime.tryParse(json['midjob_verified_at'].toString())
           : null,
       paymentEligible: json['payment_eligible'] as bool? ?? false,
+      extendedGraceMinutes: (json['extended_grace_minutes'] as num?)?.toInt() ?? 0,
+      lateNotifiedAt: json['late_notified_at'] != null
+          ? DateTime.tryParse(json['late_notified_at'].toString())
+          : null,
+      runningLateEtaMinutes: (json['running_late_eta_minutes'] as num?)?.toInt(),
+      runningLateReportedAt: json['running_late_reported_at'] != null
+          ? DateTime.tryParse(json['running_late_reported_at'].toString())
+          : null,
+      noShowTimerPaused: json['no_show_timer_paused'] as bool? ?? false,
+      replacedBy: json['replaced_by'] as String?,
       jobTitle: json['job_title'] as String? ?? json['title'] as String? ?? 'General Work',
       jobDescription: json['job_description'] as String? ?? json['description'] as String?,
       startAt: json['start_at'] != null
@@ -147,6 +181,12 @@ class ActiveJobDetail {
     int? elapsedSeconds,
     DateTime? midjobVerifiedAt,
     bool? paymentEligible,
+    int? extendedGraceMinutes,
+    DateTime? lateNotifiedAt,
+    int? runningLateEtaMinutes,
+    DateTime? runningLateReportedAt,
+    bool? noShowTimerPaused,
+    String? replacedBy,
   }) {
     final newStatus = status ?? this.status;
     return ActiveJobDetail(
@@ -163,6 +203,12 @@ class ActiveJobDetail {
       elapsedSeconds: elapsedSeconds ?? this.elapsedSeconds,
       midjobVerifiedAt: midjobVerifiedAt ?? this.midjobVerifiedAt,
       paymentEligible: paymentEligible ?? this.paymentEligible,
+      extendedGraceMinutes: extendedGraceMinutes ?? this.extendedGraceMinutes,
+      lateNotifiedAt: lateNotifiedAt ?? this.lateNotifiedAt,
+      runningLateEtaMinutes: runningLateEtaMinutes ?? this.runningLateEtaMinutes,
+      runningLateReportedAt: runningLateReportedAt ?? this.runningLateReportedAt,
+      noShowTimerPaused: noShowTimerPaused ?? this.noShowTimerPaused,
+      replacedBy: replacedBy ?? this.replacedBy,
       jobTitle: jobTitle,
       jobDescription: jobDescription,
       startAt: startAt,

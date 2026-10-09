@@ -7,6 +7,7 @@ import 'package:udyogasethu/features/job_execution/domain/assignment_event_item.
 import 'package:udyogasethu/features/job_execution/domain/job_ticket.dart';
 import 'package:udyogasethu/features/job_execution/domain/job_verification.dart';
 import 'package:udyogasethu/features/job_execution/domain/worker_schedule_item.dart';
+import 'package:udyogasethu/features/job_execution/domain/replacement_candidate.dart';
 import 'package:udyogasethu/features/job_execution/presentation/job_ticket_screen.dart';
 import 'package:udyogasethu/features/job_execution/presentation/attendance_scanner_screen.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
@@ -115,6 +116,24 @@ class MockJobExecutionRepository implements JobExecutionRepository {
   }) async {
     return 'worker-1/evidence/$fileName';
   }
+
+  @override
+  Future<int> checkNoShowAssignments() async => 0;
+
+  @override
+  Future<void> extendWait(String assignmentId, {int minutes = 10}) async {}
+
+  @override
+  Future<void> reportRunningLate(String assignmentId, {required int etaMinutes}) async {}
+
+  @override
+  Future<List<ReplacementCandidate>> findReplacementCandidates(String assignmentId) async => [];
+
+  @override
+  Future<Map<String, dynamic>> confirmReplacement({
+    required String assignmentId,
+    required String replacementWorkerId,
+  }) async => {'success': true};
 }
 
 void main() {

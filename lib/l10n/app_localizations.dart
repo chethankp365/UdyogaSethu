@@ -4603,6 +4603,136 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Elapsed Time'**
   String get elapsedTime;
+
+  /// No description provided for @smartNoShowEngineHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'SMART NO-SHOW RECOVERY ENGINE'**
+  String get smartNoShowEngineHeader;
+
+  /// No description provided for @arrivalGraceExpiredAlert.
+  ///
+  /// In en, this message translates to:
+  /// **'⚠️ ARRIVAL GRACE PERIOD EXPIRED'**
+  String get arrivalGraceExpiredAlert;
+
+  /// No description provided for @workerHasNotArrivedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker Has Not Arrived'**
+  String get workerHasNotArrivedTitle;
+
+  /// No description provided for @workerHasNotArrivedSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{workerName} is {minutesLate} minutes past the scheduled arrival time for {jobTitle}.'**
+  String workerHasNotArrivedSubtitle(
+    String workerName,
+    int minutesLate,
+    String jobTitle,
+  );
+
+  /// No description provided for @wait10MinutesAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Wait 10 Minutes'**
+  String get wait10MinutesAction;
+
+  /// No description provided for @callWorkerDirectlyAction.
+  ///
+  /// In en, this message translates to:
+  /// **'📞 Call Worker Directly'**
+  String get callWorkerDirectlyAction;
+
+  /// No description provided for @findSmartReplacementAction.
+  ///
+  /// In en, this message translates to:
+  /// **'⚡ Find Smart Replacement Worker'**
+  String get findSmartReplacementAction;
+
+  /// No description provided for @gracePeriodExtendedMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'Added +10 minutes wait grace. Timer paused.'**
+  String get gracePeriodExtendedMsg;
+
+  /// No description provided for @maskedCallDemoMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'Dialing worker... (Demo mode: Masked call arrives in P7.2)'**
+  String get maskedCallDemoMsg;
+
+  /// No description provided for @replacementBookedMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'Replacement booked with {workerName}! Original marked as no-show.'**
+  String replacementBookedMsg(String workerName);
+
+  /// No description provided for @rankedReplacementsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'RANKED NEARBY WORKERS'**
+  String get rankedReplacementsTitle;
+
+  /// No description provided for @noReplacementsFoundMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'No nearby replacement candidates available right now.'**
+  String get noReplacementsFoundMsg;
+
+  /// No description provided for @requestReplacementOneTap.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Replacement (1-Tap)'**
+  String get requestReplacementOneTap;
+
+  /// No description provided for @smartNoShowTrustNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Zero-penalty refund on no-shows. Replacement workers are background-screened.'**
+  String get smartNoShowTrustNote;
+
+  /// No description provided for @openRecoveryEngineAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Open No-Show Recovery Engine'**
+  String get openRecoveryEngineAction;
+
+  /// No description provided for @runningLateQuestionAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Running late? Tap to share ETA'**
+  String get runningLateQuestionAction;
+
+  /// No description provided for @runningLateReportedBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Reported running late (+{minutes}m). Timer paused.'**
+  String runningLateReportedBadge(int minutes);
+
+  /// No description provided for @runningLateDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Running Late?'**
+  String get runningLateDialogTitle;
+
+  /// No description provided for @runningLateDialogSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select your expected arrival delay. This notifies your employer and pauses the arrival grace timer once.'**
+  String get runningLateDialogSubtitle;
+
+  /// No description provided for @sendEtaAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Send ETA'**
+  String get sendEtaAction;
+
+  /// No description provided for @runningLateSuccessMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'Reported +{minutes} minutes ETA. Employer notified.'**
+  String runningLateSuccessMsg(int minutes);
 }
 
 class _AppLocalizationsDelegate

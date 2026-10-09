@@ -2461,4 +2461,84 @@ class AppLocalizationsMr extends AppLocalizations {
 
   @override
   String get elapsedTime => 'झालेला वेळ';
+
+  @override
+  String get smartNoShowEngineHeader => 'स्मार्ट नो-शो रिकव्हरी इंजिन';
+
+  @override
+  String get arrivalGraceExpiredAlert => '⚠️ आगमन सवलत कालावधी संपला';
+
+  @override
+  String get workerHasNotArrivedTitle => 'कामगार पोहोचलेला नाही';
+
+  @override
+  String workerHasNotArrivedSubtitle(
+    String workerName,
+    int minutesLate,
+    String jobTitle,
+  ) {
+    return '$workerName $jobTitle कामासाठी ठरलेल्या वेळेपेक्षा $minutesLate मिनिटे उशिरा आहेत.';
+  }
+
+  @override
+  String get wait10MinutesAction => '10 मिनिटे थांबा';
+
+  @override
+  String get callWorkerDirectlyAction => '📞 कामगाराला थेट कॉल करा';
+
+  @override
+  String get findSmartReplacementAction => '⚡ स्मार्ट पर्यायी कामगार शोधा';
+
+  @override
+  String get gracePeriodExtendedMsg =>
+      '+10 मिनिटे प्रतीक्षा वेळ जोडली. टायमर थांबवला.';
+
+  @override
+  String get maskedCallDemoMsg =>
+      'कॉल केला जात आहे... (डेमो मोड: मास्क केलेला कॉल P7.2 मध्ये येईल)';
+
+  @override
+  String replacementBookedMsg(String workerName) {
+    return '$workerName सह पर्यायी बुकिंग झाले! मूळ बुकिंग नो-शो म्हणून चिन्हांकित.';
+  }
+
+  @override
+  String get rankedReplacementsTitle => 'क्रमवारी लावलेले जवळचे कामगार';
+
+  @override
+  String get noReplacementsFoundMsg =>
+      'सध्या जवळ कोणताही पर्यायी कामगार उपलब्ध नाही.';
+
+  @override
+  String get requestReplacementOneTap => 'पर्यायी कामगार विनंती करा (1-टॅप)';
+
+  @override
+  String get smartNoShowTrustNote =>
+      'नो-शो वर शून्य-दंड परतावा. पर्यायी कामगारांची पार्श्वभूमी तपासलेली आहे.';
+
+  @override
+  String get openRecoveryEngineAction => 'नो-शो रिकव्हरी इंजिन उघडा';
+
+  @override
+  String get runningLateQuestionAction => 'उशीर होतोय? आगमन वेळ शेअर करा';
+
+  @override
+  String runningLateReportedBadge(int minutes) {
+    return 'उशिरा पोहोचण्याची नोंद केली (+$minutesमि). टायमर थांबवला.';
+  }
+
+  @override
+  String get runningLateDialogTitle => 'उशीर होतोय का?';
+
+  @override
+  String get runningLateDialogSubtitle =>
+      'तुमचा अपेक्षित उशीर निवडा. यामुळे मालकाला कळवले जाईल आणि ग्रेस टायमर एकदा थांबवला जाईल.';
+
+  @override
+  String get sendEtaAction => 'ETA पाठवा';
+
+  @override
+  String runningLateSuccessMsg(int minutes) {
+    return '+$minutes मिनिटे उशीर कळवला. मालकाला सूचना दिली.';
+  }
 }

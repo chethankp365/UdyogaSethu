@@ -2489,4 +2489,85 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get elapsedTime => 'ಕಳೆದ ಸಮಯ';
+
+  @override
+  String get smartNoShowEngineHeader => 'ಸ್ಮಾರ್ಟ್ ನೋ-ಶೋ ರಿಕವರಿ ಇಂಜಿನ್';
+
+  @override
+  String get arrivalGraceExpiredAlert => '⚠️ ಆಗಮನದ ರಿಯಾಯಿತಿ ಸಮಯ ಮುಕ್ತಾಯಗೊಂಡಿದೆ';
+
+  @override
+  String get workerHasNotArrivedTitle => 'ಕೆಲಸಗಾರರು ಬಂದಿಲ್ಲ';
+
+  @override
+  String workerHasNotArrivedSubtitle(
+    String workerName,
+    int minutesLate,
+    String jobTitle,
+  ) {
+    return '$workerName ಅವರು $jobTitle ಗಾಗಿ ನಿಗದಿತ ಆಗಮನ ಸಮಯಕ್ಕಿಂತ $minutesLate ನಿಮಿಷ ತಡವಾಗಿದ್ದಾರೆ.';
+  }
+
+  @override
+  String get wait10MinutesAction => '10 ನಿಮಿಷ ಕಾಯಿರಿ';
+
+  @override
+  String get callWorkerDirectlyAction => '📞 ಕೆಲಸಗಾರರಿಗೆ ನೇರವಾಗಿ ಕರೆ ಮಾಡಿ';
+
+  @override
+  String get findSmartReplacementAction =>
+      '⚡ ಸ್ಮಾರ್ಟ್ ಬದಲಿ ಕೆಲಸಗಾರರನ್ನು ಹುಡುಕಿ';
+
+  @override
+  String get gracePeriodExtendedMsg =>
+      '+10 ನಿಮಿಷ ರಿಯಾಯಿತಿ ಸೇರಿಸಲಾಗಿದೆ. ಟೈಮರ್ ನಿಲ್ಲಿಸಲಾಗಿದೆ.';
+
+  @override
+  String get maskedCallDemoMsg =>
+      'ಕರೆ ಮಾಡಲಾಗುತ್ತಿದೆ... (ಡೆಮೊ ಮೋಡ್: ಮಾಸ್ಕ್ಡ್ ಕರೆ P7.2 ನಲ್ಲಿ ಬರುತ್ತದೆ)';
+
+  @override
+  String replacementBookedMsg(String workerName) {
+    return '$workerName ಅವರೊಂದಿಗೆ ಬದಲಿ ಬುಕ್ ಮಾಡಲಾಗಿದೆ! ಮೂಲ ಕೆಲಸಗಾರರನ್ನು ನೋ-ಶೋ ಎಂದು ಗುರುತಿಸಲಾಗಿದೆ.';
+  }
+
+  @override
+  String get rankedReplacementsTitle => 'ಶ್ರೇಯಾಂಕಿತ ಹತ್ತಿರದ ಕೆಲಸಗಾರರು';
+
+  @override
+  String get noReplacementsFoundMsg =>
+      'ಸದ್ಯಕ್ಕೆ ಯಾವುದೇ ಹತ್ತಿರದ ಬದಲಿ ಕೆಲಸಗಾರರು ಲಭ್ಯವಿಲ್ಲ.';
+
+  @override
+  String get requestReplacementOneTap => 'ಬದಲಿ ವಿನಂತಿಸಿ (ಒಂದು ಟ್ಯಾಪ್)';
+
+  @override
+  String get smartNoShowTrustNote =>
+      'ನೋ-ಶೋ ಸಂದರ್ಭದಲ್ಲಿ ಸಂಪೂರ್ಣ ಮರುಪಾವತಿ. ಬದಲಿ ಕೆಲಸಗಾರರ ಹಿನ್ನೆಲೆ ಪರಿಶೀಲಿಸಲಾಗಿದೆ.';
+
+  @override
+  String get openRecoveryEngineAction => 'ನೋ-ಶೋ ರಿಕವರಿ ಇಂಜಿನ್ ತೆರೆಯಿರಿ';
+
+  @override
+  String get runningLateQuestionAction => 'ತಡವಾಗುತ್ತಿದೆಯೇ? ಆಗಮನ ಸಮಯ ಹಂಚಿಕೊಳ್ಳಿ';
+
+  @override
+  String runningLateReportedBadge(int minutes) {
+    return 'ತಡವಾಗಿ ಬರುವುದನ್ನು ತಿಳಿಸಲಾಗಿದೆ (+$minutesನಿ). ಟೈಮರ್ ನಿಲ್ಲಿಸಲಾಗಿದೆ.';
+  }
+
+  @override
+  String get runningLateDialogTitle => 'ತಡವಾಗುತ್ತಿದೆಯೇ?';
+
+  @override
+  String get runningLateDialogSubtitle =>
+      'ನಿಮ್ಮ ನಿರೀಕ್ಷಿತ ವಿಳಂಬ ಸಮಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ. ಇದು ಮಾಲೀಕರಿಗೆ ತಿಳಿಸುತ್ತದೆ ಮತ್ತು ರಿಯಾಯಿತಿ ಟೈಮರ್ ಅನ್ನು ಒಮ್ಮೆ ನಿಲ್ಲಿಸುತ್ತದೆ.';
+
+  @override
+  String get sendEtaAction => 'ಸಮಯ ಕಳುಹಿಸಿ';
+
+  @override
+  String runningLateSuccessMsg(int minutes) {
+    return '+$minutes ನಿಮಿಷ ವಿಳಂಬ ತಿಳಿಸಲಾಗಿದೆ. ಮಾಲೀಕರಿಗೆ ಸಂದೇಶ ತಲುಪಿದೆ.';
+  }
 }

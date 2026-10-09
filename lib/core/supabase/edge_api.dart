@@ -328,6 +328,11 @@ class EdgeApiClient {
     if (customerConfirmed != null) body['customer_confirmed'] = customerConfirmed;
     return _invoke('assignment-verify', body: body);
   }
+
+  /// Trigger scheduled smart no-show check engine.
+  Future<Map<String, dynamic>> checkNoShow() async {
+    return _invoke('no-show-check');
+  }
 }
 
 /// Riverpod provider for [EdgeApiClient].

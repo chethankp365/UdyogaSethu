@@ -889,5 +889,60 @@
   "timerTitle": "लाइव कार्य टाइमर",
   "timerRunning": "टाइमर चल रहा है",
   "timerPaused": "टाइमर रुका हुआ है",
-  "elapsedTime": "बीता हुआ समय"
+  "elapsedTime": "बीता हुआ समय",
+  "smartNoShowEngineHeader": "स्मार्ट नो-शो रिकवरी इंजन",
+  "arrivalGraceExpiredAlert": "⚠️ आगमन रियायत अवधि समाप्त",
+  "workerHasNotArrivedTitle": "श्रमिक नहीं पहुंचे हैं",
+  "workerHasNotArrivedSubtitle": "{workerName} {jobTitle} के लिए निर्धारित समय से {minutesLate} मिनट देर से हैं।",
+  "@workerHasNotArrivedSubtitle": {
+    "placeholders": {
+      "workerName": {
+        "type": "String"
+      },
+      "minutesLate": {
+        "type": "int"
+      },
+      "jobTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "wait10MinutesAction": "10 मिनट प्रतीक्षा करें",
+  "callWorkerDirectlyAction": "📞 श्रमिक को सीधे कॉल करें",
+  "findSmartReplacementAction": "⚡ स्मार्ट प्रतिस्थापन श्रमिक खोजें",
+  "gracePeriodExtendedMsg": "+10 मिनट प्रतीक्षा समय जोड़ा गया। टाइमर रोका गया।",
+  "maskedCallDemoMsg": "श्रमिक को कॉल किया जा रहा है... (डेमो मोड: मास्क्ड कॉल P7.2 में आएगी)",
+  "replacementBookedMsg": "{workerName} के साथ प्रतिस्थापन बुक किया गया! मूल को नो-शो चिह्नित किया गया।",
+  "@replacementBookedMsg": {
+    "placeholders": {
+      "workerName": {
+        "type": "String"
+      }
+    }
+  },
+  "rankedReplacementsTitle": "वरीयता प्राप्त नजदीकी श्रमिक",
+  "noReplacementsFoundMsg": "अभी कोई नजदीकी प्रतिस्थापन श्रमिक उपलब्ध नहीं है।",
+  "requestReplacementOneTap": "प्रतिस्थापन अनुरोध करें (1-टैप)",
+  "smartNoShowTrustNote": "नो-शो पर शून्य-दंड रिफंड। प्रतिस्थापन श्रमिकों का बैकग्राउंड सत्यापित है।",
+  "openRecoveryEngineAction": "नो-शो रिकवरी इंजन खोलें",
+  "runningLateQuestionAction": "देरी हो रही है? ETA साझा करें",
+  "runningLateReportedBadge": "देरी की सूचना दी गई (+{minutes} मि)। टाइमर रोका गया।",
+  "@runningLateReportedBadge": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "runningLateDialogTitle": "देरी हो रही है?",
+  "runningLateDialogSubtitle": "अपने आगमन में संभावित देरी चुनें। यह नियोक्ता को सूचित करेगा और ग्रेस टाइमर को एक बार रोकेगा।",
+  "sendEtaAction": "ETA भेजें",
+  "runningLateSuccessMsg": "+{minutes} मिनट की देरी की सूचना दी गई। नियोक्ता को सूचित किया गया।",
+  "@runningLateSuccessMsg": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  }
 }

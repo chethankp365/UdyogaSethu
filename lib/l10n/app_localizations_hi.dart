@@ -2460,4 +2460,84 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get elapsedTime => 'बीता हुआ समय';
+
+  @override
+  String get smartNoShowEngineHeader => 'स्मार्ट नो-शो रिकवरी इंजन';
+
+  @override
+  String get arrivalGraceExpiredAlert => '⚠️ आगमन रियायत अवधि समाप्त';
+
+  @override
+  String get workerHasNotArrivedTitle => 'श्रमिक नहीं पहुंचे हैं';
+
+  @override
+  String workerHasNotArrivedSubtitle(
+    String workerName,
+    int minutesLate,
+    String jobTitle,
+  ) {
+    return '$workerName $jobTitle के लिए निर्धारित समय से $minutesLate मिनट देर से हैं।';
+  }
+
+  @override
+  String get wait10MinutesAction => '10 मिनट प्रतीक्षा करें';
+
+  @override
+  String get callWorkerDirectlyAction => '📞 श्रमिक को सीधे कॉल करें';
+
+  @override
+  String get findSmartReplacementAction => '⚡ स्मार्ट प्रतिस्थापन श्रमिक खोजें';
+
+  @override
+  String get gracePeriodExtendedMsg =>
+      '+10 मिनट प्रतीक्षा समय जोड़ा गया। टाइमर रोका गया।';
+
+  @override
+  String get maskedCallDemoMsg =>
+      'श्रमिक को कॉल किया जा रहा है... (डेमो मोड: मास्क्ड कॉल P7.2 में आएगी)';
+
+  @override
+  String replacementBookedMsg(String workerName) {
+    return '$workerName के साथ प्रतिस्थापन बुक किया गया! मूल को नो-शो चिह्नित किया गया।';
+  }
+
+  @override
+  String get rankedReplacementsTitle => 'वरीयता प्राप्त नजदीकी श्रमिक';
+
+  @override
+  String get noReplacementsFoundMsg =>
+      'अभी कोई नजदीकी प्रतिस्थापन श्रमिक उपलब्ध नहीं है।';
+
+  @override
+  String get requestReplacementOneTap => 'प्रतिस्थापन अनुरोध करें (1-टैप)';
+
+  @override
+  String get smartNoShowTrustNote =>
+      'नो-शो पर शून्य-दंड रिफंड। प्रतिस्थापन श्रमिकों का बैकग्राउंड सत्यापित है।';
+
+  @override
+  String get openRecoveryEngineAction => 'नो-शो रिकवरी इंजन खोलें';
+
+  @override
+  String get runningLateQuestionAction => 'देरी हो रही है? ETA साझा करें';
+
+  @override
+  String runningLateReportedBadge(int minutes) {
+    return 'देरी की सूचना दी गई (+$minutes मि)। टाइमर रोका गया।';
+  }
+
+  @override
+  String get runningLateDialogTitle => 'देरी हो रही है?';
+
+  @override
+  String get runningLateDialogSubtitle =>
+      'अपने आगमन में संभावित देरी चुनें। यह नियोक्ता को सूचित करेगा और ग्रेस टाइमर को एक बार रोकेगा।';
+
+  @override
+  String get sendEtaAction => 'ETA भेजें';
+
+  @override
+  String runningLateSuccessMsg(int minutes) {
+    return '+$minutes मिनट की देरी की सूचना दी गई। नियोक्ता को सूचित किया गया।';
+  }
 }

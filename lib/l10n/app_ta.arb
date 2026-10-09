@@ -889,5 +889,60 @@
   "timerTitle": "நேரடி வேலை டைமர்",
   "timerRunning": "டைமர் இயங்குகிறது",
   "timerPaused": "டைமர் இடைநிறுத்தப்பட்டுள்ளது",
-  "elapsedTime": "கடந்த நேரம்"
+  "elapsedTime": "கடந்த நேரம்",
+  "smartNoShowEngineHeader": "ஸ்மார்ட் நோ-ஷோ மீட்பு என்ஜின்",
+  "arrivalGraceExpiredAlert": "⚠️ வருகை சலுகைக் காலம் முடிந்தது",
+  "workerHasNotArrivedTitle": "பணியாளர் வரவில்லை",
+  "workerHasNotArrivedSubtitle": "{workerName} {jobTitle} பணிக்காக திட்டமிடப்பட்ட நேரத்தை விட {minutesLate} நிமிடங்கள் தாமதமாக உள்ளார்.",
+  "@workerHasNotArrivedSubtitle": {
+    "placeholders": {
+      "workerName": {
+        "type": "String"
+      },
+      "minutesLate": {
+        "type": "int"
+      },
+      "jobTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "wait10MinutesAction": "10 நிமிடங்கள் காத்திருங்கள்",
+  "callWorkerDirectlyAction": "📞 பணியாளரை நேரடியாக அழைக்கவும்",
+  "findSmartReplacementAction": "⚡ ஸ்மார்ட் மாற்றுப் பணியாளரைக் கண்டறியவும்",
+  "gracePeriodExtendedMsg": "+10 நிமிடங்கள் காத்திருப்பு சலுகை சேர்க்கப்பட்டது. டைமர் இடைநிறுத்தப்பட்டது.",
+  "maskedCallDemoMsg": "அழைக்கப்படுகிறது... (டெமோ பயன்முறை: முகமூடி அழைப்பு P7.2 இல் வரும்)",
+  "replacementBookedMsg": "{workerName} உடன் மாற்றுப் பணியாளர் புக் செய்யப்பட்டார்! முந்தையவர் வரவில்லை எனக் குறிக்கப்பட்டது.",
+  "@replacementBookedMsg": {
+    "placeholders": {
+      "workerName": {
+        "type": "String"
+      }
+    }
+  },
+  "rankedReplacementsTitle": "வரிசைப்படுத்தப்பட்ட அருகிலுள்ள பணியாளர்கள்",
+  "noReplacementsFoundMsg": "தற்போது அருகில் மாற்றுப் பணியாளர்கள் யாரும் கிடைக்கவில்லை.",
+  "requestReplacementOneTap": "மாற்றுப் பணியாளரைக் கோருங்கள் (1-தட்டல்)",
+  "smartNoShowTrustNote": "நோ-ஷோ ஏற்பட்டால் முழு பணத்தைத் திரும்பப் பெறுதல். மாற்றுப் பணியாளர்கள் சரிபார்க்கப்பட்டவர்கள்.",
+  "openRecoveryEngineAction": "நோ-ஷோ மீட்பு என்ஜினைத் திறக்கவும்",
+  "runningLateQuestionAction": "தாமதமாகிறதா? ETA பகிர தட்டவும்",
+  "runningLateReportedBadge": "தாமதம் தெரிவிக்கப்பட்டது (+{minutes}நி). டைமர் இடைநிறுத்தப்பட்டது.",
+  "@runningLateReportedBadge": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "runningLateDialogTitle": "தாமதமாகிறதா?",
+  "runningLateDialogSubtitle": "உங்கள் எதிர்பார்க்கப்படும் தாமதத்தைத் தேர்ந்தெடுக்கவும். இது முதலாளிக்குத் தெரிவிக்கும் மற்றும் டைமரை ஒருமுறை இடைநிறுத்தும்.",
+  "sendEtaAction": "ETA அனுப்பவும்",
+  "runningLateSuccessMsg": "+{minutes} நிமிடங்கள் தாமதம் தெரிவிக்கப்பட்டது. முதலாளிக்கு அறிவிக்கப்பட்டது.",
+  "@runningLateSuccessMsg": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  }
 }

@@ -889,5 +889,60 @@
   "timerTitle": "ಲೈವ್ ಕೆಲಸದ ಟೈಮರ್",
   "timerRunning": "ಟೈಮರ್ ಚಾಲನೆಯಲ್ಲಿದೆ",
   "timerPaused": "ಟೈಮರ್ ವಿರಾಮದಲ್ಲಿದೆ",
-  "elapsedTime": "ಕಳೆದ ಸಮಯ"
+  "elapsedTime": "ಕಳೆದ ಸಮಯ",
+  "smartNoShowEngineHeader": "ಸ್ಮಾರ್ಟ್ ನೋ-ಶೋ ರಿಕವರಿ ಇಂಜಿನ್",
+  "arrivalGraceExpiredAlert": "⚠️ ಆಗಮನದ ರಿಯಾಯಿತಿ ಸಮಯ ಮುಕ್ತಾಯಗೊಂಡಿದೆ",
+  "workerHasNotArrivedTitle": "ಕೆಲಸಗಾರರು ಬಂದಿಲ್ಲ",
+  "workerHasNotArrivedSubtitle": "{workerName} ಅವರು {jobTitle} ಗಾಗಿ ನಿಗದಿತ ಆಗಮನ ಸಮಯಕ್ಕಿಂತ {minutesLate} ನಿಮಿಷ ತಡವಾಗಿದ್ದಾರೆ.",
+  "@workerHasNotArrivedSubtitle": {
+    "placeholders": {
+      "workerName": {
+        "type": "String"
+      },
+      "minutesLate": {
+        "type": "int"
+      },
+      "jobTitle": {
+        "type": "String"
+      }
+    }
+  },
+  "wait10MinutesAction": "10 ನಿಮಿಷ ಕಾಯಿರಿ",
+  "callWorkerDirectlyAction": "📞 ಕೆಲಸಗಾರರಿಗೆ ನೇರವಾಗಿ ಕರೆ ಮಾಡಿ",
+  "findSmartReplacementAction": "⚡ ಸ್ಮಾರ್ಟ್ ಬದಲಿ ಕೆಲಸಗಾರರನ್ನು ಹುಡುಕಿ",
+  "gracePeriodExtendedMsg": "+10 ನಿಮಿಷ ರಿಯಾಯಿತಿ ಸೇರಿಸಲಾಗಿದೆ. ಟೈಮರ್ ನಿಲ್ಲಿಸಲಾಗಿದೆ.",
+  "maskedCallDemoMsg": "ಕರೆ ಮಾಡಲಾಗುತ್ತಿದೆ... (ಡೆಮೊ ಮೋಡ್: ಮಾಸ್ಕ್ಡ್ ಕರೆ P7.2 ನಲ್ಲಿ ಬರುತ್ತದೆ)",
+  "replacementBookedMsg": "{workerName} ಅವರೊಂದಿಗೆ ಬದಲಿ ಬುಕ್ ಮಾಡಲಾಗಿದೆ! ಮೂಲ ಕೆಲಸಗಾರರನ್ನು ನೋ-ಶೋ ಎಂದು ಗುರುತಿಸಲಾಗಿದೆ.",
+  "@replacementBookedMsg": {
+    "placeholders": {
+      "workerName": {
+        "type": "String"
+      }
+    }
+  },
+  "rankedReplacementsTitle": "ಶ್ರೇಯಾಂಕಿತ ಹತ್ತಿರದ ಕೆಲಸಗಾರರು",
+  "noReplacementsFoundMsg": "ಸದ್ಯಕ್ಕೆ ಯಾವುದೇ ಹತ್ತಿರದ ಬದಲಿ ಕೆಲಸಗಾರರು ಲಭ್ಯವಿಲ್ಲ.",
+  "requestReplacementOneTap": "ಬದಲಿ ವಿನಂತಿಸಿ (ಒಂದು ಟ್ಯಾಪ್)",
+  "smartNoShowTrustNote": "ನೋ-ಶೋ ಸಂದರ್ಭದಲ್ಲಿ ಸಂಪೂರ್ಣ ಮರುಪಾವತಿ. ಬದಲಿ ಕೆಲಸಗಾರರ ಹಿನ್ನೆಲೆ ಪರಿಶೀಲಿಸಲಾಗಿದೆ.",
+  "openRecoveryEngineAction": "ನೋ-ಶೋ ರಿಕವರಿ ಇಂಜಿನ್ ತೆರೆಯಿರಿ",
+  "runningLateQuestionAction": "ತಡವಾಗುತ್ತಿದೆಯೇ? ಆಗಮನ ಸಮಯ ಹಂಚಿಕೊಳ್ಳಿ",
+  "runningLateReportedBadge": "ತಡವಾಗಿ ಬರುವುದನ್ನು ತಿಳಿಸಲಾಗಿದೆ (+{minutes}ನಿ). ಟೈಮರ್ ನಿಲ್ಲಿಸಲಾಗಿದೆ.",
+  "@runningLateReportedBadge": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "runningLateDialogTitle": "ತಡವಾಗುತ್ತಿದೆಯೇ?",
+  "runningLateDialogSubtitle": "ನಿಮ್ಮ ನಿರೀಕ್ಷಿತ ವಿಳಂಬ ಸಮಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ. ಇದು ಮಾಲೀಕರಿಗೆ ತಿಳಿಸುತ್ತದೆ ಮತ್ತು ರಿಯಾಯಿತಿ ಟೈಮರ್ ಅನ್ನು ಒಮ್ಮೆ ನಿಲ್ಲಿಸುತ್ತದೆ.",
+  "sendEtaAction": "ಸಮಯ ಕಳುಹಿಸಿ",
+  "runningLateSuccessMsg": "+{minutes} ನಿಮಿಷ ವಿಳಂಬ ತಿಳಿಸಲಾಗಿದೆ. ಮಾಲೀಕರಿಗೆ ಸಂದೇಶ ತಲುಪಿದೆ.",
+  "@runningLateSuccessMsg": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  }
 }

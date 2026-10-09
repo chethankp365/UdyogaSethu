@@ -13,6 +13,7 @@ import 'package:udyogasethu/features/job_execution/domain/assignment_event_item.
 import 'package:udyogasethu/features/job_execution/domain/job_ticket.dart';
 import 'package:udyogasethu/features/job_execution/domain/job_verification.dart';
 import 'package:udyogasethu/features/job_execution/domain/worker_schedule_item.dart';
+import 'package:udyogasethu/features/job_execution/domain/replacement_candidate.dart';
 
 abstract class JobExecutionRepository {
   Future<ActiveJobDetail> fetchActiveJob(String assignmentId);
@@ -52,6 +53,14 @@ abstract class JobExecutionRepository {
     required String assignmentId,
     required List<int> fileBytes,
     required String fileName,
+  });
+  Future<int> checkNoShowAssignments();
+  Future<void> extendWait(String assignmentId, {int minutes = 10});
+  Future<void> reportRunningLate(String assignmentId, {required int etaMinutes});
+  Future<List<ReplacementCandidate>> findReplacementCandidates(String assignmentId);
+  Future<Map<String, dynamic>> confirmReplacement({
+    required String assignmentId,
+    required String replacementWorkerId,
   });
 }
 
@@ -664,6 +673,102 @@ class SupabaseJobExecutionRepository implements JobExecutionRepository {
     } catch (_) {
       // In offline/demo mode, return a reliable mock path
       return 'evidence_${DateTime.now().millisecondsSinceEpoch}.jpg';
+    }
+  }
+
+  @override
+  Future<int> checkNoShowAssignments() async {
+    try {
+      final res = await _client.rpc('check_no_show_assignments');
+      return (res as num?)?.toInt() ?? 0;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[JobExecutionRepository] check_no_show_assignments failed: $e');
+      }
+      return 0;
+    }
+  }
+
+  @override
+  Future<void> extendWait(String assignmentId, {int minutes = 10}) async {
+    try {
+      await _client.rpc('extend_wait', params: {
+        'p_assignment_id': assignmentId,
+        'p_minutes': minutes,
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[JobExecutionRepository] extendWait error: $e');
+      }
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> reportRunningLate(String assignmentId, {required int etaMinutes}) async {
+    try {
+      await _client.rpc('report_running_late', params: {
+        'p_assignment_id': assignmentId,
+        'p_eta_minutes': etaMinutes,
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[JobExecutionRepository] reportRunningLate error: $e');
+      }
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<ReplacementCandidate>> findReplacementCandidates(String assignmentId) async {
+    try {
+      final res = await _client.rpc('find_replacement_candidates', params: {
+        'p_assignment_id': assignmentId,
+      });
+
+      if (res is List) {
+        return res
+            .map((e) => ReplacementCandidate.fromJson(Map<String, dynamic>.from(e as Map)))
+            .toList();
+      }
+      return [];
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[JobExecutionRepository] findReplacementCandidates failed: $e, falling back to query');
+      }
+      try {
+        final res = await _client.rpc('find_replacement', params: {
+          'p_assignment_id': assignmentId,
+        });
+        if (res is List) {
+          return res
+              .map((e) => ReplacementCandidate.fromJson(Map<String, dynamic>.from(e as Map)))
+              .toList();
+        }
+      } catch (_) {}
+      return [];
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> confirmReplacement({
+    required String assignmentId,
+    required String replacementWorkerId,
+  }) async {
+    try {
+      final res = await _client.rpc('confirm_replacement', params: {
+        'p_assignment_id': assignmentId,
+        'p_replacement_worker_id': replacementWorkerId,
+      });
+      if (res is Map) {
+        return Map<String, dynamic>.from(res);
+      }
+      return {'success': true};
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[JobExecutionRepository] confirmReplacement error: $e');
+      }
+      rethrow;
     }
   }
 }
