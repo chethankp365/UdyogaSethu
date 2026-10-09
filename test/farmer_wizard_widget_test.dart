@@ -6,6 +6,8 @@ import 'package:udyogasethu/features/farmer/domain/farmer_profile_draft.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_home_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_wizard_controller.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_wizard_screen.dart';
+import 'package:udyogasethu/features/farmer/data/farmer_home_repository.dart';
+import 'package:udyogasethu/features/farmer/domain/weather_advisory_model.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 import 'farmer_wizard_test.dart';
@@ -65,6 +67,9 @@ void main() {
       ProviderScope(
         overrides: [
           farmerProfileRepositoryProvider.overrideWithValue(repo),
+          farmerWeatherAdvisoryProvider.overrideWith((ref) => WeatherAdvisory.simulatedRain(locationName: 'Mandya Agri-Cluster')),
+          mandiPricesProvider.overrideWith((ref) => []),
+          farmerStatsProvider.overrideWith((ref) => const FarmerHomeStats()),
         ],
         child: const MaterialApp(
           locale: Locale('en'),
@@ -80,16 +85,14 @@ void main() {
       ),
     );
 
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 300));
 
     expect(find.text('Farmer Home'), findsOneWidget);
+    expect(find.text('FARMER WORKSPACE'), findsOneWidget);
     expect(find.text('Cauvery Organic Farm'), findsOneWidget);
-    expect(find.text('Mandya • 8.0 Acres'), findsOneWidget);
-    expect(find.text('ORGANIC'), findsOneWidget);
-    expect(find.text('APMC REGISTERED'), findsOneWidget);
-    expect(find.text('KCC APPROVED'), findsOneWidget);
-    expect(find.text('ORGANIC CERT (PENDING)'), findsOneWidget);
-    expect(find.text('Sugarcane'), findsOneWidget);
-    expect(find.text('Paddy / Rice'), findsOneWidget);
+    expect(find.text('Mandya Agri-Cluster'), findsNWidgets(2));
+    expect(find.text('WEATHER ADVISORY RADAR'), findsOneWidget);
+    expect(find.text('LIVE MANDI PRICES & DEMAND'), findsOneWidget);
+    expect(find.text('FARMER ESSENTIAL SUITE'), findsOneWidget);
   });
 }

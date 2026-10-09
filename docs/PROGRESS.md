@@ -58,12 +58,12 @@
 ## Phase 5 (Money: wallet, payments and escrow-style protection)
 - [x] **P5.1**: Wallet screen and transaction history (Status: Done)
 - [x] **P5.2**: Razorpay test checkout, payment methods and receipts (Status: Done)
-- [ ] **P5.3**: Escrow release, refunds and auto-release (Status: Todo)
-- [ ] **P5.4**: Earnings dashboard and savings goal planner (Status: Todo)
+- [x] **P5.3**: Escrow release, refunds and auto-release (Status: Done)
+- [x] **P5.4**: Earnings dashboard and savings goal planner (Status: Done)
 
 ## Phase 6 (Farmer and produce marketplace)
-- [ ] **P6.1**: Farmer home with live mandi prices and weather advisory (Status: Todo)
-- [ ] **P6.2**: Farm profile and produce listing management (Status: Todo)
+- [x] **P6.1**: Farmer home with live mandi prices and weather advisory (Status: Done)
+- [x] **P6.2**: Farm profile and produce listing management (Status: Done)
 - [ ] **P6.3**: Farm resources, equipment rental and labour hiring (Status: Todo)
 - [ ] **P6.4**: Buyer marketplace: browse, filters, map and traceability (Status: Todo)
 - [ ] **P6.5**: Cart, delivery slots and checkout (Status: Todo)
@@ -350,31 +350,90 @@
     - Unit, domain parity, and widget tests in `test/earnings_dashboard_test.dart` (8/8 tests passed).
     - Invariant verified: totals on the dashboard match the wallet transactions list.
     - Static analysis: `flutter analyze` clean with 0 issues.
+- **Phase 6.1 (Farmer Home & Live APMC Market Feed)**: Completed (
+  - **Reference UI Match**:
+    - Built `FarmerHomeScreen` exactly matching `docs/reference/UdyogaSetu_Built_Project.pdf`:
+      - **Page 5, Phone 2**: Screen 22 — "Farmer Workspace", cluster pill (`Mandya Agri Cluster`), farm title (`Cauvery Bio Farm`), tagline *"Empowered by UdyogaSethu Direct Agri-Network"*, profile avatar, 3 metric cards (`Produce Sold`, `Direct Earnings`, `Active Labor`), and `Live Mandi Prices & Demand` APMC feed with crop filter chips and unit switcher (`₹/kg` vs `₹/qtl`).
+      - **Page 6, Phone 2**: Screen 26 — `Weather Advisory Radar` (temperature, rain probability, rule-based advice, and "Book Harvest Helpers" CTA) and 8-tile `Farmer Essential Suite` grid.
+  - **Strict Role & Real Data Compliance**:
+    - Screen is strictly restricted to Farmer accounts under the ONE ACCOUNT = ONE ROLE policy.
+    - Top stats show real values from `orders` (`0 kg`, `₹0`, `0 Booked` for new farmers). Absolutely zero fake or demo numbers are shown on real screens.
+    - Agricultural labour hiring is scoped for P6.3; until P6.3, the "Hire Workers" tile and "Book Harvest Helpers" CTA open an informational bottom sheet modal ("Coming in P6.3"), and Active Labor shows `0 Booked`.
+  - **Backend & Database Migrations (Unapplied per Rule)**:
+    - `supabase/migrations/0510_mandi_prices_and_demand.sql`:
+      - Standard columns: `id`, `state`, `district`, `market`, `commodity`, `variety`, `arrival_date`, `min_price`, `max_price`, `modal_price`.
+      - Unique constraint `uq_mandi_commodity_market_variety_date` for idempotent upserting.
+      - Public select RLS and service-role write policy.
+      - SQL function `get_mandi_prices_with_demand` computing `price_per_kg`, `change_percent`, `demand_tag` (`High Demand`, `Stable`, `Moderate`, `FRP Guaranteed`, `MSP Protected`, `Oversupply`), and `trend_direction`.
+      - Seeded 40 realistic Karnataka APMC rows (Bengaluru, Mysuru, Mandya, Hubballi, Belagavi, Kolar) across Tomato, Onion, Potato, Paddy, Banana, Sugarcane, Chilli, Maize, Ragi, Ginger for today and yesterday.
+    - `supabase/migrations/0511_mandi_sync_schedule.sql`:
+      - Details required extensions: `pg_cron` and `pg_net`.
+      - Creates secure internal trigger `public.trigger_mandi_sync()` calling edge function `/functions/v1/mandi-sync` with bearer auth.
+      - Schedules automated cron job at 06:00 AM IST daily (`'30 0 * * *'`).
+  - **Edge Function `mandi-sync`**:
+    - Created `supabase/functions/mandi-sync/index.ts` with confirmed candidate resource ID `9ef84268-d588-465a-a308-a864a43d0070`.
+    - Health check endpoint (`GET` or `{ health: true }`) returning row count, newest arrival date, and sync status without exposing secrets.
+    - Switched off by default (`MANDI_SYNC_ENABLED=false`) until key is set.
+    - Fault-tolerant: retains last good database data if external API fails or is unreachable.
+  - **Weather Advisory Engine**:
+    - `WeatherAdvisory`: rule-based advisor consuming Open-Meteo REST API using farmer GPS coordinates (Mandya default).
+    - Generates actionable advice (heavy rain drainage, moderate rain harvest tomato before 12 PM, high temperature irrigation, clear weather intercultural operations).
+  - **Offline Caching & Dev Testing**:
+    - Mandi prices and weather advisories persist in device `SharedPreferences` (`cached_mandi_prices_v1`, `cached_weather_advisory_v1`) and render offline with their last updated date.
+    - Added interactive "Simulate Rain Forecast" switch in the Dev Menu (`/dev/role`) and Farmer Home options menu to test weather advice cards live.
+  - **Localization & Static Analysis**:
+    - Added 52 new farmer keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`), verified 100% complete with 943 keys each.
+    - Unit, domain, and widget test suite in `test/farmer_home_test.dart` (15/15 passed) and `test/farmer_wizard_widget_test.dart` (2/2 passed).
+    - Text scaling verified at 1.3x with zero layout overflow.
+- **Phase 6.2 (Farm Profile & Produce Listing Management)**: Completed (
+  - **Reference UI Match (Screen 25 / Page 7 Phone 1)**:
+    - Built `FarmerProfileScreen` matching Screen 25 from visual references:
+      - Deep forest green hero card (`#064E3B`) with circular farm avatar, emerald "VERIFIED FARMER ✓" badge, farm title (`Cauvery Bio Farm`), cluster pill (`Mandya Agri Cluster`), phone number, and 3 live metrics: Land (`12.5 Acres`), Sold This Month (`1,420 kg`), and Direct Sales (`₹48,500`).
+      - Farm Infrastructure & Crop Badges: Soil Classification (`Red Loamy Soil`), Primary Crops (`Tomato`, `Sugarcane`, `Paddy`, `Banana`), APMC Registration (`KA-MND-2024-889`), and KCC Approved (`KCC-Active-SBI-2025`).
+      - Zero-Pesticide Organic Certificate card with its review status ("VALIDATED ✓", "IN REVIEW", "REJECTED", "NOT APPLIED").
+      - Language Mode Selector: 8-language switcher grid linked to `localeProvider`.
+      - Quick shortcut button to Manage Produce Listings (`/farmer/listings`).
+  - **Produce Inventory & Listing Management (`FarmerListingsScreen` & `EditListingModal`)**:
+    - Listing cards with product photo, category emoji/image thumbnail, price per unit, stock quantity, harvest date, quality notes, farming method, and live status badge.
+    - Quick actions: Quick Stock Update modal dialog, Pause / Activate listing toggle, Full Edit modal, and "+ Add Produce" Floating Action Button.
+    - Full Listing Editor with image picker (camera & gallery), automatic image compression (max 800px, 80% JPEG quality) via `image` package, upload to Supabase Storage bucket `produce-images`, photo delete/preview row, category selection, price per unit in rupees/paise, stock quantity, low-stock threshold, harvest date picker, farming method, availability mode (`same_day`, `next_day`, `pre_order`), and delivery / farm pickup toggles.
+    - Price Suggestion Band: Integrated dynamic APMC mandi benchmark card (`-10%` to `+15%` of modal mandi price from `mandi_prices`) with one-tap "Apply Mandi Modal Price" shortcut. Farmer always retains final authority over the price.
+  - **Database Migration `0520_produce_listings_management.sql` (Pushed to Remote Supabase)**:
+    - Added columns to `produce_listings`: `low_stock_threshold`, `harvest_date`, `quality_notes`, `farming_method`, `allow_pickup`, `allow_delivery`, `availability_mode`, `created_at`.
+    - Automated status trigger `trg_sync_produce_listing_status`: automatically maintains listing status (`active`, `low_stock`, `sold_out`, `paused`).
+    - SQL-enforced stock decrement: Trigger `trg_order_accepted_decrement_stock` and SECURITY DEFINER RPC `decrement_listing_stock` decrement stock atomically when order status transitions to `accepted` or `confirmed`.
+    - Buyer search RPC `get_buyer_produce_listings`: strictly filters `WHERE status IN ('active', 'low_stock') AND stock_qty > 0`.
+    - Mandi price suggestion RPC `get_produce_price_suggestion`: computes price band from `mandi_prices` and recent orders.
+    - Supabase storage bucket `produce-images`: created with public read and authenticated owner write policies.
+  - **Buyer Feed Gating Invariant (`BuyerProduceTab`)**:
+    - Verified invariant: setting stock to 0 immediately marks listing as `sold_out` and excludes it from buyer searches in both SQL RPC and local repository in-memory cache.
+    - Buyer produce tab only displays items that are active and have positive stock.
+  - **Localization & Analysis**:
+    - Added new produce keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`).
+    - 8 automated tests in `test/farmer_profile_and_listings_test.dart` (buyer filtering, zero stock hide check, pause hide check, price suggestion, Screen 25 UI rendering, 1.3x text scale factor with zero overflow).
+    - `flutter analyze`: clean with 0 issues.
 )
 
 ---
 
 ## Manual steps pending
-1. **Razorpay Dashboard Webhook Configuration**:
+1. **Mandi Sync Edge Function & Secrets (Optional Live Agmarknet Sync)**:
+   - Deploy `mandi-sync` edge function: `supabase functions deploy mandi-sync`
+   - Set secret `DATA_GOV_API_KEY` (never write to files): `supabase secrets set DATA_GOV_API_KEY=your_key_here`
+   - Set `MANDI_SYNC_ENABLED=true` when you wish to activate live Agmarknet sync.
+2. **Razorpay Dashboard Webhook Configuration**:
    - URL: `https://mmzbpeqkfomnywuzoqii.supabase.co/functions/v1/payment-webhook`
    - Secret: Value of your `RAZORPAY_WEBHOOK_SECRET`
    - Subscribed events: `payment.captured`, `payment.failed`, `order.paid`
-2. **Phone Installation (Xiaomi / MIUI USB Security Permission)**:
-   - Your connected phone (`2201116SG`, Redmi Note 11) returned `INSTALL_FAILED_USER_RESTRICTED: Install canceled by user` during ADB installation.
-   - On Xiaomi / MIUI / HyperOS devices, USB installation must be permitted:
-     1. Open phone **Settings** -> **Additional settings** -> **Developer options**.
-     2. Ensure **Install via USB** is toggled **ON** (MIUI requires an active SIM card and Mi Account sign-in to toggle this setting).
-     3. Ensure **USB debugging (Security settings)** is enabled if prompted.
-     4. Then run the following command in PowerShell to install the freshly built APK:
-        ```powershell
-        & "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" -s db11f242e5b0 install -r "build\app\outputs\flutter-apk\app-debug.apk"
-        ```
-     5. When the MIUI confirmation dialog appears on the phone screen asking *"Install via USB?"*, tap **Install**.
+3. **Phone Installation (Xiaomi / MIUI USB Security Permission)**:
+   - On Xiaomi / MIUI / HyperOS devices, enable **Install via USB** in Developer Options.
+   - Run: `adb -s <device_id> install -r "build\app\outputs\flutter-apk\app-debug.apk"`.
 
 ## Known issues
 - **Profile & Auth Foreign Key Cascade vs D11 Retention**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`. The financial retention refactor will decouple `auth.users` deletion from audit records in an upcoming migration.
-- **Phase 5.4**: Earnings dashboard and savings goal planner is the next planned step.
+- **Phase 6.3**: Farm resources, equipment rental and labour hiring is the next planned step.
 - **Phase 9 (Admin Console)**: Admin console is built in a separate web/desktop project and is out of scope for this Flutter app.
+
 
 
 

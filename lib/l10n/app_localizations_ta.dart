@@ -805,7 +805,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get kccApplied => 'விண்ணப்பிக்கப்பட்டது';
 
   @override
-  String get kccApproved => 'அனுமதிக்கப்பட்டது / செயலில் உள்ளது';
+  String get kccApproved => 'KCC அங்கீகரிக்கப்பட்டது ✓';
 
   @override
   String get organicCertLabel =>
@@ -2958,4 +2958,327 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get savingsGoalsPlanGoals => 'இலக்குகளைத் திட்டமிடுங்கள்';
+
+  @override
+  String get farmerWorkspace => 'விவசாயி பணியிடம்';
+
+  @override
+  String get farmerEmpoweredNetwork => 'உத்யோகசேது நேரடி வேளாண் கட்டமைப்பு';
+
+  @override
+  String get farmerProduceSold => 'விற்பனையான விளைச்சல்';
+
+  @override
+  String get farmerThisMonth => 'இந்த மாதம்';
+
+  @override
+  String get farmerDirectEarnings => 'நேரடி வருவாய்';
+
+  @override
+  String get farmerZeroMiddlemen => 'இடைத்தரகர் இல்லை';
+
+  @override
+  String get farmerActiveLabor => 'தொழிலாளர்கள்';
+
+  @override
+  String get farmerHarvestShiftPlaceholder => 'அறுவடை ஷிப்ட் (P6.3)';
+
+  @override
+  String farmerBooked(int count) {
+    return '$count முன்பதிவு';
+  }
+
+  @override
+  String get farmerWeatherAdvisoryRadar => 'வானிலை ஆலோசனை ரேடார்';
+
+  @override
+  String get farmerSimulatedForecast => 'மாதிரி கணிப்பு';
+
+  @override
+  String farmerRainProbability(int percent) {
+    return '$percent% மழை வாய்ப்பு';
+  }
+
+  @override
+  String get farmerBookHarvestHelpers => 'அறுவடை தொழிலாளர்களை புக் செய்யவும்';
+
+  @override
+  String get farmerViewIrrigationGuide =>
+      'நீர்ப்பாசன வழிகாட்டியைப் பார்க்கவும்';
+
+  @override
+  String get farmerLiveMandiPrices => 'நேரடி மண்டி விலை & தேவை';
+
+  @override
+  String get farmerLiveFeed => 'நேரலை ஃபீட்';
+
+  @override
+  String get farmerAllCrops => 'அனைத்துப் பயிர்கள்';
+
+  @override
+  String get farmerVegetables => 'காய்கறிகள்';
+
+  @override
+  String get farmerGrainsAndPulses => 'தானியங்கள் & பருப்புகள்';
+
+  @override
+  String get farmerNoPricesInCategory => 'இப்பிரிவில் மண்டி விலைகள் இல்லை';
+
+  @override
+  String get farmerSelectAllCropsHint =>
+      'கர்நாடக APMC விலைகளைப் பார்க்க அனைத்துப் பயிர்களையும் தேர்ந்தெடுக்கவும்.';
+
+  @override
+  String farmerUpdatedDate(String date) {
+    return 'புதுப்பிக்கப்பட்டது $date';
+  }
+
+  @override
+  String get farmerApmcKarnatakaFeed => 'கர்நாடக APMC ஃபீட்';
+
+  @override
+  String get farmerEssentialSuite => 'விவசாயியின் அத்தியாவசிய சேவைகள்';
+
+  @override
+  String get farmerRentTractor => 'டிராக்டர் வாடகை';
+
+  @override
+  String get farmerHireWorkers => 'தொழிலாளர்களை நியமிக்கவும்';
+
+  @override
+  String get farmerSoilAiTest => 'மண் AI பரிசோதனை';
+
+  @override
+  String get farmerSellProduce => 'விளைச்சல் விற்பனை';
+
+  @override
+  String get farmerPestAiDoc => 'பூச்சி AI மருத்துவர்';
+
+  @override
+  String get farmerGovtSchemes => 'அரசுத் திட்டங்கள்';
+
+  @override
+  String get farmerAgriDrone => 'வேளாண் ட்ரோன்';
+
+  @override
+  String get farmerIrrigationAi => 'நீர்ப்பாசன AI';
+
+  @override
+  String farmerComingInPhase(String phase) {
+    return '$phase இல் வரும்';
+  }
+
+  @override
+  String get farmerUnderstood => 'புரிந்தது';
+
+  @override
+  String get farmerGotIt => 'சரி';
+
+  @override
+  String get farmerHireWorkersDesc =>
+      'விவசாயிகள் அறுவடைத் தேவைகளைப் பதிவிட்டு அருகிலுள்ள தொழிலாளர்களை நேரடியாக நியமிக்கலாம்.';
+
+  @override
+  String get farmerRentTractorDesc =>
+      'டிராக்டர் மற்றும் அறுவடை இயந்திரங்களை எளிதாக வாடகைக்கு எடுக்கவும்.';
+
+  @override
+  String get farmerSoilAiTestDesc =>
+      'மண் பரிசோதனை புகைப்படத்தை பதிவேற்றி AI உர பரிந்துரைகளைப் பெறவும்.';
+
+  @override
+  String get farmerSellProduceDesc =>
+      'இடைத்தரகர்கள் இன்றி விளைபொருட்களை மொத்த வியாபாரிகளுக்கு விற்கவும்.';
+
+  @override
+  String get farmerPestAiDocDesc =>
+      'பூச்சித் தாக்குதலை படம் பிடித்து உடனடி AI தீர்வுகளைப் பெறவும்.';
+
+  @override
+  String get farmerGovtSchemesDesc =>
+      'பிஎம்-கிசான் மற்றும் பயிர் காப்பீட்டுத் திட்டங்களை அறியவும்.';
+
+  @override
+  String get farmerAgriDroneDesc =>
+      'உர தெளிப்புக்கு வேளாண் ட்ரோன் பைலட்டுகளை புக் செய்யவும்.';
+
+  @override
+  String get farmerIrrigationAiDesc =>
+      'மண் ஈரப்பதத்திற்கு ஏற்ப ஸ்மார்ட் பாசன அட்டவணை.';
+
+  @override
+  String get farmerHomeTitle => 'விவசாயி முகப்பு';
+
+  @override
+  String get farmerSimulateRainDev => 'மழை கணிப்பு மாதிரி (Dev)';
+
+  @override
+  String get farmerFailedLoadMandi => 'மண்டி விலைகளை ஏற்றுவதில் தோல்வி';
+
+  @override
+  String get farmerHighDemand => 'அதிக தேவை';
+
+  @override
+  String get farmerStable => 'நிலையானது';
+
+  @override
+  String get farmerFrpGuaranteed => 'FRP உத்தரவாதம்';
+
+  @override
+  String get farmerMspProtected => 'MSP பாதுகாப்பானது';
+
+  @override
+  String get farmerOversupply => 'அதிக வரத்து';
+
+  @override
+  String get farmerModerate => 'மிதமான';
+
+  @override
+  String get farmerProfileTitle => 'விவசாயி சுயவிவரம்';
+
+  @override
+  String get verifiedFarmer => 'சரிபார்க்கப்பட்ட விவசாயி ✓';
+
+  @override
+  String get organicLand => 'இயற்கை விவசாய நிலம்';
+
+  @override
+  String get soldThisMonth => 'இந்த மாதம் விற்பனையானது';
+
+  @override
+  String get directSales => 'நேரடி விற்பனை';
+
+  @override
+  String get farmInfrastructureAndBadges =>
+      'பண்ணை உள்கட்டமைப்பு & பயிர் பேட்ஜ்கள்';
+
+  @override
+  String get soilClassification => 'மண் வகைப்பாடு';
+
+  @override
+  String get primaryCrops => 'முக்கிய பயிர்கள்';
+
+  @override
+  String get apmcRegistration => 'APMC பதிவு';
+
+  @override
+  String get kisanCreditCard => 'கிசான் கடன் அட்டை';
+
+  @override
+  String get zeroPesticideOrganicCertificate =>
+      'பூச்சிக்கொல்லி இல்லாத இயற்கை சான்றிதழ்';
+
+  @override
+  String get verifiedByKarnatakaOrganicBoard =>
+      'கர்நாடக இயற்கை விவசாயிகள் வாரியத்தால் சரிபார்க்கப்பட்டது';
+
+  @override
+  String get validatedStatus => 'சரிபார்க்கப்பட்டது ✓';
+
+  @override
+  String get underReviewStatus => 'மதிப்பாய்வில் உள்ளது';
+
+  @override
+  String get languageMode => 'மொழி முறை';
+
+  @override
+  String get manageProduceListings => 'விளைபொருட்கள் பட்டியலை நிர்வகி';
+
+  @override
+  String get produceListingsTitle => 'விளைபொருட்கள் பட்டியல்';
+
+  @override
+  String get addNewProduce => 'புதிய விளைபொருள் சேர்';
+
+  @override
+  String get editProduceListing => 'விளைபொருள் விவரத்தை திருத்து';
+
+  @override
+  String get produceName => 'விளைபொருள் பெயர்';
+
+  @override
+  String get category => 'வகை';
+
+  @override
+  String pricePerUnit(String unit) {
+    return '$unit விலை';
+  }
+
+  @override
+  String get stockQuantity => 'இருப்பு அளவு';
+
+  @override
+  String get unit => 'அலகு';
+
+  @override
+  String get harvestDate => 'அறுவடை தேதி';
+
+  @override
+  String get qualityNotes => 'தரக் குறிப்புகள்';
+
+  @override
+  String get farmingMethod => 'விவசாய முறை';
+
+  @override
+  String get deliveryAvailable => 'டெலிவரி உள்ளது';
+
+  @override
+  String get pickupAvailable => 'பண்ணை வாயில் பிக்அப் உள்ளது';
+
+  @override
+  String get availabilityMode => 'கிடைக்கும் முறை';
+
+  @override
+  String get sameDayDelivery => 'அன்றைய தின டெலிவரி';
+
+  @override
+  String get nextDayDelivery => 'மறுநாள் டெலிவரி';
+
+  @override
+  String get harvestPreOrder => 'முன்பதிவு';
+
+  @override
+  String get farmerSetsFinalPrice => 'விவசாயியே இறுதி விலையை நிர்ணயிக்கிறார்';
+
+  @override
+  String get statusLowStock => 'குறைந்த இருப்பு';
+
+  @override
+  String get statusSoldOut => 'விற்றுத் தீர்ந்தது';
+
+  @override
+  String get statusPaused => 'நிறுத்தப்பட்டது';
+
+  @override
+  String get pauseListing => 'நிறுத்து';
+
+  @override
+  String get activateListing => 'இயக்கு';
+
+  @override
+  String get updateStock => 'இருப்பை புதுப்பி';
+
+  @override
+  String stockInStock(String stock) {
+    return '$stock இருப்பு உள்ளது';
+  }
+
+  @override
+  String get buyerProduceMarket => 'புதிய பண்ணை விளைபொருட்கள்';
+
+  @override
+  String get buyerSearchProduceHint =>
+      'விளைபொருட்களைத் தேடுங்கள் (எ.கா. தக்காளி, அரிசி)...';
+
+  @override
+  String get noProduceAvailable => 'விளைபொருட்கள் எதுவும் கிடைக்கவில்லை';
+
+  @override
+  String get orderDirect => 'நேரடியாக ஆர்டர் செய்';
+
+  @override
+  String get uploadProducePhotos => 'பயிர் புகைப்படங்கள் (produce-images)';
+
+  @override
+  String get addPhoto => 'புகைப்படம் சேர்க்க';
 }

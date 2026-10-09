@@ -236,7 +236,7 @@
   "kccStatusLabel": "Kisan Credit Card (KCC) Status",
   "kccNone": "Not Applied",
   "kccApplied": "Applied",
-  "kccApproved": "Approved / Active",
+  "kccApproved": "KCC Approved ✓",
   "organicCertLabel": "Organic Certificate Upload (Optional)",
   "organicCertHelper": "Uploaded files are saved in private secure storage and marked as pending review.",
   "farmBadgesTitle": "Farm Profile Badges",
@@ -1085,5 +1085,146 @@
   "savingsGoalDelete": "Delete Goal",
   "savingsGoalDeleteConfirm": "Are you sure you want to delete this savings goal tracker?",
   "savingsGoalEmptyState": "Plan your next big milestone by setting a savings goal.",
-  "savingsGoalsPlanGoals": "Plan Goals"
+  "savingsGoalsPlanGoals": "Plan Goals",
+  "farmerWorkspace": "FARMER WORKSPACE",
+  "farmerEmpoweredNetwork": "Empowered by UdyogaSethu Direct Agri-Network",
+  "farmerProduceSold": "PRODUCE SOLD",
+  "farmerThisMonth": "This Month",
+  "farmerDirectEarnings": "DIRECT EARNINGS",
+  "farmerZeroMiddlemen": "Zero Middlemen",
+  "farmerActiveLabor": "ACTIVE LABOR",
+  "farmerHarvestShiftPlaceholder": "Harvest Shift (P6.3)",
+  "farmerBooked": "{count} Booked",
+  "@farmerBooked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "farmerWeatherAdvisoryRadar": "WEATHER ADVISORY RADAR",
+  "farmerSimulatedForecast": "Simulated Forecast",
+  "farmerRainProbability": "{percent}% Rain",
+  "@farmerRainProbability": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "farmerBookHarvestHelpers": "Book Harvest Helpers",
+  "farmerViewIrrigationGuide": "View Irrigation Guide",
+  "farmerLiveMandiPrices": "LIVE MANDI PRICES & DEMAND",
+  "farmerLiveFeed": "Live Feed",
+  "farmerAllCrops": "All Crops",
+  "farmerVegetables": "Vegetables",
+  "farmerGrainsAndPulses": "Grains & Pulses",
+  "farmerNoPricesInCategory": "No Mandi Prices in this Category",
+  "farmerSelectAllCropsHint": "Select All Crops to view all Karnataka APMC market prices.",
+  "farmerUpdatedDate": "Updated {date}",
+  "@farmerUpdatedDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "farmerApmcKarnatakaFeed": "APMC Karnataka Feed",
+  "farmerEssentialSuite": "FARMER ESSENTIAL SUITE",
+  "farmerRentTractor": "Rent Tractor",
+  "farmerHireWorkers": "Hire Workers",
+  "farmerSoilAiTest": "Soil AI Test",
+  "farmerSellProduce": "Sell Produce",
+  "farmerPestAiDoc": "Pest AI Doc",
+  "farmerGovtSchemes": "Govt Schemes",
+  "farmerAgriDrone": "Agri Drone",
+  "farmerIrrigationAi": "Irrigation AI",
+  "farmerComingInPhase": "Coming in {phase}",
+  "@farmerComingInPhase": {
+    "placeholders": {
+      "phase": {
+        "type": "String"
+      }
+    }
+  },
+  "farmerUnderstood": "Understood",
+  "farmerGotIt": "Got it",
+  "farmerHireWorkersDesc": "Farmers will be able to post agricultural labour requests, specify shifts, and hire verified nearby workers directly from their farmer account with escrow protection.",
+  "farmerRentTractorDesc": "Book nearby tractors, rotavators, and harvesters directly from verified agri-machinery hubs.",
+  "farmerSoilAiTestDesc": "Upload soil test report or photograph to get instant AI N-P-K recommendations and fertilizer dosages.",
+  "farmerSellProduceDesc": "List your harvested crops for direct bulk sale to mandi traders and commercial buyers with zero middlemen.",
+  "farmerPestAiDocDesc": "Snap a picture of leaf damage or crop pests for immediate AI diagnosis and organic treatment remedies.",
+  "farmerGovtSchemesDesc": "Explore PM-Kisan, Raitha Siri, solar pump subsidies, and crop insurance schemes tailored to your land.",
+  "farmerAgriDroneDesc": "Book certified agri-drone pilots for precision nano-urea and organic pest spray within 24 hours.",
+  "farmerIrrigationAiDesc": "Smart irrigation scheduling based on local evapotranspiration and soil moisture retention curves.",
+  "farmerHomeTitle": "Farmer Home",
+  "farmerSimulateRainDev": "Simulate Rain Forecast (Dev)",
+  "farmerFailedLoadMandi": "Failed to load Mandi prices",
+  "farmerHighDemand": "High Demand",
+  "farmerStable": "Stable",
+  "farmerFrpGuaranteed": "FRP Guaranteed",
+  "farmerMspProtected": "MSP Protected",
+  "farmerOversupply": "Oversupply",
+  "farmerModerate": "Moderate",
+  "farmerProfileTitle": "Farmer Profile",
+  "verifiedFarmer": "VERIFIED FARMER ✓",
+  "organicLand": "Organic Land",
+  "soldThisMonth": "Sold This Month",
+  "directSales": "Direct Sales",
+  "farmInfrastructureAndBadges": "FARM INFRASTRUCTURE & CROP BADGES",
+  "soilClassification": "SOIL CLASSIFICATION",
+  "primaryCrops": "PRIMARY CROPS",
+  "apmcRegistration": "APMC REGISTRATION",
+  "kisanCreditCard": "KISAN CREDIT CARD",
+  "zeroPesticideOrganicCertificate": "Zero-Pesticide Organic Certificate",
+  "verifiedByKarnatakaOrganicBoard": "Verified by Karnataka Organic Farmers Board",
+  "validatedStatus": "VALIDATED ✓",
+  "underReviewStatus": "UNDER REVIEW",
+  "languageMode": "LANGUAGE MODE",
+  "manageProduceListings": "Manage Produce Listings",
+  "produceListingsTitle": "Produce Listings",
+  "addNewProduce": "Add New Produce",
+  "editProduceListing": "Edit Produce Listing",
+  "produceName": "Produce Name",
+  "category": "Category",
+  "pricePerUnit": "Price per {unit}",
+  "@pricePerUnit": {
+    "placeholders": {
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "stockQuantity": "Stock Quantity",
+  "unit": "Unit",
+  "harvestDate": "Harvest Date",
+  "qualityNotes": "Quality Notes",
+  "farmingMethod": "Farming Method",
+  "deliveryAvailable": "Delivery Available",
+  "pickupAvailable": "Pickup Available",
+  "availabilityMode": "Availability Mode",
+  "sameDayDelivery": "Same Day Delivery",
+  "nextDayDelivery": "Next Day Delivery",
+  "harvestPreOrder": "Harvest Pre-Order",
+  "farmerSetsFinalPrice": "The farmer always sets the final price",
+  "statusLowStock": "Low Stock",
+  "statusSoldOut": "Sold Out",
+  "statusPaused": "Paused",
+  "pauseListing": "Pause Listing",
+  "activateListing": "Activate Listing",
+  "updateStock": "Update Stock",
+  "stockInStock": "{stock} in stock",
+  "@stockInStock": {
+    "placeholders": {
+      "stock": {
+        "type": "String"
+      }
+    }
+  },
+  "buyerProduceMarket": "Farm Fresh Produce",
+  "buyerSearchProduceHint": "Search fresh farm produce (e.g., Tomato, Rice)...",
+  "noProduceAvailable": "No Produce Listings Available",
+  "orderDirect": "Order Direct",
+  "uploadProducePhotos": "Produce Photos (produce-images)",
+  "addPhoto": "Add Photo"
 }

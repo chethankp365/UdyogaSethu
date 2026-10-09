@@ -801,7 +801,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get kccApplied => 'Applied';
 
   @override
-  String get kccApproved => 'Approved / Active';
+  String get kccApproved => 'KCC Approved ✓';
 
   @override
   String get organicCertLabel => 'Organic Certificate Upload (Optional)';
@@ -2927,4 +2927,326 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get savingsGoalsPlanGoals => 'Plan Goals';
+
+  @override
+  String get farmerWorkspace => 'FARMER WORKSPACE';
+
+  @override
+  String get farmerEmpoweredNetwork =>
+      'Empowered by UdyogaSethu Direct Agri-Network';
+
+  @override
+  String get farmerProduceSold => 'PRODUCE SOLD';
+
+  @override
+  String get farmerThisMonth => 'This Month';
+
+  @override
+  String get farmerDirectEarnings => 'DIRECT EARNINGS';
+
+  @override
+  String get farmerZeroMiddlemen => 'Zero Middlemen';
+
+  @override
+  String get farmerActiveLabor => 'ACTIVE LABOR';
+
+  @override
+  String get farmerHarvestShiftPlaceholder => 'Harvest Shift (P6.3)';
+
+  @override
+  String farmerBooked(int count) {
+    return '$count Booked';
+  }
+
+  @override
+  String get farmerWeatherAdvisoryRadar => 'WEATHER ADVISORY RADAR';
+
+  @override
+  String get farmerSimulatedForecast => 'Simulated Forecast';
+
+  @override
+  String farmerRainProbability(int percent) {
+    return '$percent% Rain';
+  }
+
+  @override
+  String get farmerBookHarvestHelpers => 'Book Harvest Helpers';
+
+  @override
+  String get farmerViewIrrigationGuide => 'View Irrigation Guide';
+
+  @override
+  String get farmerLiveMandiPrices => 'LIVE MANDI PRICES & DEMAND';
+
+  @override
+  String get farmerLiveFeed => 'Live Feed';
+
+  @override
+  String get farmerAllCrops => 'All Crops';
+
+  @override
+  String get farmerVegetables => 'Vegetables';
+
+  @override
+  String get farmerGrainsAndPulses => 'Grains & Pulses';
+
+  @override
+  String get farmerNoPricesInCategory => 'No Mandi Prices in this Category';
+
+  @override
+  String get farmerSelectAllCropsHint =>
+      'Select All Crops to view all Karnataka APMC market prices.';
+
+  @override
+  String farmerUpdatedDate(String date) {
+    return 'Updated $date';
+  }
+
+  @override
+  String get farmerApmcKarnatakaFeed => 'APMC Karnataka Feed';
+
+  @override
+  String get farmerEssentialSuite => 'FARMER ESSENTIAL SUITE';
+
+  @override
+  String get farmerRentTractor => 'Rent Tractor';
+
+  @override
+  String get farmerHireWorkers => 'Hire Workers';
+
+  @override
+  String get farmerSoilAiTest => 'Soil AI Test';
+
+  @override
+  String get farmerSellProduce => 'Sell Produce';
+
+  @override
+  String get farmerPestAiDoc => 'Pest AI Doc';
+
+  @override
+  String get farmerGovtSchemes => 'Govt Schemes';
+
+  @override
+  String get farmerAgriDrone => 'Agri Drone';
+
+  @override
+  String get farmerIrrigationAi => 'Irrigation AI';
+
+  @override
+  String farmerComingInPhase(String phase) {
+    return 'Coming in $phase';
+  }
+
+  @override
+  String get farmerUnderstood => 'Understood';
+
+  @override
+  String get farmerGotIt => 'Got it';
+
+  @override
+  String get farmerHireWorkersDesc =>
+      'Farmers will be able to post agricultural labour requests, specify shifts, and hire verified nearby workers directly from their farmer account with escrow protection.';
+
+  @override
+  String get farmerRentTractorDesc =>
+      'Book nearby tractors, rotavators, and harvesters directly from verified agri-machinery hubs.';
+
+  @override
+  String get farmerSoilAiTestDesc =>
+      'Upload soil test report or photograph to get instant AI N-P-K recommendations and fertilizer dosages.';
+
+  @override
+  String get farmerSellProduceDesc =>
+      'List your harvested crops for direct bulk sale to mandi traders and commercial buyers with zero middlemen.';
+
+  @override
+  String get farmerPestAiDocDesc =>
+      'Snap a picture of leaf damage or crop pests for immediate AI diagnosis and organic treatment remedies.';
+
+  @override
+  String get farmerGovtSchemesDesc =>
+      'Explore PM-Kisan, Raitha Siri, solar pump subsidies, and crop insurance schemes tailored to your land.';
+
+  @override
+  String get farmerAgriDroneDesc =>
+      'Book certified agri-drone pilots for precision nano-urea and organic pest spray within 24 hours.';
+
+  @override
+  String get farmerIrrigationAiDesc =>
+      'Smart irrigation scheduling based on local evapotranspiration and soil moisture retention curves.';
+
+  @override
+  String get farmerHomeTitle => 'Farmer Home';
+
+  @override
+  String get farmerSimulateRainDev => 'Simulate Rain Forecast (Dev)';
+
+  @override
+  String get farmerFailedLoadMandi => 'Failed to load Mandi prices';
+
+  @override
+  String get farmerHighDemand => 'High Demand';
+
+  @override
+  String get farmerStable => 'Stable';
+
+  @override
+  String get farmerFrpGuaranteed => 'FRP Guaranteed';
+
+  @override
+  String get farmerMspProtected => 'MSP Protected';
+
+  @override
+  String get farmerOversupply => 'Oversupply';
+
+  @override
+  String get farmerModerate => 'Moderate';
+
+  @override
+  String get farmerProfileTitle => 'Farmer Profile';
+
+  @override
+  String get verifiedFarmer => 'VERIFIED FARMER ✓';
+
+  @override
+  String get organicLand => 'Organic Land';
+
+  @override
+  String get soldThisMonth => 'Sold This Month';
+
+  @override
+  String get directSales => 'Direct Sales';
+
+  @override
+  String get farmInfrastructureAndBadges => 'FARM INFRASTRUCTURE & CROP BADGES';
+
+  @override
+  String get soilClassification => 'SOIL CLASSIFICATION';
+
+  @override
+  String get primaryCrops => 'PRIMARY CROPS';
+
+  @override
+  String get apmcRegistration => 'APMC REGISTRATION';
+
+  @override
+  String get kisanCreditCard => 'KISAN CREDIT CARD';
+
+  @override
+  String get zeroPesticideOrganicCertificate =>
+      'Zero-Pesticide Organic Certificate';
+
+  @override
+  String get verifiedByKarnatakaOrganicBoard =>
+      'Verified by Karnataka Organic Farmers Board';
+
+  @override
+  String get validatedStatus => 'VALIDATED ✓';
+
+  @override
+  String get underReviewStatus => 'UNDER REVIEW';
+
+  @override
+  String get languageMode => 'LANGUAGE MODE';
+
+  @override
+  String get manageProduceListings => 'Manage Produce Listings';
+
+  @override
+  String get produceListingsTitle => 'Produce Listings';
+
+  @override
+  String get addNewProduce => 'Add New Produce';
+
+  @override
+  String get editProduceListing => 'Edit Produce Listing';
+
+  @override
+  String get produceName => 'Produce Name';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String pricePerUnit(String unit) {
+    return 'Price per $unit';
+  }
+
+  @override
+  String get stockQuantity => 'Stock Quantity';
+
+  @override
+  String get unit => 'Unit';
+
+  @override
+  String get harvestDate => 'Harvest Date';
+
+  @override
+  String get qualityNotes => 'Quality Notes';
+
+  @override
+  String get farmingMethod => 'Farming Method';
+
+  @override
+  String get deliveryAvailable => 'Delivery Available';
+
+  @override
+  String get pickupAvailable => 'Pickup Available';
+
+  @override
+  String get availabilityMode => 'Availability Mode';
+
+  @override
+  String get sameDayDelivery => 'Same Day Delivery';
+
+  @override
+  String get nextDayDelivery => 'Next Day Delivery';
+
+  @override
+  String get harvestPreOrder => 'Harvest Pre-Order';
+
+  @override
+  String get farmerSetsFinalPrice => 'The farmer always sets the final price';
+
+  @override
+  String get statusLowStock => 'Low Stock';
+
+  @override
+  String get statusSoldOut => 'Sold Out';
+
+  @override
+  String get statusPaused => 'Paused';
+
+  @override
+  String get pauseListing => 'Pause Listing';
+
+  @override
+  String get activateListing => 'Activate Listing';
+
+  @override
+  String get updateStock => 'Update Stock';
+
+  @override
+  String stockInStock(String stock) {
+    return '$stock in stock';
+  }
+
+  @override
+  String get buyerProduceMarket => 'Farm Fresh Produce';
+
+  @override
+  String get buyerSearchProduceHint =>
+      'Search fresh farm produce (e.g., Tomato, Rice)...';
+
+  @override
+  String get noProduceAvailable => 'No Produce Listings Available';
+
+  @override
+  String get orderDirect => 'Order Direct';
+
+  @override
+  String get uploadProducePhotos => 'Produce Photos (produce-images)';
+
+  @override
+  String get addPhoto => 'Add Photo';
 }

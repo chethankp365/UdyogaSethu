@@ -810,7 +810,7 @@ class AppLocalizationsKn extends AppLocalizations {
   String get kccApplied => 'ಅರ್ಜಿ ಸಲ್ಲಿಸಲಾಗಿದೆ';
 
   @override
-  String get kccApproved => 'ಅನುಮೋದಿಸಲಾಗಿದೆ / ಸಕ್ರಿಯ';
+  String get kccApproved => 'ಕೆಸಿಸಿ ಅನುಮೋದಿತ ✓';
 
   @override
   String get organicCertLabel => 'ಸಾವಯವ ಪ್ರಮಾಣಪತ್ರ ಅಪ್‌ಲೋಡ್ (ಐಚ್ಛಿಕ)';
@@ -2649,7 +2649,7 @@ class AppLocalizationsKn extends AppLocalizations {
   String get settingsSectionHeader => 'ಸೆಟ್ಟಿಂಗ್‌ಗಳು';
 
   @override
-  String get filterAll => 'ಎಲ್ಲಾ';
+  String get filterAll => 'ಎಲ್ಲವೂ';
 
   @override
   String get filterCompleted => 'ಪೂರ್ಣಗೊಂಡಿದೆ';
@@ -2955,4 +2955,327 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get savingsGoalsPlanGoals => 'ಗುರಿಗಳನ್ನು ಯೋಜಿಸಿ';
+
+  @override
+  String get farmerWorkspace => 'ರೈತರ ಕಾರ್ಯಸ್ಥಳ';
+
+  @override
+  String get farmerEmpoweredNetwork => 'ಉದ್ಯೋಗಸೇತು ನೇರ ಕೃಷಿ ಜಾಲದ ಸಹಯೋಗ';
+
+  @override
+  String get farmerProduceSold => 'ಮಾರಾಟವಾದ ಬೆಳೆ';
+
+  @override
+  String get farmerThisMonth => 'ಈ ತಿಂಗಳು';
+
+  @override
+  String get farmerDirectEarnings => 'ನೇರ ಆದಾಯ';
+
+  @override
+  String get farmerZeroMiddlemen => 'ಮಧ್ಯವರ್ತಿಗಳಿಲ್ಲ';
+
+  @override
+  String get farmerActiveLabor => 'ಸಕ್ರಿಯ ಕಾರ್ಮಿಕರು';
+
+  @override
+  String get farmerHarvestShiftPlaceholder => 'ಕೊಯ್ಲು ಪಾಳಿ (P6.3)';
+
+  @override
+  String farmerBooked(int count) {
+    return '$count ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ';
+  }
+
+  @override
+  String get farmerWeatherAdvisoryRadar => 'ಹವಾಮಾನ ಮುನ್ಸೂಚನೆ ರೇಡಾರ್';
+
+  @override
+  String get farmerSimulatedForecast => 'ಅಣಕು ಮುನ್ಸೂಚನೆ';
+
+  @override
+  String farmerRainProbability(int percent) {
+    return '$percent% ಮಳೆ ಸಂಭವ';
+  }
+
+  @override
+  String get farmerBookHarvestHelpers => 'ಕೊಯ್ಲು ಕಾರ್ಮಿಕರನ್ನು ಬುಕ್ ಮಾಡಿ';
+
+  @override
+  String get farmerViewIrrigationGuide => 'ನೀರಾವರಿ ಮಾರ್ಗದರ್ಶಿ ನೋಡಿ';
+
+  @override
+  String get farmerLiveMandiPrices => 'ಲೈವ್ ಮಾರುಕಟ್ಟೆ ದರಗಳು & ಬೇಡಿಕೆ';
+
+  @override
+  String get farmerLiveFeed => 'ಲೈವ್ ಫೀಡ್';
+
+  @override
+  String get farmerAllCrops => 'ಎಲ್ಲಾ ಬೆಳೆಗಳು';
+
+  @override
+  String get farmerVegetables => 'ತರಕಾರಿಗಳು';
+
+  @override
+  String get farmerGrainsAndPulses => 'ಧಾನ್ಯಗಳು & ಕಾಳುಗಳು';
+
+  @override
+  String get farmerNoPricesInCategory => 'ಈ ವರ್ಗದಲ್ಲಿ ಮಾರುಕಟ್ಟೆ ದರಗಳಿಲ್ಲ';
+
+  @override
+  String get farmerSelectAllCropsHint =>
+      'ಎಲ್ಲಾ ಕರ್ನಾಟಕ APMC ಮಾರುಕಟ್ಟೆ ದರಗಳನ್ನು ನೋಡಲು ಎಲ್ಲಾ ಬೆಳೆಗಳನ್ನು ಆಯ್ಕೆಮಾಡಿ.';
+
+  @override
+  String farmerUpdatedDate(String date) {
+    return 'ನವೀಕರಿಸಲಾಗಿದೆ $date';
+  }
+
+  @override
+  String get farmerApmcKarnatakaFeed => 'ಕರ್ನಾಟಕ APMC ಫೀಡ್';
+
+  @override
+  String get farmerEssentialSuite => 'ರೈತರಿಗೆ ಅಗತ್ಯ ಸೌಲಭ್ಯಗಳು';
+
+  @override
+  String get farmerRentTractor => 'ಟ್ರಾಕ್ಟರ್ ಬಾಡಿಗೆ';
+
+  @override
+  String get farmerHireWorkers => 'ಕಾರ್ಮಿಕರನ್ನು ನೇಮಿಸಿ';
+
+  @override
+  String get farmerSoilAiTest => 'ಮಣ್ಣು AI ಪರೀಕ್ಷೆ';
+
+  @override
+  String get farmerSellProduce => 'ಬೆಳೆ ಮಾರಾಟ';
+
+  @override
+  String get farmerPestAiDoc => 'ಕೀಟ AI ವೈದ್ಯ';
+
+  @override
+  String get farmerGovtSchemes => 'ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು';
+
+  @override
+  String get farmerAgriDrone => 'ಕೃಷಿ ಡ್ರೋನ್';
+
+  @override
+  String get farmerIrrigationAi => 'ನೀರಾವರಿ AI';
+
+  @override
+  String farmerComingInPhase(String phase) {
+    return '$phase ನಲ್ಲಿ ಬರಲಿದೆ';
+  }
+
+  @override
+  String get farmerUnderstood => 'ತಿಳಿಯಿತು';
+
+  @override
+  String get farmerGotIt => 'ಸರಿ';
+
+  @override
+  String get farmerHireWorkersDesc =>
+      'ರೈತರು ಕೃಷಿ ಕಾರ್ಮಿಕರ ಅಗತ್ಯಗಳನ್ನು ಪೋಸ್ಟ್ ಮಾಡಲು, ಪಾಳಿಗಳನ್ನು ನಿಗದಿಪಡಿಸಲು ಮತ್ತು ಪರಿಶೀಲಿಸಿದ ಕಾರ್ಮಿಕರನ್ನು ನೇರವಾಗಿ ನೇಮಿಸಿಕೊಳ್ಳಬಹುದು.';
+
+  @override
+  String get farmerRentTractorDesc =>
+      'ಹತ್ತಿರದ ಯಂತ್ರೋಪಕರಣ ಹಬ್‌ಗಳಿಂದ ಟ್ರಾಕ್ಟರ್ ಮತ್ತು ಕೊಯ್ಲು ಯಂತ್ರಗಳನ್ನು ಬಾಡಿಗೆಗೆ ಪಡೆಯಿರಿ.';
+
+  @override
+  String get farmerSoilAiTestDesc =>
+      'ಮಣ್ಣಿನ ವರದಿಯ ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ತಕ್ಷಣವೇ AI N-P-K ರಸಗೊಬ್ಬರ ಪ್ರಮಾಣ ತಿಳಿಯಿರಿ.';
+
+  @override
+  String get farmerSellProduceDesc =>
+      'ನಿಮ್ಮ ಬೆಳೆಯನ್ನು ಮಧ್ಯವರ್ತಿಗಳಿಲ್ಲದೆ ಮಾರುಕಟ್ಟೆ ವ್ಯಾಪಾರಿಗಳಿಗೆ ನೇರವಾಗಿ ಮಾರಾಟ ಮಾಡಿ.';
+
+  @override
+  String get farmerPestAiDocDesc =>
+      'ಎಲೆ ರೋಗ ಅಥವಾ ಕೀಟಗಳ ಫೋಟೋ ತೆಗೆದು ತಕ್ಷಣವೇ AI ಚಿಕಿತ್ಸೆ ಮತ್ತು ಪರಿಹಾರ ಪಡೆಯಿರಿ.';
+
+  @override
+  String get farmerGovtSchemesDesc =>
+      'ಪಿಎಂ-ಕಿಸಾನ್, ರೈತ ಸಿರಿ, ಸೌರ ಪಂಪ್ ಸಬ್ಸಿಡಿ ಮತ್ತು ಬೆಳೆ ವಿಮೆ ಯೋಜನೆಗಳನ್ನು ಪರಿಶೀಲಿಸಿ.';
+
+  @override
+  String get farmerAgriDroneDesc =>
+      'ನ್ಯಾನೋ ಯೂರಿಯಾ ಮತ್ತು ಸಾವಯವ ಸಿಂಪಡಣೆಗಾಗಿ ಕೃಷಿ ಡ್ರೋನ್ ಪೈಲಟ್‌ಗಳನ್ನು ಬುಕ್ ಮಾಡಿ.';
+
+  @override
+  String get farmerIrrigationAiDesc =>
+      'ಸ್ಥಳೀಯ ಹವಾಮಾನ ಮತ್ತು ಮಣ್ಣಿನ ತೇವಾಂಶಕ್ಕೆ ಅನುಗುಣವಾಗಿ ಸ್ಮಾರ್ಟ್ ನೀರಾವರಿ ವೇಳಾಪಟ್ಟಿ.';
+
+  @override
+  String get farmerHomeTitle => 'ರೈತರ ಮುಖಪುಟ';
+
+  @override
+  String get farmerSimulateRainDev => 'ಮಳೆ ಮುನ್ಸೂಚನೆ ಸಿಮ್ಯುಲೇಶನ್ (ಡೆವ್)';
+
+  @override
+  String get farmerFailedLoadMandi =>
+      'ಮಾರುಕಟ್ಟೆ ದರಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ';
+
+  @override
+  String get farmerHighDemand => 'ಹೆಚ್ಚು ಬೇಡಿಕೆ';
+
+  @override
+  String get farmerStable => 'ಸ್ಥಿರ';
+
+  @override
+  String get farmerFrpGuaranteed => 'FRP ಖಾತರಿ';
+
+  @override
+  String get farmerMspProtected => 'MSP ರಕ್ಷಿತ';
+
+  @override
+  String get farmerOversupply => 'ಹೆಚ್ಚುವರಿ ಪೂರೈಕೆ';
+
+  @override
+  String get farmerModerate => 'ಸಾಧಾರಣ';
+
+  @override
+  String get farmerProfileTitle => 'ರೈತರ ವಿವರ';
+
+  @override
+  String get verifiedFarmer => 'ದೃಢೀಕೃತ ರೈತ ✓';
+
+  @override
+  String get organicLand => 'ಸಾವಯವ ಭೂಮಿ';
+
+  @override
+  String get soldThisMonth => 'ಈ ತಿಂಗಳು ಮಾರಾಟವಾದದ್ದು';
+
+  @override
+  String get directSales => 'ನೇರ ಮಾರಾಟ';
+
+  @override
+  String get farmInfrastructureAndBadges =>
+      'ಕೃಷಿ ಮೂಲಸೌಕರ್ಯ ಮತ್ತು ಬೆಳೆ ಬ್ಯಾಡ್ಜ್‌ಗಳು';
+
+  @override
+  String get soilClassification => 'ಮಣ್ಣಿನ ವರ್ಗೀಕರಣ';
+
+  @override
+  String get primaryCrops => 'ಮುಖ್ಯ ಬೆಳೆಗಳು';
+
+  @override
+  String get apmcRegistration => 'ಎಪಿಎಂಸಿ ನೋಂದಣಿ';
+
+  @override
+  String get kisanCreditCard => 'ಕಿಸಾನ್ ಕ್ರೆಡಿಟ್ ಕಾರ್ಡ್';
+
+  @override
+  String get zeroPesticideOrganicCertificate =>
+      'ಶೂನ್ಯ ಕೀಟನಾಶಕ ಸಾವಯವ ಪ್ರಮಾಣಪತ್ರ';
+
+  @override
+  String get verifiedByKarnatakaOrganicBoard =>
+      'ಕರ್ನಾಟಕ ಸಾವಯವ ರೈತ ಮಂಡಳಿಯಿಂದ ದೃಢೀಕರಿಸಲಾಗಿದೆ';
+
+  @override
+  String get validatedStatus => 'ದೃಢೀಕೃತ ✓';
+
+  @override
+  String get underReviewStatus => 'ಪರಿಶೀಲನೆಯಲ್ಲಿದೆ';
+
+  @override
+  String get languageMode => 'ಭಾಷಾ ಮೋಡ್';
+
+  @override
+  String get manageProduceListings => 'ಉತ್ಪನ್ನಗಳ ಪಟ್ಟಿ ನಿರ್ವಹಿಸಿ';
+
+  @override
+  String get produceListingsTitle => 'ಕೃಷಿ ಉತ್ಪನ್ನಗಳ ಪಟ್ಟಿ';
+
+  @override
+  String get addNewProduce => 'ಹೊಸ ಉತ್ಪನ್ನ ಸೇರಿಸಿ';
+
+  @override
+  String get editProduceListing => 'ಉತ್ಪನ್ನ ಪಟ್ಟಿ ಸಂಪಾದಿಸಿ';
+
+  @override
+  String get produceName => 'ಉತ್ಪನ್ನದ ಹೆಸರು';
+
+  @override
+  String get category => 'ವರ್ಗ';
+
+  @override
+  String pricePerUnit(String unit) {
+    return 'ಪ್ರತಿ $unitಗೆ ಬೆಲೆ';
+  }
+
+  @override
+  String get stockQuantity => 'ದಾಸ್ತಾನು ಪ್ರಮಾಣ';
+
+  @override
+  String get unit => 'ಘಟಕ';
+
+  @override
+  String get harvestDate => 'ಕೊಯ್ಲು ದಿನಾಂಕ';
+
+  @override
+  String get qualityNotes => 'ಗುಣಮಟ್ಟದ ವಿವರಣೆ';
+
+  @override
+  String get farmingMethod => 'ಕೃಷಿ ವಿಧಾನ';
+
+  @override
+  String get deliveryAvailable => 'ವಿತರಣೆ ಲಭ್ಯವಿದೆ';
+
+  @override
+  String get pickupAvailable => 'ತೋಟದಲ್ಲೇ ಸಂಗ್ರಹಿಸಲು ಲಭ್ಯ';
+
+  @override
+  String get availabilityMode => 'ಲಭ್ಯತೆ ಮೋಡ್';
+
+  @override
+  String get sameDayDelivery => 'ಅದೇ ದಿನದ ವಿತರಣೆ';
+
+  @override
+  String get nextDayDelivery => 'ಮರುದಿನದ ವಿತರಣೆ';
+
+  @override
+  String get harvestPreOrder => 'ಕೊಯ್ಲು ಪೂರ್ವ ಮುಂಗಡ ಬುಕಿಂಗ್';
+
+  @override
+  String get farmerSetsFinalPrice => 'ರೈತರೇ ಅಂತಿಮ ಬೆಲೆಯನ್ನು ನಿಗದಿಪಡಿಸುತ್ತಾರೆ';
+
+  @override
+  String get statusLowStock => 'ಕಡಿಮೆ ದಾಸ್ತಾನು';
+
+  @override
+  String get statusSoldOut => 'ಖಾಲಿಯಾಗಿದೆ';
+
+  @override
+  String get statusPaused => 'ಸ್ಥಗಿತಗೊಳಿಸಲಾಗಿದೆ';
+
+  @override
+  String get pauseListing => 'ಸ್ಥಗಿತಗೊಳಿಸಿ';
+
+  @override
+  String get activateListing => 'ಸಕ್ರಿಯಗೊಳಿಸಿ';
+
+  @override
+  String get updateStock => 'ದಾಸ್ತಾನು ನವೀಕರಿಸಿ';
+
+  @override
+  String stockInStock(String stock) {
+    return '$stock ದಾಸ್ತಾನು ಇದೆ';
+  }
+
+  @override
+  String get buyerProduceMarket => 'ತಾಜಾ ಕೃಷಿ ಉತ್ಪನ್ನಗಳು';
+
+  @override
+  String get buyerSearchProduceHint =>
+      'ತಾಜಾ ಕೃಷಿ ಉತ್ಪನ್ನಗಳನ್ನು ಹುಡುಕಿ (ಉದಾ. ಟೊಮೆಟೊ, ಅಕ್ಕಿ)...';
+
+  @override
+  String get noProduceAvailable => 'ಯಾವುದೇ ಉತ್ಪನ್ನಗಳ ಪಟ್ಟಿ ಲಭ್ಯವಿಲ್ಲ';
+
+  @override
+  String get orderDirect => 'ನೇರವಾಗಿ ಖರೀದಿಸಿ';
+
+  @override
+  String get uploadProducePhotos => 'ಬೆಳೆ ಫೋಟೋಗಳು (produce-images)';
+
+  @override
+  String get addPhoto => 'ಫೋಟೋ ಸೇರಿಸಿ';
 }

@@ -23,6 +23,11 @@ This document records key design, architectural, role model, and implementation 
 | D-HOME-CLEAN | Removal of Safety Onboarding Card from Home: Redundant card moved exclusively to Profile & Safety Hub to match Page 2 Phone 2 | Adopted | Home Screen Cleanliness |
 | D-GOAL-DEFAULT | Today's Goal Default: Standard daily earnings target set to ₹1,500 with interactive modal chip adjuster | Adopted | Daily Goal Gamification |
 | D50 | Wallet Balances from View, Ledger-backed Transactions, DB-enforced Overdraw Guard, Demo Withdrawal & UPI Scanner | Adopted | Wallet & Payout Architecture |
+| D51 | Razorpay Checkout, Constant-Time Webhook Verification, Escrow Hold & Digital PDF Receipts | Adopted | Payment Processing & Escrow Hold |
+| D52 | Escrow Release, Idempotent Settlement, Double-Entry Reconciliation, Dispute Freeze & Auto-Release | Adopted | Escrow Settlement & Release |
+| D53 | SQL-Backed Earnings Dashboard & Savings Goal Planner | Adopted | Earnings & Virtual Savings Planner |
+| D54 | Farmer Home Workspace, APMC Karnataka Mandi Feed, Open-Meteo Advisory & Essential Suite | Adopted | Farmer Home & Agri Advisory |
+| D55 | Farmer Profile Page, Produce Inventory Management, Auto-Status & Buyer Gating | Adopted | Farmer Profile & Produce Listings |
 
 ## Known Issues & Planned Fixes (Pre-P5.1)
 
@@ -209,3 +214,50 @@ This document records key design, architectural, role model, and implementation 
     * If no deadline exists: Computes suggestion dynamically using the worker's recent 7-day average daily earnings (`recent_avg_daily_earnings_paise`), recommending a sustainable 15% savings rate.
   * **Unified Daily Goal State**: Added `daily_earnings_goal_paise` to `public.profiles`. The "Today's Goal" circular ring on the Seeker Home Screen and the Daily Goal Card on the Earnings Dashboard synchronize to the same database setting via `update_daily_earnings_goal` RPC.
   * **Accessible Chart Invariant**: `EarningsTrendChart` uses `fl_chart` with interactive 14-day daily line chart and 6-month monthly bar chart, accompanied by a dynamic, screen-reader-friendly text summary directly beneath each chart.
+
+* **D54 — Farmer Home Workspace, APMC Karnataka Mandi Feed, Open-Meteo Advisory & Essential Suite**:
+  * **Strict Role Separation & Invariant Real Data**: The Farmer Home screen (`FarmerHomeScreen`) is strictly restricted to Farmer accounts. All top metrics (Produce Sold, Direct Earnings, Active Labor) are backed by real database records (`orders`). For fresh farmer accounts, values display natural zeros (`0 kg`, `₹0`, `0 Booked`) — no mock or placeholder numbers are rendered on real screens.
+  * **Temporary Scope Isolation for Agricultural Labour (P6.3 Placeholder)**: In P6.3, farmers will post agricultural labour requests directly from their farmer account. Until P6.3, the "Hire Workers" tile in the Essential Suite and the "Book Harvest Helpers" CTA open an informational bottom sheet modal ("Coming in P6.3"), and the Active Labor metric displays `0 Booked`.
+  * **APMC Karnataka Mandi Sync & Fault Tolerance**:
+    * Candidate resource ID `9ef84268-d588-465a-a308-a864a43d0070` on data.gov.in provides daily APMC commodity prices (`state`, `district`, `market`, `commodity`, `variety`, `arrival_date`, `min_price`, `max_price`, `modal_price`).
+    * Edge Function `mandi-sync` reads `DATA_GOV_API_KEY` from Edge Function secrets, but is kept switched off by default (`MANDI_SYNC_ENABLED=false`).
+    * Fault-tolerant retention: When the external API is unreachable or returns errors, the Edge Function logs the event and retains the existing database prices in `public.mandi_prices`.
+    * SQL function `get_mandi_prices_with_demand` calculates price per kg, percentage change vs previous arrival date, and demand indicators (`High Demand`, `Stable`, `Moderate`, `FRP Guaranteed`, `MSP Protected`, `Oversupply`).
+    * Migration `0511_mandi_sync_schedule.sql` sets up a daily schedule at 06:00 AM IST (00:30 UTC) using `pg_cron` and `pg_net` with private bearer authentication.
+  * **Rule-Based Weather Advisory via Open-Meteo**:
+    * Uses Open-Meteo REST API based on farmer coordinates (`farmLatitude`, `farmLongitude`), falling back to Mandya district center (`12.52`, `76.89`).
+    * Rule engine translates forecasts into actionable agricultural cards:
+      * Precipitation $\ge 25\text{mm}$ or violent showers: Heavy rain alert with drainage furrow advice.
+      * Rain probability $\ge 45\%$ or moderate rain code: Warning *"Moderate Rain Expected Tomorrow Afternoon - Protect ready tomato crops by harvesting before 12 PM"* with "Book Harvest Helpers" CTA.
+      * High temperature $\ge 34^\circ\text{C}$: Heat stress irrigation warning.
+      * Clear weather: Favourable field weather info card.
+  * **Offline Persistence**:
+    * Last fetched mandi prices and weather advisory are cached in device `SharedPreferences` (`cached_mandi_prices_v1`, `cached_weather_advisory_v1`). If disconnected, the app renders cached data along with the last updated date label.
+  * **Debug Simulation Switch**:
+    * An interactive toggle in the Dev Menu (`/dev/role`) and the Farmer Home screen options menu simulates a rain forecast (`simulatedRainForecastProvider`), enabling manual verification of weather advisory alerts and harvest helper actions.
+
+* **D55 — Farmer Profile Page & Produce Inventory Management**:
+  * **Visual Reference Compliance (Screen 25 / Page 7 Phone 1)**:
+    * Forest green header card (`#064E3B`) with avatar, "VERIFIED FARMER ✓" badge, farm title & cluster pill, phone number, and 3 live metrics: Land (Acres), Sold This Month (kg), and Direct Sales (₹).
+    * Farm Infrastructure & Crop Badges: Soil Classification (e.g. Red Loamy), Primary Crops, APMC Registration status, and KCC (Kisan Credit Card) Approved badge.
+    * Zero-Pesticide Organic Certificate card with its review status ("VALIDATED ✓", "IN REVIEW", "REJECTED", "NOT APPLIED").
+    * Language mode selector grid directly connected to `localeProvider`.
+  * **Produce Listings Creation & Editing**:
+    * Fields: Product name, produce category, photos, price per unit (paise/kg), stock quantity, unit (`kg`, `quintal`, `box`, `bunch`), harvest date, quality notes, farming method (`Zero-Pesticide Natural`, `Organic Certified`, `Traditional IPNM`, `Hydroponic`), delivery and pickup options, and availability mode (`same_day`, `next_day`, `pre_order`).
+    * Image compression using `image` package (resizing max dimension 800px at 80% JPEG quality) and uploading to `produce-images/{userId}/{timestamp}.jpg` in Supabase Storage with public read policies.
+  * **Automated Status Control via PostgreSQL Trigger**:
+    * Database trigger `trg_sync_produce_listing_status` on `produce_listings` automatically calculates listing status on INSERT or UPDATE:
+      * `paused` status is preserved if explicitly set by farmer.
+      * If `stock_qty <= 0`, status automatically updates to `sold_out`.
+      * If `stock_qty <= low_stock_threshold`, status automatically updates to `low_stock`.
+      * Otherwise, status updates to `active`.
+  * **Price Suggestion Band**:
+    * PostgreSQL function `get_produce_price_suggestion(p_category_id, p_commodity_name)` calculates a dynamic price suggestion band based on current APMC mandi modal price (`modal_price - 10%` to `modal_price + 15%`) and recent platform orders.
+    * The farmer always sets the final price; the suggested band is displayed in the listing editor modal along with a one-tap "Apply Mandi Modal Price" shortcut.
+  * **Database-Enforced Stock Decrement on Order Acceptance**:
+    * Stock decrements only through SQL via trigger `trg_order_accepted_decrement_stock` when order status transitions to `accepted` or `confirmed`, or through SECURITY DEFINER RPC `decrement_listing_stock(p_listing_id, p_quantity, p_order_id)`.
+    * If ordered quantity exceeds available stock, the database raises an exception (`'Insufficient stock remaining for listing'`).
+  * **Buyer Search Visibility Invariant**:
+    * Function `get_buyer_produce_listings` strictly filters `WHERE status IN ('active', 'low_stock') AND stock_qty > 0`.
+    * When stock reaches zero, the listing is immediately hidden from buyer feeds and search results.
+

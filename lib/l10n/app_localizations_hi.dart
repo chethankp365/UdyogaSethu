@@ -800,7 +800,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get kccApplied => 'आवेदन किया गया';
 
   @override
-  String get kccApproved => 'स्वीकृत / सक्रिय';
+  String get kccApproved => 'केसीसी स्वीकृत ✓';
 
   @override
   String get organicCertLabel => 'जैविक प्रमाण पत्र अपलोड (वैकल्पिक)';
@@ -2920,4 +2920,326 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get savingsGoalsPlanGoals => 'लक्ष्य प्लान करें';
+
+  @override
+  String get farmerWorkspace => 'किसान कार्यस्थल';
+
+  @override
+  String get farmerEmpoweredNetwork =>
+      'उद्योगसेतु डायरेक्ट एग्री-नेटवर्क द्वारा संचालित';
+
+  @override
+  String get farmerProduceSold => 'बेची गई उपज';
+
+  @override
+  String get farmerThisMonth => 'इस महीने';
+
+  @override
+  String get farmerDirectEarnings => 'सीधी कमाई';
+
+  @override
+  String get farmerZeroMiddlemen => 'बिना बिचौलियों के';
+
+  @override
+  String get farmerActiveLabor => 'सक्रिय मजदूर';
+
+  @override
+  String get farmerHarvestShiftPlaceholder => 'कटाई शिफ्ट (P6.3)';
+
+  @override
+  String farmerBooked(int count) {
+    return '$count बुक किए गए';
+  }
+
+  @override
+  String get farmerWeatherAdvisoryRadar => 'मौसम परामर्श रडार';
+
+  @override
+  String get farmerSimulatedForecast => 'सिम्युलेटेड पूर्वानुमान';
+
+  @override
+  String farmerRainProbability(int percent) {
+    return '$percent% बारिश की संभावना';
+  }
+
+  @override
+  String get farmerBookHarvestHelpers => 'कटाई मजदूर बुक करें';
+
+  @override
+  String get farmerViewIrrigationGuide => 'सिंचाई गाइड देखें';
+
+  @override
+  String get farmerLiveMandiPrices => 'लाइव मंडी भाव व मांग';
+
+  @override
+  String get farmerLiveFeed => 'लाइव फीड';
+
+  @override
+  String get farmerAllCrops => 'सभी फसलें';
+
+  @override
+  String get farmerVegetables => 'सब्जियां';
+
+  @override
+  String get farmerGrainsAndPulses => 'अनाज और दालें';
+
+  @override
+  String get farmerNoPricesInCategory => 'इस श्रेणी में कोई मंडी भाव नहीं है';
+
+  @override
+  String get farmerSelectAllCropsHint =>
+      'कर्नाटक APMC के सभी भाव देखने के लिए \"सभी फसलें\" चुनें।';
+
+  @override
+  String farmerUpdatedDate(String date) {
+    return 'अपडेट किया गया $date';
+  }
+
+  @override
+  String get farmerApmcKarnatakaFeed => 'कर्नाटक APMC फीड';
+
+  @override
+  String get farmerEssentialSuite => 'किसान जरूरी सुविधाएं';
+
+  @override
+  String get farmerRentTractor => 'ट्रैक्टर किराए पर लें';
+
+  @override
+  String get farmerHireWorkers => 'मजदूर बुलाएं';
+
+  @override
+  String get farmerSoilAiTest => 'मिट्टी AI जांच';
+
+  @override
+  String get farmerSellProduce => 'उपज बेचें';
+
+  @override
+  String get farmerPestAiDoc => 'कीट AI डॉक्टर';
+
+  @override
+  String get farmerGovtSchemes => 'सरकारी योजनाएं';
+
+  @override
+  String get farmerAgriDrone => 'एग्री ड्रोन';
+
+  @override
+  String get farmerIrrigationAi => 'सिंचाई AI';
+
+  @override
+  String farmerComingInPhase(String phase) {
+    return '$phase में उपलब्ध होगा';
+  }
+
+  @override
+  String get farmerUnderstood => 'समझ गया';
+
+  @override
+  String get farmerGotIt => 'ठीक है';
+
+  @override
+  String get farmerHireWorkersDesc =>
+      'किसान अपने खाते से सीधे कृषि मजदूरी की मांग पोस्ट कर सकेंगे और सत्यापित कामगारों को बुला सकेंगे।';
+
+  @override
+  String get farmerRentTractorDesc =>
+      'नजदीकी कृषि केंद्रों से ट्रैक्टर और कटाई मशीनें किराए पर बुक करें।';
+
+  @override
+  String get farmerSoilAiTestDesc =>
+      'मिट्टी जांच रिपोर्ट अपलोड करें और तुरंत खाद की AI सिफारिशें पाएं।';
+
+  @override
+  String get farmerSellProduceDesc =>
+      'बिना बिचौलियों के सीधे थोक खरीदारों को अपनी फसल बेचें।';
+
+  @override
+  String get farmerPestAiDocDesc =>
+      'कीट व बीमारी की तस्वीर खींचकर तुरंत AI उपचार पाएं।';
+
+  @override
+  String get farmerGovtSchemesDesc =>
+      'पीएम-किसान, सौर पंप और फसल बीमा योजनाओं की जानकारी लें।';
+
+  @override
+  String get farmerAgriDroneDesc =>
+      'स्प्रे के लिए प्रमाणित एग्री-ड्रोन पायलट बुक करें।';
+
+  @override
+  String get farmerIrrigationAiDesc =>
+      'मौसम व नमी के आधार पर स्मार्ट सिंचाई योजना।';
+
+  @override
+  String get farmerHomeTitle => 'किसान होम';
+
+  @override
+  String get farmerSimulateRainDev => 'बारिश पूर्वानुमान सिमुलेशन (डेव)';
+
+  @override
+  String get farmerFailedLoadMandi => 'मंडी भाव लोड करने में विफल';
+
+  @override
+  String get farmerHighDemand => 'उच्च मांग';
+
+  @override
+  String get farmerStable => 'स्थिर';
+
+  @override
+  String get farmerFrpGuaranteed => 'FRP गारंटीकृत';
+
+  @override
+  String get farmerMspProtected => 'MSP संरक्षित';
+
+  @override
+  String get farmerOversupply => 'अत्यधिक आवक';
+
+  @override
+  String get farmerModerate => 'सामान्य';
+
+  @override
+  String get farmerProfileTitle => 'किसान प्रोफ़ाइल';
+
+  @override
+  String get verifiedFarmer => 'सत्यापित किसान ✓';
+
+  @override
+  String get organicLand => 'जैविक भूमि';
+
+  @override
+  String get soldThisMonth => 'इस महीने की बिक्री';
+
+  @override
+  String get directSales => 'प्रत्यक्ष बिक्री';
+
+  @override
+  String get farmInfrastructureAndBadges => 'कृषि अवसंरचना एवं फसल बैज';
+
+  @override
+  String get soilClassification => 'मृदा वर्गीकरण';
+
+  @override
+  String get primaryCrops => 'प्रमुख फसलें';
+
+  @override
+  String get apmcRegistration => 'एपीएमसी पंजीकरण';
+
+  @override
+  String get kisanCreditCard => 'किसान क्रेडिट कार्ड';
+
+  @override
+  String get zeroPesticideOrganicCertificate =>
+      'शून्य कीटनाशक जैविक प्रमाणपत्र';
+
+  @override
+  String get verifiedByKarnatakaOrganicBoard =>
+      'कर्नाटक जैविक किसान बोर्ड द्वारा सत्यापित';
+
+  @override
+  String get validatedStatus => 'सत्यापित ✓';
+
+  @override
+  String get underReviewStatus => 'समीक्षाधीन';
+
+  @override
+  String get languageMode => 'भाषा मोड';
+
+  @override
+  String get manageProduceListings => 'उपज सूची प्रबंधित करें';
+
+  @override
+  String get produceListingsTitle => 'कृषि उपज सूची';
+
+  @override
+  String get addNewProduce => 'नई उपज जोड़ें';
+
+  @override
+  String get editProduceListing => 'उपज सूची संपादित करें';
+
+  @override
+  String get produceName => 'उपज का नाम';
+
+  @override
+  String get category => 'श्रेणी';
+
+  @override
+  String pricePerUnit(String unit) {
+    return 'प्रति $unit मूल्य';
+  }
+
+  @override
+  String get stockQuantity => 'स्टॉक मात्रा';
+
+  @override
+  String get unit => 'इकाई';
+
+  @override
+  String get harvestDate => 'कटाई की तारीख';
+
+  @override
+  String get qualityNotes => 'गुणवत्ता विवरण';
+
+  @override
+  String get farmingMethod => 'खेती की विधि';
+
+  @override
+  String get deliveryAvailable => 'डिलीवरी उपलब्ध';
+
+  @override
+  String get pickupAvailable => 'खेत से पिकअप उपलब्ध';
+
+  @override
+  String get availabilityMode => 'उपलब्धता मोड';
+
+  @override
+  String get sameDayDelivery => 'उसी दिन डिलीवरी';
+
+  @override
+  String get nextDayDelivery => 'अगले दिन डिलीवरी';
+
+  @override
+  String get harvestPreOrder => 'फसल पूर्व-ऑर्डर';
+
+  @override
+  String get farmerSetsFinalPrice => 'किसान हमेशा अंतिम मूल्य तय करता है';
+
+  @override
+  String get statusLowStock => 'कम स्टॉक';
+
+  @override
+  String get statusSoldOut => 'बिक चुका है';
+
+  @override
+  String get statusPaused => 'रोका गया';
+
+  @override
+  String get pauseListing => 'रोकें';
+
+  @override
+  String get activateListing => 'सक्रिय करें';
+
+  @override
+  String get updateStock => 'स्टॉक अपडेट करें';
+
+  @override
+  String stockInStock(String stock) {
+    return '$stock स्टॉक में उपलब्ध';
+  }
+
+  @override
+  String get buyerProduceMarket => 'ताज़ा खेत उपज';
+
+  @override
+  String get buyerSearchProduceHint =>
+      'ताज़ा खेत उपज खोजें (जैसे टमाटर, चावल)...';
+
+  @override
+  String get noProduceAvailable => 'कोई उपज उपलब्ध नहीं है';
+
+  @override
+  String get orderDirect => 'सीधा ऑर्डर करें';
+
+  @override
+  String get uploadProducePhotos => 'फसल फोटो (produce-images)';
+
+  @override
+  String get addPhoto => 'फोटो जोड़ें';
 }

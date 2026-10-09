@@ -39,6 +39,7 @@ class _EdgeFunctionHealthScreenState extends ConsumerState<EdgeFunctionHealthScr
     'face-enroll',
     'face-verify',
     'delete-account',
+    'mandi-sync',
   ];
 
   final Map<String, FunctionHealthResult> _results = {};

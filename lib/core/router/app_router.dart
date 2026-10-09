@@ -20,6 +20,8 @@ import 'package:udyogasethu/features/auth/presentation/otp_screen.dart';
 import 'package:udyogasethu/features/auth/presentation/suspended_screen.dart';
 import 'package:udyogasethu/features/auth/presentation/verify_phone_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_home_screen.dart';
+import 'package:udyogasethu/features/farmer/presentation/farmer_listings_screen.dart';
+import 'package:udyogasethu/features/farmer/presentation/farmer_profile_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_wizard_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/brand_intro_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/intro_screen.dart';
@@ -470,11 +472,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: AppRoutes.farmerMarket,
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Produce Marketplace & Labour Hiring',
-                  roleName: 'Farmer',
-                  icon: Icons.storefront_rounded,
-                ),
+                builder: (context, state) => const FarmerListingsScreen(),
               ),
             ],
           ),
@@ -494,7 +492,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: AppRoutes.farmerProfile,
-                builder: (context, state) => const ProfileScreen(role: UserRole.farmer),
+                builder: (context, state) => const FarmerProfileScreen(),
               ),
             ],
           ),

@@ -15,6 +15,7 @@ import 'package:udyogasethu/features/provider/domain/provider_profile_draft.dart
 import 'package:udyogasethu/features/provider/presentation/provider_jobs_controller.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_wizard_controller.dart';
 import 'package:udyogasethu/features/provider/presentation/worker_search_controller.dart';
+import 'package:udyogasethu/features/provider/presentation/widgets/buyer_produce_tab.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 final providerHomeProfileProvider = FutureProvider<ProviderProfileDraft>((ref) async {
@@ -192,7 +193,10 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
                 builder: (context, _) {
                   final hubIndex = _hubTabController.index;
                   if (hubIndex == 1) {
-                    return _buildFarmProducePlaceholder(l10n);
+                    return const SizedBox(
+                      height: 650,
+                      child: BuyerProduceTab(),
+                    );
                   } else if (hubIndex == 2) {
                     return _buildSubscriptionsPlaceholder(l10n);
                   }
@@ -347,44 +351,6 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
     );
   }
 
-  Widget _buildFarmProducePlaceholder(AppLocalizations l10n) {
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            children: [
-              const Icon(Icons.agriculture_rounded, size: 54, color: AppColors.headerGreenDark),
-              const SizedBox(height: 14),
-              Text(
-                l10n.hubProduceComingSoon,
-                style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: AppColors.textDark),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                l10n.hubProduceComingSoonDesc,
-                style: const TextStyle(fontSize: 13, color: AppColors.textMuted),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  color: AppColors.paleMint,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Text('Direct Farmer Marketplace opens in Phase 6', style: TextStyle(color: AppColors.headerGreenDark, fontWeight: FontWeight.bold, fontSize: 12)),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget _buildSubscriptionsPlaceholder(AppLocalizations l10n) {
     return Padding(

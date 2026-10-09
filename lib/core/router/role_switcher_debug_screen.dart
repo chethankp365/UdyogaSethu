@@ -10,6 +10,7 @@ import 'package:udyogasethu/core/widgets/app_button.dart';
 import 'package:udyogasethu/core/widgets/app_card.dart';
 import 'package:udyogasethu/core/widgets/responsive_container.dart';
 import 'package:udyogasethu/core/widgets/status_chip.dart';
+import 'package:udyogasethu/features/farmer/data/farmer_home_repository.dart';
 
 class RoleSwitcherDebugScreen extends ConsumerWidget {
   const RoleSwitcherDebugScreen({super.key});
@@ -160,6 +161,38 @@ class RoleSwitcherDebugScreen extends ConsumerWidget {
                 label: '⚡ Open Connection Debug (/dev/connection)',
                 onPressed: () => context.push(AppRoutes.devConnection),
                 variant: AppButtonVariant.secondary,
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              AppButton(
+                label: '🔍 Edge Function Health & Mandi Sync (/dev/edge-health)',
+                onPressed: () => context.push(AppRoutes.devEdgeHealth),
+                variant: AppButtonVariant.secondary,
+              ),
+              const SizedBox(height: AppSpacing.xl),
+
+              // Farmer Home Testing Controls
+              Text(
+                '3. Farmer Simulation Controls (P6.1)',
+                style: AppTypography.titleMedium(textColor),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              AppCard(
+                child: SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  secondary: const Icon(Icons.thunderstorm_rounded, color: Color(0xFF0284C7)),
+                  title: const Text(
+                    'Simulate Rain Forecast',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: const Text(
+                    'Triggers moderate rain advisory & "Book Harvest Helpers" advice card.',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  value: ref.watch(simulatedRainForecastProvider),
+                  onChanged: (val) {
+                    ref.read(simulatedRainForecastProvider.notifier).setSimulated(val);
+                  },
+                ),
               ),
             ],
           ),

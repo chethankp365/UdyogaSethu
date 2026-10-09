@@ -6,307 +6,326 @@ import 'package:udyogasethu/core/config/env.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/widgets/compact_language_selector.dart';
-import 'package:udyogasethu/core/widgets/user_avatar.dart';
+import 'package:udyogasethu/core/widgets/mic_fab.dart';
+import 'package:udyogasethu/features/farmer/data/farmer_home_repository.dart';
 import 'package:udyogasethu/features/farmer/domain/farmer_profile_draft.dart';
-import 'package:udyogasethu/features/farmer/presentation/farmer_wizard_controller.dart';
+import 'package:udyogasethu/features/farmer/presentation/widgets/essential_suite_grid.dart';
+import 'package:udyogasethu/features/farmer/presentation/widgets/farmer_header_card.dart';
+import 'package:udyogasethu/features/farmer/presentation/widgets/mandi_prices_section.dart';
+import 'package:udyogasethu/features/farmer/presentation/widgets/weather_advisory_card.dart';
+import 'package:udyogasethu/l10n/app_localizations.dart';
 
-final farmerHomeProfileProvider = FutureProvider<FarmerProfileDraft>((ref) async {
-  final repo = ref.watch(farmerProfileRepositoryProvider);
-  String? userId;
-  bool isSupabaseInitialized = true;
-  try {
-    final user = Supabase.instance.client.auth.currentUser;
-    if (user != null && user.id.isNotEmpty) userId = user.id;
-  } catch (_) {
-    isSupabaseInitialized = false;
-  }
-  if (isSupabaseInitialized && userId == null) {
-    return const FarmerProfileDraft(userId: '');
-  }
-  final targetId = userId ?? 'test-user-id';
-  return repo.loadDraft(targetId);
-});
-
-class FarmerHomeScreen extends ConsumerWidget {
+class FarmerHomeScreen extends ConsumerStatefulWidget {
   const FarmerHomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final profileAsync = ref.watch(farmerHomeProfileProvider);
+  ConsumerState<FarmerHomeScreen> createState() => _FarmerHomeScreenState();
+}
 
-    return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        backgroundColor: AppColors.headerGreenDark,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        title: const Text('Farmer Home', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-        actions: [
-          if (kAllowMultiRole)
-            IconButton(
-              icon: const Icon(Icons.swap_horiz_rounded),
-              tooltip: 'Switch Role',
-              onPressed: () => context.push(AppRoutes.devRole),
-            ),
-          const CompactLanguageSelector(),
-          IconButton(
-            icon: const Icon(Icons.logout_rounded),
-            tooltip: 'Logout',
-            onPressed: () async {
-              await Supabase.instance.client.auth.signOut();
-              if (context.mounted) {
-                context.go(AppRoutes.login);
-              }
-            },
-          ),
-        ],
+class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
+  Future<void> _refresh() async {
+    ref.invalidate(farmerHomeProfileProvider);
+    ref.invalidate(farmerStatsProvider);
+    ref.invalidate(mandiPricesProvider);
+    ref.invalidate(farmerWeatherAdvisoryProvider);
+  }
+
+  void _showHireWorkersPlaceholder(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      body: RefreshIndicator(
-        onRefresh: () async => ref.refresh(farmerHomeProfileProvider),
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.all(16.0),
-          child: profileAsync.when(
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (err, stack) => Center(child: Text('Error loading farm data: $err')),
-            data: (draft) {
-              final hasProfile = draft.farmName.isNotEmpty || draft.fullName.isNotEmpty;
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Greeting
-                  Text(
-                    'Welcome back, ${draft.fullName.isNotEmpty ? draft.fullName : "Farmer"}! 🌾',
-                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textDark),
+      backgroundColor: Colors.white,
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFCBD5E1),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF2563EB).withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(14),
                   ),
-                  const SizedBox(height: 4),
-                  const Text('Manage your farm profile, produce listings, and mandi prices.', style: TextStyle(color: AppColors.textMuted)),
-                  const SizedBox(height: 16),
-
-                  if (!hasProfile) ...[
-                    // EMPTY PROFILE CARD CTA
-                    Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                      child: Container(
-                        padding: const EdgeInsets.all(20),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: AppColors.paleMint,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: AppColors.cardBorderGreen),
-                        ),
-                        child: Column(
-                          children: [
-                            const Icon(Icons.agriculture_rounded, size: 48, color: AppColors.headerGreenDark),
-                            const SizedBox(height: 12),
-                            const Text(
-                              'Set Up Your Farm Profile',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.headerGreenDark),
-                            ),
-                            const SizedBox(height: 6),
-                            const Text(
-                              'Add your farm name, location, primary crops and registrations to start listing produce.',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 13, color: AppColors.textMuted),
-                            ),
-                            const SizedBox(height: 16),
-                            ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.headerGreenDark,
-                                foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                              ),
-                              onPressed: () => context.go(AppRoutes.profileSetupFarmer),
-                              icon: const Icon(Icons.edit_rounded, size: 18),
-                              label: const Text('Complete Farmer Profile', style: TextStyle(fontWeight: FontWeight.bold)),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ] else ...[
-                    // ACTIVE FARM CARD
-                    Card(
-                      elevation: 3,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          gradient: LinearGradient(
-                            colors: [Colors.white, AppColors.headerGreenDark.withValues(alpha: 0.04)],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                          ),
-                        ),
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                UserAvatar(
-                                  avatarPath: draft.avatarPath,
-                                  name: draft.fullName.isNotEmpty ? draft.fullName : draft.farmName,
-                                  radius: 32,
-                                  backgroundColor: AppColors.headerGreenDark.withValues(alpha: 0.15),
-                                  textColor: AppColors.headerGreenDark,
-                                ),
-                                const SizedBox(width: 14),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        draft.farmName,
-                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                                      ),
-                                      Text(
-                                        '${draft.clusterVillage.isNotEmpty ? draft.clusterVillage : "No village added"} • ${draft.acres > 0 ? "${draft.acres.toStringAsFixed(1)} Acres" : "Area unspecified"}',
-                                        style: const TextStyle(color: AppColors.headerGreenDark, fontWeight: FontWeight.bold, fontSize: 14),
-                                      ),
-                                      if (draft.farmLatitude != null && draft.farmLongitude != null)
-                                        Text(
-                                          'GPS: ${draft.farmLatitude!.toStringAsFixed(4)}, ${draft.farmLongitude!.toStringAsFixed(4)}',
-                                          style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.edit_rounded, color: AppColors.headerGreenDark),
-                                  tooltip: 'Edit Farm Profile',
-                                  onPressed: () => context.go(AppRoutes.profileSetupFarmer),
-                                ),
-                              ],
-                            ),
-                            const Divider(height: 24),
-
-                          // Badges Row
-                          const Text('Farm Badges:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.textDark)),
-                          const SizedBox(height: 6),
-                          Wrap(
-                            spacing: 6,
-                            runSpacing: 6,
-                            children: [
-                              if (draft.farmingMethod.isNotEmpty)
-                                Chip(
-                                  avatar: const Icon(Icons.eco_rounded, size: 14, color: Colors.white),
-                                  label: Text(draft.farmingMethod.toUpperCase()),
-                                  backgroundColor: AppColors.headerGreenDark,
-                                  labelStyle: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
-                                ),
-                              if (draft.hasApmcBadge)
-                                const Chip(
-                                  avatar: Icon(Icons.verified_rounded, size: 14, color: Colors.white),
-                                  label: Text('APMC REGISTERED'),
-                                  backgroundColor: AppColors.headerGreenDark,
-                                  labelStyle: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
-                                ),
-                              if (draft.hasKccBadge)
-                                Chip(
-                                  avatar: const Icon(Icons.credit_card_rounded, size: 14, color: Colors.white),
-                                  label: Text('KCC ${draft.kccStatus.toUpperCase()}'),
-                                  backgroundColor: AppColors.headerGreenDark,
-                                  labelStyle: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
-                                ),
-                              if (draft.hasOrganicBadge)
-                                const Chip(
-                                  avatar: Icon(Icons.stars_rounded, size: 14, color: Colors.white),
-                                  label: Text('ORGANIC CERT (PENDING)'),
-                                  backgroundColor: AppColors.amberOrange,
-                                  labelStyle: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
-                                ),
-                              if (draft.farmingMethod.isEmpty && !draft.hasApmcBadge && !draft.hasKccBadge && !draft.hasOrganicBadge)
-                                const Text('No badges added', style: TextStyle(fontSize: 12, color: AppColors.textMuted)),
-                            ],
-                          ),
-                          const SizedBox(height: 14),
-
-                          // Primary Crops
-                          const Text('Primary Crops:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                          const SizedBox(height: 6),
-                          if (draft.primaryCrops.isEmpty)
-                            const Text('No crops added', style: TextStyle(fontSize: 12, color: AppColors.textMuted))
-                          else
-                            Wrap(
-                              spacing: 6,
-                              runSpacing: 6,
-                              children: draft.primaryCrops.map((crop) {
-                                return Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.amberOrange.withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(color: AppColors.amberOrange.withValues(alpha: 0.3)),
-                                  ),
-                                  child: Text(crop, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.amberOrange)),
-                                );
-                              }).toList(),
-                            ),
-                          const SizedBox(height: 14),
-
-                          // Delivery & Selling Info
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade50,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                _buildInfoCol('Delivery', draft.deliveryAvailable ? '${draft.deliveryRadiusKm.toInt()} km' : 'Not added'),
-                                _buildInfoCol('Pickup', draft.pickupAvailable ? 'Yes' : 'Not added'),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-                const SizedBox(height: 20),
-
-                  // Quick Actions
-                  const Text('Farmer Actions', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  const SizedBox(height: 10),
-                  Row(
+                  child: const Icon(Icons.people_alt_rounded, color: Color(0xFF2563EB), size: 26),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: () {},
-                          icon: const Icon(Icons.add_shopping_cart_rounded, color: AppColors.headerGreenDark),
-                          label: const Text('Add Produce', style: TextStyle(color: AppColors.headerGreenDark)),
+                      Text(
+                        l10n?.farmerHireWorkers ?? 'Hire Workers',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1E293B),
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: () {},
-                          icon: const Icon(Icons.trending_up_rounded, color: AppColors.amberOrange),
-                          label: const Text('Mandi Prices', style: TextStyle(color: AppColors.amberOrange)),
+                      Text(
+                        l10n?.farmerComingInPhase('P6.3') ?? 'Coming in P6.3',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFB45309),
                         ),
                       ),
                     ],
                   ),
-                ],
-              );
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              l10n?.farmerHireWorkersDesc ??
+                  'Farmers will be able to post agricultural labour requests, specify shifts, and hire verified nearby workers directly from their farmer account with escrow protection.',
+              style: const TextStyle(
+                fontSize: 13,
+                color: Color(0xFF475569),
+                height: 1.4,
+              ),
+            ),
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF0D6548),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                ),
+                onPressed: () => Navigator.pop(ctx),
+                child: Text(
+                  l10n?.farmerGotIt ?? 'Got it',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final profileAsync = ref.watch(farmerHomeProfileProvider);
+    final statsAsync = ref.watch(farmerStatsProvider);
+    final mandiAsync = ref.watch(mandiPricesProvider);
+    final weatherAsync = ref.watch(farmerWeatherAdvisoryProvider);
+    final isRainSimulated = ref.watch(simulatedRainForecastProvider);
+
+    return Scaffold(
+      backgroundColor: const Color(0xFFF8FAFC),
+      appBar: AppBar(
+        backgroundColor: AppColors.headerGreenDark,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        title: Row(
+          children: [
+            const Icon(Icons.agriculture_rounded, size: 20),
+            const SizedBox(width: 8),
+            Text(
+              l10n?.farmerHomeTitle ?? 'Farmer Home',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+            ),
+          ],
+        ),
+        actions: [
+          // Dev Menu / Rain Simulation Toggle
+          PopupMenuButton<String>(
+            icon: Icon(
+              isRainSimulated ? Icons.thunderstorm_rounded : Icons.more_vert_rounded,
+              color: isRainSimulated ? const Color(0xFFF59E0B) : Colors.white,
+            ),
+            tooltip: 'Options',
+            onSelected: (val) {
+              if (val == 'simulate_rain') {
+                ref.read(simulatedRainForecastProvider.notifier).toggle();
+              } else if (val == 'switch_role') {
+                context.push(AppRoutes.devRole);
+              } else if (val == 'logout') {
+                Supabase.instance.client.auth.signOut();
+                context.go(AppRoutes.login);
+              }
             },
+            itemBuilder: (ctx) => [
+              PopupMenuItem(
+                value: 'simulate_rain',
+                child: Row(
+                  children: [
+                    Icon(
+                      isRainSimulated ? Icons.check_box_rounded : Icons.check_box_outline_blank_rounded,
+                      color: const Color(0xFFE65100),
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(l10n?.farmerSimulateRainDev ?? 'Simulate Rain Forecast (Dev)'),
+                  ],
+                ),
+              ),
+              if (kAllowMultiRole)
+                const PopupMenuItem(
+                  value: 'switch_role',
+                  child: Row(
+                    children: [
+                      Icon(Icons.swap_horiz_rounded, size: 20),
+                      SizedBox(width: 8),
+                      Text('Switch Role'),
+                    ],
+                  ),
+                ),
+              const PopupMenuItem(
+                value: 'logout',
+                child: Row(
+                  children: [
+                    Icon(Icons.logout_rounded, color: Color(0xFFDC2626), size: 20),
+                    SizedBox(width: 8),
+                    Text('Logout', style: TextStyle(color: Color(0xFFDC2626))),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const CompactLanguageSelector(),
+        ],
+      ),
+      floatingActionButton: MicFab(onTap: () {}),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      body: RefreshIndicator(
+        onRefresh: _refresh,
+        color: AppColors.headerGreenDark,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 1. TOP HEADER HERO CARD (Screen 22 layout)
+              profileAsync.when(
+                data: (profile) => FarmerHeaderCard(
+                  profile: profile,
+                  stats: statsAsync.value ?? const FarmerHomeStats(),
+                ),
+                loading: () => _buildHeaderSkeleton(),
+                error: (err, _) => const FarmerHeaderCard(
+                  profile: FarmerProfileDraft(userId: ''),
+                  stats: FarmerHomeStats(),
+                ),
+              ),
+              const SizedBox(height: 18),
+
+              // 2. WEATHER ADVISORY RADAR CARD (Screen 26 layout)
+              weatherAsync.when(
+                data: (advisory) => WeatherAdvisoryCard(
+                  advisory: advisory,
+                  onBookHelpers: () => _showHireWorkersPlaceholder(context),
+                ),
+                loading: () => _buildCardSkeleton(height: 140),
+                error: (err, _) => const SizedBox.shrink(),
+              ),
+              const SizedBox(height: 20),
+
+              // 3. LIVE MANDI PRICES & DEMAND SECTION (Screen 22 layout)
+              mandiAsync.when(
+                data: (prices) => MandiPricesSection(
+                  prices: prices,
+                  onRefresh: _refresh,
+                ),
+                loading: () => _buildCardSkeleton(height: 240),
+                error: (err, _) => _buildErrorCard(
+                  l10n?.farmerFailedLoadMandi ?? 'Failed to load Mandi prices',
+                  err.toString(),
+                  _refresh,
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // 4. FARMER ESSENTIAL SUITE (Screen 26 layout)
+              EssentialSuiteGrid(
+                onItemTap: (item) {
+                  if (item.type == EssentialSuiteType.hireWorkers) {
+                    _showHireWorkersPlaceholder(context);
+                  } else {
+                    EssentialSuiteGrid.showItemModal(context, item);
+                  }
+                },
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildInfoCol(String label, String val) {
-    return Column(
-      children: [
-        Text(label, style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
-        const SizedBox(height: 2),
-        Text(val, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.textDark)),
-      ],
+  Widget _buildHeaderSkeleton() {
+    return Container(
+      height: 160,
+      decoration: BoxDecoration(
+        color: AppColors.headerGreenDark.withValues(alpha: 0.8),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      alignment: Alignment.center,
+      child: const CircularProgressIndicator(color: Colors.white),
+    );
+  }
+
+  Widget _buildCardSkeleton({required double height}) {
+    return Container(
+      height: height,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+      ),
+      alignment: Alignment.center,
+      child: const CircularProgressIndicator(color: Color(0xFF0D6548)),
+    );
+  }
+
+  Widget _buildErrorCard(String title, String message, VoidCallback onRetry) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFFECACA)),
+      ),
+      child: Column(
+        children: [
+          const Icon(Icons.error_outline_rounded, size: 36, color: Color(0xFFDC2626)),
+          const SizedBox(height: 8),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+          const SizedBox(height: 4),
+          Text(message, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12, color: Color(0xFF64748B))),
+          const SizedBox(height: 12),
+          ElevatedButton.icon(
+            onPressed: onRetry,
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF0D6548)),
+            icon: const Icon(Icons.refresh_rounded, size: 16),
+            label: const Text('Retry'),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -806,7 +806,7 @@ class AppLocalizationsTe extends AppLocalizations {
   String get kccApplied => 'దరఖాస్తు చేశారు';
 
   @override
-  String get kccApproved => 'ఆమోదించబడింది / క్రియాశీల';
+  String get kccApproved => 'KCC ఆమోదించబడింది ✓';
 
   @override
   String get organicCertLabel => 'సేంద్రీయ సర్టిఫికెట్ అప్‌లోడ్ (ఐచ్ఛికం)';
@@ -2943,4 +2943,327 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get savingsGoalsPlanGoals => 'లక్ష్యాలను ప్లాన్ చేయండి';
+
+  @override
+  String get farmerWorkspace => 'రైతు వర్క్‌స్పేస్';
+
+  @override
+  String get farmerEmpoweredNetwork =>
+      'ఉద్యోగసేతు డైరెక్ట్ అగ్రి-నెట్‌వర్క్ భాగస్వామ్యం';
+
+  @override
+  String get farmerProduceSold => 'విక్రయించిన దిగుబడి';
+
+  @override
+  String get farmerThisMonth => 'ఈ నెల';
+
+  @override
+  String get farmerDirectEarnings => 'ప్రత్యక్ష ఆదాయం';
+
+  @override
+  String get farmerZeroMiddlemen => 'దళారులు లేరు';
+
+  @override
+  String get farmerActiveLabor => 'కార్మికులు';
+
+  @override
+  String get farmerHarvestShiftPlaceholder => 'కోత షిఫ్ట్ (P6.3)';
+
+  @override
+  String farmerBooked(int count) {
+    return '$count బుక్ చేయబడ్డాయి';
+  }
+
+  @override
+  String get farmerWeatherAdvisoryRadar => 'వాతావరణ సలహా రాడార్';
+
+  @override
+  String get farmerSimulatedForecast => 'సిమ్యులేటెడ్ అంచనా';
+
+  @override
+  String farmerRainProbability(int percent) {
+    return '$percent% వర్ష సూచన';
+  }
+
+  @override
+  String get farmerBookHarvestHelpers => 'కోత కార్మికులను బుక్ చేయండి';
+
+  @override
+  String get farmerViewIrrigationGuide => 'సాగునీటి గైడ్ చూడండి';
+
+  @override
+  String get farmerLiveMandiPrices => 'లైవ్ మార్కెట్ ధరలు & డిమాండ్';
+
+  @override
+  String get farmerLiveFeed => 'లైవ్ ఫీడ్';
+
+  @override
+  String get farmerAllCrops => 'అన్ని పంటలు';
+
+  @override
+  String get farmerVegetables => 'కూరగాయలు';
+
+  @override
+  String get farmerGrainsAndPulses => 'ధాన్యాలు & పప్పులు';
+
+  @override
+  String get farmerNoPricesInCategory => 'ఈ విభాగంలో మార్కెట్ ధరలు లేవు';
+
+  @override
+  String get farmerSelectAllCropsHint =>
+      'కర్ణాటక APMC ధరలన్నింటినీ చూడటానికి అన్ని పంటలను ఎంచుకోండి.';
+
+  @override
+  String farmerUpdatedDate(String date) {
+    return 'నవీకరించబడింది $date';
+  }
+
+  @override
+  String get farmerApmcKarnatakaFeed => 'కర్ణాటక APMC ఫీడ్';
+
+  @override
+  String get farmerEssentialSuite => 'రైతు ముఖ్య సేవలు';
+
+  @override
+  String get farmerRentTractor => 'ట్రాక్టర్ అద్దె';
+
+  @override
+  String get farmerHireWorkers => 'కార్మికులను నియమించండి';
+
+  @override
+  String get farmerSoilAiTest => 'నేల AI పరీక్ష';
+
+  @override
+  String get farmerSellProduce => 'పంట అమ్మకం';
+
+  @override
+  String get farmerPestAiDoc => 'పురుగుల AI డాక్టర్';
+
+  @override
+  String get farmerGovtSchemes => 'ప్రభుత్వ పథకాలు';
+
+  @override
+  String get farmerAgriDrone => 'అగ్రి డ్రోన్';
+
+  @override
+  String get farmerIrrigationAi => 'సాగునీటి AI';
+
+  @override
+  String farmerComingInPhase(String phase) {
+    return '$phase లో అందుబాటులోకి వస్తుంది';
+  }
+
+  @override
+  String get farmerUnderstood => 'అర్థమైంది';
+
+  @override
+  String get farmerGotIt => 'సరే';
+
+  @override
+  String get farmerHireWorkersDesc =>
+      'రైతులు తమ ఖాతా నుండి నేరుగా కూలీల అవసరాలను పోస్ట్ చేసి సమీప కార్మికులను నియమించుకోవచ్చు.';
+
+  @override
+  String get farmerRentTractorDesc =>
+      'సమీపంలోని యంత్రాల హబ్ నుండి ట్రాక్టర్లను అద్దెకు తీసుకోండి.';
+
+  @override
+  String get farmerSoilAiTestDesc =>
+      'నేల పరీక్ష రిపోర్టును అప్‌లోడ్ చేసి AI సిఫార్సులు పొందండి.';
+
+  @override
+  String get farmerSellProduceDesc =>
+      'దళారులు లేకుండా పంటను నేరుగా వ్యాపారులకు విక్రయించండి.';
+
+  @override
+  String get farmerPestAiDocDesc =>
+      'తెగుళ్ల ఫోటో తీసి తక్షణమే AI చికిత్స పొందండి.';
+
+  @override
+  String get farmerGovtSchemesDesc =>
+      'పీఎం-కిసాన్, పంటల బీమా పథకాల వివరాలు తెలుసుకోండి.';
+
+  @override
+  String get farmerAgriDroneDesc =>
+      'మందుల పిచికారీ కోసం అగ్రి డ్రోన్‌ను బుక్ చేయండి.';
+
+  @override
+  String get farmerIrrigationAiDesc =>
+      'వాతావరణం ఆధారంగా స్మార్ట్ నీటిపారుదల ప్రణాళిక.';
+
+  @override
+  String get farmerHomeTitle => 'రైతు హోమ్';
+
+  @override
+  String get farmerSimulateRainDev => 'వర్షపు అంచనా సిమ్యులేషన్ (డెవ్)';
+
+  @override
+  String get farmerFailedLoadMandi => 'మార్కెట్ ధరలను లోడ్ చేయడం విఫలమైంది';
+
+  @override
+  String get farmerHighDemand => 'అధిక డిమాండ్';
+
+  @override
+  String get farmerStable => 'స్థిరంగా';
+
+  @override
+  String get farmerFrpGuaranteed => 'FRP హామీ';
+
+  @override
+  String get farmerMspProtected => 'MSP రక్షితం';
+
+  @override
+  String get farmerOversupply => 'అధిక సరఫరా';
+
+  @override
+  String get farmerModerate => 'మితమైన';
+
+  @override
+  String get farmerProfileTitle => 'రైతు ప్రొఫైల్';
+
+  @override
+  String get verifiedFarmer => 'ధృవీకరించబడిన రైతు ✓';
+
+  @override
+  String get organicLand => 'సేంద్రీయ భూమి';
+
+  @override
+  String get soldThisMonth => 'ఈ నెల విక్రయాలు';
+
+  @override
+  String get directSales => 'ప్రత్యక్ష అమ్మకాలు';
+
+  @override
+  String get farmInfrastructureAndBadges =>
+      'వ్యవసాయ మౌలిక సదుపాయాలు & పంట బ్యాడ్జ్‌లు';
+
+  @override
+  String get soilClassification => 'నేల వర్గీకరణ';
+
+  @override
+  String get primaryCrops => 'ప్రధాన పంటలు';
+
+  @override
+  String get apmcRegistration => 'APMC రిజిస్ట్రేషన్';
+
+  @override
+  String get kisanCreditCard => 'కిసాన్ క్రెడిట్ కార్డు';
+
+  @override
+  String get zeroPesticideOrganicCertificate =>
+      'జీరో పెస్టిసైడ్ ఆర్గానిక్ సర్టిఫికెట్';
+
+  @override
+  String get verifiedByKarnatakaOrganicBoard =>
+      'కర్ణాటక ఆర్గానిక్ ఫార్మర్స్ బోర్డ్ ద్వారా ధృవీకరించబడింది';
+
+  @override
+  String get validatedStatus => 'ధృవీకరించబడింది ✓';
+
+  @override
+  String get underReviewStatus => 'సమీక్షలో ఉంది';
+
+  @override
+  String get languageMode => 'భాష మోడ్';
+
+  @override
+  String get manageProduceListings => 'ఉత్పత్తుల జాబితాను నిర్వహించండి';
+
+  @override
+  String get produceListingsTitle => 'వ్యవసాయ ఉత్పత్తుల జాబితా';
+
+  @override
+  String get addNewProduce => 'కొత్త ఉత్పత్తిని జోడించండి';
+
+  @override
+  String get editProduceListing => 'ఉత్పత్తి వివరాలను సవరించండి';
+
+  @override
+  String get produceName => 'ఉత్పత్తి పేరు';
+
+  @override
+  String get category => 'వర్గం';
+
+  @override
+  String pricePerUnit(String unit) {
+    return 'ప్రతి $unit ధర';
+  }
+
+  @override
+  String get stockQuantity => 'నిల్వ పరిమాణం';
+
+  @override
+  String get unit => 'యూనిట్';
+
+  @override
+  String get harvestDate => 'కోత తేదీ';
+
+  @override
+  String get qualityNotes => 'నాణ్యత గమనికలు';
+
+  @override
+  String get farmingMethod => 'వ్యవసాయ పద్ధతి';
+
+  @override
+  String get deliveryAvailable => 'డెలివరీ అందుబాటులో ఉంది';
+
+  @override
+  String get pickupAvailable => 'తోట వద్ద పికప్ అందుబాటులో ఉంది';
+
+  @override
+  String get availabilityMode => 'లభ్యత మోడ్';
+
+  @override
+  String get sameDayDelivery => 'అదే రోజు డెలివరీ';
+
+  @override
+  String get nextDayDelivery => 'మరుసటి రోజు డెలివరీ';
+
+  @override
+  String get harvestPreOrder => 'ముందస్తు ఆర్డర్';
+
+  @override
+  String get farmerSetsFinalPrice => 'రైతే తుది ధరను నిర్ణయిస్తారు';
+
+  @override
+  String get statusLowStock => 'తక్కువ నిల్వ';
+
+  @override
+  String get statusSoldOut => 'అయిపోయింది';
+
+  @override
+  String get statusPaused => 'నిలిపివేయబడింది';
+
+  @override
+  String get pauseListing => 'పాజ్ చేయండి';
+
+  @override
+  String get activateListing => 'యాక్టివేట్ చేయండి';
+
+  @override
+  String get updateStock => 'నిల్వ అప్‌డేట్ చేయండి';
+
+  @override
+  String stockInStock(String stock) {
+    return '$stock నిల్వ ఉంది';
+  }
+
+  @override
+  String get buyerProduceMarket => 'తాజా వ్యవసాయ ఉత్పత్తులు';
+
+  @override
+  String get buyerSearchProduceHint =>
+      'తాజా ఉత్పత్తులను వెతకండి (ఉదా: టమాట, బియ్యం)...';
+
+  @override
+  String get noProduceAvailable => 'ఉత్పత్తులు అందుబాటులో లేవు';
+
+  @override
+  String get orderDirect => 'నేరుగా ఆర్డర్ చేయండి';
+
+  @override
+  String get uploadProducePhotos => 'పంట ఫోటోలు (produce-images)';
+
+  @override
+  String get addPhoto => 'ఫోటో జోడించండి';
 }

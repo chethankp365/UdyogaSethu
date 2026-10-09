@@ -1529,7 +1529,7 @@ abstract class AppLocalizations {
   /// No description provided for @kccApproved.
   ///
   /// In en, this message translates to:
-  /// **'Approved / Active'**
+  /// **'KCC Approved ✓'**
   String get kccApproved;
 
   /// No description provided for @organicCertLabel.
@@ -5459,6 +5459,600 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Plan Goals'**
   String get savingsGoalsPlanGoals;
+
+  /// No description provided for @farmerWorkspace.
+  ///
+  /// In en, this message translates to:
+  /// **'FARMER WORKSPACE'**
+  String get farmerWorkspace;
+
+  /// No description provided for @farmerEmpoweredNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Empowered by UdyogaSethu Direct Agri-Network'**
+  String get farmerEmpoweredNetwork;
+
+  /// No description provided for @farmerProduceSold.
+  ///
+  /// In en, this message translates to:
+  /// **'PRODUCE SOLD'**
+  String get farmerProduceSold;
+
+  /// No description provided for @farmerThisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'This Month'**
+  String get farmerThisMonth;
+
+  /// No description provided for @farmerDirectEarnings.
+  ///
+  /// In en, this message translates to:
+  /// **'DIRECT EARNINGS'**
+  String get farmerDirectEarnings;
+
+  /// No description provided for @farmerZeroMiddlemen.
+  ///
+  /// In en, this message translates to:
+  /// **'Zero Middlemen'**
+  String get farmerZeroMiddlemen;
+
+  /// No description provided for @farmerActiveLabor.
+  ///
+  /// In en, this message translates to:
+  /// **'ACTIVE LABOR'**
+  String get farmerActiveLabor;
+
+  /// No description provided for @farmerHarvestShiftPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Harvest Shift (P6.3)'**
+  String get farmerHarvestShiftPlaceholder;
+
+  /// No description provided for @farmerBooked.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Booked'**
+  String farmerBooked(int count);
+
+  /// No description provided for @farmerWeatherAdvisoryRadar.
+  ///
+  /// In en, this message translates to:
+  /// **'WEATHER ADVISORY RADAR'**
+  String get farmerWeatherAdvisoryRadar;
+
+  /// No description provided for @farmerSimulatedForecast.
+  ///
+  /// In en, this message translates to:
+  /// **'Simulated Forecast'**
+  String get farmerSimulatedForecast;
+
+  /// No description provided for @farmerRainProbability.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% Rain'**
+  String farmerRainProbability(int percent);
+
+  /// No description provided for @farmerBookHarvestHelpers.
+  ///
+  /// In en, this message translates to:
+  /// **'Book Harvest Helpers'**
+  String get farmerBookHarvestHelpers;
+
+  /// No description provided for @farmerViewIrrigationGuide.
+  ///
+  /// In en, this message translates to:
+  /// **'View Irrigation Guide'**
+  String get farmerViewIrrigationGuide;
+
+  /// No description provided for @farmerLiveMandiPrices.
+  ///
+  /// In en, this message translates to:
+  /// **'LIVE MANDI PRICES & DEMAND'**
+  String get farmerLiveMandiPrices;
+
+  /// No description provided for @farmerLiveFeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Live Feed'**
+  String get farmerLiveFeed;
+
+  /// No description provided for @farmerAllCrops.
+  ///
+  /// In en, this message translates to:
+  /// **'All Crops'**
+  String get farmerAllCrops;
+
+  /// No description provided for @farmerVegetables.
+  ///
+  /// In en, this message translates to:
+  /// **'Vegetables'**
+  String get farmerVegetables;
+
+  /// No description provided for @farmerGrainsAndPulses.
+  ///
+  /// In en, this message translates to:
+  /// **'Grains & Pulses'**
+  String get farmerGrainsAndPulses;
+
+  /// No description provided for @farmerNoPricesInCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'No Mandi Prices in this Category'**
+  String get farmerNoPricesInCategory;
+
+  /// No description provided for @farmerSelectAllCropsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select All Crops to view all Karnataka APMC market prices.'**
+  String get farmerSelectAllCropsHint;
+
+  /// No description provided for @farmerUpdatedDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated {date}'**
+  String farmerUpdatedDate(String date);
+
+  /// No description provided for @farmerApmcKarnatakaFeed.
+  ///
+  /// In en, this message translates to:
+  /// **'APMC Karnataka Feed'**
+  String get farmerApmcKarnatakaFeed;
+
+  /// No description provided for @farmerEssentialSuite.
+  ///
+  /// In en, this message translates to:
+  /// **'FARMER ESSENTIAL SUITE'**
+  String get farmerEssentialSuite;
+
+  /// No description provided for @farmerRentTractor.
+  ///
+  /// In en, this message translates to:
+  /// **'Rent Tractor'**
+  String get farmerRentTractor;
+
+  /// No description provided for @farmerHireWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Hire Workers'**
+  String get farmerHireWorkers;
+
+  /// No description provided for @farmerSoilAiTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Soil AI Test'**
+  String get farmerSoilAiTest;
+
+  /// No description provided for @farmerSellProduce.
+  ///
+  /// In en, this message translates to:
+  /// **'Sell Produce'**
+  String get farmerSellProduce;
+
+  /// No description provided for @farmerPestAiDoc.
+  ///
+  /// In en, this message translates to:
+  /// **'Pest AI Doc'**
+  String get farmerPestAiDoc;
+
+  /// No description provided for @farmerGovtSchemes.
+  ///
+  /// In en, this message translates to:
+  /// **'Govt Schemes'**
+  String get farmerGovtSchemes;
+
+  /// No description provided for @farmerAgriDrone.
+  ///
+  /// In en, this message translates to:
+  /// **'Agri Drone'**
+  String get farmerAgriDrone;
+
+  /// No description provided for @farmerIrrigationAi.
+  ///
+  /// In en, this message translates to:
+  /// **'Irrigation AI'**
+  String get farmerIrrigationAi;
+
+  /// No description provided for @farmerComingInPhase.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming in {phase}'**
+  String farmerComingInPhase(String phase);
+
+  /// No description provided for @farmerUnderstood.
+  ///
+  /// In en, this message translates to:
+  /// **'Understood'**
+  String get farmerUnderstood;
+
+  /// No description provided for @farmerGotIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get farmerGotIt;
+
+  /// No description provided for @farmerHireWorkersDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Farmers will be able to post agricultural labour requests, specify shifts, and hire verified nearby workers directly from their farmer account with escrow protection.'**
+  String get farmerHireWorkersDesc;
+
+  /// No description provided for @farmerRentTractorDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Book nearby tractors, rotavators, and harvesters directly from verified agri-machinery hubs.'**
+  String get farmerRentTractorDesc;
+
+  /// No description provided for @farmerSoilAiTestDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload soil test report or photograph to get instant AI N-P-K recommendations and fertilizer dosages.'**
+  String get farmerSoilAiTestDesc;
+
+  /// No description provided for @farmerSellProduceDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'List your harvested crops for direct bulk sale to mandi traders and commercial buyers with zero middlemen.'**
+  String get farmerSellProduceDesc;
+
+  /// No description provided for @farmerPestAiDocDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Snap a picture of leaf damage or crop pests for immediate AI diagnosis and organic treatment remedies.'**
+  String get farmerPestAiDocDesc;
+
+  /// No description provided for @farmerGovtSchemesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore PM-Kisan, Raitha Siri, solar pump subsidies, and crop insurance schemes tailored to your land.'**
+  String get farmerGovtSchemesDesc;
+
+  /// No description provided for @farmerAgriDroneDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Book certified agri-drone pilots for precision nano-urea and organic pest spray within 24 hours.'**
+  String get farmerAgriDroneDesc;
+
+  /// No description provided for @farmerIrrigationAiDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart irrigation scheduling based on local evapotranspiration and soil moisture retention curves.'**
+  String get farmerIrrigationAiDesc;
+
+  /// No description provided for @farmerHomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Farmer Home'**
+  String get farmerHomeTitle;
+
+  /// No description provided for @farmerSimulateRainDev.
+  ///
+  /// In en, this message translates to:
+  /// **'Simulate Rain Forecast (Dev)'**
+  String get farmerSimulateRainDev;
+
+  /// No description provided for @farmerFailedLoadMandi.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load Mandi prices'**
+  String get farmerFailedLoadMandi;
+
+  /// No description provided for @farmerHighDemand.
+  ///
+  /// In en, this message translates to:
+  /// **'High Demand'**
+  String get farmerHighDemand;
+
+  /// No description provided for @farmerStable.
+  ///
+  /// In en, this message translates to:
+  /// **'Stable'**
+  String get farmerStable;
+
+  /// No description provided for @farmerFrpGuaranteed.
+  ///
+  /// In en, this message translates to:
+  /// **'FRP Guaranteed'**
+  String get farmerFrpGuaranteed;
+
+  /// No description provided for @farmerMspProtected.
+  ///
+  /// In en, this message translates to:
+  /// **'MSP Protected'**
+  String get farmerMspProtected;
+
+  /// No description provided for @farmerOversupply.
+  ///
+  /// In en, this message translates to:
+  /// **'Oversupply'**
+  String get farmerOversupply;
+
+  /// No description provided for @farmerModerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get farmerModerate;
+
+  /// No description provided for @farmerProfileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Farmer Profile'**
+  String get farmerProfileTitle;
+
+  /// No description provided for @verifiedFarmer.
+  ///
+  /// In en, this message translates to:
+  /// **'VERIFIED FARMER ✓'**
+  String get verifiedFarmer;
+
+  /// No description provided for @organicLand.
+  ///
+  /// In en, this message translates to:
+  /// **'Organic Land'**
+  String get organicLand;
+
+  /// No description provided for @soldThisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Sold This Month'**
+  String get soldThisMonth;
+
+  /// No description provided for @directSales.
+  ///
+  /// In en, this message translates to:
+  /// **'Direct Sales'**
+  String get directSales;
+
+  /// No description provided for @farmInfrastructureAndBadges.
+  ///
+  /// In en, this message translates to:
+  /// **'FARM INFRASTRUCTURE & CROP BADGES'**
+  String get farmInfrastructureAndBadges;
+
+  /// No description provided for @soilClassification.
+  ///
+  /// In en, this message translates to:
+  /// **'SOIL CLASSIFICATION'**
+  String get soilClassification;
+
+  /// No description provided for @primaryCrops.
+  ///
+  /// In en, this message translates to:
+  /// **'PRIMARY CROPS'**
+  String get primaryCrops;
+
+  /// No description provided for @apmcRegistration.
+  ///
+  /// In en, this message translates to:
+  /// **'APMC REGISTRATION'**
+  String get apmcRegistration;
+
+  /// No description provided for @kisanCreditCard.
+  ///
+  /// In en, this message translates to:
+  /// **'KISAN CREDIT CARD'**
+  String get kisanCreditCard;
+
+  /// No description provided for @zeroPesticideOrganicCertificate.
+  ///
+  /// In en, this message translates to:
+  /// **'Zero-Pesticide Organic Certificate'**
+  String get zeroPesticideOrganicCertificate;
+
+  /// No description provided for @verifiedByKarnatakaOrganicBoard.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified by Karnataka Organic Farmers Board'**
+  String get verifiedByKarnatakaOrganicBoard;
+
+  /// No description provided for @validatedStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'VALIDATED ✓'**
+  String get validatedStatus;
+
+  /// No description provided for @underReviewStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'UNDER REVIEW'**
+  String get underReviewStatus;
+
+  /// No description provided for @languageMode.
+  ///
+  /// In en, this message translates to:
+  /// **'LANGUAGE MODE'**
+  String get languageMode;
+
+  /// No description provided for @manageProduceListings.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Produce Listings'**
+  String get manageProduceListings;
+
+  /// No description provided for @produceListingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Produce Listings'**
+  String get produceListingsTitle;
+
+  /// No description provided for @addNewProduce.
+  ///
+  /// In en, this message translates to:
+  /// **'Add New Produce'**
+  String get addNewProduce;
+
+  /// No description provided for @editProduceListing.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Produce Listing'**
+  String get editProduceListing;
+
+  /// No description provided for @produceName.
+  ///
+  /// In en, this message translates to:
+  /// **'Produce Name'**
+  String get produceName;
+
+  /// No description provided for @category.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category;
+
+  /// No description provided for @pricePerUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'Price per {unit}'**
+  String pricePerUnit(String unit);
+
+  /// No description provided for @stockQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock Quantity'**
+  String get stockQuantity;
+
+  /// No description provided for @unit.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit'**
+  String get unit;
+
+  /// No description provided for @harvestDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Harvest Date'**
+  String get harvestDate;
+
+  /// No description provided for @qualityNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Quality Notes'**
+  String get qualityNotes;
+
+  /// No description provided for @farmingMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Farming Method'**
+  String get farmingMethod;
+
+  /// No description provided for @deliveryAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery Available'**
+  String get deliveryAvailable;
+
+  /// No description provided for @pickupAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup Available'**
+  String get pickupAvailable;
+
+  /// No description provided for @availabilityMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Availability Mode'**
+  String get availabilityMode;
+
+  /// No description provided for @sameDayDelivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Same Day Delivery'**
+  String get sameDayDelivery;
+
+  /// No description provided for @nextDayDelivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Next Day Delivery'**
+  String get nextDayDelivery;
+
+  /// No description provided for @harvestPreOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Harvest Pre-Order'**
+  String get harvestPreOrder;
+
+  /// No description provided for @farmerSetsFinalPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'The farmer always sets the final price'**
+  String get farmerSetsFinalPrice;
+
+  /// No description provided for @statusLowStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Low Stock'**
+  String get statusLowStock;
+
+  /// No description provided for @statusSoldOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sold Out'**
+  String get statusSoldOut;
+
+  /// No description provided for @statusPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get statusPaused;
+
+  /// No description provided for @pauseListing.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause Listing'**
+  String get pauseListing;
+
+  /// No description provided for @activateListing.
+  ///
+  /// In en, this message translates to:
+  /// **'Activate Listing'**
+  String get activateListing;
+
+  /// No description provided for @updateStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Stock'**
+  String get updateStock;
+
+  /// No description provided for @stockInStock.
+  ///
+  /// In en, this message translates to:
+  /// **'{stock} in stock'**
+  String stockInStock(String stock);
+
+  /// No description provided for @buyerProduceMarket.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm Fresh Produce'**
+  String get buyerProduceMarket;
+
+  /// No description provided for @buyerSearchProduceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search fresh farm produce (e.g., Tomato, Rice)...'**
+  String get buyerSearchProduceHint;
+
+  /// No description provided for @noProduceAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No Produce Listings Available'**
+  String get noProduceAvailable;
+
+  /// No description provided for @orderDirect.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Direct'**
+  String get orderDirect;
+
+  /// No description provided for @uploadProducePhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'Produce Photos (produce-images)'**
+  String get uploadProducePhotos;
+
+  /// No description provided for @addPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Photo'**
+  String get addPhoto;
 }
 
 class _AppLocalizationsDelegate
