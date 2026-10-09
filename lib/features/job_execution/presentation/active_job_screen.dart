@@ -21,6 +21,7 @@ import 'package:udyogasethu/features/job_execution/presentation/widgets/running_
 import 'package:udyogasethu/features/job_execution/presentation/widgets/worker_not_arrived_sheet.dart';
 import 'package:udyogasethu/features/trust/presentation/widgets/raise_dispute_dialog.dart';
 import 'package:udyogasethu/features/trust/presentation/widgets/rate_job_dialog.dart';
+import 'package:udyogasethu/features/payments/data/payment_repository.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class ActiveJobScreen extends ConsumerStatefulWidget {
@@ -231,7 +232,7 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
             padding: const EdgeInsets.all(16),
             children: [
               // 1. Status Banner with Pulsing Live Dot
-              _buildStatusBanner(context, detail, l10n),
+              _buildStatusBanner(context, detail, isProvider, l10n),
               const SizedBox(height: 16),
 
               // Provider No-Show Alert Banner (when late or late_notified_at is set)
@@ -290,7 +291,7 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
     );
   }
 
-  Widget _buildStatusBanner(BuildContext context, ActiveJobDetail detail, AppLocalizations? l10n) {
+  Widget _buildStatusBanner(BuildContext context, ActiveJobDetail detail, bool isProvider, AppLocalizations? l10n) {
     Color bg;
     Color fg;
     String statusLabel = detail.stage.title;
@@ -327,9 +328,15 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
         statusLabel = l10n?.stageJobInProgress ?? 'Job In Progress';
         break;
       case AssignmentStage.completed:
-        bg = const Color(0xFFECFDF5);
-        fg = const Color(0xFF047857);
-        statusLabel = l10n?.stageCompleted ?? 'Work Completed';
+        if (!isProvider) {
+          bg = const Color(0xFFFEF3C7);
+          fg = const Color(0xFFB45309);
+          statusLabel = l10n?.pendingEscrowRelease ?? 'Pending Escrow Release';
+        } else {
+          bg = const Color(0xFFECFDF5);
+          fg = const Color(0xFF047857);
+          statusLabel = 'Work Completed - Ready for Release';
+        }
         break;
       case AssignmentStage.paymentReleased:
         bg = const Color(0xFFF0FDF4);
@@ -373,9 +380,12 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
               children: [
                 Row(
                   children: [
-                    Text(
-                      statusLabel,
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: fg),
+                    Flexible(
+                      child: Text(
+                        statusLabel,
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: fg),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     const SizedBox(width: 8),
                     Container(
@@ -383,6 +393,32 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
                       height: 8,
                       decoration: BoxDecoration(color: fg, shape: BoxShape.circle),
                     ),
+                    if (detail.protectionSelected) ...[
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: fg.withValues(alpha: 0.4)),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.verified_user_rounded, size: 11, color: fg),
+                            const SizedBox(width: 3),
+                            Text(
+                              l10n?.protectedBadge ?? 'Protected',
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: fg,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ],
                 ),
                 const SizedBox(height: 2),
@@ -439,9 +475,9 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
           onPrimaryPressed = () => context.push('/jobs/completion/${detail.assignmentId}');
           break;
         case AssignmentStage.completed:
-          primaryText = l10n?.actionAwaitingPayment ?? 'Awaiting Payment Release';
+          primaryText = '${l10n?.pendingEscrowRelease ?? 'Pending Escrow Release'} (₹${detail.agreedWageRupees})';
           primaryIcon = Icons.hourglass_top_rounded;
-          onPrimaryPressed = null;
+          onPrimaryPressed = () => _showWorkerEscrowInfoSheet(context, detail);
           break;
         case AssignmentStage.paymentReleased:
           primaryText = l10n?.actionJobFinished ?? 'Job Fully Completed';
@@ -484,9 +520,9 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
           onPrimaryPressed = () => _showProviderCompletionDialog(context, detail);
           break;
         case AssignmentStage.completed:
-          primaryText = l10n?.actionReleasePayment ?? 'Release Payment';
+          primaryText = '${l10n?.confirmAndRelease ?? 'Confirm & Release Payment'} (₹${detail.agreedWageRupees})';
           primaryIcon = Icons.payments_rounded;
-          onPrimaryPressed = () => _handleTransition(detail, 'payment_released');
+          onPrimaryPressed = () => _showProviderReleaseDialog(context, detail);
           break;
         case AssignmentStage.paymentReleased:
           primaryText = l10n?.actionPaymentDone ?? 'Payment Settled';
@@ -931,9 +967,42 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            detail.jobTitle,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textDark),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  detail.jobTitle,
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textDark),
+                ),
+              ),
+              if (detail.protectionSelected) ...[
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFECFDF5),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: const Color(0xFF10B981)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.verified_user_rounded, size: 13, color: Color(0xFF047857)),
+                      const SizedBox(width: 4),
+                      Text(
+                        l10n?.protectedBadge ?? 'Protected',
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF047857),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ],
           ),
           if (detail.jobDescription != null) ...[
             const SizedBox(height: 4),
@@ -1194,6 +1263,365 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
                 TextButton(
                   onPressed: () => Navigator.pop(ctx),
                   child: const Text('Cancel'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showProviderReleaseDialog(BuildContext context, ActiveJobDetail detail) {
+    final l10n = AppLocalizations.of(context);
+    final wagePaise = detail.agreedWagePaise;
+    final commissionPaise = (wagePaise * 5) ~/ 100; // 500 bps = 5%
+    final workerNetPaise = wagePaise - commissionPaise;
+    final wageRupees = (wagePaise / 100).toStringAsFixed(0);
+    final commissionRupees = (commissionPaise / 100).toStringAsFixed(2);
+    final workerNetRupees = (workerNetPaise / 100).toStringAsFixed(2);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFECFDF5),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.lock_open_rounded, color: Color(0xFF047857), size: 28),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n?.releaseEscrowPayment ?? 'Release Escrow Payment',
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                          ),
+                          Text(
+                            detail.jobTitle,
+                            style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (detail.protectionSelected)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF0FDF4),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: const Color(0xFF10B981)),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.verified_user_rounded, size: 12, color: Color(0xFF047857)),
+                            const SizedBox(width: 3),
+                            Text(
+                              l10n?.protectedBadge ?? 'Protected',
+                              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF047857)),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF8FAFC),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey.shade200),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              l10n?.paymentServiceWage ?? 'Service / Wage Amount',
+                              style: const TextStyle(color: AppColors.textMuted, fontSize: 13),
+                            ),
+                          ),
+                          Text('₹$wageRupees', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '${l10n?.paymentPlatformFee ?? 'Platform Fee'} (5%)',
+                              style: const TextStyle(color: AppColors.textMuted, fontSize: 13),
+                            ),
+                          ),
+                          Text('- ₹$commissionRupees', style: const TextStyle(color: Color(0xFFD97706), fontSize: 13, fontWeight: FontWeight.w600)),
+                        ],
+                      ),
+                      const Divider(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              l10n?.workerPayout ?? 'Worker Payout (Available Balance)',
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                            ),
+                          ),
+                          Text('₹$workerNetRupees', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF15803D))),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 14),
+                const Row(
+                  children: [
+                    Icon(Icons.info_outline_rounded, size: 16, color: AppColors.textMuted),
+                    SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        'Releasing escrow immediately transfers available balance to the worker and marks this assignment as settled.',
+                        style: TextStyle(fontSize: 11, color: AppColors.textMuted),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.headerGreenDark,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    icon: const Icon(Icons.check_circle_rounded),
+                    label: Text('${l10n?.confirmAndRelease ?? 'Confirm & Release Payment'} (₹$wageRupees)', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                    onPressed: () {
+                      Navigator.pop(ctx);
+                      _releaseEscrowAction(detail);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _releaseEscrowAction(ActiveJobDetail detail) async {
+    final l10n = AppLocalizations.of(context);
+    setState(() => _isActionInProgress = true);
+    try {
+      await ref.read(paymentRepositoryProvider).confirmJobCompletionAndRelease(detail.assignmentId);
+      ref.invalidate(activeJobDetailProvider(widget.assignmentId));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: const Color(0xFF0D6548),
+            content: Text(l10n?.releaseEscrowSuccess ?? 'Payment successfully released to worker wallet!'),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Escrow release failed: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isActionInProgress = false);
+      }
+    }
+  }
+
+  void _showWorkerEscrowInfoSheet(BuildContext context, ActiveJobDetail detail) {
+    final l10n = AppLocalizations.of(context);
+    final wagePaise = detail.agreedWagePaise;
+    final commissionPaise = (wagePaise * 5) ~/ 100;
+    final workerNetPaise = wagePaise - commissionPaise;
+    final wageRupees = (wagePaise / 100).toStringAsFixed(0);
+    final commissionRupees = (commissionPaise / 100).toStringAsFixed(2);
+    final workerNetRupees = (workerNetPaise / 100).toStringAsFixed(2);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFFEF3C7),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.hourglass_top_rounded, color: Color(0xFFB45309), size: 28),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n?.pendingEscrowRelease ?? 'Pending Escrow Release',
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                          ),
+                          Text(
+                            l10n?.escrowEarningsSecured ?? 'Your earnings are 100% secured in escrow',
+                            style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (detail.protectionSelected)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF0FDF4),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: const Color(0xFF10B981)),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.verified_user_rounded, size: 12, color: Color(0xFF047857)),
+                            const SizedBox(width: 3),
+                            Text(
+                              l10n?.protectedBadge ?? 'Protected',
+                              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF047857)),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF8FAFC),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey.shade200),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              l10n?.paymentServiceWage ?? 'Service / Wage Amount',
+                              style: const TextStyle(color: AppColors.textMuted, fontSize: 13),
+                            ),
+                          ),
+                          Text('₹$wageRupees', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '${l10n?.paymentPlatformFee ?? 'Platform Fee'} (5%)',
+                              style: const TextStyle(color: AppColors.textMuted, fontSize: 13),
+                            ),
+                          ),
+                          Text('- ₹$commissionRupees', style: const TextStyle(color: Color(0xFFD97706), fontSize: 13, fontWeight: FontWeight.w600)),
+                        ],
+                      ),
+                      const Divider(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              l10n?.workerPayout ?? 'Expected Payout in Wallet',
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                            ),
+                          ),
+                          Text('₹$workerNetRupees', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF15803D))),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 14),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFFBEB),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: const Color(0xFFFDE68A)),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.timer_outlined, color: Color(0xFFD97706), size: 20),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          l10n?.escrowAutoReleaseNotice ??
+                              'Payment will be released as soon as the employer confirms, or automatically within 24 hours if no dispute is raised.',
+                          style: const TextStyle(fontSize: 12, color: Color(0xFF92400E)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.headerGreenDark,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    onPressed: () => Navigator.pop(ctx),
+                    child: const Text('Got it', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                  ),
                 ),
               ],
             ),

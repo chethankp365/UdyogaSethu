@@ -2798,4 +2798,31 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get paymentTryAgain => 'மீண்டும் முயற்சிக்கவும்';
+
+  @override
+  String get pendingEscrowRelease => 'எஸ்க்ரோ வெளியீடு நிலுவையில் உள்ளது';
+
+  @override
+  String get protectedBadge => 'பாதுகாக்கப்பட்டது';
+
+  @override
+  String get releaseEscrowPayment => 'எஸ்க்ரோ கட்டணத்தை விடுவிக்கவும்';
+
+  @override
+  String get confirmAndRelease => 'உறுதிசெய்து பணம் விடுவிக்கவும்';
+
+  @override
+  String get workerPayout => 'தொழிலாளி கட்டணம் (இருப்பு தொகை)';
+
+  @override
+  String get escrowAutoReleaseNotice =>
+      'முதலாளி உறுதிசெய்தவுடன் அல்லது எந்த தகராறும் இல்லாவிட்டால் 24 மணி நேரத்திற்குள் பணம் தானாக விடுவிக்கப்படும்.';
+
+  @override
+  String get escrowEarningsSecured =>
+      'உங்கள் வருமானம் எஸ்க்ரோவில் 100% பாதுகாப்பானது';
+
+  @override
+  String get releaseEscrowSuccess =>
+      'தொழிலாளி வாலட்டுக்கு பணம் வெற்றிகரமாக விடுவிக்கப்பட்டது!';
 }

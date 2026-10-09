@@ -2784,4 +2784,31 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get paymentTryAgain => 'మళ్ళీ ప్రయత్నించండి';
+
+  @override
+  String get pendingEscrowRelease => 'ఎస్క్రో విడుదల పెండింగ్‌లో ఉంది';
+
+  @override
+  String get protectedBadge => 'రక్షించబడింది';
+
+  @override
+  String get releaseEscrowPayment => 'ఎస్క్రో చెల్లింపును విడుదల చేయండి';
+
+  @override
+  String get confirmAndRelease => 'ధృవీకరించి చెల్లింపును విడుదల చేయండి';
+
+  @override
+  String get workerPayout =>
+      'కార్మికుడి చెల్లింపు (అందుబాటులో ఉన్న బ్యాలెన్స్)';
+
+  @override
+  String get escrowAutoReleaseNotice =>
+      'యాజమాని నిర్ధారించిన వెంటనే లేదా ఎలాంటి వివాదం లేకపోతే 24 గంటల్లో చెల్లింపు ఆటోమేటిక్‌గా విడుదల అవుతుంది.';
+
+  @override
+  String get escrowEarningsSecured => 'మీ సంపాదన ఎస్క్రోలో 100% సురక్షితం';
+
+  @override
+  String get releaseEscrowSuccess =>
+      'చెల్లింపు కార్మికుడి వాలెట్‌కు విజయవంతంగా విడుదల చేయబడింది!';
 }

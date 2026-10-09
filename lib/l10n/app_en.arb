@@ -1035,5 +1035,13 @@
   "paymentReceiptNo": "Receipt No",
   "paymentDownloadPdf": "Share / Download PDF Receipt",
   "paymentContinueJob": "Continue to Job / Order",
-  "paymentTryAgain": "Try Again"
+  "paymentTryAgain": "Try Again",
+  "pendingEscrowRelease": "Pending Escrow Release",
+  "protectedBadge": "Protected",
+  "releaseEscrowPayment": "Release Escrow Payment",
+  "confirmAndRelease": "Confirm & Release Payment",
+  "workerPayout": "Worker Payout (Available Balance)",
+  "escrowAutoReleaseNotice": "Payment will be released as soon as the employer confirms, or automatically within 24 hours if no dispute is raised.",
+  "escrowEarningsSecured": "Your earnings are 100% secured in escrow",
+  "releaseEscrowSuccess": "Payment successfully released to worker wallet!"
 }

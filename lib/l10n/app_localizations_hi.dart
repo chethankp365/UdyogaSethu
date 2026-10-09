@@ -2762,4 +2762,30 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get paymentTryAgain => 'पुनः प्रयास करें';
+
+  @override
+  String get pendingEscrowRelease => 'एस्क्रो रिलीज लंबित';
+
+  @override
+  String get protectedBadge => 'सुरक्षित';
+
+  @override
+  String get releaseEscrowPayment => 'एस्क्रो भुगतान जारी करें';
+
+  @override
+  String get confirmAndRelease => 'पुष्टि करें और भुगतान जारी करें';
+
+  @override
+  String get workerPayout => 'श्रमिक भुगतान (उपलब्ध शेष राशि)';
+
+  @override
+  String get escrowAutoReleaseNotice =>
+      'नियोक्ता द्वारा पुष्टि करने पर तुरंत, या विवाद न होने पर 24 घंटे में भुगतान अपने आप जारी हो जाएगा।';
+
+  @override
+  String get escrowEarningsSecured => 'आपकी कमाई एस्क्रो में 100% सुरक्षित है';
+
+  @override
+  String get releaseEscrowSuccess =>
+      'भुगतान सफलतापूर्वक श्रमिक के वॉलेट में जारी किया गया!';
 }

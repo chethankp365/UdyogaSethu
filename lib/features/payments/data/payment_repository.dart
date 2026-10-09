@@ -23,6 +23,16 @@ abstract class PaymentRepository {
   Stream<PaymentRecord?> streamPayment(String paymentId);
 
   Future<int> getAvailableWalletBalancePaise();
+
+  Future<bool> releaseAssignmentEscrow(String assignmentId);
+
+  Future<bool> confirmJobCompletionAndRelease(String assignmentId);
+
+  Future<bool> refundEscrow(String paymentId, {int? refundPaise, String? reason});
+
+  Future<bool> refundAssignmentEscrow(String assignmentId, {int? refundPaise, String? reason});
+
+  Future<bool> releaseOrderEscrow(String orderId);
 }
 
 class SupabasePaymentRepository implements PaymentRepository {
@@ -113,6 +123,53 @@ class SupabasePaymentRepository implements PaymentRepository {
         .maybeSingle();
     if (res == null) return 0;
     return (res['available_paise'] as num?)?.toInt() ?? 0;
+  }
+
+  @override
+  Future<bool> releaseAssignmentEscrow(String assignmentId) async {
+    final res = await _client.rpc('release_assignment_escrow', params: {
+      'p_assignment_id': assignmentId,
+    });
+    return res as bool? ?? false;
+  }
+
+  @override
+  Future<bool> confirmJobCompletionAndRelease(String assignmentId) async {
+    final res = await _client.rpc('confirm_job_completion_and_release', params: {
+      'p_assignment_id': assignmentId,
+    });
+    if (res is Map && res['success'] == true) {
+      return true;
+    }
+    return false;
+  }
+
+  @override
+  Future<bool> refundEscrow(String paymentId, {int? refundPaise, String? reason}) async {
+    final res = await _client.rpc('refund_escrow', params: {
+      'p_payment_id': paymentId,
+      'p_refund_paise': refundPaise,
+      'p_reason': reason ?? 'Refund requested',
+    });
+    return res as bool? ?? false;
+  }
+
+  @override
+  Future<bool> refundAssignmentEscrow(String assignmentId, {int? refundPaise, String? reason}) async {
+    final res = await _client.rpc('refund_assignment_escrow', params: {
+      'p_assignment_id': assignmentId,
+      'p_refund_paise': refundPaise,
+      'p_reason': reason ?? 'Assignment cancelled/no-show',
+    });
+    return res as bool? ?? false;
+  }
+
+  @override
+  Future<bool> releaseOrderEscrow(String orderId) async {
+    final res = await _client.rpc('release_order_escrow', params: {
+      'p_order_id': orderId,
+    });
+    return res as bool? ?? false;
   }
 }
 

@@ -2768,4 +2768,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get paymentTryAgain => 'Try Again';
+
+  @override
+  String get pendingEscrowRelease => 'Pending Escrow Release';
+
+  @override
+  String get protectedBadge => 'Protected';
+
+  @override
+  String get releaseEscrowPayment => 'Release Escrow Payment';
+
+  @override
+  String get confirmAndRelease => 'Confirm & Release Payment';
+
+  @override
+  String get workerPayout => 'Worker Payout (Available Balance)';
+
+  @override
+  String get escrowAutoReleaseNotice =>
+      'Payment will be released as soon as the employer confirms, or automatically within 24 hours if no dispute is raised.';
+
+  @override
+  String get escrowEarningsSecured =>
+      'Your earnings are 100% secured in escrow';
+
+  @override
+  String get releaseEscrowSuccess =>
+      'Payment successfully released to worker wallet!';
 }

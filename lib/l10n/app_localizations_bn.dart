@@ -2767,4 +2767,30 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get paymentTryAgain => 'Try Again';
+
+  @override
+  String get pendingEscrowRelease => 'এসক্রো রিলিজ পেন্ডিং';
+
+  @override
+  String get protectedBadge => 'সুরক্ষিত';
+
+  @override
+  String get releaseEscrowPayment => 'এসক্রো পেমেন্ট রিলিজ করুন';
+
+  @override
+  String get confirmAndRelease => 'নিশ্চিত করুন এবং পেমেন্ট রিলিজ করুন';
+
+  @override
+  String get workerPayout => 'কর্মী পেআউট (উপলব্ধ ব্যালেন্স)';
+
+  @override
+  String get escrowAutoReleaseNotice =>
+      'নিয়োগকর্তা নিশ্চিত করার সাথে সাথে বা কোনো বিরোধ না থাকলে ২৪ ঘণ্টার মধ্যে পেমেন্ট স্বয়ংক্রিয়ভাবে রিলিজ হবে।';
+
+  @override
+  String get escrowEarningsSecured => 'আপনার উপার্জন এসক্রোতে ১০০% সুরক্ষিত';
+
+  @override
+  String get releaseEscrowSuccess =>
+      'পেমেন্ট সফলভাবে কর্মীর ওয়ালেটে রিলিজ করা হয়েছে!';
 }

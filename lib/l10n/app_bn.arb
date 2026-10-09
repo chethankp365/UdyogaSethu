@@ -1015,5 +1015,13 @@
   "paymentReceiptNo": "Receipt No",
   "paymentDownloadPdf": "Share / Download PDF Receipt",
   "paymentContinueJob": "Continue to Job / Order",
-  "paymentTryAgain": "Try Again"
+  "paymentTryAgain": "Try Again",
+  "pendingEscrowRelease": "এসক্রো রিলিজ পেন্ডিং",
+  "protectedBadge": "সুরক্ষিত",
+  "releaseEscrowPayment": "এসক্রো পেমেন্ট রিলিজ করুন",
+  "confirmAndRelease": "নিশ্চিত করুন এবং পেমেন্ট রিলিজ করুন",
+  "workerPayout": "কর্মী পেআউট (উপলব্ধ ব্যালেন্স)",
+  "escrowAutoReleaseNotice": "নিয়োগকর্তা নিশ্চিত করার সাথে সাথে বা কোনো বিরোধ না থাকলে ২৪ ঘণ্টার মধ্যে পেমেন্ট স্বয়ংক্রিয়ভাবে রিলিজ হবে।",
+  "escrowEarningsSecured": "আপনার উপার্জন এসক্রোতে ১০০% সুরক্ষিত",
+  "releaseEscrowSuccess": "পেমেন্ট সফলভাবে কর্মীর ওয়ালেটে রিলিজ করা হয়েছে!"
 }

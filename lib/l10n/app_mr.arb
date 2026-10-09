@@ -1015,5 +1015,13 @@
   "paymentReceiptNo": "Receipt No",
   "paymentDownloadPdf": "Share / Download PDF Receipt",
   "paymentContinueJob": "Continue to Job / Order",
-  "paymentTryAgain": "Try Again"
+  "paymentTryAgain": "Try Again",
+  "pendingEscrowRelease": "एस्क्रो रिलीज प्रलंबित",
+  "protectedBadge": "सुरक्षित",
+  "releaseEscrowPayment": "एस्क्रो पेमेंट रिलीज करा",
+  "confirmAndRelease": "पुष्टी करा आणि पेमेंट रिलीज करा",
+  "workerPayout": "कामगार पेआउट (उपलब्ध शिल्लक)",
+  "escrowAutoReleaseNotice": "मालकाने पुष्टी करताच किंवा कोणताही वाद नसल्यास 24 तासांच्या आत पेमेंट आपोआप रिलीज होईल.",
+  "escrowEarningsSecured": "तुमची कमाई एस्क्रोमध्ये 100% सुरक्षित आहे",
+  "releaseEscrowSuccess": "पेमेंट कामगाराच्या वॉलेटमध्ये यशस्वीरित्या रिलीज झाले!"
 }

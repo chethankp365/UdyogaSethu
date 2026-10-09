@@ -288,6 +288,34 @@
     - Full test suite: 367/367 tests passed cleanly (`flutter test`).
     - Static analysis: `flutter analyze` 0 issues.
 
+- [x] **P5.3**: Escrow release, refunds and auto-release (Status: Done |
+  - **Database Migrations `0490_escrow_release_refunds_reconciliation.sql`, `0491_payments_updated_at.sql`, `0492_typed_record_release_escrow.sql`**:
+    - Pushed cleanly to remote Supabase database `mmzbpeqkfomnywuzoqii` via `npx supabase db push`.
+    - Implemented server-authoritative `release_escrow(p_payment_id UUID)`:
+      - Strictly idempotent: Exits cleanly if payment is already released without double credit.
+      - Platform commission fee deduction with exact integer paise rounding (`(amount_paise * commission_bps + 5000) / 10000`).
+      - Double-entry ledger updates: debits payer's `escrow` balance, credits payee's `available` balance by net wage, and credits platform commission to platform revenue.
+      - Updates `payments.status = 'released'`, `job_assignments.status = 'payment_released'`, logs `assignment_events` timeline event, and notifies payee.
+      - Dispute Freeze Invariant: Throws exception and blocks release if an open dispute exists on the assignment or order.
+    - Implemented `confirm_job_completion_and_release(p_assignment_id UUID)` and `release_assignment_escrow(p_assignment_id UUID)`.
+    - Implemented `refund_escrow(p_payment_id, p_refund_paise, p_reason)` and `refund_assignment_escrow(p_assignment_id, p_refund_paise, p_reason)`: Credits payer available balance from escrow balance (full or partial).
+    - Implemented `auto_release_escrow()`: Idempotent batch auto-release scanner releasing completed assignments older than `auto_release_hours` (default: 24h) where all verifications are green and no dispute is raised.
+    - Implemented Phase 6 order delivery compatibility: `release_order_escrow(p_order_id UUID)` and handling `orders.status = 'delivered'`.
+    - Integrated `advance_assignment_stage` interceptor: advancing to `payment_released` invokes `confirm_job_completion_and_release`.
+  - **Integration & Invariant Tests (`scratch/test_escrow_release.js`)**:
+    - 6/6 remote database test scenarios passing: hold then release (net payout ₹665, fee ₹35), double release idempotency (0 duplicate credit), partial refund (₹200 refunded, ₹300 held), dispute freeze check (exception thrown), fee rounding in paise (73,533 paise -> 3,677 paise fee and 69,856 paise net), and auto-release timing (completed >24h released, <24h held).
+  - **Flutter Repository Layer**:
+    - Added `releaseAssignmentEscrow`, `confirmJobCompletionAndRelease`, `refundEscrow`, `refundAssignmentEscrow`, and `releaseOrderEscrow` to `PaymentRepository` and `SupabasePaymentRepository`.
+  - **Flutter Presentation Layer (`ActiveJobScreen`)**:
+    - Added emerald **"Protected"** badge (`Icons.verified_user_rounded`) in status banner and job details card when `protectionSelected` is true.
+    - Worker View on `completed`: Status banner displays **"Pending Escrow Release"** with amber styling, and action button opens bottom sheet with fee breakdown (agreed wage, 5% fee, expected payout) and reassurance note about the 24h auto-release.
+    - Provider View on `completed`: Primary button displays **"Confirm & Release Payment (₹...)"** opening confirmation sheet with itemized breakdown (Total Wage, Platform Fee 5%, Worker Payout) and 1-tap instant release.
+    - Realtime wallet balance updates reflect the change from "Pending Escrow" to "Available Balance" automatically.
+  - **Localization & Static Analysis**:
+    - Added 8 new keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`) verified via `dart run tool/check_l10n.dart` (849 keys each, 100% complete).
+    - Added unit and widget tests in `test/escrow_release_refund_test.dart` (6/6 passed) and `test/payments_test.dart` (8/8 passed).
+    - Static analysis: `flutter analyze` 0 issues.
+
 ---
 
 ## Manual steps pending
@@ -309,7 +337,8 @@
 
 ## Known issues
 - **Profile & Auth Foreign Key Cascade vs D11 Retention**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`. The financial retention refactor will decouple `auth.users` deletion from audit records in an upcoming migration.
-- **Phase 5.3**: Escrow release, refunds and auto-release is the next planned step.
+- **Phase 5.4**: Earnings dashboard and savings goal planner is the next planned step.
 - **Phase 9 (Admin Console)**: Admin console is built in a separate web/desktop project and is out of scope for this Flutter app.
+
 
 

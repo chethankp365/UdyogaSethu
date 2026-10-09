@@ -5159,6 +5159,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try Again'**
   String get paymentTryAgain;
+
+  /// No description provided for @pendingEscrowRelease.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Escrow Release'**
+  String get pendingEscrowRelease;
+
+  /// No description provided for @protectedBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Protected'**
+  String get protectedBadge;
+
+  /// No description provided for @releaseEscrowPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Release Escrow Payment'**
+  String get releaseEscrowPayment;
+
+  /// No description provided for @confirmAndRelease.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm & Release Payment'**
+  String get confirmAndRelease;
+
+  /// No description provided for @workerPayout.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker Payout (Available Balance)'**
+  String get workerPayout;
+
+  /// No description provided for @escrowAutoReleaseNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment will be released as soon as the employer confirms, or automatically within 24 hours if no dispute is raised.'**
+  String get escrowAutoReleaseNotice;
+
+  /// No description provided for @escrowEarningsSecured.
+  ///
+  /// In en, this message translates to:
+  /// **'Your earnings are 100% secured in escrow'**
+  String get escrowEarningsSecured;
+
+  /// No description provided for @releaseEscrowSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment successfully released to worker wallet!'**
+  String get releaseEscrowSuccess;
 }
 
 class _AppLocalizationsDelegate

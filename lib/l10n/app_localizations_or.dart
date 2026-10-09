@@ -2771,4 +2771,30 @@ class AppLocalizationsOr extends AppLocalizations {
 
   @override
   String get paymentTryAgain => 'Try Again';
+
+  @override
+  String get pendingEscrowRelease => 'ଏସ୍କ୍ରୋ ରିଲିଜ୍ ବାକି ଅଛି';
+
+  @override
+  String get protectedBadge => 'ସୁରକ୍ଷିତ';
+
+  @override
+  String get releaseEscrowPayment => 'ଏସ୍କ୍ରୋ ପେମେଣ୍ଟ ରିଲିଜ୍ କରନ୍ତୁ';
+
+  @override
+  String get confirmAndRelease => 'ନିଶ୍ଚିତ କରନ୍ତୁ ଏବଂ ପେମେଣ୍ଟ ରିଲିଜ୍ କରନ୍ତୁ';
+
+  @override
+  String get workerPayout => 'ଶ୍ରମିକ ପେଆଉଟ୍ (ଉପଲବ୍ଧ ବାଲାନ୍ସ)';
+
+  @override
+  String get escrowAutoReleaseNotice =>
+      'ନିୟୋଜକ ନିଶ୍ଚିତ କଲା ମାତ୍ରେ କିମ୍ବା କୌଣସି ବିବାଦ ନଥିଲେ ୨୪ ଘଣ୍ଟା ମଧ୍ୟରେ ପେମେଣ୍ଟ ଆପେ ଆପେ ରିଲିଜ୍ ହେବ।';
+
+  @override
+  String get escrowEarningsSecured => 'ଆପଣଙ୍କ ରୋଜଗାର ଏସ୍କ୍ରୋରେ ୧୦୦% ସୁରକ୍ଷିତ';
+
+  @override
+  String get releaseEscrowSuccess =>
+      'ଶ୍ରମିକ ୱାଲେଟକୁ ପେମେଣ୍ଟ ସଫଳତାର ସହ ରିଲିଜ୍ ହେଲା!';
 }

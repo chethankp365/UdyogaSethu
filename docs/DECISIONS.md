@@ -193,6 +193,15 @@ This document records key design, architectural, role model, and implementation 
   * **Realtime State Tracking**: `PaymentStatusScreen` listens to Supabase Realtime updates on the `payments` row rather than relying solely on the client SDK callback, ensuring atomic consistency between payment capture, webhook receipt, and UI transition.
   * **Digital PDF Receipts**: Built `PaymentReceiptPdf` generating an itemized tax invoice and escrow certificate, shareable via `share_plus`.
 
+* **D52 — Escrow Release, Idempotent Settlement, Double-Entry Reconciliation, Dispute Freeze & Auto-Release**:
+  * **Idempotent Settlement (`release_escrow`)**: Settlement functions are strictly idempotent. If `release_escrow` is invoked on a payment that is already in status `released`, the function safely exits without writing duplicate ledger rows or firing duplicate notifications.
+  * **Paise Rounding & Platform Fee (`commission_bps`)**: Fee calculations use integer paise math with exact rounding (`(amount_paise * commission_bps + 5000) / 10000`). Tested against edge case fractional amounts (e.g., 73,533 paise resulting in 3,677 paise platform fee and 69,856 paise net worker credit).
+  * **Double-Entry Ledger Integrity**: Releasing escrow debits payer's `escrow` balance by the gross wage and credits worker's `available` balance by the net wage (deducting the platform commission to platform revenue). Trigger-driven ledger validation maintains mathematical parity at all times.
+  * **Dispute Freeze Invariant**: When an active dispute exists on an assignment (`status = 'disputed'` or unresolved disputes in `assignment_disputes`), `release_escrow` raises an exception and freezes release until resolved by the external Admin console.
+  * **Automated Batch Release (`auto_release_escrow`)**: A scheduled, idempotent database procedure automatically scans completed assignments older than `auto_release_hours` (default: 24h) where all verifications are green and no open dispute exists, releasing escrow automatically.
+  * **Phase 6 Order Reusability**: `release_order_escrow(order_id)` and `release_escrow` seamlessly support orders when delivery is verified (`status = 'delivered'`).
+  * **UI Escrow & Protection Transparency**: `ActiveJobScreen` presents emerald "Protected" badges on jobs with escrow protection, provides "Pending Escrow Release" status with informational breakdown sheet for workers, and an itemized "Confirm & Release Payment" bottom sheet for employers showing gross wage, 5% platform fee deduction, and net worker payout.
+
 
 
 

@@ -2796,4 +2796,31 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get paymentTryAgain => 'ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ';
+
+  @override
+  String get pendingEscrowRelease => 'ಎಸ್ಕ್ರೋ ಬಿಡುಗಡೆ ಬಾಕಿ ಇದೆ';
+
+  @override
+  String get protectedBadge => 'ಸುರಕ್ಷಿತ';
+
+  @override
+  String get releaseEscrowPayment => 'ಎಸ್ಕ್ರೋ ಪಾವತಿ ಬಿಡುಗಡೆ ಮಾಡಿ';
+
+  @override
+  String get confirmAndRelease => 'ಖಚಿತಪಡಿಸಿ ಮತ್ತು ಪಾವತಿ ಬಿಡುಗಡೆ ಮಾಡಿ';
+
+  @override
+  String get workerPayout => 'ಕಾರ್ಮಿಕರ ಪಾವತಿ (ಲಭ್ಯವಿರುವ ಬ್ಯಾಲೆನ್ಸ್)';
+
+  @override
+  String get escrowAutoReleaseNotice =>
+      'ಉದ್ಯೋಗದಾತರು ಖಚಿತಪಡಿಸಿದ ತಕ್ಷಣ ಅಥವಾ ಯಾವುದೇ ವಿವಾದವಿಲ್ಲದಿದ್ದರೆ 24 ಗಂಟೆಗಳಲ್ಲಿ ಹಣ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಬಿಡುಗಡೆಯಾಗುತ್ತದೆ.';
+
+  @override
+  String get escrowEarningsSecured =>
+      'ನಿಮ್ಮ ಗಳಿಕೆಗಳು ಎಸ್ಕ್ರೋದಲ್ಲಿ 100% ಸುರಕ್ಷಿತವಾಗಿವೆ';
+
+  @override
+  String get releaseEscrowSuccess =>
+      'ಕಾರ್ಮಿಕರ ವ್ಯಾಲೆಟ್‌ಗೆ ಪಾವತಿ ಯಶಸ್ವಿಯಾಗಿ ಬಿಡುಗಡೆಯಾಗಿದೆ!';
 }

@@ -118,6 +118,21 @@ class MockPaymentRepository implements PaymentRepository {
   Future<int> getAvailableWalletBalancePaise() async {
     return availableWalletBalance;
   }
+
+  @override
+  Future<bool> releaseAssignmentEscrow(String assignmentId) async => true;
+
+  @override
+  Future<bool> confirmJobCompletionAndRelease(String assignmentId) async => true;
+
+  @override
+  Future<bool> refundEscrow(String paymentId, {int? refundPaise, String? reason}) async => true;
+
+  @override
+  Future<bool> refundAssignmentEscrow(String assignmentId, {int? refundPaise, String? reason}) async => true;
+
+  @override
+  Future<bool> releaseOrderEscrow(String orderId) async => true;
 }
 
 Widget createTestWidget(Widget child, {List<dynamic> overrides = const []}) {
