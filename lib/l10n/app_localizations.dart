@@ -5207,6 +5207,258 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Payment successfully released to worker wallet!'**
   String get releaseEscrowSuccess;
+
+  /// No description provided for @earningsDashboardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Earnings & Performance'**
+  String get earningsDashboardTitle;
+
+  /// No description provided for @earningsToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Earnings'**
+  String get earningsToday;
+
+  /// No description provided for @earningsThisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This Week'**
+  String get earningsThisWeek;
+
+  /// No description provided for @earningsThisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'This Month'**
+  String get earningsThisMonth;
+
+  /// No description provided for @earningsTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Lifetime Earnings'**
+  String get earningsTotal;
+
+  /// No description provided for @earningsCompletedJobs.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed Jobs'**
+  String get earningsCompletedJobs;
+
+  /// No description provided for @earningsFarmOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm Orders'**
+  String get earningsFarmOrders;
+
+  /// No description provided for @earningsAverageRating.
+  ///
+  /// In en, this message translates to:
+  /// **'Average Rating'**
+  String get earningsAverageRating;
+
+  /// No description provided for @earningsDailyGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Goal'**
+  String get earningsDailyGoal;
+
+  /// No description provided for @earningsDailyGoalProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Goal Progress'**
+  String get earningsDailyGoalProgress;
+
+  /// No description provided for @earningsPayoutTrends.
+  ///
+  /// In en, this message translates to:
+  /// **'Payout Trend'**
+  String get earningsPayoutTrends;
+
+  /// No description provided for @earningsTimeframe14Days.
+  ///
+  /// In en, this message translates to:
+  /// **'14 Days'**
+  String get earningsTimeframe14Days;
+
+  /// No description provided for @earningsTimeframe6Months.
+  ///
+  /// In en, this message translates to:
+  /// **'6 Months'**
+  String get earningsTimeframe6Months;
+
+  /// No description provided for @earningsBestDayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Best Earning Day'**
+  String get earningsBestDayTitle;
+
+  /// No description provided for @earningsBestDaySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You earned {amount} on {date}!'**
+  String earningsBestDaySubtitle(Object amount, Object date);
+
+  /// No description provided for @earningsSetDailyGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Daily Goal'**
+  String get earningsSetDailyGoal;
+
+  /// No description provided for @earningsSaveGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Goal'**
+  String get earningsSaveGoal;
+
+  /// No description provided for @savingsGoalsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Savings Goal Planner'**
+  String get savingsGoalsTitle;
+
+  /// No description provided for @savingsGoalsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Track your dreams. Goals are virtual trackers and do not lock your money.'**
+  String get savingsGoalsSubtitle;
+
+  /// No description provided for @savingsGoalsVirtualNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Virtual Goal Trackers: Goals help you budget and plan towards your dreams. They do not freeze or lock your wallet money.'**
+  String get savingsGoalsVirtualNotice;
+
+  /// No description provided for @savingsGoalNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New Savings Goal'**
+  String get savingsGoalNew;
+
+  /// No description provided for @savingsGoalCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Savings Goal'**
+  String get savingsGoalCreate;
+
+  /// No description provided for @savingsGoalTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'Target Amount'**
+  String get savingsGoalTarget;
+
+  /// No description provided for @savingsGoalSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved So Far'**
+  String get savingsGoalSaved;
+
+  /// No description provided for @savingsGoalDeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Target Deadline'**
+  String get savingsGoalDeadline;
+
+  /// No description provided for @savingsGoalCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get savingsGoalCategory;
+
+  /// No description provided for @savingsGoalSuggestedPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested Savings Plan'**
+  String get savingsGoalSuggestedPlan;
+
+  /// No description provided for @savingsGoalAddSavings.
+  ///
+  /// In en, this message translates to:
+  /// **'Record Savings Progress'**
+  String get savingsGoalAddSavings;
+
+  /// No description provided for @savingsGoalAddAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount Saved'**
+  String get savingsGoalAddAmount;
+
+  /// No description provided for @savingsGoalCompletedBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal Achieved! 🎉'**
+  String get savingsGoalCompletedBadge;
+
+  /// No description provided for @savingsGoalActiveBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get savingsGoalActiveBadge;
+
+  /// No description provided for @savingsGoalCategorySchoolFees.
+  ///
+  /// In en, this message translates to:
+  /// **'School Fees'**
+  String get savingsGoalCategorySchoolFees;
+
+  /// No description provided for @savingsGoalCategoryEquipment.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Equipment'**
+  String get savingsGoalCategoryEquipment;
+
+  /// No description provided for @savingsGoalCategoryScooter.
+  ///
+  /// In en, this message translates to:
+  /// **'Scooter / Vehicle'**
+  String get savingsGoalCategoryScooter;
+
+  /// No description provided for @savingsGoalCategorySeeds.
+  ///
+  /// In en, this message translates to:
+  /// **'Seeds & Fertilizer'**
+  String get savingsGoalCategorySeeds;
+
+  /// No description provided for @savingsGoalCategoryEmergency.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency Fund'**
+  String get savingsGoalCategoryEmergency;
+
+  /// No description provided for @savingsGoalCategoryHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Renovation'**
+  String get savingsGoalCategoryHome;
+
+  /// No description provided for @savingsGoalCategoryCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Goal'**
+  String get savingsGoalCategoryCustom;
+
+  /// No description provided for @savingsGoalDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Goal'**
+  String get savingsGoalDelete;
+
+  /// No description provided for @savingsGoalDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this savings goal tracker?'**
+  String get savingsGoalDeleteConfirm;
+
+  /// No description provided for @savingsGoalEmptyState.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan your next big milestone by setting a savings goal.'**
+  String get savingsGoalEmptyState;
+
+  /// No description provided for @savingsGoalsPlanGoals.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan Goals'**
+  String get savingsGoalsPlanGoals;
 }
 
 class _AppLocalizationsDelegate

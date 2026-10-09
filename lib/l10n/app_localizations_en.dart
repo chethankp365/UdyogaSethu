@@ -2795,4 +2795,136 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get releaseEscrowSuccess =>
       'Payment successfully released to worker wallet!';
+
+  @override
+  String get earningsDashboardTitle => 'Earnings & Performance';
+
+  @override
+  String get earningsToday => 'Today\'s Earnings';
+
+  @override
+  String get earningsThisWeek => 'This Week';
+
+  @override
+  String get earningsThisMonth => 'This Month';
+
+  @override
+  String get earningsTotal => 'Total Lifetime Earnings';
+
+  @override
+  String get earningsCompletedJobs => 'Completed Jobs';
+
+  @override
+  String get earningsFarmOrders => 'Farm Orders';
+
+  @override
+  String get earningsAverageRating => 'Average Rating';
+
+  @override
+  String get earningsDailyGoal => 'Daily Goal';
+
+  @override
+  String get earningsDailyGoalProgress => 'Today\'s Goal Progress';
+
+  @override
+  String get earningsPayoutTrends => 'Payout Trend';
+
+  @override
+  String get earningsTimeframe14Days => '14 Days';
+
+  @override
+  String get earningsTimeframe6Months => '6 Months';
+
+  @override
+  String get earningsBestDayTitle => 'Best Earning Day';
+
+  @override
+  String earningsBestDaySubtitle(Object amount, Object date) {
+    return 'You earned $amount on $date!';
+  }
+
+  @override
+  String get earningsSetDailyGoal => 'Set Daily Goal';
+
+  @override
+  String get earningsSaveGoal => 'Save Goal';
+
+  @override
+  String get savingsGoalsTitle => 'Savings Goal Planner';
+
+  @override
+  String get savingsGoalsSubtitle =>
+      'Track your dreams. Goals are virtual trackers and do not lock your money.';
+
+  @override
+  String get savingsGoalsVirtualNotice =>
+      'Virtual Goal Trackers: Goals help you budget and plan towards your dreams. They do not freeze or lock your wallet money.';
+
+  @override
+  String get savingsGoalNew => 'New Savings Goal';
+
+  @override
+  String get savingsGoalCreate => 'Create Savings Goal';
+
+  @override
+  String get savingsGoalTarget => 'Target Amount';
+
+  @override
+  String get savingsGoalSaved => 'Saved So Far';
+
+  @override
+  String get savingsGoalDeadline => 'Target Deadline';
+
+  @override
+  String get savingsGoalCategory => 'Category';
+
+  @override
+  String get savingsGoalSuggestedPlan => 'Suggested Savings Plan';
+
+  @override
+  String get savingsGoalAddSavings => 'Record Savings Progress';
+
+  @override
+  String get savingsGoalAddAmount => 'Amount Saved';
+
+  @override
+  String get savingsGoalCompletedBadge => 'Goal Achieved! 🎉';
+
+  @override
+  String get savingsGoalActiveBadge => 'In Progress';
+
+  @override
+  String get savingsGoalCategorySchoolFees => 'School Fees';
+
+  @override
+  String get savingsGoalCategoryEquipment => 'Work Equipment';
+
+  @override
+  String get savingsGoalCategoryScooter => 'Scooter / Vehicle';
+
+  @override
+  String get savingsGoalCategorySeeds => 'Seeds & Fertilizer';
+
+  @override
+  String get savingsGoalCategoryEmergency => 'Emergency Fund';
+
+  @override
+  String get savingsGoalCategoryHome => 'Home Renovation';
+
+  @override
+  String get savingsGoalCategoryCustom => 'Custom Goal';
+
+  @override
+  String get savingsGoalDelete => 'Delete Goal';
+
+  @override
+  String get savingsGoalDeleteConfirm =>
+      'Are you sure you want to delete this savings goal tracker?';
+
+  @override
+  String get savingsGoalEmptyState =>
+      'Plan your next big milestone by setting a savings goal.';
+
+  @override
+  String get savingsGoalsPlanGoals => 'Plan Goals';
 }

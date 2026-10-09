@@ -2823,4 +2823,136 @@ class AppLocalizationsKn extends AppLocalizations {
   @override
   String get releaseEscrowSuccess =>
       'ಕಾರ್ಮಿಕರ ವ್ಯಾಲೆಟ್‌ಗೆ ಪಾವತಿ ಯಶಸ್ವಿಯಾಗಿ ಬಿಡುಗಡೆಯಾಗಿದೆ!';
+
+  @override
+  String get earningsDashboardTitle => 'ಗಳಿಕೆ ಮತ್ತು ಕಾರ್ಯಕ್ಷಮತೆ';
+
+  @override
+  String get earningsToday => 'ಇಂದಿನ ಗಳಿಕೆ';
+
+  @override
+  String get earningsThisWeek => 'ಈ ವಾರ';
+
+  @override
+  String get earningsThisMonth => 'ಈ ತಿಂಗಳು';
+
+  @override
+  String get earningsTotal => 'ಒಟ್ಟು ಗಳಿಕೆ';
+
+  @override
+  String get earningsCompletedJobs => 'ಪೂರ್ಣಗೊಂಡ ಕೆಲಸಗಳು';
+
+  @override
+  String get earningsFarmOrders => 'ಕೃಷಿ ಆದೇಶಗಳು';
+
+  @override
+  String get earningsAverageRating => 'ಸರಾಸರಿ ರೇಟಿಂಗ್';
+
+  @override
+  String get earningsDailyGoal => 'ದೈನಂದಿನ ಗುರಿ';
+
+  @override
+  String get earningsDailyGoalProgress => 'ಇಂದಿನ ಗುರಿ ಪ್ರಗತಿ';
+
+  @override
+  String get earningsPayoutTrends => 'ಪಾವತಿ ಪ್ರವೃತ್ತಿ';
+
+  @override
+  String get earningsTimeframe14Days => '14 ದಿನಗಳು';
+
+  @override
+  String get earningsTimeframe6Months => '6 ತಿಂಗಳು';
+
+  @override
+  String get earningsBestDayTitle => 'ಅತ್ಯುತ್ತಮ ಗಳಿಕೆಯ ದಿನ';
+
+  @override
+  String earningsBestDaySubtitle(Object amount, Object date) {
+    return 'ನೀವು $date ರಂದು $amount ಗಳಿಸಿದ್ದೀರಿ!';
+  }
+
+  @override
+  String get earningsSetDailyGoal => 'ದೈನಂದಿನ ಗುರಿ ಹೊಂದಿಸಿ';
+
+  @override
+  String get earningsSaveGoal => 'ಗುರಿ ಉಳಿಸಿ';
+
+  @override
+  String get savingsGoalsTitle => 'ಉಳಿತಾಯ ಗುರಿ ಯೋಜಕ';
+
+  @override
+  String get savingsGoalsSubtitle =>
+      'ನಿಮ್ಮ ಕನಸುಗಳನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಿ. ಗುರಿಗಳು ನಿಮ್ಮ ಹಣವನ್ನು ಲಾಕ್ ಮಾಡುವುದಿಲ್ಲ.';
+
+  @override
+  String get savingsGoalsVirtualNotice =>
+      'ವರ್ಚುವಲ್ ಗುರಿ ಟ್ರ್ಯಾಕರ್: ಗುರಿಗಳು ಯೋಜನೆಗೆ ಮಾತ್ರ. ನಿಮ್ಮ ಹಣವು ಯಾವಾಗಲೂ ನಿಮ್ಮ ವಾಲೆಟ್‌ನಲ್ಲಿ ಲಭ್ಯವಿರುತ್ತದೆ.';
+
+  @override
+  String get savingsGoalNew => 'ಹೊಸ ಉಳಿತಾಯ ಗುರಿ';
+
+  @override
+  String get savingsGoalCreate => 'ಗುರಿ ರಚಿಸಿ';
+
+  @override
+  String get savingsGoalTarget => 'ಗುರಿ ಮೊತ್ತ';
+
+  @override
+  String get savingsGoalSaved => 'ಇಲ್ಲಿಯವರೆಗೆ ಉಳಿಸಿದ ಮೊತ್ತ';
+
+  @override
+  String get savingsGoalDeadline => 'ಗಡುವು ದಿನಾಂಕ';
+
+  @override
+  String get savingsGoalCategory => 'ವರ್ಗ';
+
+  @override
+  String get savingsGoalSuggestedPlan => 'ಸೂಚಿಸಲಾದ ಉಳಿತಾಯ ಯೋಜನೆ';
+
+  @override
+  String get savingsGoalAddSavings => 'ಉಳಿತಾಯ ಪ್ರಗತಿ ದಾಖಲಿಸಿ';
+
+  @override
+  String get savingsGoalAddAmount => 'ಉಳಿಸಿದ ಮೊತ್ತ';
+
+  @override
+  String get savingsGoalCompletedBadge => 'ಗುರಿ ತಲುಪಿದೆ! 🎉';
+
+  @override
+  String get savingsGoalActiveBadge => 'ಪ್ರಗತಿಯಲ್ಲಿದೆ';
+
+  @override
+  String get savingsGoalCategorySchoolFees => 'ಶಾಲಾ ಶುಲ್ಕ';
+
+  @override
+  String get savingsGoalCategoryEquipment => 'ಕೆಲಸದ ಉಪಕರಣಗಳು';
+
+  @override
+  String get savingsGoalCategoryScooter => 'ಸ್ಕೂಟರ್ / ವಾಹನ';
+
+  @override
+  String get savingsGoalCategorySeeds => 'ಬೀಜಗಳು ಮತ್ತು ಗೊಬ್ಬರ';
+
+  @override
+  String get savingsGoalCategoryEmergency => 'ತುರ್ತು ನಿಧಿ';
+
+  @override
+  String get savingsGoalCategoryHome => 'ಮನೆ ನವೀಕರಣ';
+
+  @override
+  String get savingsGoalCategoryCustom => 'ಕಸ್ಟಮ್ ಗುರಿ';
+
+  @override
+  String get savingsGoalDelete => 'ಗುರಿ ಅಳಿಸಿ';
+
+  @override
+  String get savingsGoalDeleteConfirm =>
+      'ಈ ಉಳಿತಾಯ ಗುರಿ ಟ್ರ್ಯಾಕರ್ ಅನ್ನು ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?';
+
+  @override
+  String get savingsGoalEmptyState =>
+      'ಉಳಿತಾಯ ಗುರಿಯನ್ನು ನಿಗದಿಪಡಿಸುವ ಮೂಲಕ ನಿಮ್ಮ ಮುಂದಿನ ಮೈಲಿಗಲ್ಲನ್ನು ಯೋಜಿಸಿ.';
+
+  @override
+  String get savingsGoalsPlanGoals => 'ಗುರಿಗಳನ್ನು ಯೋಜಿಸಿ';
 }

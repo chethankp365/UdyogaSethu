@@ -201,12 +201,11 @@ This document records key design, architectural, role model, and implementation 
   * **Automated Batch Release (`auto_release_escrow`)**: A scheduled, idempotent database procedure automatically scans completed assignments older than `auto_release_hours` (default: 24h) where all verifications are green and no open dispute exists, releasing escrow automatically.
   * **Phase 6 Order Reusability**: `release_order_escrow(order_id)` and `release_escrow` seamlessly support orders when delivery is verified (`status = 'delivered'`).
   * **UI Escrow & Protection Transparency**: `ActiveJobScreen` presents emerald "Protected" badges on jobs with escrow protection, provides "Pending Escrow Release" status with informational breakdown sheet for workers, and an itemized "Confirm & Release Payment" bottom sheet for employers showing gross wage, 5% platform fee deduction, and net worker payout.
-
-
-
-
-
-
-
-
-
+* **D53 — Earnings Dashboard & Savings Goal Planner**:
+  * **SQL-Backed Aggregate Invariant (No Client-Side Summing)**: All daily, weekly, monthly, and lifetime earnings totals are computed directly in PostgreSQL via `get_earnings_dashboard(p_days)`. Sums are backed strictly by `ledger_entries` where `wallet_id = v_wallet_id AND direction = 'credit' AND bucket = 'available'`, guaranteeing 100% mathematical parity with the wallet transactions list.
+  * **Virtual Tracker Invariant**: Savings goals are strictly virtual planning trackers stored in `public.savings_goals`. They calculate progress, supportive cheers, and suggested allocations per job and per week, but **never lock or freeze funds**. User money remains completely available in the wallet for withdrawal at all times.
+  * **Suggested Savings Algorithm**:
+    * If a deadline exists: Calculates weeks remaining and suggests `remaining_target / weeks_remaining` per week, and `per_week / 5` per completed job.
+    * If no deadline exists: Computes suggestion dynamically using the worker's recent 7-day average daily earnings (`recent_avg_daily_earnings_paise`), recommending a sustainable 15% savings rate.
+  * **Unified Daily Goal State**: Added `daily_earnings_goal_paise` to `public.profiles`. The "Today's Goal" circular ring on the Seeker Home Screen and the Daily Goal Card on the Earnings Dashboard synchronize to the same database setting via `update_daily_earnings_goal` RPC.
+  * **Accessible Chart Invariant**: `EarningsTrendChart` uses `fl_chart` with interactive 14-day daily line chart and 6-month monthly bar chart, accompanied by a dynamic, screen-reader-friendly text summary directly beneath each chart.

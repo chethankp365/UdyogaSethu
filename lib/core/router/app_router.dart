@@ -45,6 +45,8 @@ import 'package:udyogasethu/features/trust/presentation/trust_safety_centre_scre
 import 'package:udyogasethu/features/trust/presentation/job_history_screen.dart';
 import 'package:udyogasethu/features/trust/presentation/favourites_screen.dart';
 import 'package:udyogasethu/features/wallet/presentation/wallet_screen.dart';
+import 'package:udyogasethu/features/earnings/presentation/earnings_dashboard_screen.dart';
+import 'package:udyogasethu/features/earnings/presentation/savings_goals_screen.dart';
 import 'package:udyogasethu/features/payments/presentation/payment_checkout_screen.dart';
 import 'package:udyogasethu/features/payments/presentation/payment_status_screen.dart';
 import 'package:udyogasethu/features/verification/presentation/face_check_screen.dart';
@@ -668,6 +670,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.wallet,
         builder: (context, state) => const WalletScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.earningsDashboard,
+        builder: (context, state) => const EarningsDashboardScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.savingsGoals,
+        builder: (context, state) => const SavingsGoalsScreen(),
       ),
       GoRoute(
         path: AppRoutes.paymentCheckout,

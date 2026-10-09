@@ -2825,4 +2825,137 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get releaseEscrowSuccess =>
       'தொழிலாளி வாலட்டுக்கு பணம் வெற்றிகரமாக விடுவிக்கப்பட்டது!';
+
+  @override
+  String get earningsDashboardTitle => 'வருமானம் மற்றும் செயல்திறன்';
+
+  @override
+  String get earningsToday => 'இன்றைய வருமானம்';
+
+  @override
+  String get earningsThisWeek => 'இந்த வாரம்';
+
+  @override
+  String get earningsThisMonth => 'இந்த மாதம்';
+
+  @override
+  String get earningsTotal => 'மொத்த வருமானம்';
+
+  @override
+  String get earningsCompletedJobs => 'முடிக்கப்பட்ட வேலைகள்';
+
+  @override
+  String get earningsFarmOrders => 'விவசாய ஆர்டர்கள்';
+
+  @override
+  String get earningsAverageRating => 'சராசரி மதிப்பீடு';
+
+  @override
+  String get earningsDailyGoal => 'தினசரி இலக்கு';
+
+  @override
+  String get earningsDailyGoalProgress => 'இன்றைய இலக்கு முன்னேற்றம்';
+
+  @override
+  String get earningsPayoutTrends => 'பணம் செலுத்தும் போக்கு';
+
+  @override
+  String get earningsTimeframe14Days => '14 நாட்கள்';
+
+  @override
+  String get earningsTimeframe6Months => '6 மாதங்கள்';
+
+  @override
+  String get earningsBestDayTitle => 'சிறந்த வருவாய் நாள்';
+
+  @override
+  String earningsBestDaySubtitle(Object amount, Object date) {
+    return '$date அன்று நீங்கள் $amount சம்பாதித்துள்ளீர்கள்!';
+  }
+
+  @override
+  String get earningsSetDailyGoal => 'தினசரி இலக்கை அமைக்கவும்';
+
+  @override
+  String get earningsSaveGoal => 'இலக்கைச் சேமிக்கவும்';
+
+  @override
+  String get savingsGoalsTitle => 'சேமிப்பு இலக்கு திட்டமிடுபவர்';
+
+  @override
+  String get savingsGoalsSubtitle =>
+      'உங்கள் கனவுகளைத் திட்டமிடுங்கள். இலக்குகள் உங்கள் பணத்தைப் பூட்டாது.';
+
+  @override
+  String get savingsGoalsVirtualNotice =>
+      'மெய்நிகர் இலக்கு டிராக்கர்: இலக்குகள் திட்டமிடலுக்கு மட்டுமே. உங்கள் பணம் எப்போதும் உங்கள் வாலட்டில் கிடைக்கும்.';
+
+  @override
+  String get savingsGoalNew => 'புதிய சேமிப்பு இலக்கு';
+
+  @override
+  String get savingsGoalCreate => 'இலக்கை உருவாக்கவும்';
+
+  @override
+  String get savingsGoalTarget => 'இலக்கு தொகை';
+
+  @override
+  String get savingsGoalSaved => 'இதுவரை சேமிக்கப்பட்டது';
+
+  @override
+  String get savingsGoalDeadline => 'இலக்கு தேதி';
+
+  @override
+  String get savingsGoalCategory => 'வகை';
+
+  @override
+  String get savingsGoalSuggestedPlan =>
+      'பரிந்துரைக்கப்பட்ட சேமிப்புத் திட்டம்';
+
+  @override
+  String get savingsGoalAddSavings => 'சேமிப்பு முன்னேற்றத்தைப் பதிவுசெய்க';
+
+  @override
+  String get savingsGoalAddAmount => 'சேமித்த தொகை';
+
+  @override
+  String get savingsGoalCompletedBadge => 'இலக்கு அடையப்பட்டது! 🎉';
+
+  @override
+  String get savingsGoalActiveBadge => 'செயலில் உள்ளது';
+
+  @override
+  String get savingsGoalCategorySchoolFees => 'பள்ளி கட்டணம்';
+
+  @override
+  String get savingsGoalCategoryEquipment => 'வேலைக் கருவிகள்';
+
+  @override
+  String get savingsGoalCategoryScooter => 'ஸ்கூட்டர் / வாகனம்';
+
+  @override
+  String get savingsGoalCategorySeeds => 'விதைகள் & உரங்கள்';
+
+  @override
+  String get savingsGoalCategoryEmergency => 'அவசர நிதி';
+
+  @override
+  String get savingsGoalCategoryHome => 'வீடு சீரமைப்பு';
+
+  @override
+  String get savingsGoalCategoryCustom => 'தனிப்பயன் இலக்கு';
+
+  @override
+  String get savingsGoalDelete => 'இலக்கை நீக்கு';
+
+  @override
+  String get savingsGoalDeleteConfirm =>
+      'இந்த சேமிப்பு இலக்கை நிச்சயமாக நீக்க விரும்புகிறீர்களா?';
+
+  @override
+  String get savingsGoalEmptyState =>
+      'சேமிப்பு இலக்கை அமைத்து உங்கள் அடுத்த மைல்கல்லைத் திட்டமிடுங்கள்.';
+
+  @override
+  String get savingsGoalsPlanGoals => 'இலக்குகளைத் திட்டமிடுங்கள்';
 }

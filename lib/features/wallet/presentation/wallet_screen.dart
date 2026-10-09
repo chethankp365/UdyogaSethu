@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/widgets/mic_fab.dart';
 import 'package:udyogasethu/features/wallet/data/wallet_repository.dart';
@@ -374,6 +376,38 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 14),
+
+          // Link to Earnings Dashboard & Savings Goal Planner
+          InkWell(
+            onTap: () => context.push(AppRoutes.earningsDashboard),
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.18)),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.insights_rounded, color: Color(0xFF34D399), size: 16),
+                  SizedBox(width: 8),
+                  Text(
+                    'Earnings Analytics & Savings Planner',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(width: 6),
+                  Icon(Icons.chevron_right_rounded, color: Colors.white70, size: 16),
+                ],
+              ),
+            ),
           ),
         ],
       ),

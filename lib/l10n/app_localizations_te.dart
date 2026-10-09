@@ -2811,4 +2811,136 @@ class AppLocalizationsTe extends AppLocalizations {
   @override
   String get releaseEscrowSuccess =>
       'చెల్లింపు కార్మికుడి వాలెట్‌కు విజయవంతంగా విడుదల చేయబడింది!';
+
+  @override
+  String get earningsDashboardTitle => 'సంపాదన మరియు పనితీరు';
+
+  @override
+  String get earningsToday => 'నేటి సంపాదన';
+
+  @override
+  String get earningsThisWeek => 'ఈ వారం';
+
+  @override
+  String get earningsThisMonth => 'ఈ నెల';
+
+  @override
+  String get earningsTotal => 'మొత్తం సంపాదన';
+
+  @override
+  String get earningsCompletedJobs => 'పూర్తయిన పనులు';
+
+  @override
+  String get earningsFarmOrders => 'వ్యవసాయ ఆర్డర్లు';
+
+  @override
+  String get earningsAverageRating => 'సగటు రేటింగ్';
+
+  @override
+  String get earningsDailyGoal => 'రోజువారీ లక్ష్యం';
+
+  @override
+  String get earningsDailyGoalProgress => 'నేటి లక్ష్యం పురోగతి';
+
+  @override
+  String get earningsPayoutTrends => 'చెల్లింపు ట్రెండ్స్';
+
+  @override
+  String get earningsTimeframe14Days => '14 రోజులు';
+
+  @override
+  String get earningsTimeframe6Months => '6 నెలలు';
+
+  @override
+  String get earningsBestDayTitle => 'ఉత్తమ సంపాదన రోజు';
+
+  @override
+  String earningsBestDaySubtitle(Object amount, Object date) {
+    return 'మీరు $dateన $amount సంపాదించారు!';
+  }
+
+  @override
+  String get earningsSetDailyGoal => 'రోజువారీ లక్ష్యం సెట్ చేయండి';
+
+  @override
+  String get earningsSaveGoal => 'లక్ష్యం సేవ్ చేయండి';
+
+  @override
+  String get savingsGoalsTitle => 'పొదుపు లక్ష్య ప్లానర్';
+
+  @override
+  String get savingsGoalsSubtitle =>
+      'మీ కలలను ట్రాక్ చేయండి. లక్ష్యాలు మీ డబ్బును లాక్ చేయవు.';
+
+  @override
+  String get savingsGoalsVirtualNotice =>
+      'వర్చువల్ లక్ష్య ట్రాకర్: లక్ష్యాలు ప్లానింగ్ కోసం మాత్రమే. మీ డబ్బు మీ వాలెట్లోనే సురక్షితంగా ఉంటుంది.';
+
+  @override
+  String get savingsGoalNew => 'కొత్త పొదుపు లక్ష్యం';
+
+  @override
+  String get savingsGoalCreate => 'లక్ష్యం సృష్టించండి';
+
+  @override
+  String get savingsGoalTarget => 'లక్ష్యం మొత్తం';
+
+  @override
+  String get savingsGoalSaved => 'ఇప్పటివరకు పొదుపు చేసినది';
+
+  @override
+  String get savingsGoalDeadline => 'చివరి తేదీ';
+
+  @override
+  String get savingsGoalCategory => 'వర్గం';
+
+  @override
+  String get savingsGoalSuggestedPlan => 'సూచించిన పొదుపు ప్రణాళిక';
+
+  @override
+  String get savingsGoalAddSavings => 'పొదుపు పురోగతి నమోదు చేయండి';
+
+  @override
+  String get savingsGoalAddAmount => 'పొదుపు మొత్తం';
+
+  @override
+  String get savingsGoalCompletedBadge => 'లక్ష్యం పూర్తయింది! 🎉';
+
+  @override
+  String get savingsGoalActiveBadge => 'పురోగతిలో ఉంది';
+
+  @override
+  String get savingsGoalCategorySchoolFees => 'స్కూల్ ఫీజులు';
+
+  @override
+  String get savingsGoalCategoryEquipment => 'పని పరికరాలు';
+
+  @override
+  String get savingsGoalCategoryScooter => 'స్కూటర్ / వాహనం';
+
+  @override
+  String get savingsGoalCategorySeeds => 'విత్తనాలు & ఎరువులు';
+
+  @override
+  String get savingsGoalCategoryEmergency => 'అత్యవసర నిధి';
+
+  @override
+  String get savingsGoalCategoryHome => 'ఇంటి పునరుద్ధరణ';
+
+  @override
+  String get savingsGoalCategoryCustom => 'కస్టమ్ లక్ష్యం';
+
+  @override
+  String get savingsGoalDelete => 'లక్ష్యం తొలగించు';
+
+  @override
+  String get savingsGoalDeleteConfirm =>
+      'మీరు ఈ పొదుపు లక్ష్యాన్ని ఖచ్చితంగా తొలగించాలనుకుంటున్నారా?';
+
+  @override
+  String get savingsGoalEmptyState =>
+      'పొదుపు లక్ష్యాన్ని నిర్దేశించుకుని ప్రణాళిక వేసుకోండి.';
+
+  @override
+  String get savingsGoalsPlanGoals => 'లక్ష్యాలను ప్లాన్ చేయండి';
 }

@@ -316,6 +316,42 @@
     - Added unit and widget tests in `test/escrow_release_refund_test.dart` (6/6 passed) and `test/payments_test.dart` (8/8 passed).
     - Static analysis: `flutter analyze` 0 issues.
 
+- [x] **P5.4**: Earnings dashboard and savings goal planner (Status: Done |
+  - **Database Migration `0500_earnings_dashboard_savings_goals.sql`**:
+    - Pushed cleanly to remote Supabase database `mmzbpeqkfomnywuzoqii` via `npx supabase db push`.
+    - Added `daily_earnings_goal_paise BIGINT NOT NULL DEFAULT 150000` to `public.profiles`.
+    - Harmonized `public.savings_goals` (from migration 0040) with `category` (enum constraint: `school_fees`, `equipment`, `scooter`, `seeds`, `emergency_fund`, `home_improvement`, `custom`), `is_completed`, and `updated_at`.
+    - Implemented server-authoritative RPC `get_earnings_dashboard(p_days INT)`:
+      - Sourced strictly from `ledger_entries` where `direction = 'credit' AND bucket = 'available'` (100% mathematical parity with wallet transactions list).
+      - Returns daily, weekly, monthly, and lifetime total earnings, completed jobs and orders count, average rating, daily goal, daily trends (last 14 days), monthly trends (last 6 months), best day insight, and 7-day average daily earnings.
+    - Implemented RPC `update_daily_earnings_goal(p_goal_paise BIGINT)`.
+    - Implemented RPC `allocate_savings_goal(p_goal_id UUID, p_amount_paise BIGINT)`.
+  - **Flutter Packages & Domain Layer**:
+    - Installed & verified `fl_chart: ^1.2.0`.
+    - Built domain models in `lib/features/earnings/domain/`:
+      - `EarningsDashboardData`, `DailyTrendItem`, `MonthlyTrendItem`, `BestDayInsight`.
+      - `SavingsGoal`, `SavingsGoalCategory` enum, `SavingsGoalDraft`.
+      - Dynamic suggested savings algorithm computing suggested weekly and per-job savings based on deadline or recent average daily earnings.
+      - Supportive cheer messages based on percentage progression (0%, 25%, 50%, 75%, 100%).
+  - **Flutter Repository Layer**:
+    - Built `EarningsRepository` and `SupabaseEarningsRepository` with Riverpod providers `earningsRepositoryProvider`, `earningsDashboardProvider(days)`, and `savingsGoalsProvider`.
+  - **Flutter Presentation Layer**:
+    - `EarningsTrendChart`: Interactive 14-day LineChart (with green gradient and touch tooltips) and 6-month BarChart. Includes **accessible screen-reader-friendly text summary directly beneath each chart**.
+    - `SavingsGoalCard`: Goal tracker card with category badge, circular progress ring, deadline countdown, supportive cheer text, and "+ Record Savings Progress" action.
+    - `CreateSavingsGoalDialog`: Dialog with category chips, target amount, deadline picker, and live suggested savings calculator (per week and per job) computed from recent earnings history.
+    - `AllocateSavingsDialog`: Virtual allocation dialog to record savings progress towards any goal.
+    - `EarningsDashboardScreen` (`/earnings`): Metric cards (today, week, month, lifetime total matching wallet ledger), completed jobs/orders, star rating, today's goal ring with tap-to-edit, payout trends chart, best day insight, and savings planner preview.
+    - `SavingsGoalsScreen` (`/earnings/savings-goals`): Dedicated planner screen with virtual tracker notice (*"Goals help you budget. They do not freeze or lock your wallet money."*), overall progress bar, filters (All, Active, Completed), and goal creation.
+  - **Home Screen & Wallet Integration**:
+    - Hooked "Today's Goal" ring on Seeker Home (`seeker_home_screen.dart`) to persist to database via `earningsRepositoryProvider.updateDailyEarningsGoal` and navigate to `/earnings`.
+    - Added "Earnings Analytics & Savings Planner" entry point banner inside `WalletScreen`.
+  - **Localization & Static Analysis**:
+    - Added 42 new keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`) verified via `dart run tool/check_l10n.dart` (891 keys each, 100% complete).
+    - Unit, domain parity, and widget tests in `test/earnings_dashboard_test.dart` (8/8 tests passed).
+    - Invariant verified: totals on the dashboard match the wallet transactions list.
+    - Static analysis: `flutter analyze` clean with 0 issues.
+)
+
 ---
 
 ## Manual steps pending

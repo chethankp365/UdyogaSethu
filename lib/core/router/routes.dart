@@ -74,6 +74,8 @@ class AppRoutes {
   static const String favourites = '/favourites';
   static const String paymentCheckout = '/payments/checkout';
   static const String paymentStatus = '/payments/status';
+  static const String earningsDashboard = '/earnings';
+  static const String savingsGoals = '/earnings/savings-goals';
 
   // Debug Routes (gated under kDebugMode)
   static const String devGallery = '/dev/gallery';

@@ -11,6 +11,7 @@ import 'package:udyogasethu/features/seeker/data/seeker_home_repository.dart';
 import 'package:udyogasethu/features/seeker/domain/job_recommendation.dart';
 import 'package:udyogasethu/features/seeker/domain/seeker_profile_draft.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_home_controller.dart';
+import 'package:udyogasethu/features/earnings/data/earnings_repository.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class SeekerHomeScreen extends ConsumerStatefulWidget {
@@ -164,6 +165,15 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
                   );
                 }).toList(),
               ),
+              const SizedBox(height: 12),
+              TextButton.icon(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  context.push(AppRoutes.earningsDashboard);
+                },
+                icon: const Icon(Icons.insights_rounded, size: 16),
+                label: const Text('Open Earnings Dashboard'),
+              ),
             ],
           ),
           actions: [
@@ -176,12 +186,19 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
                 backgroundColor: AppColors.headerGreenDark,
                 foregroundColor: Colors.white,
               ),
-              onPressed: () {
+              onPressed: () async {
                 final rupees = int.tryParse(controller.text.trim());
                 if (rupees != null && rupees > 0) {
-                  ref.read(seekerDailyGoalProvider.notifier).setGoalPaise(rupees * 100);
+                  final newGoalPaise = rupees * 100;
+                  ref.read(seekerDailyGoalProvider.notifier).setGoalPaise(newGoalPaise);
+                  try {
+                    await ref.read(earningsRepositoryProvider).updateDailyEarningsGoal(newGoalPaise);
+                    ref.invalidate(earningsDashboardProvider(14));
+                  } catch (_) {}
                 }
-                Navigator.pop(ctx);
+                if (ctx.mounted) {
+                  Navigator.pop(ctx);
+                }
               },
               child: const Text('Save Goal'),
             ),

@@ -2788,4 +2788,136 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get releaseEscrowSuccess =>
       'भुगतान सफलतापूर्वक श्रमिक के वॉलेट में जारी किया गया!';
+
+  @override
+  String get earningsDashboardTitle => 'कमाई और प्रदर्शन';
+
+  @override
+  String get earningsToday => 'आज की कमाई';
+
+  @override
+  String get earningsThisWeek => 'इस सप्ताह';
+
+  @override
+  String get earningsThisMonth => 'इस महीने';
+
+  @override
+  String get earningsTotal => 'कुल जीवनकाल कमाई';
+
+  @override
+  String get earningsCompletedJobs => 'पूर्ण किए गए कार्य';
+
+  @override
+  String get earningsFarmOrders => 'कृषि ऑर्डर';
+
+  @override
+  String get earningsAverageRating => 'औसत रेटिंग';
+
+  @override
+  String get earningsDailyGoal => 'दैनिक लक्ष्य';
+
+  @override
+  String get earningsDailyGoalProgress => 'आज के लक्ष्य की प्रगति';
+
+  @override
+  String get earningsPayoutTrends => 'भुगतान रुझान';
+
+  @override
+  String get earningsTimeframe14Days => '14 दिन';
+
+  @override
+  String get earningsTimeframe6Months => '6 महीने';
+
+  @override
+  String get earningsBestDayTitle => 'सर्वश्रेष्ठ कमाई का दिन';
+
+  @override
+  String earningsBestDaySubtitle(Object amount, Object date) {
+    return 'आपने $date को $amount कमाए!';
+  }
+
+  @override
+  String get earningsSetDailyGoal => 'दैनिक लक्ष्य सेट करें';
+
+  @override
+  String get earningsSaveGoal => 'लक्ष्य सहेजें';
+
+  @override
+  String get savingsGoalsTitle => 'बचत लक्ष्य योजनाकार';
+
+  @override
+  String get savingsGoalsSubtitle =>
+      'सपनों को ट्रैक करें। लक्ष्य आभासी हैं और आपका पैसा लॉक नहीं करते।';
+
+  @override
+  String get savingsGoalsVirtualNotice =>
+      'आभासी लक्ष्य ट्रैकर: लक्ष्य आपके बजट की योजना बनाने में मदद करते हैं। आपका पैसा हमेशा वॉलेट में उपलब्ध रहता है।';
+
+  @override
+  String get savingsGoalNew => 'नया बचत लक्ष्य';
+
+  @override
+  String get savingsGoalCreate => 'बचत लक्ष्य बनाएं';
+
+  @override
+  String get savingsGoalTarget => 'लक्ष्य राशि';
+
+  @override
+  String get savingsGoalSaved => 'अब तक की बचत';
+
+  @override
+  String get savingsGoalDeadline => 'अंतिम तिथि';
+
+  @override
+  String get savingsGoalCategory => 'श्रेणी';
+
+  @override
+  String get savingsGoalSuggestedPlan => 'सुझाई गई बचत योजना';
+
+  @override
+  String get savingsGoalAddSavings => 'बचत प्रगति दर्ज करें';
+
+  @override
+  String get savingsGoalAddAmount => 'बचत राशि';
+
+  @override
+  String get savingsGoalCompletedBadge => 'लक्ष्य पूरा हुआ! 🎉';
+
+  @override
+  String get savingsGoalActiveBadge => 'प्रगति पर है';
+
+  @override
+  String get savingsGoalCategorySchoolFees => 'स्कूल की फीस';
+
+  @override
+  String get savingsGoalCategoryEquipment => 'काम के उपकरण';
+
+  @override
+  String get savingsGoalCategoryScooter => 'स्कूटर / वाहन';
+
+  @override
+  String get savingsGoalCategorySeeds => 'बीज और खाद';
+
+  @override
+  String get savingsGoalCategoryEmergency => 'आपातकालीन फंड';
+
+  @override
+  String get savingsGoalCategoryHome => 'घर की मरम्मत';
+
+  @override
+  String get savingsGoalCategoryCustom => 'कस्टम लक्ष्य';
+
+  @override
+  String get savingsGoalDelete => 'लक्ष्य हटाएं';
+
+  @override
+  String get savingsGoalDeleteConfirm =>
+      'क्या आप इस बचत लक्ष्य को हटाना चाहते हैं?';
+
+  @override
+  String get savingsGoalEmptyState =>
+      'बचत लक्ष्य निर्धारित करके अपना अगला पड़ाव प्लान करें।';
+
+  @override
+  String get savingsGoalsPlanGoals => 'लक्ष्य प्लान करें';
 }
