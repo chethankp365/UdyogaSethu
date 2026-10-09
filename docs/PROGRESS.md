@@ -414,6 +414,43 @@
     - `flutter analyze`: clean with 0 issues.
 )
 
+- **Phase 6.3 (Farm Resources Map, Equipment Escrow Booking & Agri Labour Hiring)**: Completed
+  - **Visual Reference Compliance**:
+    - Built `FarmResourcesMapScreen` (`/farmer/resources`) matching **Screen 23 / Page 6 Phone 2**:
+      - Interactive OpenStreetMap with price overlay pins (`₹850/hr`, `₹1,400/hr`, `₹450/acre`, `₹450/bag`, `₹15/crate/day`, `₹200/sample`).
+      - Category filter chips: `All`, `Tractors & Implements`, `Seeds & Bio-Fertilizers`, `Cold Storage`, `Drones & Spraying`.
+      - Search bar with live query filtering, zoom controls (+ / -), and GPS recenter button.
+      - Draggable bottom sheet (`0.35` to `0.85` height) displaying nearby resource listing cards with thumbnail icons, verified owner tags, distance (e.g. `2.4 km away`), equipment specs, rating, price, and "Book Item" action.
+    - Built `EquipmentRentalSection` matching **Screen 26 / Page 7 Phone 2**:
+      - Equipment cards on Farmer Home: "Mahindra 575 DI Tractor + Rotavator", "Multi-Crop Harvester & Thresher", "Agricultural Drone Spraying Kit".
+      - Verified owner badge, distance, rating (`★ 4.9`), price per unit, "Escrow Guaranteed" badge, and "Book Now" CTA.
+  - **Escrow-Protected Booking Flow (`BookResourceModal`)**:
+    - Date selection, quantity / rental hours stepper, delivery address / farm location input, and special notes.
+    - Prominent Escrow Protection card (*"100% Escrow Protection: Payment is held safely by UdyogaSethu. Funds are only released to the equipment owner after your work or rental is completed."*).
+    - Itemized bill breakdown (Rental Fee, Platform Escrow Fee 5%, GST 18%, Total Due) computed via `compute_payment_bill` extended for `ref_type = 'resource_booking'`.
+    - Instant booking confirmation showing sequential receipt number (`REC-RSC-...`) and `escrow_held` status.
+  - **Labour Hiring via Shared Jobs System**:
+    - Farmer Home "Hire Workers" and weather advisory "Book Harvest Helpers" quick actions check for the `provider` role.
+    - If the user lacks the `provider` role, an interactive dialog prompts them to activate or switch to Job Provider using `RoleSwitcherBottomSheet` (P2.10).
+    - Quick post flow drafts a harvest shift with category `Agri Labour` (`b2222222-2222-4222-8222-222222222222`), e.g. "Morning Harvest Shift - 6 AM to 2 PM", ₹450/day wage, immediately discoverable by job seekers on the map and feed.
+  - **Owner / Vendor View (`VendorResourcesScreen`)**:
+    - Dedicated screen at `/farmer/vendor-resources` allowing equipment and supply owners to view and manage their listings, toggle availability, and manage booking requests through status lifecycle (`confirmed`, `in_progress`, `completed`, `cancelled`).
+  - **Database Migration `0530_farm_resources_and_bookings.sql` (Pushed to Remote Supabase)**:
+    - Added columns to `resource_listings`: `specs`, `address_text`, `rating_avg`, `rating_count`, `verified`.
+    - Added columns to `resource_bookings`: `quantity`, `unit`, `delivery_address`, `notes`, `payment_id`.
+    - Extended `compute_payment_bill` for `ref_type = 'resource_booking'`.
+    - Added atomic `book_resource` RPC with `hold_escrow` invocation and sequential receipt number generation.
+    - Replaced `nearby_resources` RPC to return full metadata.
+    - Seeded 7 realistic Karnataka agricultural resources across Mandya, Kolar, Mysuru, Bengaluru, Ramanagara, and Malavalli.
+  - **Invariants Verified ("CHECK BEFORE MOVING ON")**:
+    - Booked tractor and verified escrow is held in status `escrow_held` with receipt number.
+    - Posted harvest shift job and verified category `Agri Labour` job parameters.
+  - **Localization & Analysis**:
+    - Added 12 new localization keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`).
+    - 9 automated tests passing in `test/farm_resources_and_labour_test.dart`.
+    - Full test suite passing (413/413 tests).
+    - `flutter analyze`: clean with 0 issues.
+
 ---
 
 ## Manual steps pending
@@ -431,7 +468,7 @@
 
 ## Known issues
 - **Profile & Auth Foreign Key Cascade vs D11 Retention**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`. The financial retention refactor will decouple `auth.users` deletion from audit records in an upcoming migration.
-- **Phase 6.3**: Farm resources, equipment rental and labour hiring is the next planned step.
+- **Phase 6.4**: Farmer orders, delivery verification and buyer review is the next planned step.
 - **Phase 9 (Admin Console)**: Admin console is built in a separate web/desktop project and is out of scope for this Flutter app.
 
 

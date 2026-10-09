@@ -1164,5 +1164,17 @@
   "noProduceAvailable": "କୌଣସି ଉତ୍ପାଦ ଉପଲବ୍ଧ ନାହିଁ",
   "orderDirect": "ସିଧାସଳଖ ଅର୍ଡର କରନ୍ତୁ",
   "uploadProducePhotos": "ଫସଲ ଫଟୋ (produce-images)",
-  "addPhoto": "ଫଟୋ ଯୋଡ଼ନ୍ତୁ"
+  "addPhoto": "ଫଟୋ ଯୋଡ଼ନ୍ତୁ",
+  "farmerMapHeader": "କୃଷକମାନଙ୍କ ପାଇଁ ଆବଶ୍ୟକ ସାମଗ୍ରୀ, ବିହନ, ଯନ୍ତ୍ରପାତି ଏବଂ ସେବା",
+  "farmerNearbyRentals": "ନିକଟସ୍ଥ ଯନ୍ତ୍ରପାତି ଏବଂ ଡ୍ରୋନ ଭଡ଼ା",
+  "farmerEscrowGuaranteed": "ଏସ୍କ୍ରୋ ଗ୍ୟାରେଣ୍ଟି",
+  "farmerBookNow": "ବର୍ତ୍ତମାନ ବୁକ୍ କରନ୍ତୁ",
+  "farmerBookItem": "ଆଇଟମ୍ ବୁକ୍ କରନ୍ତୁ",
+  "farmerViewAllEquipmentMap": "ସମସ୍ତ କୃଷି ଉତ୍ସ ଏବଂ ଲାଇଭ୍ ମ୍ୟାପ୍ ଦେଖନ୍ତୁ →",
+  "farmerEquipmentBooked": "ଯନ୍ତ୍ରପାତି ବୁକ୍ ହୋଇଛି!",
+  "farmerBookingQuantity": "ବୁକିଂ ଅବଧି / ପରିମାଣ",
+  "farmerDeliveryAddress": "ଫାର୍ମ ବିତରଣ / କାର୍ଯ୍ୟ ସ୍ଥଳ ଠିକଣା",
+  "farmerSpecialNotes": "କାର୍ଯ୍ୟ ନିର୍ଦ୍ଦେଶାବଳୀ / ଫସଲ ନୋଟ୍ (ଇଚ୍ଛାଧୀନ)",
+  "farmerVendorHubTitle": "ଯନ୍ତ୍ରପାତି ବିକ୍ରେତା କେନ୍ଦ୍ର",
+  "farmerAddEquipment": "ଯନ୍ତ୍ରପାତି ଯୋଡନ୍ତୁ"
 }

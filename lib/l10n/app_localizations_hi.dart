@@ -3242,4 +3242,41 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get addPhoto => 'फोटो जोड़ें';
+
+  @override
+  String get farmerMapHeader =>
+      'किसानों के लिए आवश्यक उत्पाद, बीज, मशीनरी और सेवाएं';
+
+  @override
+  String get farmerNearbyRentals => 'पास के उपकरण और ड्रोन किराए पर';
+
+  @override
+  String get farmerEscrowGuaranteed => 'एस्क्रो गारंटीकृत';
+
+  @override
+  String get farmerBookNow => 'अभी बुक करें';
+
+  @override
+  String get farmerBookItem => 'आइटम बुक करें';
+
+  @override
+  String get farmerViewAllEquipmentMap => 'सभी कृषि संसाधन और लाइव मैप देखें →';
+
+  @override
+  String get farmerEquipmentBooked => 'उपकरण बुक हो गया!';
+
+  @override
+  String get farmerBookingQuantity => 'बुकिंग अवधि / मात्रा';
+
+  @override
+  String get farmerDeliveryAddress => 'खेत वितरण / कार्य स्थल का पता';
+
+  @override
+  String get farmerSpecialNotes => 'कार्य निर्देश / फसल नोट्स (वैकल्पिक)';
+
+  @override
+  String get farmerVendorHubTitle => 'उपकरण और मशीनरी वेंडर हब';
+
+  @override
+  String get farmerAddEquipment => 'उपकरण जोड़ें';
 }

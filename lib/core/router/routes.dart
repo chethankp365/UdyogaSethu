@@ -43,6 +43,9 @@ class AppRoutes {
   static const String farmerMarket = '/farmer/market';
   static const String farmerChat = '/farmer/chat';
   static const String farmerProfile = '/farmer/profile';
+  static const String farmerListings = '/farmer/listings';
+  static const String farmerResources = '/farmer/resources';
+  static const String farmerVendorResources = '/farmer/vendor-resources';
 
   // Shared Feature Screens
   static const String settings = '/settings';

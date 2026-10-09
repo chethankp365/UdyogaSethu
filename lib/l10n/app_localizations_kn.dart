@@ -3278,4 +3278,42 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get addPhoto => 'ಫೋಟೋ ಸೇರಿಸಿ';
+
+  @override
+  String get farmerMapHeader =>
+      'ರೈತರಿಗೆ ಅಗತ್ಯವಿರುವ ಉತ್ಪನ್ನಗಳು, ಬೀಜಗಳು, ಯಂತ್ರೋಪಕರಣಗಳು ಮತ್ತು ಸೇವೆಗಳು';
+
+  @override
+  String get farmerNearbyRentals => 'ಹತ್ತಿರದ ಉಪಕರಣಗಳು ಮತ್ತು ಡ್ರೋನ್ ಬಾಡಿಗೆ';
+
+  @override
+  String get farmerEscrowGuaranteed => 'ಎಸ್ಕ್ರೋ ಗ್ಯಾರಂಟಿ';
+
+  @override
+  String get farmerBookNow => 'ಈಗ ಬುಕ್ ಮಾಡಿ';
+
+  @override
+  String get farmerBookItem => 'ಐಟಂ ಬುಕ್ ಮಾಡಿ';
+
+  @override
+  String get farmerViewAllEquipmentMap =>
+      'ಎಲ್ಲಾ ಕೃಷಿ ಸಂಪನ್ಮೂಲಗಳು ಮತ್ತು ಲೈವ್ ನಕ್ಷೆ ವೀಕ್ಷಿಸಿ →';
+
+  @override
+  String get farmerEquipmentBooked => 'ಉಪಕರಣ ಬುಕ್ ಆಗಿದೆ!';
+
+  @override
+  String get farmerBookingQuantity => 'ಬುಕಿಂಗ್ ಅವಧಿ / ಪ್ರಮಾಣ';
+
+  @override
+  String get farmerDeliveryAddress => 'ಜಮೀನಿನ ವಿತರಣೆ / ಕೆಲಸದ ಸ್ಥಳ ವಿಳಾಸ';
+
+  @override
+  String get farmerSpecialNotes => 'ಕೆಲಸದ ಸೂಚನೆಗಳು / ಬೆಳೆ ಟಿಪ್ಪಣಿಗಳು (ಐಚ್ಛಿಕ)';
+
+  @override
+  String get farmerVendorHubTitle => 'ಯಂತ್ರೋಪಕರಣಗಳ ವೆಂಡರ್ ಹಬ್';
+
+  @override
+  String get farmerAddEquipment => 'ಉಪಕರಣ ಸೇರಿಸಿ';
 }

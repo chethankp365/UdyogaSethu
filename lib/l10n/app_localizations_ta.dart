@@ -3281,4 +3281,44 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get addPhoto => 'புகைப்படம் சேர்க்க';
+
+  @override
+  String get farmerMapHeader =>
+      'விவசாயிகளுக்கு தேவையான பொருட்கள், விதைகள், இயந்திரங்கள் மற்றும் சேவைகள்';
+
+  @override
+  String get farmerNearbyRentals =>
+      'அருகிலுள்ள இயந்திரங்கள் மற்றும் ட்ரோன் வாடகை';
+
+  @override
+  String get farmerEscrowGuaranteed => 'எஸ்க்ரோ உத்தரவாதம்';
+
+  @override
+  String get farmerBookNow => 'இப்போது முன்பதிவு செய்க';
+
+  @override
+  String get farmerBookItem => 'பொருளை முன்பதிவு செய்க';
+
+  @override
+  String get farmerViewAllEquipmentMap =>
+      'அனைத்து பண்ணை வளங்கள் & நேரடி வரைபடத்தைக் காண்க →';
+
+  @override
+  String get farmerEquipmentBooked => 'இயந்திரம் முன்பதிவு செய்யப்பட்டது!';
+
+  @override
+  String get farmerBookingQuantity => 'முன்பதிவு காலம் / அளவு';
+
+  @override
+  String get farmerDeliveryAddress => 'பண்ணை விநியோகம் / வேலை தள முகவரி';
+
+  @override
+  String get farmerSpecialNotes =>
+      'பணி வழிமுறைகள் / பயிர் குறிப்புகள் (விருப்பத்தேர்வு)';
+
+  @override
+  String get farmerVendorHubTitle => 'இயந்திர விற்பனையாளர் மையம்';
+
+  @override
+  String get farmerAddEquipment => 'இயந்திரத்தைச் சேர்க்கவும்';
 }

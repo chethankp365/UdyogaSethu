@@ -260,4 +260,15 @@ This document records key design, architectural, role model, and implementation 
   * **Buyer Search Visibility Invariant**:
     * Function `get_buyer_produce_listings` strictly filters `WHERE status IN ('active', 'low_stock') AND stock_qty > 0`.
     * When stock reaches zero, the listing is immediately hidden from buyer feeds and search results.
-
+* **D56 — Farm Resources Map, Equipment Escrow Booking & Agri Labour Hiring**:
+  * **Visual Reference Compliance**:
+    * **Screen 23 (Page 6 Phone 2)**: Map with price overlay pins (`₹850/hr`, `₹1,400/hr`, `₹450/acre`, `₹450/bag`, `₹15/crate/day`, `₹200/sample`), top category filter chips (`All`, `Tractors & Implements`, `Seeds & Bio-Fertilizers`, `Cold Storage`, `Drones & Spraying`), search bar, interactive zoom controls, and draggable bottom sheet with distance tags, owner verification, and "Book Item" CTA.
+    * **Screen 26 (Page 7 Phone 2)**: Equipment rental cards on Farmer Home ("Mahindra 575 DI Tractor + Rotavator", "Multi-Crop Harvester & Thresher", "Agricultural Drone Spraying Kit") with verified owner badge, distance, rating, price per unit, "Escrow Guaranteed" badge, and "Book Now" CTA.
+  * **Escrow-Protected Booking Lifecycle**:
+    * Extended `compute_payment_bill` for `ref_type = 'resource_booking'` using standard P5 payment calculation (base amount + 5% platform fee + 18% GST on fee).
+    * Atomic PostgreSQL function `book_resource` generates sequential receipt number (`REC-RSC-...`), records booking in `resource_bookings` with initial status `escrow_held`, and calls `hold_escrow` to lock payment until service completion.
+  * **Agri Labour Hiring via Shared Jobs System**:
+    * Gated labour hiring on the `provider` role. Farmers without the provider role are guided to activate it via `RoleSwitcherBottomSheet` (P2.10).
+    * Reuses the jobs system with category `Agri Labour` (`b2222222-2222-4222-8222-222222222222`), allowing farmers to post harvest shifts (e.g. "Morning Harvest Shift - 6 AM to 2 PM, ₹450/day") visible directly on the seeker map and feed.
+  * **Resource Vendor View**:
+    * Created `VendorResourcesScreen` (`/farmer/vendor-resources`) for equipment and seed owners to manage listings, toggle active availability, and update booking lifecycle (`confirmed`, `in_progress`, `completed`, `cancelled`).

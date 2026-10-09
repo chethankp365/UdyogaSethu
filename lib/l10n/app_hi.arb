@@ -1164,5 +1164,17 @@
   "noProduceAvailable": "कोई उपज उपलब्ध नहीं है",
   "orderDirect": "सीधा ऑर्डर करें",
   "uploadProducePhotos": "फसल फोटो (produce-images)",
-  "addPhoto": "फोटो जोड़ें"
+  "addPhoto": "फोटो जोड़ें",
+  "farmerMapHeader": "किसानों के लिए आवश्यक उत्पाद, बीज, मशीनरी और सेवाएं",
+  "farmerNearbyRentals": "पास के उपकरण और ड्रोन किराए पर",
+  "farmerEscrowGuaranteed": "एस्क्रो गारंटीकृत",
+  "farmerBookNow": "अभी बुक करें",
+  "farmerBookItem": "आइटम बुक करें",
+  "farmerViewAllEquipmentMap": "सभी कृषि संसाधन और लाइव मैप देखें →",
+  "farmerEquipmentBooked": "उपकरण बुक हो गया!",
+  "farmerBookingQuantity": "बुकिंग अवधि / मात्रा",
+  "farmerDeliveryAddress": "खेत वितरण / कार्य स्थल का पता",
+  "farmerSpecialNotes": "कार्य निर्देश / फसल नोट्स (वैकल्पिक)",
+  "farmerVendorHubTitle": "उपकरण और मशीनरी वेंडर हब",
+  "farmerAddEquipment": "उपकरण जोड़ें"
 }

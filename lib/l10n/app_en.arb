@@ -1226,5 +1226,17 @@
   "noProduceAvailable": "No Produce Listings Available",
   "orderDirect": "Order Direct",
   "uploadProducePhotos": "Produce Photos (produce-images)",
-  "addPhoto": "Add Photo"
+  "addPhoto": "Add Photo",
+  "farmerMapHeader": "FARMERS REQUIRED PRODUCTS, SEEDS, MACHINERY & SERVICES NEAR ME",
+  "farmerNearbyRentals": "NEARBY EQUIPMENT & DRONE RENTALS",
+  "farmerEscrowGuaranteed": "Escrow Guaranteed",
+  "farmerBookNow": "Book Now",
+  "farmerBookItem": "Book Item",
+  "farmerViewAllEquipmentMap": "View All Farm Resources & Live Map →",
+  "farmerEquipmentBooked": "Equipment Booked!",
+  "farmerBookingQuantity": "Booking Duration / Quantity",
+  "farmerDeliveryAddress": "Farm Delivery / Work Site Address",
+  "farmerSpecialNotes": "Work Instructions / Crop Notes (Optional)",
+  "farmerVendorHubTitle": "Equipment & Machinery Vendor Hub",
+  "farmerAddEquipment": "Add Equipment"
 }

@@ -3246,4 +3246,42 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get addPhoto => 'ছবি যোগ করুন';
+
+  @override
+  String get farmerMapHeader =>
+      'কৃষকদের জন্য প্রয়োজনীয় পণ্য, বীজ, যন্ত্রপাতি এবং পরিষেবা';
+
+  @override
+  String get farmerNearbyRentals => 'কাছাকাছি যন্ত্রপাতি এবং ড্রোন ভাড়া';
+
+  @override
+  String get farmerEscrowGuaranteed => 'এসক্রো গ্যারান্টিযুক্ত';
+
+  @override
+  String get farmerBookNow => 'এখনই বুক করুন';
+
+  @override
+  String get farmerBookItem => 'আইটেম বুক করুন';
+
+  @override
+  String get farmerViewAllEquipmentMap =>
+      'সমস্ত কৃষি সম্পদ এবং লাইভ মানচিত্র দেখুন →';
+
+  @override
+  String get farmerEquipmentBooked => 'যন্ত্রপাতি বুক করা হয়েছে!';
+
+  @override
+  String get farmerBookingQuantity => 'বুকিং সময়কাল / পরিমাণ';
+
+  @override
+  String get farmerDeliveryAddress => 'খামার ডেলিভারি / কাজের সাইটের ঠিকানা';
+
+  @override
+  String get farmerSpecialNotes => 'কাজের নির্দেশাবলী / ফসলের নোট (ঐচ্ছিক)';
+
+  @override
+  String get farmerVendorHubTitle => 'যন্ত্রপাতি বিক্রেতা কেন্দ্র';
+
+  @override
+  String get farmerAddEquipment => 'যন্ত্রপাতি যোগ করুন';
 }

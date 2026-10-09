@@ -3266,4 +3266,42 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get addPhoto => 'ఫోటో జోడించండి';
+
+  @override
+  String get farmerMapHeader =>
+      'రైతులకు అవసరమైన ఉత్పత్తులు, విత్తనాలు, యంత్రాలు & సేవలు';
+
+  @override
+  String get farmerNearbyRentals => 'సమీపంలోని యంత్రాలు & డ్రోన్ అద్దెలు';
+
+  @override
+  String get farmerEscrowGuaranteed => 'ఎస్క్రో గ్యారెంటీ';
+
+  @override
+  String get farmerBookNow => 'ఇప్పుడే బుక్ చేయండి';
+
+  @override
+  String get farmerBookItem => 'ఐటెమ్ బుక్ చేయండి';
+
+  @override
+  String get farmerViewAllEquipmentMap =>
+      'అన్ని వ్యవసాయ వనరులు & ప్రత్యక్ష మ్యాప్ చూడండి →';
+
+  @override
+  String get farmerEquipmentBooked => 'పరికరాలు బుక్ చేయబడ్డాయి!';
+
+  @override
+  String get farmerBookingQuantity => 'బుకింగ్ వ్యవధి / పరిమాణం';
+
+  @override
+  String get farmerDeliveryAddress => 'పొలం డెలివరీ / పని ప్రదేశ చిరునామా';
+
+  @override
+  String get farmerSpecialNotes => 'పని సూచనలు / పంట గమనికలు (ఐచ్ఛికం)';
+
+  @override
+  String get farmerVendorHubTitle => 'పరికరాలు & యంత్రాల విక్రేత హబ్';
+
+  @override
+  String get farmerAddEquipment => 'పరికరాలను జోడించండి';
 }

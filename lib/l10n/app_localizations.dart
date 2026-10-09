@@ -6053,6 +6053,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add Photo'**
   String get addPhoto;
+
+  /// No description provided for @farmerMapHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'FARMERS REQUIRED PRODUCTS, SEEDS, MACHINERY & SERVICES NEAR ME'**
+  String get farmerMapHeader;
+
+  /// No description provided for @farmerNearbyRentals.
+  ///
+  /// In en, this message translates to:
+  /// **'NEARBY EQUIPMENT & DRONE RENTALS'**
+  String get farmerNearbyRentals;
+
+  /// No description provided for @farmerEscrowGuaranteed.
+  ///
+  /// In en, this message translates to:
+  /// **'Escrow Guaranteed'**
+  String get farmerEscrowGuaranteed;
+
+  /// No description provided for @farmerBookNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Book Now'**
+  String get farmerBookNow;
+
+  /// No description provided for @farmerBookItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Book Item'**
+  String get farmerBookItem;
+
+  /// No description provided for @farmerViewAllEquipmentMap.
+  ///
+  /// In en, this message translates to:
+  /// **'View All Farm Resources & Live Map →'**
+  String get farmerViewAllEquipmentMap;
+
+  /// No description provided for @farmerEquipmentBooked.
+  ///
+  /// In en, this message translates to:
+  /// **'Equipment Booked!'**
+  String get farmerEquipmentBooked;
+
+  /// No description provided for @farmerBookingQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking Duration / Quantity'**
+  String get farmerBookingQuantity;
+
+  /// No description provided for @farmerDeliveryAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm Delivery / Work Site Address'**
+  String get farmerDeliveryAddress;
+
+  /// No description provided for @farmerSpecialNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Instructions / Crop Notes (Optional)'**
+  String get farmerSpecialNotes;
+
+  /// No description provided for @farmerVendorHubTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Equipment & Machinery Vendor Hub'**
+  String get farmerVendorHubTitle;
+
+  /// No description provided for @farmerAddEquipment.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Equipment'**
+  String get farmerAddEquipment;
 }
 
 class _AppLocalizationsDelegate

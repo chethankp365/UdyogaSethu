@@ -1164,5 +1164,17 @@
   "noProduceAvailable": "कोणतीही उत्पादने उपलब्ध नाहीत",
   "orderDirect": "थेट मागणी करा",
   "uploadProducePhotos": "पिकांचे फोटो (produce-images)",
-  "addPhoto": "फोटो जोडा"
+  "addPhoto": "फोटो जोडा",
+  "farmerMapHeader": "शेतकऱ्यांसाठी आवश्यक उत्पादने, बियाणे, यंत्रसामग्री आणि सेवा",
+  "farmerNearbyRentals": "जवळपासची यंत्रसामग्री आणि ड्रोन भाड्याने",
+  "farmerEscrowGuaranteed": "एस्क्रो हमी",
+  "farmerBookNow": "आत्ताच बुक करा",
+  "farmerBookItem": "वस्तू बुक करा",
+  "farmerViewAllEquipmentMap": "सर्व कृषी संसाधने आणि थेट नकाशा पहा →",
+  "farmerEquipmentBooked": "उपकरणे बुक झाली!",
+  "farmerBookingQuantity": "बुकिंग कालावधी / प्रमाण",
+  "farmerDeliveryAddress": "शेत वितरण / कामाच्या ठिकाणाचा पत्ता",
+  "farmerSpecialNotes": "कामाच्या सूचना / पिकाच्या नोंदी (पर्यायी)",
+  "farmerVendorHubTitle": "यंत्रसामग्री विक्रेता केंद्र",
+  "farmerAddEquipment": "उपकरणे जोडा"
 }

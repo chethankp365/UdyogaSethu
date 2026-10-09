@@ -56,7 +56,7 @@ enum EssentialSuiteType {
   String get phase {
     switch (this) {
       case EssentialSuiteType.rentTractor:
-        return 'P6.2';
+        return 'P6.3';
       case EssentialSuiteType.hireWorkers:
         return 'P6.3';
       case EssentialSuiteType.soilAiTest:
@@ -68,7 +68,7 @@ enum EssentialSuiteType {
       case EssentialSuiteType.govtSchemes:
         return 'P6.x';
       case EssentialSuiteType.agriDrone:
-        return 'P6.x';
+        return 'P6.3';
       case EssentialSuiteType.irrigationAi:
         return 'P6.x';
     }

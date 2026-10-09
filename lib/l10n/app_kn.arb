@@ -1164,5 +1164,17 @@
   "noProduceAvailable": "ಯಾವುದೇ ಉತ್ಪನ್ನಗಳ ಪಟ್ಟಿ ಲಭ್ಯವಿಲ್ಲ",
   "orderDirect": "ನೇರವಾಗಿ ಖರೀದಿಸಿ",
   "uploadProducePhotos": "ಬೆಳೆ ಫೋಟೋಗಳು (produce-images)",
-  "addPhoto": "ಫೋಟೋ ಸೇರಿಸಿ"
+  "addPhoto": "ಫೋಟೋ ಸೇರಿಸಿ",
+  "farmerMapHeader": "ರೈತರಿಗೆ ಅಗತ್ಯವಿರುವ ಉತ್ಪನ್ನಗಳು, ಬೀಜಗಳು, ಯಂತ್ರೋಪಕರಣಗಳು ಮತ್ತು ಸೇವೆಗಳು",
+  "farmerNearbyRentals": "ಹತ್ತಿರದ ಉಪಕರಣಗಳು ಮತ್ತು ಡ್ರೋನ್ ಬಾಡಿಗೆ",
+  "farmerEscrowGuaranteed": "ಎಸ್ಕ್ರೋ ಗ್ಯಾರಂಟಿ",
+  "farmerBookNow": "ಈಗ ಬುಕ್ ಮಾಡಿ",
+  "farmerBookItem": "ಐಟಂ ಬುಕ್ ಮಾಡಿ",
+  "farmerViewAllEquipmentMap": "ಎಲ್ಲಾ ಕೃಷಿ ಸಂಪನ್ಮೂಲಗಳು ಮತ್ತು ಲೈವ್ ನಕ್ಷೆ ವೀಕ್ಷಿಸಿ →",
+  "farmerEquipmentBooked": "ಉಪಕರಣ ಬುಕ್ ಆಗಿದೆ!",
+  "farmerBookingQuantity": "ಬುಕಿಂಗ್ ಅವಧಿ / ಪ್ರಮಾಣ",
+  "farmerDeliveryAddress": "ಜಮೀನಿನ ವಿತರಣೆ / ಕೆಲಸದ ಸ್ಥಳ ವಿಳಾಸ",
+  "farmerSpecialNotes": "ಕೆಲಸದ ಸೂಚನೆಗಳು / ಬೆಳೆ ಟಿಪ್ಪಣಿಗಳು (ಐಚ್ಛಿಕ)",
+  "farmerVendorHubTitle": "ಯಂತ್ರೋಪಕರಣಗಳ ವೆಂಡರ್ ಹಬ್",
+  "farmerAddEquipment": "ಉಪಕರಣ ಸೇರಿಸಿ"
 }

@@ -3,17 +3,30 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/config/env.dart';
+import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/widgets/compact_language_selector.dart';
 import 'package:udyogasethu/core/widgets/mic_fab.dart';
+import 'package:udyogasethu/features/account/presentation/role_switcher_bottom_sheet.dart';
+import 'package:udyogasethu/features/farmer/data/farm_resources_repository.dart';
 import 'package:udyogasethu/features/farmer/data/farmer_home_repository.dart';
+import 'package:udyogasethu/features/farmer/domain/farm_resource_model.dart';
 import 'package:udyogasethu/features/farmer/domain/farmer_profile_draft.dart';
+import 'package:udyogasethu/features/farmer/presentation/widgets/book_resource_modal.dart';
+import 'package:udyogasethu/features/farmer/presentation/widgets/equipment_rental_section.dart';
 import 'package:udyogasethu/features/farmer/presentation/widgets/essential_suite_grid.dart';
 import 'package:udyogasethu/features/farmer/presentation/widgets/farmer_header_card.dart';
 import 'package:udyogasethu/features/farmer/presentation/widgets/mandi_prices_section.dart';
 import 'package:udyogasethu/features/farmer/presentation/widgets/weather_advisory_card.dart';
+import 'package:udyogasethu/features/provider/data/provider_jobs_repository.dart';
+import 'package:udyogasethu/features/provider/domain/job_post_draft.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
+
+final nearbyEquipmentProvider = FutureProvider<List<FarmResource>>((ref) async {
+  final repo = ref.watch(farmResourcesRepositoryProvider);
+  return repo.getNearbyResources(limit: 6);
+});
 
 class FarmerHomeScreen extends ConsumerStatefulWidget {
   const FarmerHomeScreen({super.key});
@@ -28,98 +41,376 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
     ref.invalidate(farmerStatsProvider);
     ref.invalidate(mandiPricesProvider);
     ref.invalidate(farmerWeatherAdvisoryProvider);
+    ref.invalidate(nearbyEquipmentProvider);
   }
 
-  void _showHireWorkersPlaceholder(BuildContext context) {
+  void _handleHireWorkers(BuildContext context) {
+    final session = ref.read(appSessionProvider);
+    final assignedRoles = session.assignedRoles;
     final l10n = AppLocalizations.of(context);
-    showModalBottomSheet(
+
+    if (assignedRoles.contains(UserRole.provider)) {
+      _showPostHarvestShiftSheet(context);
+    } else {
+      _showProviderRoleRequiredDialog(context, l10n);
+    }
+  }
+
+  void _showProviderRoleRequiredDialog(
+    BuildContext context,
+    AppLocalizations? l10n,
+  ) {
+    showDialog(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      backgroundColor: Colors.white,
-      builder: (ctx) => Padding(
-        padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
           children: [
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFCBD5E1),
-                  borderRadius: BorderRadius.circular(2),
-                ),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF2563EB).withValues(alpha: 0.12),
+                shape: BoxShape.circle,
               ),
+              child: const Icon(Icons.people_alt_rounded,
+                  color: Color(0xFF2563EB), size: 24),
             ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF2563EB).withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: const Icon(Icons.people_alt_rounded, color: Color(0xFF2563EB), size: 26),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n?.farmerHireWorkers ?? 'Hire Workers',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF1E293B),
-                        ),
-                      ),
-                      Text(
-                        l10n?.farmerComingInPhase('P6.3') ?? 'Coming in P6.3',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFFB45309),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              l10n?.farmerHireWorkersDesc ??
-                  'Farmers will be able to post agricultural labour requests, specify shifts, and hire verified nearby workers directly from their farmer account with escrow protection.',
-              style: const TextStyle(
-                fontSize: 13,
-                color: Color(0xFF475569),
-                height: 1.4,
-              ),
-            ),
-            const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF0D6548),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                ),
-                onPressed: () => Navigator.pop(ctx),
-                child: Text(
-                  l10n?.farmerGotIt ?? 'Got it',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+            const SizedBox(width: 12),
+            const Expanded(
+              child: Text(
+                'Job Provider Role Required',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF1E293B),
                 ),
               ),
             ),
           ],
+        ),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Hiring farm labour and posting harvest shifts requires the Job Provider / Employer role.',
+              style: TextStyle(fontSize: 13, height: 1.4, color: Color(0xFF475569)),
+            ),
+            SizedBox(height: 12),
+            Text(
+              'You can easily add or switch to the Job Provider role without losing your farm profile.',
+              style: TextStyle(fontSize: 12, color: AppColors.textMuted),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.headerGreenDark,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            onPressed: () {
+              Navigator.pop(ctx);
+              RoleSwitcherBottomSheet.show(context);
+            },
+            child: const Text('Switch / Add Provider Role'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showPostHarvestShiftSheet(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    int slots = 5;
+    int wagePerDay = 650;
+    bool isPosting = false;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setSheetState) => Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF2563EB).withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(Icons.people_alt_rounded,
+                        color: Color(0xFF2563EB), size: 24),
+                  ),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Post Farm Harvest Shift Job',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1E293B),
+                          ),
+                        ),
+                        Text(
+                          'Category: Agri Labour (Benchmarked ₹550-₹750/day)',
+                          style: TextStyle(fontSize: 11, color: AppColors.textMuted),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              const Divider(height: 1),
+              const SizedBox(height: 14),
+
+              // Helpers needed stepper
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Harvest Helpers Needed',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                      Text('Slots available for local seekers',
+                          style: TextStyle(fontSize: 11, color: AppColors.textMuted)),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.remove_circle_outline_rounded),
+                        color: AppColors.headerGreenDark,
+                        onPressed: slots > 1
+                            ? () => setSheetState(() => slots -= 1)
+                            : null,
+                      ),
+                      Text(
+                        '$slots Workers',
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.add_circle_outline_rounded),
+                        color: AppColors.headerGreenDark,
+                        onPressed: () => setSheetState(() => slots += 1),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+
+              // Wage per day
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Daily Wage Per Helper',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                      Text('Standard 8-hour field shift',
+                          style: TextStyle(fontSize: 11, color: AppColors.textMuted)),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.remove_circle_outline_rounded),
+                        color: AppColors.headerGreenDark,
+                        onPressed: wagePerDay > 400
+                            ? () => setSheetState(() => wagePerDay -= 50)
+                            : null,
+                      ),
+                      Text(
+                        '₹$wagePerDay/day',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          color: Color(0xFF0D6548),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.add_circle_outline_rounded),
+                        color: AppColors.headerGreenDark,
+                        onPressed: () => setSheetState(() => wagePerDay += 50),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
+
+              // Escrow protection banner
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE6F4EA),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: const Color(0xFFA7F3D0)),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.verified_user_rounded,
+                        color: Color(0xFF0D6548), size: 22),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        'Total ₹${3250} wage is escrow-protected. Will appear live on Seeker Map & job recommendations.',
+                        style: TextStyle(fontSize: 11, color: Color(0xFF064E3B)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 18),
+
+              // Action buttons
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF0D6548),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                  ),
+                  onPressed: isPosting
+                      ? null
+                      : () async {
+                          setSheetState(() => isPosting = true);
+                          try {
+                            final draft = JobPostDraft(
+                              title: 'Crop Harvesting & Threshing Shift',
+                              categoryId: 'b2222222-2222-4222-8222-222222222222',
+                              categoryName: 'Agri Labour',
+                              description:
+                                  'Urgent farm harvesting helper shift for ready crops. Lunch and water provided on field.',
+                              wageType: 'daily',
+                              wagePaise: wagePerDay * 100,
+                              slotsTotal: slots,
+                              startAt: DateTime.now().add(const Duration(hours: 14)),
+                              addressText: 'Mandya Farm Cluster, Field Sector 4',
+                              latitude: 12.5244,
+                              longitude: 76.8951,
+                              paymentMode: 'escrow',
+                              studentsOk: true,
+                            );
+
+                            final repo = ref.read(providerJobsRepositoryProvider);
+                            await repo.postJob(draft);
+
+                            if (ctx.mounted) {
+                              Navigator.pop(ctx);
+                              showDialog(
+                                context: context,
+                                builder: (dialogCtx) => AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18)),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(Icons.check_circle_rounded,
+                                          color: Color(0xFF0D6548), size: 48),
+                                      const SizedBox(height: 12),
+                                      const Text(
+                                        'Harvest Shift Posted!',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: Color(0xFF0D6548),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 6),
+                                      Text(
+                                        '$slots worker slots opened at ₹$wagePerDay/day. This job is now live on the Seeker Map.',
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            fontSize: 12, color: AppColors.textMuted),
+                                      ),
+                                      const SizedBox(height: 16),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: AppColors.headerGreenDark,
+                                          foregroundColor: Colors.white,
+                                        ),
+                                        onPressed: () => Navigator.pop(dialogCtx),
+                                        child: Text(l10n?.farmerUnderstood ?? 'Understood'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
+                          } catch (err) {
+                            if (ctx.mounted) {
+                              setSheetState(() => isPosting = false);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Failed to post job: $err')),
+                              );
+                            }
+                          }
+                        },
+                  child: isPosting
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : Text('Post Harvest Shift ($slots Workers)'),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Center(
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    context.push('/provider/jobs/new?category=agri_labour');
+                  },
+                  child: const Text(
+                    'Open Full Job Posting Wizard →',
+                    style: TextStyle(fontSize: 12, color: AppColors.headerGreenDark),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -132,6 +423,7 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
     final statsAsync = ref.watch(farmerStatsProvider);
     final mandiAsync = ref.watch(mandiPricesProvider);
     final weatherAsync = ref.watch(farmerWeatherAdvisoryProvider);
+    final equipmentAsync = ref.watch(nearbyEquipmentProvider);
     final isRainSimulated = ref.watch(simulatedRainForecastProvider);
 
     return Scaffold(
@@ -151,21 +443,22 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
           ],
         ),
         actions: [
-          // Dev Menu / Rain Simulation Toggle
           PopupMenuButton<String>(
-            icon: Icon(
-              isRainSimulated ? Icons.thunderstorm_rounded : Icons.more_vert_rounded,
-              color: isRainSimulated ? const Color(0xFFF59E0B) : Colors.white,
-            ),
+            icon: const Icon(Icons.more_vert_rounded),
             tooltip: 'Options',
             onSelected: (val) {
               if (val == 'simulate_rain') {
                 ref.read(simulatedRainForecastProvider.notifier).toggle();
-              } else if (val == 'switch_role') {
-                context.push(AppRoutes.devRole);
+                ref.invalidate(farmerWeatherAdvisoryProvider);
+              } else if (val == 'vendor_hub') {
+                context.push(AppRoutes.farmerVendorResources);
+              } else if (val == 'resources_map') {
+                context.push(AppRoutes.farmerResources);
+              } else if (val == 'role_switch') {
+                RoleSwitcherBottomSheet.show(context);
               } else if (val == 'logout') {
                 Supabase.instance.client.auth.signOut();
-                context.go(AppRoutes.login);
+                context.go('/login');
               }
             },
             itemBuilder: (ctx) => [
@@ -174,18 +467,40 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
                 child: Row(
                   children: [
                     Icon(
-                      isRainSimulated ? Icons.check_box_rounded : Icons.check_box_outline_blank_rounded,
-                      color: const Color(0xFFE65100),
+                      isRainSimulated ? Icons.water_drop : Icons.water_drop_outlined,
                       size: 20,
+                      color: const Color(0xFF0284C7),
                     ),
                     const SizedBox(width: 8),
-                    Text(l10n?.farmerSimulateRainDev ?? 'Simulate Rain Forecast (Dev)'),
+                    Text(
+                      isRainSimulated ? 'Disable Rain Sim' : 'Simulate Rain Alert',
+                    ),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'resources_map',
+                child: Row(
+                  children: [
+                    Icon(Icons.map_rounded, size: 20, color: Color(0xFF0D6548)),
+                    SizedBox(width: 8),
+                    Text('Farm Machinery Map'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'vendor_hub',
+                child: Row(
+                  children: [
+                    Icon(Icons.handyman_rounded, size: 20, color: Color(0xFFD97706)),
+                    SizedBox(width: 8),
+                    Text('Equipment Vendor Hub'),
                   ],
                 ),
               ),
               if (kAllowMultiRole)
                 const PopupMenuItem(
-                  value: 'switch_role',
+                  value: 'role_switch',
                   child: Row(
                     children: [
                       Icon(Icons.swap_horiz_rounded, size: 20),
@@ -238,7 +553,7 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
               weatherAsync.when(
                 data: (advisory) => WeatherAdvisoryCard(
                   advisory: advisory,
-                  onBookHelpers: () => _showHireWorkersPlaceholder(context),
+                  onBookHelpers: () => _handleHireWorkers(context),
                 ),
                 loading: () => _buildCardSkeleton(height: 140),
                 error: (err, _) => const SizedBox.shrink(),
@@ -263,12 +578,36 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
               // 4. FARMER ESSENTIAL SUITE (Screen 26 layout)
               EssentialSuiteGrid(
                 onItemTap: (item) {
-                  if (item.type == EssentialSuiteType.hireWorkers) {
-                    _showHireWorkersPlaceholder(context);
+                  if (item.type == EssentialSuiteType.rentTractor) {
+                    context.push('/farmer/resources?category=tractor');
+                  } else if (item.type == EssentialSuiteType.agriDrone) {
+                    context.push('/farmer/resources?category=drone');
+                  } else if (item.type == EssentialSuiteType.sellProduce) {
+                    context.push(AppRoutes.farmerListings);
+                  } else if (item.type == EssentialSuiteType.hireWorkers) {
+                    _handleHireWorkers(context);
                   } else {
                     EssentialSuiteGrid.showItemModal(context, item);
                   }
                 },
+              ),
+              const SizedBox(height: 24),
+
+              // 5. NEARBY EQUIPMENT & DRONE RENTALS SECTION (Screen 26 layout)
+              equipmentAsync.when(
+                data: (items) => EquipmentRentalSection(
+                  resources: items,
+                  onViewAll: () => context.push(AppRoutes.farmerResources),
+                  onBookItem: (res) => BookResourceModal.show(
+                    context,
+                    resource: res,
+                    onBookingConfirmed: (b) {
+                      ref.invalidate(nearbyEquipmentProvider);
+                    },
+                  ),
+                ),
+                loading: () => _buildCardSkeleton(height: 180),
+                error: (err, _) => const SizedBox.shrink(),
               ),
             ],
           ),
@@ -318,11 +657,14 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
           const SizedBox(height: 4),
           Text(message, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12, color: Color(0xFF64748B))),
           const SizedBox(height: 12),
-          ElevatedButton.icon(
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF0D6548),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
             onPressed: onRetry,
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF0D6548)),
-            icon: const Icon(Icons.refresh_rounded, size: 16),
-            label: const Text('Retry'),
+            child: const Text('Retry'),
           ),
         ],
       ),

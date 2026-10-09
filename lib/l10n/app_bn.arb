@@ -1164,5 +1164,17 @@
   "noProduceAvailable": "কোনো ফসল উপলব্ধ নেই",
   "orderDirect": "সরাসরি অর্ডার করুন",
   "uploadProducePhotos": "ফসলের ছবি (produce-images)",
-  "addPhoto": "ছবি যোগ করুন"
+  "addPhoto": "ছবি যোগ করুন",
+  "farmerMapHeader": "কৃষকদের জন্য প্রয়োজনীয় পণ্য, বীজ, যন্ত্রপাতি এবং পরিষেবা",
+  "farmerNearbyRentals": "কাছাকাছি যন্ত্রপাতি এবং ড্রোন ভাড়া",
+  "farmerEscrowGuaranteed": "এসক্রো গ্যারান্টিযুক্ত",
+  "farmerBookNow": "এখনই বুক করুন",
+  "farmerBookItem": "আইটেম বুক করুন",
+  "farmerViewAllEquipmentMap": "সমস্ত কৃষি সম্পদ এবং লাইভ মানচিত্র দেখুন →",
+  "farmerEquipmentBooked": "যন্ত্রপাতি বুক করা হয়েছে!",
+  "farmerBookingQuantity": "বুকিং সময়কাল / পরিমাণ",
+  "farmerDeliveryAddress": "খামার ডেলিভারি / কাজের সাইটের ঠিকানা",
+  "farmerSpecialNotes": "কাজের নির্দেশাবলী / ফসলের নোট (ঐচ্ছিক)",
+  "farmerVendorHubTitle": "যন্ত্রপাতি বিক্রেতা কেন্দ্র",
+  "farmerAddEquipment": "যন্ত্রপাতি যোগ করুন"
 }

@@ -3249,4 +3249,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addPhoto => 'Add Photo';
+
+  @override
+  String get farmerMapHeader =>
+      'FARMERS REQUIRED PRODUCTS, SEEDS, MACHINERY & SERVICES NEAR ME';
+
+  @override
+  String get farmerNearbyRentals => 'NEARBY EQUIPMENT & DRONE RENTALS';
+
+  @override
+  String get farmerEscrowGuaranteed => 'Escrow Guaranteed';
+
+  @override
+  String get farmerBookNow => 'Book Now';
+
+  @override
+  String get farmerBookItem => 'Book Item';
+
+  @override
+  String get farmerViewAllEquipmentMap =>
+      'View All Farm Resources & Live Map →';
+
+  @override
+  String get farmerEquipmentBooked => 'Equipment Booked!';
+
+  @override
+  String get farmerBookingQuantity => 'Booking Duration / Quantity';
+
+  @override
+  String get farmerDeliveryAddress => 'Farm Delivery / Work Site Address';
+
+  @override
+  String get farmerSpecialNotes => 'Work Instructions / Crop Notes (Optional)';
+
+  @override
+  String get farmerVendorHubTitle => 'Equipment & Machinery Vendor Hub';
+
+  @override
+  String get farmerAddEquipment => 'Add Equipment';
 }

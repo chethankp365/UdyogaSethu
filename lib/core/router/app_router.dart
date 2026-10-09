@@ -19,10 +19,13 @@ import 'package:udyogasethu/features/auth/presentation/login_screen.dart';
 import 'package:udyogasethu/features/auth/presentation/otp_screen.dart';
 import 'package:udyogasethu/features/auth/presentation/suspended_screen.dart';
 import 'package:udyogasethu/features/auth/presentation/verify_phone_screen.dart';
+import 'package:udyogasethu/features/farmer/domain/farm_resource_model.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_home_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_listings_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_profile_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_wizard_screen.dart';
+import 'package:udyogasethu/features/farmer/presentation/farm_resources_map_screen.dart';
+import 'package:udyogasethu/features/farmer/presentation/vendor_resources_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/brand_intro_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/intro_screen.dart';
 import 'package:udyogasethu/features/onboarding/presentation/language_screen.dart';
@@ -497,6 +500,32 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             ],
           ),
         ],
+      ),
+
+      GoRoute(
+        path: AppRoutes.farmerListings,
+        builder: (context, state) => const FarmerListingsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.farmerResources,
+        builder: (context, state) {
+          final cat = state.uri.queryParameters['category'];
+          FarmResourceCategoryFilter initialFilter = FarmResourceCategoryFilter.all;
+          if (cat == 'tractor') {
+            initialFilter = FarmResourceCategoryFilter.tractorsAndImplements;
+          } else if (cat == 'drone') {
+            initialFilter = FarmResourceCategoryFilter.dronesAndSpraying;
+          } else if (cat == 'seeds' || cat == 'fertilizer') {
+            initialFilter = FarmResourceCategoryFilter.seedsAndBioFertilizers;
+          } else if (cat == 'cold_storage') {
+            initialFilter = FarmResourceCategoryFilter.coldStorage;
+          }
+          return FarmResourcesMapScreen(initialFilter: initialFilter);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.farmerVendorResources,
+        builder: (context, state) => const VendorResourcesScreen(),
       ),
 
       GoRoute(
