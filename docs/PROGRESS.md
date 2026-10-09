@@ -235,6 +235,32 @@
     - Added 29 keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`) verified via `dart tool/check_l10n.dart` (799 keys each, 100% complete) and regenerated via `flutter gen-l10n`.
     - Added unit & widget tests in `test/trust_reviews_favourites_disputes_test.dart` (9/9 passed). Full test suite: 350/350 tests passed cleanly (`flutter test`). Static analysis: `flutter analyze` 0 issues.
 
+- [x] **P5.1**: Wallet Screen, History and Demo Withdrawal (Status: Done | Features #50, #51, #52)
+  - **Database Migration `0470_wallet_payouts_transactions.sql`**: Pushed cleanly to remote Supabase and verified with live invariant testing.
+    - Granted `SELECT ON public.wallet_balances TO authenticated;`.
+    - Created `public.get_wallet_summary()` RPC: returns `wallet_id`, `available_paise`, `pending_paise`, `escrow_paise`, `reward_paise`, `total_balance_paise`, and `today_credit_paise` (server-authoritative from `wallet_balances` and `ledger_entries`, never client math).
+    - Created `public.get_wallet_transactions(p_type, p_start_date, p_end_date, p_limit, p_offset)` RPC: queries user's `ledger_entries` with category types (`Daily Wage`, `UPI transfer`, `Farm Produce Direct Sale`, `UPI Auto-Payout`, `Platform Fee`, `Reward Credit`, `Refund`), signed amounts, and fee/commission breakdown.
+    - Created `public.request_wallet_withdrawal(p_amount_paise, p_method, p_payout_ref, p_idempotency_key)` procedure: enforces server-side invariant `available_paise >= p_amount_paise`, inserts into `payouts`, executes `wallet_debit`, and logs the payout. Tested and verified that overdraw attempts throw `Insufficient available balance.` in SQL.
+  - **Flutter Domain & Data Layer**:
+    - `WalletBalance` domain model with Indian currency grouping formatter (`WalletBalance.formatIndianCurrency(paise)` -> `₹15,250`, `₹1,00,000`).
+    - `WalletTransaction` domain model with typed categorization (`WalletTransactionType`), signed amounts (`+₹800`, `-₹500`), visual iconography, and fee breakdown line.
+    - `UpiPaymentData` domain model parsing `upi://pay` URI schemes (`pa`, `pn`, `am`, `cu`, `tn`) with validation.
+    - `WithdrawalResult` model indicating payout status, payout reference ID, and `isDemo: true`.
+    - `WalletRepository` & `SupabaseWalletRepository` implementation with Realtime streaming on `ledger_entries` table. Providers: `walletRepositoryProvider`, `walletSummaryStreamProvider`, `walletSummaryProvider`, `walletTransactionsProvider`.
+  - **Flutter Presentation Layer (Prototype Screen 8 Match)**:
+    - `WalletScreen` (`/wallet`): Forest green `#0D6548` hero balance card, "Escrow Protected" shield badge, today's credit sub-card (`+₹800`), pending escrow sub-card (`₹1,200`), primary action `↗ Withdraw` button, `Scan UPI QR` secondary action, horizontal filter chips (`All`, `Wages`, `Payouts`, `Escrow`, `Direct Sales`, `Fees`), pull-to-refresh, skeleton shimmer loading, error retry states, and center `MicFab`.
+    - `WalletSkeleton`: 3-section shimmer placeholder for smooth loading states.
+    - `TransactionTile`: Clean itemized card with type icon, title, counterparty/ref, relative/formatted timestamp, signed amount, completed status badge, and fee lines.
+    - `WithdrawDialog`: Amount input with quick selection chips (`₹100`, `₹500`, `₹1,000`, `All Balance`), live overdraw validation, demo mode banner (*"Demo mode — Simulated withdrawal until banking partner integrated"*), and error alert display.
+    - `ScanUpiDialog`: UPI QR parser supporting manual paste or quick sample intents, metadata preview (Payee, VPA, Amount, Note), and amber Demo mode disclaimer.
+  - **Router & Navigation Integration**:
+    - Registered route `AppRoutes.wallet = '/wallet'` in `app_router.dart`.
+    - Wired Seeker Home wallet balance card and quick action tile to navigate to `/wallet`.
+    - Wired Profile screen Total Earnings stat and added "Wallet & Escrow" navigation tile to `/wallet`.
+  - **Localization & Quality**:
+    - Added 17 keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`) verified via `dart tool/check_l10n.dart` (816 keys each, 100% complete) and regenerated via `flutter gen-l10n`.
+    - Added comprehensive unit, repository invariant, and widget tests in `test/wallet_test.dart` (9/9 passed). Full test suite: 359/359 tests passed cleanly (`flutter test`). Static analysis: `flutter analyze` 0 issues.
+
 ---
 
 ## Manual steps pending
@@ -260,8 +286,8 @@
    ```
 
 ## Known issues
-- **Profile & Auth Foreign Key Cascade vs D11 Retention (To be fixed in P5.1 migration)**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`, and financial/order tables (`wallets`, `payouts`, `orders`, `group_orders`, `group_order_members`, `disputes`, `dispute_evidence`, `job_assignments`, `job_evidence`, `ratings_reviews`) referencing `profiles(id)` with `ON DELETE CASCADE`. Calling `auth.admin.deleteUser` cascades through `auth.users -> profiles -> child tables`, erasing financial audit trails and breaking D11. The P5.1 migration must alter these foreign key constraints (e.g., remove cascade on `profiles.id` so scrubbed tombstone profiles survive, or move records to snapshot columns with `ON DELETE SET NULL`) and re-verify that account deletion never fails and re-registration with the same phone number works cleanly.
-- **Phase 5.1**: Escrow fund holding, wallet balance, and payout management is the planned next step.
+- **Profile & Auth Foreign Key Cascade vs D11 Retention**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`. The financial retention refactor will decouple `auth.users` deletion from audit records in an upcoming migration.
+- **Phase 5.2**: Instant UPI Auto-Payout and payment gateway integration is the next planned step.
 - **Phase 9 (Admin Console)**: Admin console is built in a separate web/desktop project and is out of scope for this Flutter app.
 
 

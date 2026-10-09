@@ -358,51 +358,6 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
     );
   }
 
-  void _showWalletSheet(BuildContext context, SeekerHomeSummary summary) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (ctx) => Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Row(
-              children: [
-                Icon(Icons.account_balance_wallet_rounded, color: AppColors.headerGreenDark, size: 24),
-                SizedBox(width: 10),
-                Text('Wallet Balance & Escrow', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-              ],
-            ),
-            const SizedBox(height: 14),
-            Text(
-              'Available Balance: ₹${summary.walletBalanceRupees.toStringAsFixed(2)}',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.headerGreenDark),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              "Today's Earnings: ₹${summary.todayEarningsRupees.toStringAsFixed(2)}",
-              style: const TextStyle(fontSize: 13, color: AppColors.textMuted),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.headerGreenDark,
-                foregroundColor: Colors.white,
-                minimumSize: const Size(double.infinity, 42),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-              onPressed: () => Navigator.pop(ctx),
-              child: const Text('Close'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   void _showWhySponsoredDialog(BuildContext context, SponsoredAdBanner ad) {
     showModalBottomSheet(
@@ -897,7 +852,7 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
         // Right Card: Wallet Balance (clean, no overlap with View Wallet >)
         Expanded(
           child: InkWell(
-            onTap: () => _showWalletSheet(context, summary),
+            onTap: () => context.push(AppRoutes.wallet),
             borderRadius: BorderRadius.circular(16),
             child: Container(
               padding: const EdgeInsets.all(12),
@@ -1017,7 +972,7 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
                 iconColor: const Color(0xFF059669),
                 bgColor: const Color(0xFFE8F5E9),
                 label: 'Wallet',
-                onTap: () => _showWalletSheet(context, summary),
+                onTap: () => context.push(AppRoutes.wallet),
               ),
             ),
             const SizedBox(width: 8),

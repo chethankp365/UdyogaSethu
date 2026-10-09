@@ -973,5 +973,22 @@
   "filterCompleted": "పూర్తయింది",
   "filterDisputed": "వివాదంలో ఉంది",
   "filterInProgress": "పురోగతిలో ఉంది",
-  "filterCancelled": "రద్దయింది"
+  "filterCancelled": "రద్దయింది",
+  "walletTitle": "వాలెట్ మరియు ఎస్క్రో",
+  "walletBalanceHeader": "వాలెట్ బ్యాలెన్స్",
+  "escrowProtected": "ఎస్క్రో సురక్షితం",
+  "todaysReleased": "నేటి విడుదల",
+  "pendingEscrow": "పెండింగ్ ఎస్క్రో",
+  "withdrawAction": "విత్‌డ్రా",
+  "scanUpiQr": "UPI QR స్కాన్ చేయండి",
+  "recentTransactions": "ఇటీవలి లావాదేవీలు",
+  "withdrawEarningsTitle": "సంపాదనను విత్‌డ్రా చేసుకోండి",
+  "demoWithdrawNote": "డెమో మోడ్: బ్యాంకింగ్ భాగస్వామి అందుబాటులోకి వచ్చే వరకు అనుకరణ చెల్లింపు లెడ్జర్ డెబిట్.",
+  "transferToUpi": "బదిలీ (UPI VPA / బ్యాంక్)",
+  "confirmPayoutWithdrawal": "విత్‌డ్రాను నిర్ధారించండి",
+  "demoPayoutCompleted": "డెమో చెల్లింపు పూర్తయింది",
+  "demoUpiScanner": "డెమో మోడ్: సిమ్యులేటెడ్ UPI స్కానర్",
+  "demoUpiNote": "నిజమైన డబ్బు బదిలీ చేయబడదు. చెల్లింపు మార్గాలు ఫేజ్ 5.2లో కనెక్ట్ చేయబడతాయి.",
+  "noTransactionsFound": "లావాదేవీలు ఏవీ కనుగొనబడలేదు",
+  "noTransactionsSubtitle": "పూర్తయిన రోజువారీ వేతనాలు మరియు బదిలీలు ఇక్కడ కనిపిస్తాయి."
 }

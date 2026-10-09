@@ -973,5 +973,22 @@
   "filterCompleted": "முடிந்தது",
   "filterDisputed": "சர்ச்சைக்குரியது",
   "filterInProgress": "செயலில் உள்ளது",
-  "filterCancelled": "ரத்து செய்யப்பட்டது"
+  "filterCancelled": "ரத்து செய்யப்பட்டது",
+  "walletTitle": "வாலட் மற்றும் எஸ்க்ரோ",
+  "walletBalanceHeader": "வாலட் இருப்பு",
+  "escrowProtected": "எஸ்க்ரோ பாதுகாப்பானது",
+  "todaysReleased": "இன்றைய வெளியீடு",
+  "pendingEscrow": "நிலுவையில் உள்ள எஸ்க்ரோ",
+  "withdrawAction": "திரும்பப் பெறு",
+  "scanUpiQr": "UPI QR ஐ ஸ்கேன் செய்யவும்",
+  "recentTransactions": "சமீபத்திய பரிவர்த்தனைகள்",
+  "withdrawEarningsTitle": "வருமானத்தை திரும்பப் பெறுக",
+  "demoWithdrawNote": "டெமோ பயன்முறை: வங்கி கூட்டாளர் கிடைக்கும் வரை உருவகப்படுத்தப்பட்ட பேஅவுட் லெட்ஜர் டெபிட்.",
+  "transferToUpi": "பரிமாற்றம் (UPI VPA / வங்கி)",
+  "confirmPayoutWithdrawal": "திரும்பப் பெறுவதை உறுதிப்படுத்தவும்",
+  "demoPayoutCompleted": "டெமோ கட்டணம் முடிந்தது",
+  "demoUpiScanner": "டெமோ பயன்முறை: உருவகப்படுத்தப்பட்ட UPI ஸ்கேனர்",
+  "demoUpiNote": "உண்மையான பணம் மாற்றப்படாது. பேமெண்ட் ரெயில்கள் கட்டம் 5.2 இல் இணையும்.",
+  "noTransactionsFound": "பரிவர்த்தனைகள் எதுவும் இல்லை",
+  "noTransactionsSubtitle": "முடிக்கப்பட்ட தினசரி ஊதியம் மற்றும் இடமாற்றங்கள் இங்கே தோன்றும்."
 }

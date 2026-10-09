@@ -2650,4 +2650,58 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get filterCancelled => 'రద్దయింది';
+
+  @override
+  String get walletTitle => 'వాలెట్ మరియు ఎస్క్రో';
+
+  @override
+  String get walletBalanceHeader => 'వాలెట్ బ్యాలెన్స్';
+
+  @override
+  String get escrowProtected => 'ఎస్క్రో సురక్షితం';
+
+  @override
+  String get todaysReleased => 'నేటి విడుదల';
+
+  @override
+  String get pendingEscrow => 'పెండింగ్ ఎస్క్రో';
+
+  @override
+  String get withdrawAction => 'విత్‌డ్రా';
+
+  @override
+  String get scanUpiQr => 'UPI QR స్కాన్ చేయండి';
+
+  @override
+  String get recentTransactions => 'ఇటీవలి లావాదేవీలు';
+
+  @override
+  String get withdrawEarningsTitle => 'సంపాదనను విత్‌డ్రా చేసుకోండి';
+
+  @override
+  String get demoWithdrawNote =>
+      'డెమో మోడ్: బ్యాంకింగ్ భాగస్వామి అందుబాటులోకి వచ్చే వరకు అనుకరణ చెల్లింపు లెడ్జర్ డెబిట్.';
+
+  @override
+  String get transferToUpi => 'బదిలీ (UPI VPA / బ్యాంక్)';
+
+  @override
+  String get confirmPayoutWithdrawal => 'విత్‌డ్రాను నిర్ధారించండి';
+
+  @override
+  String get demoPayoutCompleted => 'డెమో చెల్లింపు పూర్తయింది';
+
+  @override
+  String get demoUpiScanner => 'డెమో మోడ్: సిమ్యులేటెడ్ UPI స్కానర్';
+
+  @override
+  String get demoUpiNote =>
+      'నిజమైన డబ్బు బదిలీ చేయబడదు. చెల్లింపు మార్గాలు ఫేజ్ 5.2లో కనెక్ట్ చేయబడతాయి.';
+
+  @override
+  String get noTransactionsFound => 'లావాదేవీలు ఏవీ కనుగొనబడలేదు';
+
+  @override
+  String get noTransactionsSubtitle =>
+      'పూర్తయిన రోజువారీ వేతనాలు మరియు బదిలీలు ఇక్కడ కనిపిస్తాయి.';
 }

@@ -4907,6 +4907,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cancelled'**
   String get filterCancelled;
+
+  /// No description provided for @walletTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet & Escrow'**
+  String get walletTitle;
+
+  /// No description provided for @walletBalanceHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'WALLET BALANCE'**
+  String get walletBalanceHeader;
+
+  /// No description provided for @escrowProtected.
+  ///
+  /// In en, this message translates to:
+  /// **'Escrow Protected'**
+  String get escrowProtected;
+
+  /// No description provided for @todaysReleased.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Released'**
+  String get todaysReleased;
+
+  /// No description provided for @pendingEscrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Escrow'**
+  String get pendingEscrow;
+
+  /// No description provided for @withdrawAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw'**
+  String get withdrawAction;
+
+  /// No description provided for @scanUpiQr.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan UPI QR'**
+  String get scanUpiQr;
+
+  /// No description provided for @recentTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'RECENT TRANSACTIONS'**
+  String get recentTransactions;
+
+  /// No description provided for @withdrawEarningsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw Earnings'**
+  String get withdrawEarningsTitle;
+
+  /// No description provided for @demoWithdrawNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo mode: Simulated payout ledger debit until banking partner exists.'**
+  String get demoWithdrawNote;
+
+  /// No description provided for @transferToUpi.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer To (UPI VPA / Bank)'**
+  String get transferToUpi;
+
+  /// No description provided for @confirmPayoutWithdrawal.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Payout Withdrawal'**
+  String get confirmPayoutWithdrawal;
+
+  /// No description provided for @demoPayoutCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo Payout Completed'**
+  String get demoPayoutCompleted;
+
+  /// No description provided for @demoUpiScanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo mode: Simulated UPI Scanner'**
+  String get demoUpiScanner;
+
+  /// No description provided for @demoUpiNote.
+  ///
+  /// In en, this message translates to:
+  /// **'No real money will be transferred. Payment rails connect in Phase 5.2.'**
+  String get demoUpiNote;
+
+  /// No description provided for @noTransactionsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No Transactions Found'**
+  String get noTransactionsFound;
+
+  /// No description provided for @noTransactionsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed daily wages and transfers will appear here.'**
+  String get noTransactionsSubtitle;
 }
 
 class _AppLocalizationsDelegate

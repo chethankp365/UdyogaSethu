@@ -973,5 +973,22 @@
   "filterCompleted": "ಪೂರ್ಣಗೊಂಡಿದೆ",
   "filterDisputed": "ವಿವಾದದಲ್ಲಿದೆ",
   "filterInProgress": "ಪ್ರಗತಿಯಲ್ಲಿದೆ",
-  "filterCancelled": "ರದ್ದುಗೊಂಡಿದೆ"
+  "filterCancelled": "ರದ್ದುಗೊಂಡಿದೆ",
+  "walletTitle": "ವ್ಯಾಲೆಟ್ ಮತ್ತು ಎಸ್ಕ್ರೋ",
+  "walletBalanceHeader": "ವ್ಯಾಲೆಟ್ ಬ್ಯಾಲೆನ್ಸ್",
+  "escrowProtected": "ಎಸ್ಕ್ರೋ ಸುರಕ್ಷಿತ",
+  "todaysReleased": "ಇಂದಿನ ಬಿಡುಗಡೆ",
+  "pendingEscrow": "ಬಾಕಿ ಎಸ್ಕ್ರೋ",
+  "withdrawAction": "ಹಿಂಪಡೆಯಿರಿ",
+  "scanUpiQr": "UPI QR ಸ್ಕ್ಯಾನ್ ಮಾಡಿ",
+  "recentTransactions": "ಇತ್ತೀಚಿನ ವಹಿವಾಟುಗಳು",
+  "withdrawEarningsTitle": "ಗಳಿಕೆಯನ್ನು ಹಿಂಪಡೆಯಿರಿ",
+  "demoWithdrawNote": "ಡೆಮೊ ಮೋಡ್: ಬ್ಯಾಂಕಿಂಗ್ ಪಾಲುದಾರ ಲಭ್ಯವಾಗುವವರೆಗೆ ಸಿಮ್ಯುಲೇಟೆಡ್ ಪಾವತಿ ಲೆಡ್ಜರ್ ಡೆಬಿಟ್.",
+  "transferToUpi": "ವರ್ಗಾವಣೆ (UPI VPA / ಬ್ಯಾಂಕ್)",
+  "confirmPayoutWithdrawal": "ಹಿಂಪಡೆಯುವಿಕೆಯನ್ನು ದೃಢೀಕರಿಸಿ",
+  "demoPayoutCompleted": "ಡೆಮೊ ಪಾವತಿ ಪೂರ್ಣಗೊಂಡಿದೆ",
+  "demoUpiScanner": "ಡೆಮೊ ಮೋಡ್: ಸಿಮ್ಯುಲೇಟೆಡ್ UPI ಸ್ಕ್ಯಾನರ್",
+  "demoUpiNote": "ಯಾವುದೇ ನೈಜ ಹಣ ವರ್ಗಾವಣೆಯಾಗುವುದಿಲ್ಲ. ಪಾವತಿ ಹಳಿಗಳು ಹಂತ 5.2 ರಲ್ಲಿ ಸಂಪರ್ಕಗೊಳ್ಳುತ್ತವೆ.",
+  "noTransactionsFound": "ಯಾವುದೇ ವಹಿವಾಟುಗಳು ಕಂಡುಬಂದಿಲ್ಲ",
+  "noTransactionsSubtitle": "ಪೂರ್ಣಗೊಂಡ ದೈನಂದಿನ ಕೂಲಿ ಮತ್ತು ವರ್ಗಾವಣೆಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ."
 }

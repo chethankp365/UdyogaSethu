@@ -973,5 +973,22 @@
   "filterCompleted": "ସମ୍ପନ୍ନ",
   "filterDisputed": "ବିବାଦିତ",
   "filterInProgress": "ଚାଲୁଅଛି",
-  "filterCancelled": "ବାତିଲ"
+  "filterCancelled": "ବାତିଲ",
+  "walletTitle": "ୱାଲେଟ୍ ଏବଂ ଏସ୍କ୍ରୋ",
+  "walletBalanceHeader": "ୱାଲେଟ୍ ବାଲାନ୍ସ",
+  "escrowProtected": "ଏସ୍କ୍ରୋ ସୁରକ୍ଷିତ",
+  "todaysReleased": "ଆଜିର ମୁକ୍ତ",
+  "pendingEscrow": "ବାକି ଥିବା ଏସ୍କ୍ରୋ",
+  "withdrawAction": "ଉଠାଣ କରନ୍ତୁ",
+  "scanUpiQr": "UPI QR ସ୍କାନ୍ କରନ୍ତୁ",
+  "recentTransactions": "ସାମ୍ପ୍ରତିକ କାରବାର",
+  "withdrawEarningsTitle": "ଆୟ ଉଠାଣ କରନ୍ତୁ",
+  "demoWithdrawNote": "ଡେମୋ ମୋଡ୍: ବ୍ୟାଙ୍କିଂ ପାର୍ଟନର ମିଳିବା ପର୍ଯ୍ୟନ୍ତ ସିମୁଲେଟେଡ୍ ପେଆଉଟ୍ ଲେଜର ଡେବିଟ୍।",
+  "transferToUpi": "ସ୍ଥାନାନ୍ତର (UPI VPA / ବ୍ୟାଙ୍କ)",
+  "confirmPayoutWithdrawal": "ଉଠାଣ ନିଶ୍ଚିତ କରନ୍ତୁ",
+  "demoPayoutCompleted": "ଡେମୋ ପେଆଉଟ୍ ସମ୍ପୂର୍ଣ୍ଣ ହେଲା",
+  "demoUpiScanner": "ଡେମୋ ମୋଡ୍: ସିମୁଲେଟେଡ୍ UPI ସ୍କାନର୍",
+  "demoUpiNote": "କୌଣସି ପ୍ରକୃତ ଟଙ୍କା ସ୍ଥାନାନ୍ତରିତ ହେବ ନାହିଁ। ପର୍ଯ୍ୟାୟ 5.2 ରେ ପେମେଣ୍ଟ ରେଳ ସଂଯୋଗ ହେବ।",
+  "noTransactionsFound": "କୌଣସି କାରବାର ମିଳିଲା ନାହିଁ",
+  "noTransactionsSubtitle": "ସମ୍ପୂର୍ଣ୍ଣ ହୋଇଥିବା ଦୈନିକ ମଜୁରୀ ଏବଂ ସ୍ଥାନାନ୍ତର ଏଠାରେ ଦେଖାଯିବ।"
 }

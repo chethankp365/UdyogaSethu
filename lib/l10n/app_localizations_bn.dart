@@ -2634,4 +2634,58 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get filterCancelled => 'বাতিল';
+
+  @override
+  String get walletTitle => 'ওয়ালেট ও এসক্রো';
+
+  @override
+  String get walletBalanceHeader => 'ওয়ালেট ব্যালেন্স';
+
+  @override
+  String get escrowProtected => 'এসক্রো সুরক্ষিত';
+
+  @override
+  String get todaysReleased => 'আজকের মুক্তিপ্রাপ্ত';
+
+  @override
+  String get pendingEscrow => 'মুলতুবি এসক্রো';
+
+  @override
+  String get withdrawAction => 'উত্তোলন';
+
+  @override
+  String get scanUpiQr => 'UPI QR স্ক্যান করুন';
+
+  @override
+  String get recentTransactions => 'সাম্প্রতিক লেনদেন';
+
+  @override
+  String get withdrawEarningsTitle => 'উপার্জন উত্তোলন করুন';
+
+  @override
+  String get demoWithdrawNote =>
+      'ডেমো মোড: ব্যাঙ্কিং অংশীদার পাওয়া পর্যন্ত সিমুলেটেড পেআউট লেজার ডেবিট।';
+
+  @override
+  String get transferToUpi => 'স্থানান্তর (UPI VPA / ব্যাংক)';
+
+  @override
+  String get confirmPayoutWithdrawal => 'উত্তোলন নিশ্চিত করুন';
+
+  @override
+  String get demoPayoutCompleted => 'ডেমো পেআউট সম্পন্ন হয়েছে';
+
+  @override
+  String get demoUpiScanner => 'ডেমো মোড: সিমুলেটেড UPI স্ক্যানার';
+
+  @override
+  String get demoUpiNote =>
+      'কোন আসল টাকা স্থানান্তরিত হবে না। পর্যায় 5.2-এ পেমেন্ট রেল সংযুক্ত হবে।';
+
+  @override
+  String get noTransactionsFound => 'কোন লেনদেন পাওয়া যায়নি';
+
+  @override
+  String get noTransactionsSubtitle =>
+      'সম্পন্ন দৈনিক মজুরি এবং স্থানান্তর এখানে উপস্থিত হবে।';
 }

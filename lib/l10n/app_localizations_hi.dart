@@ -2629,4 +2629,58 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get filterCancelled => 'रद्द';
+
+  @override
+  String get walletTitle => 'वॉलेट और एस्क्रो';
+
+  @override
+  String get walletBalanceHeader => 'वॉलेट बैलेंस';
+
+  @override
+  String get escrowProtected => 'एस्क्रो सुरक्षित';
+
+  @override
+  String get todaysReleased => 'आज का जारी भुगतान';
+
+  @override
+  String get pendingEscrow => 'लंबित एस्क्रो';
+
+  @override
+  String get withdrawAction => 'निकासी';
+
+  @override
+  String get scanUpiQr => 'UPI QR स्कैन करें';
+
+  @override
+  String get recentTransactions => 'हाल के लेनदेन';
+
+  @override
+  String get withdrawEarningsTitle => 'कमाई निकालें';
+
+  @override
+  String get demoWithdrawNote =>
+      'डेमो मोड: बैंकिंग भागीदार उपलब्ध होने तक सिम्युलेटेड भुगतान लेज़र डेबिट।';
+
+  @override
+  String get transferToUpi => 'स्थानांतरण (UPI VPA / बैंक)';
+
+  @override
+  String get confirmPayoutWithdrawal => 'निकासी की पुष्टि करें';
+
+  @override
+  String get demoPayoutCompleted => 'डेमो भुगतान पूरा हुआ';
+
+  @override
+  String get demoUpiScanner => 'डेमो मोड: सिम्युलेटेड UPI स्कैनर';
+
+  @override
+  String get demoUpiNote =>
+      'कोई वास्तविक धन हस्तांतरित नहीं होगा। चरण 5.2 में भुगतान रेल जुड़ेगी।';
+
+  @override
+  String get noTransactionsFound => 'कोई लेन-देन नहीं मिला';
+
+  @override
+  String get noTransactionsSubtitle =>
+      'पूरा हुआ दैनिक वेतन और स्थानांतरण यहां दिखाई देगा।';
 }

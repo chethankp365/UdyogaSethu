@@ -993,5 +993,22 @@
   "filterCompleted": "Completed",
   "filterDisputed": "Disputed",
   "filterInProgress": "In Progress",
-  "filterCancelled": "Cancelled"
+  "filterCancelled": "Cancelled",
+  "walletTitle": "Wallet & Escrow",
+  "walletBalanceHeader": "WALLET BALANCE",
+  "escrowProtected": "Escrow Protected",
+  "todaysReleased": "Today's Released",
+  "pendingEscrow": "Pending Escrow",
+  "withdrawAction": "Withdraw",
+  "scanUpiQr": "Scan UPI QR",
+  "recentTransactions": "RECENT TRANSACTIONS",
+  "withdrawEarningsTitle": "Withdraw Earnings",
+  "demoWithdrawNote": "Demo mode: Simulated payout ledger debit until banking partner exists.",
+  "transferToUpi": "Transfer To (UPI VPA / Bank)",
+  "confirmPayoutWithdrawal": "Confirm Payout Withdrawal",
+  "demoPayoutCompleted": "Demo Payout Completed",
+  "demoUpiScanner": "Demo mode: Simulated UPI Scanner",
+  "demoUpiNote": "No real money will be transferred. Payment rails connect in Phase 5.2.",
+  "noTransactionsFound": "No Transactions Found",
+  "noTransactionsSubtitle": "Completed daily wages and transfers will appear here."
 }

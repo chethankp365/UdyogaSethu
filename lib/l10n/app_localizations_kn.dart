@@ -2662,4 +2662,58 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get filterCancelled => 'ರದ್ದುಗೊಂಡಿದೆ';
+
+  @override
+  String get walletTitle => 'ವ್ಯಾಲೆಟ್ ಮತ್ತು ಎಸ್ಕ್ರೋ';
+
+  @override
+  String get walletBalanceHeader => 'ವ್ಯಾಲೆಟ್ ಬ್ಯಾಲೆನ್ಸ್';
+
+  @override
+  String get escrowProtected => 'ಎಸ್ಕ್ರೋ ಸುರಕ್ಷಿತ';
+
+  @override
+  String get todaysReleased => 'ಇಂದಿನ ಬಿಡುಗಡೆ';
+
+  @override
+  String get pendingEscrow => 'ಬಾಕಿ ಎಸ್ಕ್ರೋ';
+
+  @override
+  String get withdrawAction => 'ಹಿಂಪಡೆಯಿರಿ';
+
+  @override
+  String get scanUpiQr => 'UPI QR ಸ್ಕ್ಯಾನ್ ಮಾಡಿ';
+
+  @override
+  String get recentTransactions => 'ಇತ್ತೀಚಿನ ವಹಿವಾಟುಗಳು';
+
+  @override
+  String get withdrawEarningsTitle => 'ಗಳಿಕೆಯನ್ನು ಹಿಂಪಡೆಯಿರಿ';
+
+  @override
+  String get demoWithdrawNote =>
+      'ಡೆಮೊ ಮೋಡ್: ಬ್ಯಾಂಕಿಂಗ್ ಪಾಲುದಾರ ಲಭ್ಯವಾಗುವವರೆಗೆ ಸಿಮ್ಯುಲೇಟೆಡ್ ಪಾವತಿ ಲೆಡ್ಜರ್ ಡೆಬಿಟ್.';
+
+  @override
+  String get transferToUpi => 'ವರ್ಗಾವಣೆ (UPI VPA / ಬ್ಯಾಂಕ್)';
+
+  @override
+  String get confirmPayoutWithdrawal => 'ಹಿಂಪಡೆಯುವಿಕೆಯನ್ನು ದೃಢೀಕರಿಸಿ';
+
+  @override
+  String get demoPayoutCompleted => 'ಡೆಮೊ ಪಾವತಿ ಪೂರ್ಣಗೊಂಡಿದೆ';
+
+  @override
+  String get demoUpiScanner => 'ಡೆಮೊ ಮೋಡ್: ಸಿಮ್ಯುಲೇಟೆಡ್ UPI ಸ್ಕ್ಯಾನರ್';
+
+  @override
+  String get demoUpiNote =>
+      'ಯಾವುದೇ ನೈಜ ಹಣ ವರ್ಗಾವಣೆಯಾಗುವುದಿಲ್ಲ. ಪಾವತಿ ಹಳಿಗಳು ಹಂತ 5.2 ರಲ್ಲಿ ಸಂಪರ್ಕಗೊಳ್ಳುತ್ತವೆ.';
+
+  @override
+  String get noTransactionsFound => 'ಯಾವುದೇ ವಹಿವಾಟುಗಳು ಕಂಡುಬಂದಿಲ್ಲ';
+
+  @override
+  String get noTransactionsSubtitle =>
+      'ಪೂರ್ಣಗೊಂಡ ದೈನಂದಿನ ಕೂಲಿ ಮತ್ತು ವರ್ಗಾವಣೆಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.';
 }

@@ -2663,4 +2663,58 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get filterCancelled => 'ரத்து செய்யப்பட்டது';
+
+  @override
+  String get walletTitle => 'வாலட் மற்றும் எஸ்க்ரோ';
+
+  @override
+  String get walletBalanceHeader => 'வாலட் இருப்பு';
+
+  @override
+  String get escrowProtected => 'எஸ்க்ரோ பாதுகாப்பானது';
+
+  @override
+  String get todaysReleased => 'இன்றைய வெளியீடு';
+
+  @override
+  String get pendingEscrow => 'நிலுவையில் உள்ள எஸ்க்ரோ';
+
+  @override
+  String get withdrawAction => 'திரும்பப் பெறு';
+
+  @override
+  String get scanUpiQr => 'UPI QR ஐ ஸ்கேன் செய்யவும்';
+
+  @override
+  String get recentTransactions => 'சமீபத்திய பரிவர்த்தனைகள்';
+
+  @override
+  String get withdrawEarningsTitle => 'வருமானத்தை திரும்பப் பெறுக';
+
+  @override
+  String get demoWithdrawNote =>
+      'டெமோ பயன்முறை: வங்கி கூட்டாளர் கிடைக்கும் வரை உருவகப்படுத்தப்பட்ட பேஅவுட் லெட்ஜர் டெபிட்.';
+
+  @override
+  String get transferToUpi => 'பரிமாற்றம் (UPI VPA / வங்கி)';
+
+  @override
+  String get confirmPayoutWithdrawal => 'திரும்பப் பெறுவதை உறுதிப்படுத்தவும்';
+
+  @override
+  String get demoPayoutCompleted => 'டெமோ கட்டணம் முடிந்தது';
+
+  @override
+  String get demoUpiScanner => 'டெமோ பயன்முறை: உருவகப்படுத்தப்பட்ட UPI ஸ்கேனர்';
+
+  @override
+  String get demoUpiNote =>
+      'உண்மையான பணம் மாற்றப்படாது. பேமெண்ட் ரெயில்கள் கட்டம் 5.2 இல் இணையும்.';
+
+  @override
+  String get noTransactionsFound => 'பரிவர்த்தனைகள் எதுவும் இல்லை';
+
+  @override
+  String get noTransactionsSubtitle =>
+      'முடிக்கப்பட்ட தினசரி ஊதியம் மற்றும் இடமாற்றங்கள் இங்கே தோன்றும்.';
 }

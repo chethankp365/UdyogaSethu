@@ -973,5 +973,22 @@
   "filterCompleted": "সম্পন্ন",
   "filterDisputed": "বিরোধপূর্ণ",
   "filterInProgress": "চলমান",
-  "filterCancelled": "বাতিল"
+  "filterCancelled": "বাতিল",
+  "walletTitle": "ওয়ালেট ও এসক্রো",
+  "walletBalanceHeader": "ওয়ালেট ব্যালেন্স",
+  "escrowProtected": "এসক্রো সুরক্ষিত",
+  "todaysReleased": "আজকের মুক্তিপ্রাপ্ত",
+  "pendingEscrow": "মুলতুবি এসক্রো",
+  "withdrawAction": "উত্তোলন",
+  "scanUpiQr": "UPI QR স্ক্যান করুন",
+  "recentTransactions": "সাম্প্রতিক লেনদেন",
+  "withdrawEarningsTitle": "উপার্জন উত্তোলন করুন",
+  "demoWithdrawNote": "ডেমো মোড: ব্যাঙ্কিং অংশীদার পাওয়া পর্যন্ত সিমুলেটেড পেআউট লেজার ডেবিট।",
+  "transferToUpi": "স্থানান্তর (UPI VPA / ব্যাংক)",
+  "confirmPayoutWithdrawal": "উত্তোলন নিশ্চিত করুন",
+  "demoPayoutCompleted": "ডেমো পেআউট সম্পন্ন হয়েছে",
+  "demoUpiScanner": "ডেমো মোড: সিমুলেটেড UPI স্ক্যানার",
+  "demoUpiNote": "কোন আসল টাকা স্থানান্তরিত হবে না। পর্যায় 5.2-এ পেমেন্ট রেল সংযুক্ত হবে।",
+  "noTransactionsFound": "কোন লেনদেন পাওয়া যায়নি",
+  "noTransactionsSubtitle": "সম্পন্ন দৈনিক মজুরি এবং স্থানান্তর এখানে উপস্থিত হবে।"
 }

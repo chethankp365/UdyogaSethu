@@ -2630,4 +2630,58 @@ class AppLocalizationsMr extends AppLocalizations {
 
   @override
   String get filterCancelled => 'रद्द केले';
+
+  @override
+  String get walletTitle => 'वॉलेट आणि एस्क्रो';
+
+  @override
+  String get walletBalanceHeader => 'वॉलेट शिल्लक';
+
+  @override
+  String get escrowProtected => 'एस्क्रो संरक्षित';
+
+  @override
+  String get todaysReleased => 'आजचे जारी केलेले';
+
+  @override
+  String get pendingEscrow => 'प्रलंबित एस्क्रो';
+
+  @override
+  String get withdrawAction => 'पैसे काढा';
+
+  @override
+  String get scanUpiQr => 'UPI QR स्कॅन करा';
+
+  @override
+  String get recentTransactions => 'अलीकडील व्यवहार';
+
+  @override
+  String get withdrawEarningsTitle => 'कमाई काढा';
+
+  @override
+  String get demoWithdrawNote =>
+      'डेमो मोड: बँकिंग भागीदार उपलब्ध होईपर्यंत सिम्युलेटेड पेआउट लेजर डेबिट.';
+
+  @override
+  String get transferToUpi => 'हस्तांतरण (UPI VPA / बँक)';
+
+  @override
+  String get confirmPayoutWithdrawal => 'पैसे काढण्याची पुष्टी करा';
+
+  @override
+  String get demoPayoutCompleted => 'डेमो पेआउट पूर्ण झाले';
+
+  @override
+  String get demoUpiScanner => 'डेमो मोड: सिम्युलेटेड UPI स्कॅनर';
+
+  @override
+  String get demoUpiNote =>
+      'कोणतेही खरे पैसे हस्तांतरित केले जाणार नाहीत. पेमेंट रेल्स टप्पा 5.2 मध्ये जोडल्या जातील.';
+
+  @override
+  String get noTransactionsFound => 'कोणतेही व्यवहार आढळले नाहीत';
+
+  @override
+  String get noTransactionsSubtitle =>
+      'पूर्ण झालेली दैनंदिन मजुरी आणि हस्तांतरण येथे दिसतील.';
 }

@@ -2635,4 +2635,58 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get filterCancelled => 'Cancelled';
+
+  @override
+  String get walletTitle => 'Wallet & Escrow';
+
+  @override
+  String get walletBalanceHeader => 'WALLET BALANCE';
+
+  @override
+  String get escrowProtected => 'Escrow Protected';
+
+  @override
+  String get todaysReleased => 'Today\'s Released';
+
+  @override
+  String get pendingEscrow => 'Pending Escrow';
+
+  @override
+  String get withdrawAction => 'Withdraw';
+
+  @override
+  String get scanUpiQr => 'Scan UPI QR';
+
+  @override
+  String get recentTransactions => 'RECENT TRANSACTIONS';
+
+  @override
+  String get withdrawEarningsTitle => 'Withdraw Earnings';
+
+  @override
+  String get demoWithdrawNote =>
+      'Demo mode: Simulated payout ledger debit until banking partner exists.';
+
+  @override
+  String get transferToUpi => 'Transfer To (UPI VPA / Bank)';
+
+  @override
+  String get confirmPayoutWithdrawal => 'Confirm Payout Withdrawal';
+
+  @override
+  String get demoPayoutCompleted => 'Demo Payout Completed';
+
+  @override
+  String get demoUpiScanner => 'Demo mode: Simulated UPI Scanner';
+
+  @override
+  String get demoUpiNote =>
+      'No real money will be transferred. Payment rails connect in Phase 5.2.';
+
+  @override
+  String get noTransactionsFound => 'No Transactions Found';
+
+  @override
+  String get noTransactionsSubtitle =>
+      'Completed daily wages and transfers will appear here.';
 }

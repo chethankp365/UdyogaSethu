@@ -973,5 +973,22 @@
   "filterCompleted": "पूर्ण",
   "filterDisputed": "विवादित",
   "filterInProgress": "प्रगति पर",
-  "filterCancelled": "रद्द"
+  "filterCancelled": "रद्द",
+  "walletTitle": "वॉलेट और एस्क्रो",
+  "walletBalanceHeader": "वॉलेट बैलेंस",
+  "escrowProtected": "एस्क्रो सुरक्षित",
+  "todaysReleased": "आज का जारी भुगतान",
+  "pendingEscrow": "लंबित एस्क्रो",
+  "withdrawAction": "निकासी",
+  "scanUpiQr": "UPI QR स्कैन करें",
+  "recentTransactions": "हाल के लेनदेन",
+  "withdrawEarningsTitle": "कमाई निकालें",
+  "demoWithdrawNote": "डेमो मोड: बैंकिंग भागीदार उपलब्ध होने तक सिम्युलेटेड भुगतान लेज़र डेबिट।",
+  "transferToUpi": "स्थानांतरण (UPI VPA / बैंक)",
+  "confirmPayoutWithdrawal": "निकासी की पुष्टि करें",
+  "demoPayoutCompleted": "डेमो भुगतान पूरा हुआ",
+  "demoUpiScanner": "डेमो मोड: सिम्युलेटेड UPI स्कैनर",
+  "demoUpiNote": "कोई वास्तविक धन हस्तांतरित नहीं होगा। चरण 5.2 में भुगतान रेल जुड़ेगी।",
+  "noTransactionsFound": "कोई लेन-देन नहीं मिला",
+  "noTransactionsSubtitle": "पूरा हुआ दैनिक वेतन और स्थानांतरण यहां दिखाई देगा।"
 }

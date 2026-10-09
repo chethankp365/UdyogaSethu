@@ -469,11 +469,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
                 ),
                 Container(width: 1, height: 32, color: Colors.white.withValues(alpha: 0.2)),
                 Expanded(
-                  child: _buildStatColumn(
-                    value: summary.walletBalanceRupees > 0
-                        ? '₹${summary.walletBalanceRupees.toStringAsFixed(0)}'
-                        : '₹0',
-                    label: l10n?.totalEarningsStat ?? 'Total Earnings',
+                  child: InkWell(
+                    onTap: () => context.push(AppRoutes.wallet),
+                    borderRadius: BorderRadius.circular(8),
+                    child: _buildStatColumn(
+                      value: summary.walletBalanceRupees > 0
+                          ? '₹${summary.walletBalanceRupees.toStringAsFixed(0)}'
+                          : '₹0',
+                      label: l10n?.totalEarningsStat ?? 'Total Earnings',
+                    ),
                   ),
                 ),
               ],
@@ -1177,6 +1181,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
             ),
             const Divider(height: 1, indent: 56),
           ],
+          ListTile(
+            leading: _buildCircleIcon(Icons.account_balance_wallet_rounded, const Color(0xFF0D6548)),
+            title: const Text('Wallet & Escrow', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+            subtitle: const Text('Balance, protected escrow, and withdrawals', style: TextStyle(fontSize: 11)),
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => context.push(AppRoutes.wallet),
+          ),
+          const Divider(height: 1, indent: 56),
           ListTile(
             leading: _buildCircleIcon(Icons.history_rounded, Colors.orange),
             title: const Text('Job History & Ratings', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),

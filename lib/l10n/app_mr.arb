@@ -973,5 +973,22 @@
   "filterCompleted": "पूर्ण झाले",
   "filterDisputed": "वादग्रस्त",
   "filterInProgress": "प्रगतीपथावर",
-  "filterCancelled": "रद्द केले"
+  "filterCancelled": "रद्द केले",
+  "walletTitle": "वॉलेट आणि एस्क्रो",
+  "walletBalanceHeader": "वॉलेट शिल्लक",
+  "escrowProtected": "एस्क्रो संरक्षित",
+  "todaysReleased": "आजचे जारी केलेले",
+  "pendingEscrow": "प्रलंबित एस्क्रो",
+  "withdrawAction": "पैसे काढा",
+  "scanUpiQr": "UPI QR स्कॅन करा",
+  "recentTransactions": "अलीकडील व्यवहार",
+  "withdrawEarningsTitle": "कमाई काढा",
+  "demoWithdrawNote": "डेमो मोड: बँकिंग भागीदार उपलब्ध होईपर्यंत सिम्युलेटेड पेआउट लेजर डेबिट.",
+  "transferToUpi": "हस्तांतरण (UPI VPA / बँक)",
+  "confirmPayoutWithdrawal": "पैसे काढण्याची पुष्टी करा",
+  "demoPayoutCompleted": "डेमो पेआउट पूर्ण झाले",
+  "demoUpiScanner": "डेमो मोड: सिम्युलेटेड UPI स्कॅनर",
+  "demoUpiNote": "कोणतेही खरे पैसे हस्तांतरित केले जाणार नाहीत. पेमेंट रेल्स टप्पा 5.2 मध्ये जोडल्या जातील.",
+  "noTransactionsFound": "कोणतेही व्यवहार आढळले नाहीत",
+  "noTransactionsSubtitle": "पूर्ण झालेली दैनंदिन मजुरी आणि हस्तांतरण येथे दिसतील."
 }

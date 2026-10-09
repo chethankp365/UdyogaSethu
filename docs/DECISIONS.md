@@ -22,6 +22,7 @@ This document records key design, architectural, role model, and implementation 
 | D-REF-UI | UI Reference Mapping: Every UI prompt matches `docs/reference/UdyogaSetu_Built_Project.pdf` (Page 2 Phone 2 = Home, Page 3 Phone 4 & Page 4 Phone 2 = Profile, Page 4 Phone 4 = Category Change) | Adopted | Design System & UI Truth |
 | D-HOME-CLEAN | Removal of Safety Onboarding Card from Home: Redundant card moved exclusively to Profile & Safety Hub to match Page 2 Phone 2 | Adopted | Home Screen Cleanliness |
 | D-GOAL-DEFAULT | Today's Goal Default: Standard daily earnings target set to ₹1,500 with interactive modal chip adjuster | Adopted | Daily Goal Gamification |
+| D50 | Wallet Balances from View, Ledger-backed Transactions, DB-enforced Overdraw Guard, Demo Withdrawal & UPI Scanner | Adopted | Wallet & Payout Architecture |
 
 ## Known Issues & Planned Fixes (Pre-P5.1)
 
@@ -171,6 +172,16 @@ This document records key design, architectural, role model, and implementation 
   * **Favourites & Trust Circles**: Heart toggle on profiles persists to `public.favourites`. Enhanced `nearby_workers(...)` SQL procedure ranks repeat, well-rated connections (rating >= 4.0) and saved favourites first in search results without filtering out new or other workers. Built dedicated `FavouritesScreen` with 1-tap rebooking.
   * **1-Tap Rebooking**: One-tap rebooking from history items or favourites pre-fills `BookingDraft` (worker ID, name, category, agreed daily wage) and opens the booking wizard directly.
   * **Dispute Reporting & Escrow Freeze**: Implemented 7 canonical dispute issue types (`no_show`, `incomplete_work`, `poor_quality`, `wrong_product`, `payment_issue`, `unsafe_conduct`, `verification_problem`) with multi-line explanation and photo evidence attachments. `create_assignment_dispute(...)` marks `job_assignments.status = 'disputed'`, logs timeline event `dispute_opened`, and notifies counterparty. Escrow release is frozen on disputed assignments (completed in P5.3).
+
+* **D50 — Wallet Balances from View, Ledger-backed Transactions, DB-enforced Overdraw Guard, Demo Withdrawal & UPI Scanner**:
+  * **Server-Authoritative Balances**: Sourced strictly from the PostgreSQL view `wallet_balances` (available, pending, escrow, reward, total) via RPC `get_wallet_summary()`. Client calculations of balances are strictly prohibited.
+  * **Indian Grouping Formatter**: All currency balances and transactions are formatted using Indian grouping (`₹15,250`, `₹1,00,000`, `₹1,00,00,000`) implemented in `WalletBalance.formatIndianCurrency(paise)` with round-trip safety.
+  * **Itemized Ledger Transactions**: Transactions are queried from `ledger_entries` via `get_wallet_transactions(...)` RPC, with typed categorization (`Daily Wage`, `UPI transfer`, `Farm Produce Direct Sale`, `UPI Auto-Payout`, `Platform Fee`, `Reward Credit`, `Refund`), fee/commission breakdown lines, filter chips (All, Wages, Payouts, Escrow, Direct Sales, Fees), and offset-based pagination.
+  * **Database-Enforced Overdraw Guard**: Withdrawal amount validation is enforced at the database level inside `request_wallet_withdrawal(...)` procedure. Any request where requested amount exceeds `available_paise` throws an `RAISE EXCEPTION 'Insufficient available balance.'` before any ledger mutation occurs. Secondarily, double-entry trigger `wallet_debit` checks ledger invariants against `wallet_balances`.
+  * **Honesty & Simulation Rules**:
+    * **Withdrawal**: Until a live banking payout partner (e.g., RazorpayX / Cashfree) is integrated, all withdrawal actions are explicitly badged as demo mode with a visible amber/warning banner: *"Demo mode — Simulated withdrawal until banking partner integrated"*. A simulated payout row is recorded in `payouts` with reference ID.
+    * **UPI QR Scanner**: Scans and parses `upi://pay` URI scheme (`pa`, `pn`, `am`, `cu`, `tn`). Marked with a prominent amber **Demo mode** disclaimer: *"Demo mode — Scanned details are displayed for verification only. No money is transferred or deducted."*
+  * **Realtime Balance Updates**: `SupabaseWalletRepository` subscribes to Supabase Realtime channel on table `ledger_entries` for the authenticated user, automatically triggering wallet summary recalculation whenever new debits or credits are posted.
 
 
 
