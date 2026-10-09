@@ -3287,4 +3287,68 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get farmerAddEquipment => 'Add Equipment';
+
+  @override
+  String get farmTraceabilityTitle => 'Farm Quality Traceability Verified';
+
+  @override
+  String get traceabilityCropItem => 'Crop Item:';
+
+  @override
+  String get traceabilityFarmerOrigin => 'Farmer Origin:';
+
+  @override
+  String get traceabilityHarvestTime => 'Harvest Time:';
+
+  @override
+  String get traceabilityCertification => 'Organic Certification:';
+
+  @override
+  String get traceabilityFarmingMethod => 'Farming Method:';
+
+  @override
+  String get traceabilityQualityNotes => 'Quality Notes:';
+
+  @override
+  String get closeTraceability => 'Close Traceability Details';
+
+  @override
+  String get produceFiltersTitle => 'Filters & Sorting';
+
+  @override
+  String get clearFilters => 'Reset All';
+
+  @override
+  String get sortBy => 'Sort By';
+
+  @override
+  String get maxDistance => 'Maximum Distance';
+
+  @override
+  String get minFarmerRating => 'Farmer Rating';
+
+  @override
+  String get freshnessFilter => 'Harvest Freshness';
+
+  @override
+  String get fulfillmentOptions => 'Fulfillment & Availability';
+
+  @override
+  String get deliveryAvailableOnly => 'Doorstep Delivery Available';
+
+  @override
+  String get walkInStoreOnly => 'Walk-in Store / Farm Depot Pickup';
+
+  @override
+  String get organicCertifiedOnly => 'Organic Certificate Validated Only';
+
+  @override
+  String get applyFilters => 'Apply Filters';
+
+  @override
+  String get customerProduceMapTitle =>
+      'CUSTOMER REQUIRED FARM PRODUCE, ORGANIC SELLERS & OUTLETS NEAR ME';
+
+  @override
+  String get orderNow => 'Order Now';
 }

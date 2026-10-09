@@ -7,6 +7,8 @@ import { checkRateLimit } from '../_shared/rate_limiter.ts';
 export interface QrIssueRequest {
   purpose?: string;
   assignment_id?: string;
+  listing_id?: string;
+  lot_number?: string;
   health?: boolean;
 }
 
@@ -85,7 +87,7 @@ Deno.serve(async (req: Request) => {
       });
     }
 
-    // Purpose handling: 'profile' (Digital ID) vs 'ticket' (Job Attendance)
+    // Purpose handling: 'profile' (Digital ID) vs 'ticket' (Job Attendance) vs 'produce_lot' (Farm Traceability)
     const purpose = body.purpose ?? 'profile';
 
     if (purpose === 'profile') {
@@ -143,6 +145,8 @@ Deno.serve(async (req: Request) => {
           400
         );
       }
+    } else if (purpose === 'produce_lot' || purpose === 'lot') {
+      // Produce Lot QR: Available for all registered users / farmers
     }
 
     // Rate-limit issuance to 60 requests per minute
@@ -150,7 +154,7 @@ Deno.serve(async (req: Request) => {
     if (rate.errorResponse) return rate.errorResponse;
 
     // Read default expiry from admin_settings using correct schema (key, value)
-    let expirySeconds = purpose === 'ticket' ? 120 : 300; // 2 minutes for ticket, 5 minutes for profile
+    let expirySeconds = purpose === 'ticket' ? 120 : (purpose === 'produce_lot' || purpose === 'lot' ? 2592000 : 300); // 30 days for produce lot
     const settingKey = purpose === 'ticket' ? 'qr_ticket_expiry_seconds' : 'qr_expiry_seconds';
     try {
       const { data: settingData } = await serviceClient
@@ -188,6 +192,8 @@ Deno.serve(async (req: Request) => {
       iat: iat,
       exp: exp,
       ...(body.assignment_id ? { aid: body.assignment_id, assignment_id: body.assignment_id } : {}),
+      ...(body.listing_id ? { listing_id: body.listing_id } : {}),
+      ...(body.lot_number ? { lot_number: body.lot_number, lot_id: body.lot_number } : {}),
     };
 
     const enc = new TextEncoder();

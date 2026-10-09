@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
+import 'package:udyogasethu/features/marketplace/data/produce_marketplace_repository.dart';
+import 'package:udyogasethu/features/marketplace/domain/lot_traceability_data.dart';
+import 'package:udyogasethu/features/marketplace/presentation/widgets/farm_traceability_modal.dart';
 import 'package:udyogasethu/features/trust/data/digital_id_repository.dart';
 import 'package:udyogasethu/features/trust/domain/digital_id_card.dart';
 
@@ -75,8 +78,37 @@ class _ScanVerifyScreenState extends ConsumerState<ScanVerifyScreen> with Widget
     });
 
     try {
+      // 1. Check if token or raw text represents a farm produce lot
+      final payload = LotTraceabilityData.parseTokenPayload(rawCode);
+      if (payload?['pur'] == 'produce_lot' || rawCode.startsWith('LOT-')) {
+        final produceRepo = ref.read(produceMarketplaceRepositoryProvider);
+        final trace = await produceRepo.getLotTraceability(rawCode);
+        if (mounted) {
+          setState(() {
+            _isProcessing = false;
+          });
+          FarmTraceabilityModal.show(context, trace);
+        }
+        return;
+      }
+
+      // 2. Otherwise verify through digitalId repository
       final repo = ref.read(digitalIdRepositoryProvider);
       final result = await repo.verifyQrToken(rawCode);
+
+      // If backend returned produce_lot verification:
+      if (result.purpose == 'produce_lot') {
+        final produceRepo = ref.read(produceMarketplaceRepositoryProvider);
+        final trace = await produceRepo.getLotTraceability(rawCode);
+        if (mounted) {
+          setState(() {
+            _isProcessing = false;
+          });
+          FarmTraceabilityModal.show(context, trace);
+        }
+        return;
+      }
+
       if (mounted) {
         setState(() {
           _verificationResult = result;
@@ -155,6 +187,49 @@ class _ScanVerifyScreenState extends ConsumerState<ScanVerifyScreen> with Widget
         });
       }
     }
+  }
+
+  Future<void> _simulateProduceLotScan() async {
+    // Generates signed lot token for Organic Red Tomatoes
+    final token = LotTraceabilityData.createSignedLotToken(
+      lotNumber: 'LOT-KA-2026-TOM-01',
+      listingId: 'a1111111-3333-4333-8333-111111111111',
+    );
+    await _processQrCode(token);
+  }
+
+  void _showPasteTokenDialog() {
+    final textController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Paste QR Token (Debug Mode)'),
+        content: TextField(
+          controller: textController,
+          maxLines: 3,
+          decoration: const InputDecoration(
+            hintText: 'Paste signed QR token or LOT-XXXX code here...',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final text = textController.text.trim();
+              Navigator.of(ctx).pop();
+              if (text.isNotEmpty) {
+                _processQrCode(text);
+              }
+            },
+            child: const Text('Verify Token'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -553,6 +628,24 @@ class _ScanVerifyScreenState extends ConsumerState<ScanVerifyScreen> with Widget
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                 ),
                 child: const Text('3. Test Tampered Token', style: TextStyle(fontSize: 11)),
+              ),
+              ElevatedButton(
+                onPressed: _isProcessing ? null : _simulateProduceLotScan,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF00875A),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                ),
+                child: const Text('4. Test Scan Produce Lot QR', style: TextStyle(fontSize: 11)),
+              ),
+              ElevatedButton(
+                onPressed: _isProcessing ? null : _showPasteTokenDialog,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF334155),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                ),
+                child: const Text('5. Paste QR Token', style: TextStyle(fontSize: 11)),
               ),
             ],
           ),

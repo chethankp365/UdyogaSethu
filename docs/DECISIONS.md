@@ -272,3 +272,21 @@ This document records key design, architectural, role model, and implementation 
     * Reuses the jobs system with category `Agri Labour` (`b2222222-2222-4222-8222-222222222222`), allowing farmers to post harvest shifts (e.g. "Morning Harvest Shift - 6 AM to 2 PM, ₹450/day") visible directly on the seeker map and feed.
   * **Resource Vendor View**:
     * Created `VendorResourcesScreen` (`/farmer/vendor-resources`) for equipment and seed owners to manage listings, toggle active availability, and update booking lifecycle (`confirmed`, `in_progress`, `completed`, `cancelled`).
+* **D57 — Produce Marketplace, Map View & Lot Traceability**:
+  * **Visual Reference Compliance**:
+    * **Screen 27 (Provider Hub Farm Produce Tab)**: Category chips (`Organic Veggies`, `Fresh Milk & Dairy`, `Fruit Orchards`, `Grains & Pulses`, `Flowers`, `Local Products`), produce listing cards with verified farmer tick, stock quantity, freshness label ("Harvested Today (4h ago)"), distance tag, delivery availability, trust badges, "Order Direct", and "Traceability" button.
+    * **Screen 29 (Customer Required Farm Produce, Organic Sellers & Outlets Near Me Map)**: Interactive OpenStreetMap with price pins (`₹34/kg`, `₹60/Liter`, `₹120/kg`), amber "Walk-in Store" depot badges, search bar, filter bottom sheet, zoom controls, and bottom draggable list with direct "Order Now" action.
+    * **Screen 28 (Farm Quality Traceability Dialog)**: Green inspection circle with magnifying glass, verified origin header, crop item, farmer origin (farm name & village), harvest time, organic certification status pill, farming method, and quality notes.
+  * **Unified "Scan QR" Integration**:
+    * Maintained the single quick action "Scan QR" in Provider Hub and Trust Centre without breaking worker ID scanning (P3.7/P4.8).
+    * `ScanVerifyScreen` inspects the QR payload: if purpose is `produce_lot` or starts with `UDS:LOT:`, it resolves the lot record and displays `FarmTraceabilityModal`.
+  * **Lot QR Security & HMAC-SHA256 Signing**:
+    * Lot QR tokens are cryptographically signed using HMAC-SHA256 (`udyoga_setu_secure_lot_signing_secret_2026`) with 30-day expiration, containing only public lot identifiers (`lot_id`, `listing_id`, `pur: produce_lot`), never exposing raw database IDs or private personal data.
+  * **Produce Listings Invariant**:
+    * Produce listings are shown only if active and in-stock (`status IN ('active', 'low_stock') AND stock_qty > 0`). Inactive or demo farmers are excluded from verified labels.
+  * **Single-Phone Debug Testing Helper**:
+    * Gated strictly under `kDebugMode`: product detail screen provides "Show Lot QR Code for Scanning" dialog showing the live QR code on screen and one-tap "Copy Token String".
+    * `ScanVerifyScreen` debug section provides "Test Scan Produce Lot QR" and "Paste QR Token" dialogs for complete single-phone validation.
+  * **Simulation Honesty**:
+    * Produce ordering triggers an instant order feedback labelled "(Demo mode)". Recorded in DECISIONS.md.
+

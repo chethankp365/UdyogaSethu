@@ -449,6 +449,59 @@
     - Added 12 new localization keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`).
     - 9 automated tests passing in `test/farm_resources_and_labour_test.dart`.
     - Full test suite passing (413/413 tests).
+  - **Phase 6.4 (Produce Marketplace, Near Me Map, & Farm Quality Traceability)**: Completed
+  - **Visual Reference Compliance**:
+    - Built **Produce Marketplace (Screen 27 / Provider Hub Farm Produce Tab)**:
+      - Category filter chips: `All`, `Organic Veggies`, `Fresh Milk & Dairy`, `Fruit Orchards`, `Grains & Pulses`, `Flowers`, `Local Products`.
+      - Product cards with high-res photos, crop name, category emoji, unit price (`₹34/kg`, `₹60/L`), verified farmer name with emerald checkmark, live stock quantity, harvest recency tag (`Harvested today`, `Harvested yesterday`), distance calculation (`2.4 km away` or `Location not set`), delivery tags (`Farm Pickup & Delivery Available`), and trust badges.
+      - Dual actions per card: "Order Direct" opening produce detail / checkout and "Traceability" opening Farm Quality Traceability modal directly.
+      - Seamless List / Map toggle button in the header.
+    - Built **Interactive Map View (Screen 29 / "Farm produce, organic sellers near me")**:
+      - Leaflet / OpenStreetMap view centered on buyer's location.
+      - Price pins (`₹34/kg`, `₹60/Liter`, `₹120/kg`) with farm icons.
+      - Verified "Walk-in Store" markers for farms supporting on-site pickup and direct counter sales.
+      - Zoom controls (+ / -) and GPS recenter button.
+      - Draggable bottom listing sheet with quick search and "Order Now" action buttons.
+    - Built **Product Detail Screen (`/produce/:id`)**:
+      - Image gallery carousel with status pills (`In Stock`, `Organic Certified`).
+      - Verified Farmer card with farm name, location, and verified badges.
+      - Harvest details: harvest date, farming method (`Zero-Pesticide Organic`, `Natural`, `Conventional`), shelf life / batch freshness, and quality notes.
+      - Quantity selector stepper with live total price calculation in Indian currency (₹).
+      - "View Traceability Certificate" link.
+      - Single-Phone Debug Helper (visible strictly in `kDebugMode`): "Show Lot QR Code for Scanning" dialog displaying high-contrast QR code and 1-tap "Copy Token" button for manual clipboard testing.
+    - Built **Farm Quality Traceability Modal (Screen 28 Match)**:
+      - Circular magnifying glass inspection badge matching reference prototype.
+      - Crop title and lot number.
+      - Farmer origin: Farm name, village, and verified status.
+      - Harvest timestamp: Exact date and time recorded at harvest.
+      - Organic Certification status pill: Emerald "VALIDATED ✓" or "IN REVIEW".
+      - Farming method badge and agronomist quality notes.
+      - Cryptographic HMAC-SHA256 signature indicator (`Signed & Verified`).
+  - **Unified "Scan QR" Integration**:
+    - Updated `ScanVerifyScreen` (Screen 10 / Quick Action "Scan QR") to recognize both worker ID verification tokens (`P3.7`/`P4.8`) and produce lot QR tokens.
+    - Automatically parses token structure without breaking worker verification.
+    - Shows `FarmTraceabilityModal` for lot tokens, and worker verification card for worker tokens.
+    - Kept label "Scan QR" across all 8 supported languages.
+    - Debug helper menu in `ScanVerifyScreen` includes options to test produce lot QR scanning and paste tokens from clipboard.
+  - **Lot QR Security Invariants**:
+    - Lot tokens contain HMAC-SHA256 signatures (`udyoga_setu_secure_lot_signing_secret_2026`) with 30-day expiry.
+    - Tokens hold signed random lot ID or lot token string; never expose raw database UUIDs or private personal data.
+    - Public traceability card displays only safe public data: crop, farm name, village, harvest time, farming method, organic certification status, and quality notes.
+  - **Database & Edge Function Migrations**:
+    - Authored migration `0540_produce_marketplace_and_lots.sql` (pushed to remote Supabase via `npx supabase db push`):
+      - Created `produce_lots` table linked to `produce_listings`.
+      - Created RPC `get_nearby_produce_marketplace` with full filters, distance calculation, verified farmer status, and ordering.
+      - Created RPC `get_lot_traceability_by_token` with public security definer policy.
+      - Created RPC `get_or_create_produce_lot`.
+      - Seeded 6 realistic Karnataka produce listings with lots across Mandya, Kolar, Mysuru, and Ramanagara.
+    - Updated Edge Functions:
+      - `qr-issue`: Support for `purpose: 'produce_lot'` generating signed lot tokens.
+      - `qr-verify`: Public lot token verification allowing buyers, seekers, and providers to verify lot authenticity.
+  - **Localization & Analysis**:
+    - Added 21 new keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`) verified via `dart tool/check_l10n.dart` (1,023 keys each, 100% complete) and regenerated via `flutter gen-l10n`.
+    - Added 8 unit and widget tests in `test/produce_marketplace_and_traceability_test.dart` (filter combinations, stock/price sorting, lot QR HMAC signing and verification, unified QR scanner routing).
+    - Responsive layout verified at 360dp width and 1.6x text scale with 0 RenderFlex overflow issues.
+    - Full test suite passing (420+ tests).
     - `flutter analyze`: clean with 0 issues.
 
 ---
@@ -468,7 +521,7 @@
 
 ## Known issues
 - **Profile & Auth Foreign Key Cascade vs D11 Retention**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`. The financial retention refactor will decouple `auth.users` deletion from audit records in an upcoming migration.
-- **Phase 6.4**: Farmer orders, delivery verification and buyer review is the next planned step.
+- **Phase 6.5**: Farmer orders, delivery verification and buyer review is the next planned step.
 - **Phase 9 (Admin Console)**: Admin console is built in a separate web/desktop project and is out of scope for this Flutter app.
 
 

@@ -3321,4 +3321,69 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get farmerAddEquipment => 'இயந்திரத்தைச் சேர்க்கவும்';
+
+  @override
+  String get farmTraceabilityTitle =>
+      'பண்ணைத் தரத்தின் தோற்றம் சரிபார்க்கப்பட்டது';
+
+  @override
+  String get traceabilityCropItem => 'பயிர் விவரம்:';
+
+  @override
+  String get traceabilityFarmerOrigin => 'விவசாயி தோற்றம்:';
+
+  @override
+  String get traceabilityHarvestTime => 'அறுவடை செய்த நேரம்:';
+
+  @override
+  String get traceabilityCertification => 'இயற்கை சான்றிதழ்:';
+
+  @override
+  String get traceabilityFarmingMethod => 'விவசாய முறை:';
+
+  @override
+  String get traceabilityQualityNotes => 'தரக் குறிப்புகள்:';
+
+  @override
+  String get closeTraceability => 'சரிபார்ப்பு விவரங்களை மூடு';
+
+  @override
+  String get produceFiltersTitle => 'வடிகட்டிகள் & வரிசைப்படுத்து';
+
+  @override
+  String get clearFilters => 'அனைத்தையும் மீட்டமை';
+
+  @override
+  String get sortBy => 'வரிசைப்படுத்து';
+
+  @override
+  String get maxDistance => 'அதிகபட்ச தூரம்';
+
+  @override
+  String get minFarmerRating => 'விவசாயி மதிப்பீடு';
+
+  @override
+  String get freshnessFilter => 'அறுவடை புத்துணர்ச்சி';
+
+  @override
+  String get fulfillmentOptions => 'டெலிவரி மற்றும் கிடைக்கும் தன்மை';
+
+  @override
+  String get deliveryAvailableOnly => 'வீட்டுக்கே டெலிவரி கிடைக்கும்';
+
+  @override
+  String get walkInStoreOnly => 'நேரடி கடை / பண்ணை கொள்முதல்';
+
+  @override
+  String get organicCertifiedOnly => 'இயற்கை சான்றளிக்கப்பட்டது மட்டும்';
+
+  @override
+  String get applyFilters => 'வடிகட்டிகளைப் பயன்படுத்து';
+
+  @override
+  String get customerProduceMapTitle =>
+      'அருகிலுள்ள பண்ணை விளைபொருட்கள், இயற்கை விற்பனையாளர்கள் & கடைகள்';
+
+  @override
+  String get orderNow => 'இப்போது ஆர்டர் செய்';
 }

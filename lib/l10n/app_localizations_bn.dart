@@ -3284,4 +3284,68 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get farmerAddEquipment => 'যন্ত্রপাতি যোগ করুন';
+
+  @override
+  String get farmTraceabilityTitle => 'খামারের গুণমান ও উৎস যাচাইকৃত';
+
+  @override
+  String get traceabilityCropItem => 'ফসলের বিবরণ:';
+
+  @override
+  String get traceabilityFarmerOrigin => 'কৃষকের উৎস:';
+
+  @override
+  String get traceabilityHarvestTime => 'ফসল কাটার সময়:';
+
+  @override
+  String get traceabilityCertification => 'জৈব শংসাপত্র:';
+
+  @override
+  String get traceabilityFarmingMethod => 'চাষের পদ্ধতি:';
+
+  @override
+  String get traceabilityQualityNotes => 'গুণমানের নোট:';
+
+  @override
+  String get closeTraceability => 'বিবরণ বন্ধ করুন';
+
+  @override
+  String get produceFiltersTitle => 'ফিল্টার এবং সাজান';
+
+  @override
+  String get clearFilters => 'রিসেট করুন';
+
+  @override
+  String get sortBy => 'সাজানোর ক্রম';
+
+  @override
+  String get maxDistance => 'সর্বোচ্চ দূরত্ব';
+
+  @override
+  String get minFarmerRating => 'কৃষকের রেটিং';
+
+  @override
+  String get freshnessFilter => 'ফসল তোলার সতেজতা';
+
+  @override
+  String get fulfillmentOptions => 'ডেলিভারি এবং প্রাপ্যতা';
+
+  @override
+  String get deliveryAvailableOnly => 'হোম ডেলিভারি উপলব্ধ';
+
+  @override
+  String get walkInStoreOnly => 'খামার ডিপো / স্টোর পিকআপ';
+
+  @override
+  String get organicCertifiedOnly => 'কেবলমাত্র প্রত্যয়িত জৈব';
+
+  @override
+  String get applyFilters => 'ফিল্টার প্রয়োগ করুন';
+
+  @override
+  String get customerProduceMapTitle =>
+      'আমার কাছাকাছি খামারের পণ্য, জৈব বিক্রেতা এবং আউটলেট';
+
+  @override
+  String get orderNow => 'এখনই অর্ডার করুন';
 }

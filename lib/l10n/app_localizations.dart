@@ -6125,6 +6125,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add Equipment'**
   String get farmerAddEquipment;
+
+  /// No description provided for @farmTraceabilityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm Quality Traceability Verified'**
+  String get farmTraceabilityTitle;
+
+  /// No description provided for @traceabilityCropItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Crop Item:'**
+  String get traceabilityCropItem;
+
+  /// No description provided for @traceabilityFarmerOrigin.
+  ///
+  /// In en, this message translates to:
+  /// **'Farmer Origin:'**
+  String get traceabilityFarmerOrigin;
+
+  /// No description provided for @traceabilityHarvestTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Harvest Time:'**
+  String get traceabilityHarvestTime;
+
+  /// No description provided for @traceabilityCertification.
+  ///
+  /// In en, this message translates to:
+  /// **'Organic Certification:'**
+  String get traceabilityCertification;
+
+  /// No description provided for @traceabilityFarmingMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Farming Method:'**
+  String get traceabilityFarmingMethod;
+
+  /// No description provided for @traceabilityQualityNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Quality Notes:'**
+  String get traceabilityQualityNotes;
+
+  /// No description provided for @closeTraceability.
+  ///
+  /// In en, this message translates to:
+  /// **'Close Traceability Details'**
+  String get closeTraceability;
+
+  /// No description provided for @produceFiltersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters & Sorting'**
+  String get produceFiltersTitle;
+
+  /// No description provided for @clearFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset All'**
+  String get clearFilters;
+
+  /// No description provided for @sortBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort By'**
+  String get sortBy;
+
+  /// No description provided for @maxDistance.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum Distance'**
+  String get maxDistance;
+
+  /// No description provided for @minFarmerRating.
+  ///
+  /// In en, this message translates to:
+  /// **'Farmer Rating'**
+  String get minFarmerRating;
+
+  /// No description provided for @freshnessFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Harvest Freshness'**
+  String get freshnessFilter;
+
+  /// No description provided for @fulfillmentOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Fulfillment & Availability'**
+  String get fulfillmentOptions;
+
+  /// No description provided for @deliveryAvailableOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Doorstep Delivery Available'**
+  String get deliveryAvailableOnly;
+
+  /// No description provided for @walkInStoreOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Walk-in Store / Farm Depot Pickup'**
+  String get walkInStoreOnly;
+
+  /// No description provided for @organicCertifiedOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Organic Certificate Validated Only'**
+  String get organicCertifiedOnly;
+
+  /// No description provided for @applyFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Filters'**
+  String get applyFilters;
+
+  /// No description provided for @customerProduceMapTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'CUSTOMER REQUIRED FARM PRODUCE, ORGANIC SELLERS & OUTLETS NEAR ME'**
+  String get customerProduceMapTitle;
+
+  /// No description provided for @orderNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Now'**
+  String get orderNow;
 }
 
 class _AppLocalizationsDelegate

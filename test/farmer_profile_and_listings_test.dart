@@ -228,8 +228,8 @@ void main() {
       await tester.pumpAndSettle();
 
       // Fresh farm produce items in stock should be shown
-      expect(find.text('Organic Hybrid Tomatoes'), findsOneWidget);
-      expect(find.text('Fresh Sona Masuri Rice'), findsOneWidget);
+      expect(find.text('Organic Red Tomatoes'), findsOneWidget);
+      expect(find.text('Pure A2 Gir Cow Milk'), findsOneWidget);
 
       // Sold out potatoes (stock 0) must NOT be shown
       expect(find.text('Fresh Farm Baby Potatoes'), findsNothing);

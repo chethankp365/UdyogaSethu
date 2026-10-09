@@ -3282,4 +3282,68 @@ class AppLocalizationsMr extends AppLocalizations {
 
   @override
   String get farmerAddEquipment => 'उपकरणे जोडा';
+
+  @override
+  String get farmTraceabilityTitle => 'शेती गुणवत्ता मूळ पडताळणी';
+
+  @override
+  String get traceabilityCropItem => 'पीक तपशील:';
+
+  @override
+  String get traceabilityFarmerOrigin => 'शेतकरी मूळ:';
+
+  @override
+  String get traceabilityHarvestTime => 'कापणीची वेळ:';
+
+  @override
+  String get traceabilityCertification => 'सेंद्रिय प्रमाणपत्र:';
+
+  @override
+  String get traceabilityFarmingMethod => 'शेती पद्धती:';
+
+  @override
+  String get traceabilityQualityNotes => 'गुणवत्ता नोंदी:';
+
+  @override
+  String get closeTraceability => 'तपशील बंद करा';
+
+  @override
+  String get produceFiltersTitle => 'फिल्टर आणि क्रमवारी';
+
+  @override
+  String get clearFilters => 'रीसेट करा';
+
+  @override
+  String get sortBy => 'क्रमवारी लावा';
+
+  @override
+  String get maxDistance => 'जास्तीत जास्त अंतर';
+
+  @override
+  String get minFarmerRating => 'शेतकरी रेटिंग';
+
+  @override
+  String get freshnessFilter => 'कापणीची ताजी स्थिती';
+
+  @override
+  String get fulfillmentOptions => 'वितरण आणि उपलब्धता';
+
+  @override
+  String get deliveryAvailableOnly => 'होम डिलिव्हरी उपलब्ध';
+
+  @override
+  String get walkInStoreOnly => 'शेत दुकान / थेट खरेदी केंद्र';
+
+  @override
+  String get organicCertifiedOnly => 'फक्त सेंद्रिय प्रमाणित';
+
+  @override
+  String get applyFilters => 'फिल्टर लागू करा';
+
+  @override
+  String get customerProduceMapTitle =>
+      'माझ्या जवळील शेतमाल, सेंद्रिय विक्रेते आणि दुकाने';
+
+  @override
+  String get orderNow => 'आत्ताच ऑर्डर करा';
 }

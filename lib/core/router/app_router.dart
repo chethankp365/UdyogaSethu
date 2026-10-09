@@ -55,6 +55,8 @@ import 'package:udyogasethu/features/earnings/presentation/savings_goals_screen.
 import 'package:udyogasethu/features/payments/presentation/payment_checkout_screen.dart';
 import 'package:udyogasethu/features/payments/presentation/payment_status_screen.dart';
 import 'package:udyogasethu/features/verification/presentation/face_check_screen.dart';
+import 'package:udyogasethu/features/marketplace/domain/produce_marketplace_item.dart';
+import 'package:udyogasethu/features/marketplace/presentation/produce_detail_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_home_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_wizard_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/post_job_wizard_screen.dart';
@@ -726,6 +728,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final paymentId = state.pathParameters['id'] ?? '';
           return PaymentStatusScreen(paymentId: paymentId);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.produceDetail,
+        builder: (context, state) {
+          final id = state.pathParameters['id'] ?? '';
+          final item = state.extra as ProduceMarketplaceItem?;
+          return ProduceDetailScreen(
+            listingId: id.isNotEmpty ? id : null,
+            item: item,
+          );
         },
       ),
 

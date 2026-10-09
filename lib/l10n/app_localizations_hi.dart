@@ -3178,7 +3178,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get qualityNotes => 'गुणवत्ता विवरण';
 
   @override
-  String get farmingMethod => 'खेती की विधि';
+  String get farmingMethod => 'खेती का तरीका';
 
   @override
   String get deliveryAvailable => 'डिलीवरी उपलब्ध';
@@ -3279,4 +3279,68 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get farmerAddEquipment => 'उपकरण जोड़ें';
+
+  @override
+  String get farmTraceabilityTitle => 'कृषि गुणवत्ता स्रोत सत्यापित';
+
+  @override
+  String get traceabilityCropItem => 'फसल विवरण:';
+
+  @override
+  String get traceabilityFarmerOrigin => 'किसान का स्रोत:';
+
+  @override
+  String get traceabilityHarvestTime => 'कटाई का समय:';
+
+  @override
+  String get traceabilityCertification => 'जैविक प्रमाणीकरण:';
+
+  @override
+  String get traceabilityFarmingMethod => 'खेती का तरीका:';
+
+  @override
+  String get traceabilityQualityNotes => 'गुणवत्ता विवरण:';
+
+  @override
+  String get closeTraceability => 'विवरण बंद करें';
+
+  @override
+  String get produceFiltersTitle => 'फिल्टर और क्रमबद्ध करें';
+
+  @override
+  String get clearFilters => 'रीसेट करें';
+
+  @override
+  String get sortBy => 'क्रमबद्ध करें';
+
+  @override
+  String get maxDistance => 'अधिकतम दूरी';
+
+  @override
+  String get minFarmerRating => 'किसान रेटिंग';
+
+  @override
+  String get freshnessFilter => 'कटाई की ताजगी';
+
+  @override
+  String get fulfillmentOptions => 'वितरण और उपलब्धता';
+
+  @override
+  String get deliveryAvailableOnly => 'होम डिलीवरी उपलब्ध';
+
+  @override
+  String get walkInStoreOnly => 'फार्म डिपो / स्टोर पिकअप';
+
+  @override
+  String get organicCertifiedOnly => 'केवल जैविक प्रमाणित';
+
+  @override
+  String get applyFilters => 'फिल्टर लागू करें';
+
+  @override
+  String get customerProduceMapTitle =>
+      'मेरे पास ताजा कृषि उत्पाद, जैविक विक्रेता और आउटलेट';
+
+  @override
+  String get orderNow => 'अभी ऑर्डर करें';
 }

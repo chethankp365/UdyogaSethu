@@ -3289,4 +3289,68 @@ class AppLocalizationsOr extends AppLocalizations {
 
   @override
   String get farmerAddEquipment => 'ଯନ୍ତ୍ରପାତି ଯୋଡନ୍ତୁ';
+
+  @override
+  String get farmTraceabilityTitle => 'ଫାର୍ମ ଗୁଣବତ୍ତା ଉତ୍ସ ଯାଞ୍ଚ ହୋଇଛି';
+
+  @override
+  String get traceabilityCropItem => 'ଫସଲ ବିବରଣୀ:';
+
+  @override
+  String get traceabilityFarmerOrigin => 'କୃଷକଙ୍କ ଉତ୍ସ:';
+
+  @override
+  String get traceabilityHarvestTime => 'ଅମଳ ସମୟ:';
+
+  @override
+  String get traceabilityCertification => 'ଜୈବିକ ପ୍ରମାଣପତ୍ର:';
+
+  @override
+  String get traceabilityFarmingMethod => 'ଚାଷ ପ୍ରଣାଳୀ:';
+
+  @override
+  String get traceabilityQualityNotes => 'ଗୁଣବତ୍ତା ନୋଟ୍:';
+
+  @override
+  String get closeTraceability => 'ବିବରଣୀ ବନ୍ଦ କରନ୍ତୁ';
+
+  @override
+  String get produceFiltersTitle => 'ଫିଲ୍ଟର୍ ଏବଂ ସଜାନ୍ତୁ';
+
+  @override
+  String get clearFilters => 'ରିସେଟ୍ କରନ୍ତୁ';
+
+  @override
+  String get sortBy => 'ସଜାଇବା କ୍ରମ';
+
+  @override
+  String get maxDistance => 'ସର୍ବାଧିକ ଦୂରତା';
+
+  @override
+  String get minFarmerRating => 'କୃଷକ ରେଟିଂ';
+
+  @override
+  String get freshnessFilter => 'ଅମଳର ସତେଜତା';
+
+  @override
+  String get fulfillmentOptions => 'ବିତରଣ ଏବଂ ଉପଲବ୍ଧତା';
+
+  @override
+  String get deliveryAvailableOnly => 'ହୋମ୍ ଡେଲିଭରୀ ଉପଲବ୍ଧ';
+
+  @override
+  String get walkInStoreOnly => 'ଫାର୍ମ ଡିପୋ / ଷ୍ଟୋର୍ ପିକଅପ୍';
+
+  @override
+  String get organicCertifiedOnly => 'କେବଳ ଜୈବିକ ପ୍ରମାଣିତ';
+
+  @override
+  String get applyFilters => 'ଫିଲ୍ଟର୍ ପ୍ରୟୋଗ କରନ୍ତୁ';
+
+  @override
+  String get customerProduceMapTitle =>
+      'ମୋ ନିକଟରେ ଥିବା କୃଷି ଉତ୍ପାଦ, ଜୈବିକ ବିକ୍ରେତା ଏବଂ ଆଉଟଲେଟ୍';
+
+  @override
+  String get orderNow => 'ବର୍ତ୍ତମାନ ଅର୍ଡର କରନ୍ତୁ';
 }

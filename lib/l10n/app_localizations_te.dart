@@ -3304,4 +3304,68 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get farmerAddEquipment => 'పరికరాలను జోడించండి';
+
+  @override
+  String get farmTraceabilityTitle => 'వ్యవసాయ నాణ్యతా మూలం ధృవీకరించబడింది';
+
+  @override
+  String get traceabilityCropItem => 'పంట వివరాలు:';
+
+  @override
+  String get traceabilityFarmerOrigin => 'రైతు మూలం:';
+
+  @override
+  String get traceabilityHarvestTime => 'కోత సమయం:';
+
+  @override
+  String get traceabilityCertification => 'సేంద్రీయ ధృవీకరణ:';
+
+  @override
+  String get traceabilityFarmingMethod => 'వ్యవసాయ పద్ధతి:';
+
+  @override
+  String get traceabilityQualityNotes => 'నాణ్యత గమనికలు:';
+
+  @override
+  String get closeTraceability => 'వివరాలను మూసివేయండి';
+
+  @override
+  String get produceFiltersTitle => 'ఫిల్టర్లు & క్రమబద్ధీకరణ';
+
+  @override
+  String get clearFilters => 'రీసెట్ చేయండి';
+
+  @override
+  String get sortBy => 'క్రమబద్ధీకరించు';
+
+  @override
+  String get maxDistance => 'గరిష్ట దూరం';
+
+  @override
+  String get minFarmerRating => 'రైతు రేటింగ్';
+
+  @override
+  String get freshnessFilter => 'తాజాదనం';
+
+  @override
+  String get fulfillmentOptions => 'డెలివరీ ఎంపికలు';
+
+  @override
+  String get deliveryAvailableOnly => 'డోర్‌స్టెప్ డెలివరీ అందుబాటులో ఉంది';
+
+  @override
+  String get walkInStoreOnly => 'ఫార్మ్ స్టోర్ / పికప్';
+
+  @override
+  String get organicCertifiedOnly => 'సేంద్రీయ ధృవీకరించబడినవి మాత్రమే';
+
+  @override
+  String get applyFilters => 'ఫిల్టర్లు వర్తింపజేయండి';
+
+  @override
+  String get customerProduceMapTitle =>
+      'నా సమీపంలోని వ్యవసాయ ఉత్పత్తులు, సేంద్రీయ విక్రేతలు & అవుట్‌లెట్లు';
+
+  @override
+  String get orderNow => 'ఇప్పుడే ఆర్డర్ చేయండి';
 }

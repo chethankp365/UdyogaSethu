@@ -3316,4 +3316,68 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get farmerAddEquipment => 'ಉಪಕರಣ ಸೇರಿಸಿ';
+
+  @override
+  String get farmTraceabilityTitle => 'ಕೃಷಿ ಗುಣಮಟ್ಟದ ಮೂಲ ಪರಿಶೀಲಿಸಲಾಗಿದೆ';
+
+  @override
+  String get traceabilityCropItem => 'ಬೆಳೆ ವಿವರ:';
+
+  @override
+  String get traceabilityFarmerOrigin => 'ರೈತರ ಮೂಲ:';
+
+  @override
+  String get traceabilityHarvestTime => 'ಕೊಯ್ಲು ಮಾಡಿದ ಸಮಯ:';
+
+  @override
+  String get traceabilityCertification => 'ಸಾವಯವ ಪ್ರಮಾಣಪತ್ರ:';
+
+  @override
+  String get traceabilityFarmingMethod => 'ಕೃಷಿ ವಿಧಾನ:';
+
+  @override
+  String get traceabilityQualityNotes => 'ಗುಣಮಟ್ಟದ ಟಿಪ್ಪಣಿಗಳು:';
+
+  @override
+  String get closeTraceability => 'ಪರಿಶೀಲನೆ ವಿವರ ಮುಚ್ಚಿ';
+
+  @override
+  String get produceFiltersTitle => 'ಫಿಲ್ಟರ್‌ಗಳು ಮತ್ತು ವಿಂಗಡಣೆ';
+
+  @override
+  String get clearFilters => 'ಮರುಹೊಂದಿಸಿ';
+
+  @override
+  String get sortBy => 'ವಿಂಗಡಿಸಿ';
+
+  @override
+  String get maxDistance => 'ಗರಿಷ್ಠ ದೂರ';
+
+  @override
+  String get minFarmerRating => 'ರೈತರ ರೇಟಿಂಗ್';
+
+  @override
+  String get freshnessFilter => 'ಕೊಯ್ಲಿನ ತಾಜಾತನ';
+
+  @override
+  String get fulfillmentOptions => 'ವಿತರಣಾ ಆಯ್ಕೆಗಳು';
+
+  @override
+  String get deliveryAvailableOnly => 'ಮನೆ ಬಾಗಿಲಿಗೆ ವಿತರಣೆ ಲಭ್ಯ';
+
+  @override
+  String get walkInStoreOnly => 'ನೇರ ಮಳಿಗೆ / ಫಾರ್ಮ್ ಡಿಪೋ';
+
+  @override
+  String get organicCertifiedOnly => 'ಸಾವಯವ ಪ್ರಮಾಣೀಕೃತ ಮಾತ್ರ';
+
+  @override
+  String get applyFilters => 'ಫಿಲ್ಟರ್ ಅನ್ವಯಿಸಿ';
+
+  @override
+  String get customerProduceMapTitle =>
+      'ನನ್ನ ಹತ್ತಿರದ ಕೃಷಿ ಉತ್ಪನ್ನಗಳು, ಸಾವಯವ ಮಾರಾಟಗಾರರು ಮತ್ತು ಮಳಿಗೆಗಳು';
+
+  @override
+  String get orderNow => 'ಈಗಲೇ ಆರ್ಡರ್ ಮಾಡಿ';
 }

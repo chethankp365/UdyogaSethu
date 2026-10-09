@@ -193,13 +193,17 @@ class EdgeApiClient {
     }
   }
 
-  /// Issue signed QR token for digital ID profile verification or assignment ticket check-in.
+  /// Issue signed QR token for digital ID profile verification, assignment ticket check-in, or produce lot traceability.
   Future<Map<String, dynamic>> qrIssue({
     String? assignmentId,
+    String? listingId,
+    String? lotNumber,
     String purpose = 'profile',
   }) async {
     final body = <String, dynamic>{'purpose': purpose};
     if (assignmentId != null) body['assignment_id'] = assignmentId;
+    if (listingId != null) body['listing_id'] = listingId;
+    if (lotNumber != null) body['lot_number'] = lotNumber;
     return _invoke('qr-issue', body: body);
   }
 

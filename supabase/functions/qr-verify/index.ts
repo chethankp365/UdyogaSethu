@@ -86,25 +86,6 @@ Deno.serve(async (req: Request) => {
       });
     }
 
-    // Role Guard per D-VISIBILITY: Verification is restricted to Job Providers and Admins
-    const { data: userRoles, error: rolesErr } = await serviceClient
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', scannerUserId);
-
-    const isProviderOrAdmin = userRoles?.some((r) => r.role === 'provider' || r.role === 'admin');
-    if (rolesErr || !isProviderOrAdmin) {
-      return errorResponse(
-        'unauthorized_role',
-        'Only registered Job Providers and Admins are authorized to scan and verify worker credentials.',
-        403
-      );
-    }
-
-    // Rate-limit scanner to 30 verification checks per minute
-    const rate = await checkRateLimit(scannerUserId, 'qr-verify', 30, 60);
-    if (rate.errorResponse) return rate.errorResponse;
-
     const qrToken = body.qr_token?.trim();
     if (!qrToken) {
       return errorResponse('bad_request', 'Missing required parameter: qr_token.', 400);
@@ -174,11 +155,66 @@ Deno.serve(async (req: Request) => {
     if (nowSec > exp) {
       return errorResponse(
         'token_expired',
-        'This QR code has expired. Please ask the worker to show an updated QR code.',
+        'This QR code has expired. Please ask for an updated QR code.',
         400,
         { expired_at: new Date(exp * 1000).toISOString() }
       );
     }
+
+    // Produce Lot Traceability Verification (Available for all signed-in users)
+    if (purpose === 'produce_lot' || purpose === 'lot') {
+      const lotId = (payload.lot_id ?? payload.lot_number ?? tokenId) as string;
+      const listingId = payload.listing_id as string | undefined;
+
+      const { data: traceList, error: traceErr } = await serviceClient.rpc('get_produce_lot_traceability', {
+        p_lot_number: lotId,
+        p_listing_id: listingId ?? null,
+      });
+
+      if (traceErr || !traceList || traceList.length === 0) {
+        return errorResponse('produce_lot_not_found', 'Produce lot traceability record not found.', 404);
+      }
+
+      const trace = traceList[0];
+      return jsonResponse({
+        valid: true,
+        purpose: 'produce_lot',
+        lot_number: trace.lot_number,
+        crop_item: trace.crop_item,
+        category: trace.category,
+        farmer_origin: trace.farmer_origin,
+        cluster_village: trace.cluster_village,
+        harvest_time: trace.harvest_time,
+        harvest_at: trace.harvest_at,
+        farming_method: trace.farming_method,
+        organic_certification: trace.organic_certification,
+        quality_notes: trace.quality_notes,
+        price_paise: trace.price_paise,
+        unit: trace.unit,
+        rating_avg: trace.rating_avg,
+        images: trace.images,
+        listing_id: trace.listing_id,
+      });
+    }
+
+    // Role Guard per D-VISIBILITY: Worker verification is restricted to Job Providers and Admins
+    const { data: userRoles, error: rolesErr } = await serviceClient
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', scannerUserId);
+
+    const isProviderOrAdmin = userRoles?.some((r) => r.role === 'provider' || r.role === 'admin');
+    if (rolesErr || !isProviderOrAdmin) {
+      return errorResponse(
+        'unauthorized_role',
+        'Only registered Job Providers and Admins are authorized to scan and verify worker credentials.',
+        403
+      );
+    }
+
+    // Rate-limit scanner to 30 verification checks per minute
+    const rate = await checkRateLimit(scannerUserId, 'qr-verify', 30, 60);
+    if (rate.errorResponse) return rate.errorResponse;
 
     // Look up token hash in database for revocation & replay check
     const tokenIdHash = await sha256Hex(tokenId);

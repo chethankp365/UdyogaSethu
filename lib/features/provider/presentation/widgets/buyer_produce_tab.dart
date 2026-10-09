@@ -2,8 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
-import 'package:udyogasethu/features/farmer/data/farmer_listings_repository.dart';
 import 'package:udyogasethu/features/farmer/domain/produce_listing_model.dart';
+import 'package:udyogasethu/features/marketplace/data/produce_marketplace_repository.dart';
+import 'package:udyogasethu/features/marketplace/domain/lot_traceability_data.dart';
+import 'package:udyogasethu/features/marketplace/domain/produce_filters.dart';
+import 'package:udyogasethu/features/marketplace/domain/produce_marketplace_item.dart';
+import 'package:udyogasethu/features/marketplace/presentation/produce_detail_screen.dart';
+import 'package:udyogasethu/features/marketplace/presentation/produce_map_view.dart';
+import 'package:udyogasethu/features/marketplace/presentation/widgets/farm_traceability_modal.dart';
+import 'package:udyogasethu/features/marketplace/presentation/widgets/produce_filter_sheet.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class BuyerProduceTab extends ConsumerStatefulWidget {
@@ -16,15 +23,17 @@ class BuyerProduceTab extends ConsumerStatefulWidget {
 class _BuyerProduceTabState extends ConsumerState<BuyerProduceTab> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
-  String _selectedCategory = 'all';
+  ProduceFilters _filters = const ProduceFilters();
+  bool _isMapView = false;
 
   final List<Map<String, String>> _categories = [
     {'id': 'all', 'label': 'All Produce'},
-    {'id': 'vegetable', 'label': 'Vegetables'},
-    {'id': 'fruit', 'label': 'Fruits'},
-    {'id': 'grain', 'label': 'Grains'},
-    {'id': 'pulse', 'label': 'Pulses'},
-    {'id': 'spices', 'label': 'Spices'},
+    {'id': 'vegetable', 'label': 'Organic Veggies'},
+    {'id': 'dairy', 'label': 'Fresh Milk & Dairy'},
+    {'id': 'fruit', 'label': 'Fruit Orchards'},
+    {'id': 'grain', 'label': 'Grains & Pulses'},
+    {'id': 'flower', 'label': 'Flowers'},
+    {'id': 'other', 'label': 'Local Products'},
   ];
 
   @override
@@ -33,9 +42,10 @@ class _BuyerProduceTabState extends ConsumerState<BuyerProduceTab> {
     super.dispose();
   }
 
-  void _showOrderBottomSheet(BuildContext context, ProduceListing item, AppLocalizations? l10n) {
-    double orderQty = 10.0;
+  void _showOrderBottomSheet(BuildContext context, ProduceMarketplaceItem item, AppLocalizations? l10n) {
+    double orderQty = 5.0;
     if (orderQty > item.stockQty) orderQty = item.stockQty;
+    if (orderQty < 1.0 && item.stockQty > 0) orderQty = item.stockQty;
 
     showModalBottomSheet(
       context: context,
@@ -198,161 +208,297 @@ class _BuyerProduceTabState extends ConsumerState<BuyerProduceTab> {
     );
   }
 
+  void _openTraceabilityModal(ProduceMarketplaceItem item) {
+    final trace = LotTraceabilityData(
+      listingId: item.id,
+      lotNumber: item.lotNumber,
+      cropItem: item.name,
+      category: item.category,
+      farmerOrigin: '${item.farmName} • ${item.clusterVillage}',
+      clusterVillage: item.clusterVillage,
+      harvestTime: item.freshnessLabel,
+      harvestAt: item.harvestAt,
+      farmingMethod: item.farmingMethod,
+      organicCertification: item.organicCertified
+          ? (item.certificationName.isNotEmpty ? item.certificationName : 'Pesticide-Free ✓')
+          : 'Natural IPNM Verified ✓',
+      qualityNotes: item.qualityNotes,
+      pricePaise: item.pricePaise,
+      unit: item.unit,
+      ratingAvg: item.farmerRatingAvg,
+      images: item.images,
+    );
+    FarmTraceabilityModal.show(context, trace);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final produceAsync = ref.watch(buyerProduceListingsProvider(_searchQuery.isNotEmpty ? _searchQuery : null));
+    final produceAsync = ref.watch(
+      produceMarketplaceListingsProvider((
+        filters: _filters,
+        searchQuery: _searchQuery,
+        userLat: 12.9716,
+        userLng: 77.5946,
+      )),
+    );
 
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 1. Search Bar
-          TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              hintText: l10n?.buyerSearchProduceHint ?? 'Search fresh farm produce (e.g. Tomato, Rice)...',
-              prefixIcon: const Icon(Icons.search_rounded, color: Color(0xFF047857)),
-              suffixIcon: _searchQuery.isNotEmpty
-                  ? IconButton(
-                      icon: const Icon(Icons.clear_rounded),
-                      onPressed: () {
-                        setState(() {
-                          _searchController.clear();
-                          _searchQuery = '';
-                        });
-                      },
-                    )
-                  : null,
-              filled: true,
-              fillColor: Colors.white,
-              contentPadding: const EdgeInsets.symmetric(vertical: 12),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: BorderSide(color: Colors.grey.shade300),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: BorderSide(color: Colors.grey.shade300),
-              ),
-            ),
-            onChanged: (val) => setState(() => _searchQuery = val.trim()),
-          ),
-
-          const SizedBox(height: 12),
-
-          // 2. Category Pills
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: _categories.map((c) {
-                final isSelected = _selectedCategory == c['id'];
-                return Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: FilterChip(
-                    label: Text(c['label']!),
-                    selected: isSelected,
-                    selectedColor: const Color(0xFFECFDF5),
-                    checkmarkColor: const Color(0xFF047857),
-                    labelStyle: TextStyle(
-                      color: isSelected ? const Color(0xFF047857) : const Color(0xFF475569),
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                      fontSize: 12,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(
-                        color: isSelected ? const Color(0xFF047857) : const Color(0xFFE2E8F0),
+    return Column(
+      children: [
+        // Top Search, Filter and View Toggle Controls
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  // 1. Search Bar
+                  Expanded(
+                    child: TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: l10n?.buyerSearchProduceHint ?? 'Search fresh farm produce (e.g. Tomato, Rice)...',
+                        hintStyle: const TextStyle(fontSize: 13),
+                        prefixIcon: const Icon(Icons.search_rounded, color: Color(0xFF047857), size: 20),
+                        suffixIcon: _searchQuery.isNotEmpty
+                            ? IconButton(
+                                icon: const Icon(Icons.clear_rounded, size: 18),
+                                onPressed: () {
+                                  setState(() {
+                                    _searchController.clear();
+                                    _searchQuery = '';
+                                  });
+                                },
+                              )
+                            : null,
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(14),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(14),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
                       ),
+                      onChanged: (val) => setState(() => _searchQuery = val.trim()),
                     ),
-                    onSelected: (_) => setState(() => _selectedCategory = c['id']!),
                   ),
-                );
-              }).toList(),
-            ),
-          ),
 
-          const SizedBox(height: 14),
+                  const SizedBox(width: 8),
 
-          // 3. Listings Grid / List
-          Expanded(
-            child: produceAsync.when(
-              loading: () => const Center(
-                child: CircularProgressIndicator(color: Color(0xFF064E3B)),
-              ),
-              error: (err, _) => Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.error_outline_rounded, size: 44, color: Colors.red),
-                    const SizedBox(height: 10),
-                    Text('Failed to load produce: $err'),
-                    const SizedBox(height: 12),
-                    ElevatedButton(
-                      onPressed: () => ref.invalidate(buyerProduceListingsProvider),
-                      child: Text(l10n?.retry ?? 'Retry'),
-                    ),
-                  ],
-                ),
-              ),
-              data: (listings) {
-                // Filter by category if not 'all'
-                final filtered = listings.where((l) {
-                  if (_selectedCategory != 'all' && l.category != _selectedCategory) {
-                    return false;
-                  }
-                  // Strict invariant: only show active/lowStock and stockQty > 0
-                  return l.isActiveAndInStock;
-                }).toList();
-
-                if (filtered.isEmpty) {
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
+                  // 2. Filter Button
+                  InkWell(
+                    onTap: () {
+                      ProduceFilterSheet.show(
+                        context,
+                        currentFilters: _filters,
+                        onApply: (newFilters) {
+                          setState(() => _filters = newFilters);
+                        },
+                      );
+                    },
+                    borderRadius: BorderRadius.circular(14),
+                    child: Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: _filters.hasActiveCustomFilters ? const Color(0xFFECFDF5) : Colors.white,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                          color: _filters.hasActiveCustomFilters ? const Color(0xFF047857) : Colors.grey.shade300,
+                        ),
+                      ),
+                      child: Stack(
+                        alignment: Alignment.center,
                         children: [
-                          const Icon(Icons.grass_outlined, size: 54, color: Colors.grey),
-                          const SizedBox(height: 12),
-                          Text(
-                            l10n?.noProduceAvailable ?? 'No Produce In Stock',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textDark,
+                          Icon(
+                            Icons.tune_rounded,
+                            color: _filters.hasActiveCustomFilters ? const Color(0xFF047857) : const Color(0xFF475569),
+                            size: 20,
+                          ),
+                          if (_filters.hasActiveCustomFilters)
+                            Positioned(
+                              top: 8,
+                              right: 8,
+                              child: Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFF047857),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 6),
-                          const Text(
-                            'Produce listings appear only when active and in stock.',
-                            style: TextStyle(fontSize: 12, color: Colors.grey),
-                            textAlign: TextAlign.center,
-                          ),
                         ],
                       ),
                     ),
-                  );
-                }
+                  ),
 
-                return ListView.separated(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  itemCount: filtered.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 12),
-                  itemBuilder: (ctx, idx) {
-                    final item = filtered[idx];
-                    return _buildBuyerProduceCard(item, l10n);
+                  const SizedBox(width: 8),
+
+                  // 3. List / Map View Toggle
+                  InkWell(
+                    onTap: () => setState(() => _isMapView = !_isMapView),
+                    borderRadius: BorderRadius.circular(14),
+                    child: Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: _isMapView ? const Color(0xFF0D6548) : Colors.white,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                          color: _isMapView ? const Color(0xFF0D6548) : Colors.grey.shade300,
+                        ),
+                      ),
+                      child: Icon(
+                        _isMapView ? Icons.view_list_rounded : Icons.map_rounded,
+                        color: _isMapView ? Colors.white : const Color(0xFF475569),
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              // Horizontal Category Chips Row (Shown in List View)
+              if (!_isMapView) ...[
+                const SizedBox(height: 10),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: _categories.map((c) {
+                      final isSelected = _filters.category == c['id'];
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: FilterChip(
+                          label: Text(c['label']!),
+                          selected: isSelected,
+                          selectedColor: const Color(0xFFECFDF5),
+                          checkmarkColor: const Color(0xFF047857),
+                          labelStyle: TextStyle(
+                            color: isSelected ? const Color(0xFF047857) : const Color(0xFF475569),
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                            fontSize: 12,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            side: BorderSide(
+                              color: isSelected ? const Color(0xFF047857) : const Color(0xFFE2E8F0),
+                            ),
+                          ),
+                          onSelected: (_) {
+                            setState(() {
+                              _filters = _filters.copyWith(category: c['id']!);
+                            });
+                          },
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+
+        // Main View: Map View vs List View
+        Expanded(
+          child: produceAsync.when(
+            loading: () => const Center(
+              child: CircularProgressIndicator(color: Color(0xFF064E3B)),
+            ),
+            error: (err, _) => Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.error_outline_rounded, size: 44, color: Colors.red),
+                  const SizedBox(height: 10),
+                  Text('Failed to load produce: $err'),
+                  const SizedBox(height: 12),
+                  ElevatedButton(
+                    onPressed: () => ref.invalidate(produceMarketplaceListingsProvider),
+                    child: Text(l10n?.retry ?? 'Retry'),
+                  ),
+                ],
+              ),
+            ),
+            data: (listings) {
+              if (_isMapView) {
+                return ProduceMapView(
+                  items: listings,
+                  filters: _filters,
+                  onCategorySelected: (cat) => setState(() => _filters = _filters.copyWith(category: cat)),
+                  onOpenFilters: () {
+                    ProduceFilterSheet.show(
+                      context,
+                      currentFilters: _filters,
+                      onApply: (newFilters) => setState(() => _filters = newFilters),
+                    );
                   },
                 );
-              },
-            ),
+              }
+
+              if (listings.isEmpty) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.grass_outlined, size: 54, color: Colors.grey),
+                        const SizedBox(height: 12),
+                        Text(
+                          l10n?.noProduceAvailable ?? 'No Produce Found',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textDark,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        const Text(
+                          'Try clearing filters or widening your distance.',
+                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 14),
+                        OutlinedButton(
+                          onPressed: () {
+                            setState(() {
+                              _filters = const ProduceFilters();
+                              _searchController.clear();
+                              _searchQuery = '';
+                            });
+                          },
+                          child: const Text('Reset Filters'),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+
+              return ListView.separated(
+                padding: const EdgeInsets.fromLTRB(16, 4, 16, 20),
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: listings.length,
+                separatorBuilder: (_, _) => const SizedBox(height: 12),
+                itemBuilder: (ctx, idx) {
+                  final item = listings[idx];
+                  return _buildBuyerProduceCard(item, l10n);
+                },
+              );
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  Widget _buildBuyerProduceCard(ProduceListing item, AppLocalizations? l10n) {
+  Widget _buildBuyerProduceCard(ProduceMarketplaceItem item, AppLocalizations? l10n) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -370,77 +516,86 @@ class _BuyerProduceTabState extends ConsumerState<BuyerProduceTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Row 1: Sprout Icon, Title, Farming Method Badge
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFECFDF5),
-                  borderRadius: BorderRadius.circular(14),
+          // Row 1: Category Icon, Title, Farming Method Badge
+          InkWell(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => ProduceDetailScreen(item: item),
                 ),
-                child: const Center(
-                  child: Text('🌾', style: TextStyle(fontSize: 24)),
-                ),
-              ),
-
-              const SizedBox(width: 12),
-
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item.name,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF0F172A),
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    Wrap(
-                      spacing: 6,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        Text(
-                          item.farmingMethod,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF047857),
-                          ),
-                        ),
-                        const Text('•', style: TextStyle(color: Color(0xFF94A3B8))),
-                        Text(
-                          item.availabilityMode.label,
-                          style: const TextStyle(fontSize: 11.5, color: Color(0xFF64748B)),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              // Price Chip
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFECFDF5),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  item.formattedPrice,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w900,
-                    color: Color(0xFF064E3B),
+              );
+            },
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFECFDF5),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Center(
+                    child: Icon(item.categoryIcon, color: const Color(0xFF00875A), size: 26),
                   ),
                 ),
-              ),
-            ],
+
+                const SizedBox(width: 12),
+
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item.name,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF0F172A),
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Wrap(
+                        spacing: 6,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          Text(
+                            item.farmingMethod,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF047857),
+                            ),
+                          ),
+                          const Text('•', style: TextStyle(color: Color(0xFF94A3B8))),
+                          Text(
+                            item.freshnessLabel,
+                            style: const TextStyle(fontSize: 11.5, color: Color(0xFF64748B)),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Price Chip
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFECFDF5),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    item.formattedPrice,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w900,
+                      color: Color(0xFF064E3B),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
 
           const SizedBox(height: 12),
@@ -458,15 +613,33 @@ class _BuyerProduceTabState extends ConsumerState<BuyerProduceTab> {
                 const Icon(Icons.person_pin_rounded, color: Color(0xFF047857), size: 18),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: Text(
-                    '${item.farmerName} • ${item.farmName} (${item.clusterVillage})',
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF334155)),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Flexible(
+                            child: Text(
+                              '${item.farmerName} • ${item.farmName}',
+                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF334155)),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          if (item.isVerifiedFarmer) ...[
+                            const SizedBox(width: 4),
+                            const Text('✓', style: TextStyle(color: Color(0xFF047857), fontWeight: FontWeight.bold, fontSize: 13)),
+                          ],
+                        ],
+                      ),
+                      const SizedBox(height: 1),
+                      Text(
+                        '★ ${item.farmerRatingAvg.toStringAsFixed(1)} • ${item.formattedDistance}',
+                        style: const TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+                      ),
+                    ],
                   ),
                 ),
-                if (item.isVerifiedFarmer)
-                  const Text('✓', style: TextStyle(color: Color(0xFF047857), fontWeight: FontWeight.bold, fontSize: 13)),
               ],
             ),
           ),
@@ -503,16 +676,28 @@ class _BuyerProduceTabState extends ConsumerState<BuyerProduceTab> {
                 ],
               ),
 
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF064E3B),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                ),
-                icon: const Icon(Icons.shopping_bag_outlined, size: 16),
-                label: Text(l10n?.orderDirect ?? 'Order Direct', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                onPressed: () => _showOrderBottomSheet(context, item, l10n),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Traceability button
+                  IconButton(
+                    icon: const Icon(Icons.verified_outlined, size: 20, color: Color(0xFF00875A)),
+                    tooltip: 'Traceability',
+                    onPressed: () => _openTraceabilityModal(item),
+                  ),
+
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF064E3B),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    ),
+                    icon: const Icon(Icons.shopping_bag_outlined, size: 16),
+                    label: Text(l10n?.orderDirect ?? 'Order Direct', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                    onPressed: () => _showOrderBottomSheet(context, item, l10n),
+                  ),
+                ],
               ),
             ],
           ),
