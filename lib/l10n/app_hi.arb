@@ -944,5 +944,34 @@
         "type": "int"
       }
     }
-  }
+  },
+  "jobHistoryTitle": "कार्य इतिहास और रेटिंग",
+  "jobHistoryHeader": "कार्य इतिहास",
+  "favouritesTitle": "पसंदीदा और विश्वास मंडल",
+  "rateJobTitle": "कार्य को रेट और समीक्षा करें",
+  "quickTagsLabel": "त्वरित टैग",
+  "reviewCommentLabel": "प्रतिक्रिया और समीक्षा (वैकल्पिक)",
+  "reviewCommentHint": "समुदाय की सहायता के लिए अपना अनुभव साझा करें...",
+  "submitReviewBtn": "सत्यापित समीक्षा सबमिट करें",
+  "reportDisputeTitle": "कार्य विवाद की रिपोर्ट करें",
+  "disputeFreezeNotice": "विवाद दर्ज करने से एस्क्रो भुगतान रुक जाता है और ट्रस्ट टीम को समीक्षा के लिए भेजा जाता है।",
+  "disputeIssueTypeLabel": "समस्या का प्रकार चुनें",
+  "disputeDetailsLabel": "समस्या का विवरण और समय",
+  "disputeDetailsHint": "कृपया स्पष्ट रूप से बताएं कि क्या हुआ...",
+  "disputeEvidenceLabel": "सबूत तस्वीरें (वैकल्पिक)",
+  "submitDisputeBtn": "औपचारिक विवाद दर्ज करें",
+  "disputeTypeNoShow": "नहीं पहुंचे / अनुपस्थिति",
+  "disputeTypeIncompleteWork": "अधूरा काम / जल्दी चले गए",
+  "disputeTypePoorQuality": "खराब गुणवत्ता का काम",
+  "disputeTypeWrongProduct": "गलत उत्पाद / गुणवत्ता बेमेल",
+  "disputeTypePaymentIssue": "भुगतान समस्या / एस्क्रो विवाद",
+  "disputeTypeUnsafeConduct": "असुरक्षित आचरण / दुर्व्यवहार",
+  "disputeTypeVerificationProblem": "सत्यापन / पहचान बेमेल",
+  "disputeTrackingTitle": "विवाद स्थिति ट्रैकिंग",
+  "settingsSectionHeader": "सेटिंग्स",
+  "filterAll": "सभी",
+  "filterCompleted": "पूर्ण",
+  "filterDisputed": "विवादित",
+  "filterInProgress": "प्रगति पर",
+  "filterCancelled": "रद्द"
 }

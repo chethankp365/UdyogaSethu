@@ -944,5 +944,34 @@
         "type": "int"
       }
     }
-  }
+  },
+  "jobHistoryTitle": "పని చరిత్ర & రేటింగ్‌లు",
+  "jobHistoryHeader": "పని చరిత్ర",
+  "favouritesTitle": "ఇష్టమైనవి & విశ్వాస వృత్తాలు",
+  "rateJobTitle": "పనిని రేట్ చేసి సమీక్షించండి",
+  "quickTagsLabel": "త్వరిత ట్యాగ్‌లు",
+  "reviewCommentLabel": "అభిప్రాయం & సమీక్ష (ఐచ్ఛికం)",
+  "reviewCommentHint": "సమాజానికి సహాయపడటానికి మీ అనుభవాన్ని పంచుకోండి...",
+  "submitReviewBtn": "ధృవీకరించిన సమీక్షను సమర్పించండి",
+  "reportDisputeTitle": "పని వివాదాన్ని నివేదించండి",
+  "disputeFreezeNotice": "వివాదం నమోదు చేయడం వల్ల ఎస్క్రో విడుదల నిలిపివేయబడుతుంది మరియు సమీక్షకు పంపబడుతుంది.",
+  "disputeIssueTypeLabel": "సమస్య రకాన్ని ఎంచుకోండి",
+  "disputeDetailsLabel": "సమస్య వివరాలు & సమయక్రమం",
+  "disputeDetailsHint": "ఏమి జరిగిందో స్పష్టంగా వివరించండి...",
+  "disputeEvidenceLabel": "సాక్ష్యపు ఫోటోలు (ఐచ్ఛికం)",
+  "submitDisputeBtn": "లాంఛనప్రాయ వివాదాన్ని నమోదు చేయండి",
+  "disputeTypeNoShow": "రాలేదు / హాజరుకాలేదు",
+  "disputeTypeIncompleteWork": "అసంపూర్ణ పని / త్వరగా వెళ్లిపోయారు",
+  "disputeTypePoorQuality": "నాణ్యత లేని పని",
+  "disputeTypeWrongProduct": "తప్పు ఉత్పత్తి / నాణ్యత తేడా",
+  "disputeTypePaymentIssue": "చెల్లింపు సమస్య / ఎస్క్రో వివాదం",
+  "disputeTypeUnsafeConduct": "అసురక్షిత ప్రవర్తన",
+  "disputeTypeVerificationProblem": "ధృవీకరణ / గుర్తింపు సరిపోలలేదు",
+  "disputeTrackingTitle": "వివాద స్థితి ట్రాకింగ్",
+  "settingsSectionHeader": "సెట్టింగ్‌లు",
+  "filterAll": "అన్నీ",
+  "filterCompleted": "పూర్తయింది",
+  "filterDisputed": "వివాదంలో ఉంది",
+  "filterInProgress": "పురోగతిలో ఉంది",
+  "filterCancelled": "రద్దయింది"
 }

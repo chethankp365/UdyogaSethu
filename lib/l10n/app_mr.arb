@@ -944,5 +944,34 @@
         "type": "int"
       }
     }
-  }
+  },
+  "jobHistoryTitle": "कामाचा इतिहास आणि रेटिंग्ज",
+  "jobHistoryHeader": "कामाचा इतिहास",
+  "favouritesTitle": "आवडते आणि विश्वास मंडळ",
+  "rateJobTitle": "कामाला रेट आणि पुनरावलोकन करा",
+  "quickTagsLabel": "द्रुत टॅग्ज",
+  "reviewCommentLabel": "अभिप्राय आणि पुनरावलोकन (पर्यायी)",
+  "reviewCommentHint": "समुदायाला मदत करण्यासाठी आपला अनुभव शेअर करा...",
+  "submitReviewBtn": "सत्यापित पुनरावलोकन सबमिट करा",
+  "reportDisputeTitle": "कामाच्या वादाचा अहवाल द्या",
+  "disputeFreezeNotice": "वाद दाखल केल्यास एस्क्रो पैसे देणे थांबवले जाते आणि पुनरावलोकनासाठी पाठवले जाते.",
+  "disputeIssueTypeLabel": "समस्येचा प्रकार निवडा",
+  "disputeDetailsLabel": "समस्येचा तपशील आणि वेळ",
+  "disputeDetailsHint": "काय घडले ते स्पष्टपणे सांगा...",
+  "disputeEvidenceLabel": "पुराव्याचे फोटो (पर्यायी)",
+  "submitDisputeBtn": "औपचारिक वाद दाखल करा",
+  "disputeTypeNoShow": "हजर राहिले नाहीत / गैरहजर",
+  "disputeTypeIncompleteWork": "अपूर्ण काम / लवकर निघून गेले",
+  "disputeTypePoorQuality": "निकृष्ट दर्जाचे काम",
+  "disputeTypeWrongProduct": "चुकीचे उत्पादन / गुणवत्ता जुळत नाही",
+  "disputeTypePaymentIssue": "पेमेंट समस्या / एस्क्रो वाद",
+  "disputeTypeUnsafeConduct": "असुरक्षित वर्तन",
+  "disputeTypeVerificationProblem": "पडताळणी / ओळख जुळत नाही",
+  "disputeTrackingTitle": "वाद स्थिती ट्रॅकिंग",
+  "settingsSectionHeader": "सेटिंग्ज",
+  "filterAll": "सर्व",
+  "filterCompleted": "पूर्ण झाले",
+  "filterDisputed": "वादग्रस्त",
+  "filterInProgress": "प्रगतीपथावर",
+  "filterCancelled": "रद्द केले"
 }

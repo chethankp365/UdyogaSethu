@@ -4733,6 +4733,180 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reported +{minutes} minutes ETA. Employer notified.'**
   String runningLateSuccessMsg(int minutes);
+
+  /// No description provided for @jobHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Job History & Ratings'**
+  String get jobHistoryTitle;
+
+  /// No description provided for @jobHistoryHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Job History'**
+  String get jobHistoryHeader;
+
+  /// No description provided for @favouritesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Favourites & Trust Circles'**
+  String get favouritesTitle;
+
+  /// No description provided for @rateJobTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate & Review Job'**
+  String get rateJobTitle;
+
+  /// No description provided for @quickTagsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Tags'**
+  String get quickTagsLabel;
+
+  /// No description provided for @reviewCommentLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback & Review (Optional)'**
+  String get reviewCommentLabel;
+
+  /// No description provided for @reviewCommentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your experience to help the community...'**
+  String get reviewCommentHint;
+
+  /// No description provided for @submitReviewBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Verified Review'**
+  String get submitReviewBtn;
+
+  /// No description provided for @reportDisputeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Report Job Dispute'**
+  String get reportDisputeTitle;
+
+  /// No description provided for @disputeFreezeNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Filing a dispute pauses automatic escrow release and assigns the case to UdyogaSethu Trust & Safety for review.'**
+  String get disputeFreezeNotice;
+
+  /// No description provided for @disputeIssueTypeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Issue Type'**
+  String get disputeIssueTypeLabel;
+
+  /// No description provided for @disputeDetailsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Issue Details & Timeline'**
+  String get disputeDetailsLabel;
+
+  /// No description provided for @disputeDetailsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Please explain what happened clearly, including timestamps and any verbal agreements...'**
+  String get disputeDetailsHint;
+
+  /// No description provided for @disputeEvidenceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Evidence Photos (Optional)'**
+  String get disputeEvidenceLabel;
+
+  /// No description provided for @submitDisputeBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Raise Formal Dispute'**
+  String get submitDisputeBtn;
+
+  /// No description provided for @disputeTypeNoShow.
+  ///
+  /// In en, this message translates to:
+  /// **'No-Show / Unreported Absence'**
+  String get disputeTypeNoShow;
+
+  /// No description provided for @disputeTypeIncompleteWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Incomplete Work / Left Early'**
+  String get disputeTypeIncompleteWork;
+
+  /// No description provided for @disputeTypePoorQuality.
+  ///
+  /// In en, this message translates to:
+  /// **'Poor Quality / Substandard Work'**
+  String get disputeTypePoorQuality;
+
+  /// No description provided for @disputeTypeWrongProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong Product / Quality Mismatch'**
+  String get disputeTypeWrongProduct;
+
+  /// No description provided for @disputeTypePaymentIssue.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Issue / Escrow Dispute'**
+  String get disputeTypePaymentIssue;
+
+  /// No description provided for @disputeTypeUnsafeConduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsafe Conduct / Behaviour Violation'**
+  String get disputeTypeUnsafeConduct;
+
+  /// No description provided for @disputeTypeVerificationProblem.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification / Identity Mismatch'**
+  String get disputeTypeVerificationProblem;
+
+  /// No description provided for @disputeTrackingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Dispute Status Tracking'**
+  String get disputeTrackingTitle;
+
+  /// No description provided for @settingsSectionHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsSectionHeader;
+
+  /// No description provided for @filterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get filterAll;
+
+  /// No description provided for @filterCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get filterCompleted;
+
+  /// No description provided for @filterDisputed.
+  ///
+  /// In en, this message translates to:
+  /// **'Disputed'**
+  String get filterDisputed;
+
+  /// No description provided for @filterInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get filterInProgress;
+
+  /// No description provided for @filterCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get filterCancelled;
 }
 
 class _AppLocalizationsDelegate

@@ -2541,4 +2541,93 @@ class AppLocalizationsMr extends AppLocalizations {
   String runningLateSuccessMsg(int minutes) {
     return '+$minutes मिनिटे उशीर कळवला. मालकाला सूचना दिली.';
   }
+
+  @override
+  String get jobHistoryTitle => 'कामाचा इतिहास आणि रेटिंग्ज';
+
+  @override
+  String get jobHistoryHeader => 'कामाचा इतिहास';
+
+  @override
+  String get favouritesTitle => 'आवडते आणि विश्वास मंडळ';
+
+  @override
+  String get rateJobTitle => 'कामाला रेट आणि पुनरावलोकन करा';
+
+  @override
+  String get quickTagsLabel => 'द्रुत टॅग्ज';
+
+  @override
+  String get reviewCommentLabel => 'अभिप्राय आणि पुनरावलोकन (पर्यायी)';
+
+  @override
+  String get reviewCommentHint =>
+      'समुदायाला मदत करण्यासाठी आपला अनुभव शेअर करा...';
+
+  @override
+  String get submitReviewBtn => 'सत्यापित पुनरावलोकन सबमिट करा';
+
+  @override
+  String get reportDisputeTitle => 'कामाच्या वादाचा अहवाल द्या';
+
+  @override
+  String get disputeFreezeNotice =>
+      'वाद दाखल केल्यास एस्क्रो पैसे देणे थांबवले जाते आणि पुनरावलोकनासाठी पाठवले जाते.';
+
+  @override
+  String get disputeIssueTypeLabel => 'समस्येचा प्रकार निवडा';
+
+  @override
+  String get disputeDetailsLabel => 'समस्येचा तपशील आणि वेळ';
+
+  @override
+  String get disputeDetailsHint => 'काय घडले ते स्पष्टपणे सांगा...';
+
+  @override
+  String get disputeEvidenceLabel => 'पुराव्याचे फोटो (पर्यायी)';
+
+  @override
+  String get submitDisputeBtn => 'औपचारिक वाद दाखल करा';
+
+  @override
+  String get disputeTypeNoShow => 'हजर राहिले नाहीत / गैरहजर';
+
+  @override
+  String get disputeTypeIncompleteWork => 'अपूर्ण काम / लवकर निघून गेले';
+
+  @override
+  String get disputeTypePoorQuality => 'निकृष्ट दर्जाचे काम';
+
+  @override
+  String get disputeTypeWrongProduct => 'चुकीचे उत्पादन / गुणवत्ता जुळत नाही';
+
+  @override
+  String get disputeTypePaymentIssue => 'पेमेंट समस्या / एस्क्रो वाद';
+
+  @override
+  String get disputeTypeUnsafeConduct => 'असुरक्षित वर्तन';
+
+  @override
+  String get disputeTypeVerificationProblem => 'पडताळणी / ओळख जुळत नाही';
+
+  @override
+  String get disputeTrackingTitle => 'वाद स्थिती ट्रॅकिंग';
+
+  @override
+  String get settingsSectionHeader => 'सेटिंग्ज';
+
+  @override
+  String get filterAll => 'सर्व';
+
+  @override
+  String get filterCompleted => 'पूर्ण झाले';
+
+  @override
+  String get filterDisputed => 'वादग्रस्त';
+
+  @override
+  String get filterInProgress => 'प्रगतीपथावर';
+
+  @override
+  String get filterCancelled => 'रद्द केले';
 }

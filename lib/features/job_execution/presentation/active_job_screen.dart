@@ -19,6 +19,8 @@ import 'package:udyogasethu/features/job_execution/presentation/mid_job_dialog.d
 import 'package:udyogasethu/features/job_execution/presentation/widgets/job_live_timer_card.dart';
 import 'package:udyogasethu/features/job_execution/presentation/widgets/running_late_dialog.dart';
 import 'package:udyogasethu/features/job_execution/presentation/widgets/worker_not_arrived_sheet.dart';
+import 'package:udyogasethu/features/trust/presentation/widgets/raise_dispute_dialog.dart';
+import 'package:udyogasethu/features/trust/presentation/widgets/rate_job_dialog.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class ActiveJobScreen extends ConsumerStatefulWidget {
@@ -626,6 +628,37 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
             onPressed: _isActionInProgress ? null : onPrimaryPressed,
           ),
         ),
+        // Rate Job Button on Completion
+        if (detail.stage == AssignmentStage.completed || detail.stage == AssignmentStage.paymentReleased) ...[
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            height: 48,
+            child: OutlinedButton.icon(
+              style: OutlinedButton.styleFrom(
+                foregroundColor: const Color(0xFFD97706),
+                side: const BorderSide(color: Color(0xFFFCD34D), width: 1.5),
+                backgroundColor: const Color(0xFFFFFBEB),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              icon: const Icon(Icons.star_rounded, size: 20),
+              label: const Text(
+                'Rate & Review This Job',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              ),
+              onPressed: () {
+                RateJobDialog.show(
+                  context,
+                  assignmentId: detail.assignmentId,
+                  jobTitle: detail.jobTitle,
+                  counterpartyName: isProvider ? detail.workerName : detail.providerName,
+                  onReviewSubmitted: () => ref.invalidate(activeJobDetailProvider(widget.assignmentId)),
+                );
+              },
+            ),
+          ),
+        ],
+
         const SizedBox(height: 10),
         Row(
           children: [
@@ -638,8 +671,20 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 12),
                 ),
                 icon: const Icon(Icons.warning_amber_rounded, size: 18),
-                label: Text(l10n?.actionDispute ?? 'Raise Dispute'),
-                onPressed: () => _handleTransition(detail, 'disputed'),
+                label: Text(detail.stage == AssignmentStage.disputeRaised
+                    ? 'Dispute Active'
+                    : (l10n?.actionDispute ?? 'Raise Dispute')),
+                onPressed: detail.stage == AssignmentStage.disputeRaised
+                    ? null
+                    : () {
+                        RaiseDisputeDialog.show(
+                          context,
+                          assignmentId: detail.assignmentId,
+                          jobTitle: detail.jobTitle,
+                          counterpartyName: isProvider ? detail.workerName : detail.providerName,
+                          onDisputeRaised: () => ref.invalidate(activeJobDetailProvider(widget.assignmentId)),
+                        );
+                      },
               ),
             ),
             const SizedBox(width: 10),

@@ -964,5 +964,34 @@
         "type": "int"
       }
     }
-  }
+  },
+  "jobHistoryTitle": "Job History & Ratings",
+  "jobHistoryHeader": "Job History",
+  "favouritesTitle": "Favourites & Trust Circles",
+  "rateJobTitle": "Rate & Review Job",
+  "quickTagsLabel": "Quick Tags",
+  "reviewCommentLabel": "Feedback & Review (Optional)",
+  "reviewCommentHint": "Share your experience to help the community...",
+  "submitReviewBtn": "Submit Verified Review",
+  "reportDisputeTitle": "Report Job Dispute",
+  "disputeFreezeNotice": "Filing a dispute pauses automatic escrow release and assigns the case to UdyogaSethu Trust & Safety for review.",
+  "disputeIssueTypeLabel": "Select Issue Type",
+  "disputeDetailsLabel": "Issue Details & Timeline",
+  "disputeDetailsHint": "Please explain what happened clearly, including timestamps and any verbal agreements...",
+  "disputeEvidenceLabel": "Evidence Photos (Optional)",
+  "submitDisputeBtn": "Raise Formal Dispute",
+  "disputeTypeNoShow": "No-Show / Unreported Absence",
+  "disputeTypeIncompleteWork": "Incomplete Work / Left Early",
+  "disputeTypePoorQuality": "Poor Quality / Substandard Work",
+  "disputeTypeWrongProduct": "Wrong Product / Quality Mismatch",
+  "disputeTypePaymentIssue": "Payment Issue / Escrow Dispute",
+  "disputeTypeUnsafeConduct": "Unsafe Conduct / Behaviour Violation",
+  "disputeTypeVerificationProblem": "Verification / Identity Mismatch",
+  "disputeTrackingTitle": "Dispute Status Tracking",
+  "settingsSectionHeader": "Settings",
+  "filterAll": "All",
+  "filterCompleted": "Completed",
+  "filterDisputed": "Disputed",
+  "filterInProgress": "In Progress",
+  "filterCancelled": "Cancelled"
 }

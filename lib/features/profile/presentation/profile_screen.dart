@@ -1010,21 +1010,43 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
             ),
           ),
           const SizedBox(height: 28),
-          ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.headerGreenDark,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-            icon: const Icon(Icons.search_rounded, size: 18),
-            label: Text(
-              l10n?.browseJobsAction ?? 'Browse Jobs',
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-            ),
-            onPressed: () {
-              context.go(AppRoutes.seekerHome);
-            },
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.headerGreenDark,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                icon: const Icon(Icons.search_rounded, size: 18),
+                label: Text(
+                  l10n?.browseJobsAction ?? 'Browse Jobs',
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                ),
+                onPressed: () {
+                  context.go(AppRoutes.seekerHome);
+                },
+              ),
+              const SizedBox(width: 10),
+              OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppColors.headerGreenDark,
+                  side: const BorderSide(color: AppColors.cardBorderGreen),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                icon: const Icon(Icons.history_rounded, size: 18),
+                label: const Text(
+                  'Job History',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                ),
+                onPressed: () {
+                  context.push(AppRoutes.jobHistory);
+                },
+              ),
+            ],
           ),
           const SizedBox(height: 36),
           _buildAccountAndSafetyCard(context, l10n),
@@ -1155,6 +1177,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
             ),
             const Divider(height: 1, indent: 56),
           ],
+          ListTile(
+            leading: _buildCircleIcon(Icons.history_rounded, Colors.orange),
+            title: const Text('Job History & Ratings', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+            subtitle: const Text('Past jobs, reviews, and dispute status', style: TextStyle(fontSize: 11)),
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => context.push(AppRoutes.jobHistory),
+          ),
+          const Divider(height: 1, indent: 56),
+          ListTile(
+            leading: _buildCircleIcon(Icons.favorite_rounded, Colors.red),
+            title: const Text('Favourites & Trust Circles', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+            subtitle: const Text('Trusted repeat workers and farmers', style: TextStyle(fontSize: 11)),
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => context.push(AppRoutes.favourites),
+          ),
+          const Divider(height: 1, indent: 56),
           ListTile(
             leading: _buildCircleIcon(Icons.security_rounded, Colors.teal),
             title: const Text('Trust & Safety Centre', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),

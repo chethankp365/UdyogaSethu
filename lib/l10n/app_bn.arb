@@ -944,5 +944,34 @@
         "type": "int"
       }
     }
-  }
+  },
+  "jobHistoryTitle": "কাজের ইতিহাস এবং রেটিং",
+  "jobHistoryHeader": "কাজের ইতিহাস",
+  "favouritesTitle": "পছন্দের তালিকা এবং ট্রাস্ট সার্কেল",
+  "rateJobTitle": "কাজে রেটিং এবং পর্যালোচনা দিন",
+  "quickTagsLabel": "দ্রুত ট্যাগ",
+  "reviewCommentLabel": "মতামত এবং পর্যালোচনা (ঐচ্ছিক)",
+  "reviewCommentHint": "সম্প্রদায়কে সাহায্য করতে আপনার অভিজ্ঞতা শেয়ার করুন...",
+  "submitReviewBtn": "যাচাইকৃত পর্যালোচনা জমা দিন",
+  "reportDisputeTitle": "কাজের বিরোধ রিপোর্ট করুন",
+  "disputeFreezeNotice": "বিরোধ দায়ের করলে এসক্রো অর্থ প্রদান স্থগিত করা হয় এবং পর্যালোচনার জন্য পাঠানো হয়।",
+  "disputeIssueTypeLabel": "সমস্যার ধরন নির্বাচন করুন",
+  "disputeDetailsLabel": "সমস্যার বিবরণ এবং সময়রেখা",
+  "disputeDetailsHint": "কী ঘটেছে তা স্পষ্টভাবে ব্যাখ্যা করুন...",
+  "disputeEvidenceLabel": "প্রমাণের ছবি (ঐচ্ছিক)",
+  "submitDisputeBtn": "আনুষ্ঠানিক বিরোধ উত্থাপন করুন",
+  "disputeTypeNoShow": "উপস্থিত হননি / অনুপস্থিতি",
+  "disputeTypeIncompleteWork": "অসম্পূর্ণ কাজ / তাড়াতাড়ি চলে গেছেন",
+  "disputeTypePoorQuality": "নিম্নমানের কাজ",
+  "disputeTypeWrongProduct": "ভুল পণ্য / মানের অমিল",
+  "disputeTypePaymentIssue": "পেমেন্ট সমস্যা / এসক্রো বিরোধ",
+  "disputeTypeUnsafeConduct": "নিরাপত্তাহীন আচরণ",
+  "disputeTypeVerificationProblem": "যাচাইকরণ / পরিচয়ের অমিল",
+  "disputeTrackingTitle": "বিরোধের অবস্থা ট্র্যাকিং",
+  "settingsSectionHeader": "সেটিংস",
+  "filterAll": "সব",
+  "filterCompleted": "সম্পন্ন",
+  "filterDisputed": "বিরোধপূর্ণ",
+  "filterInProgress": "চলমান",
+  "filterCancelled": "বাতিল"
 }

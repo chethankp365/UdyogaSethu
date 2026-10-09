@@ -944,5 +944,34 @@
         "type": "int"
       }
     }
-  }
+  },
+  "jobHistoryTitle": "ಕೆಲಸದ ಇತಿಹಾಸ ಮತ್ತು ರೇಟಿಂಗ್‌ಗಳು",
+  "jobHistoryHeader": "ಕೆಲಸದ ಇತಿಹಾಸ",
+  "favouritesTitle": "ಮೆಚ್ಚಿನವರು ಮತ್ತು ನಂಬಿಕೆಯ ವಲಯಗಳು",
+  "rateJobTitle": "ಕೆಲಸಕ್ಕೆ ರೇಟಿಂಗ್ ಮತ್ತು ವಿಮರ್ಶೆ ನೀಡಿ",
+  "quickTagsLabel": "ತ್ವರಿತ ಟ್ಯಾಗ್‌ಗಳು",
+  "reviewCommentLabel": "ಪ್ರತಿಕ್ರಿಯೆ ಮತ್ತು ವಿಮರ್ಶೆ (ಐಚ್ಛಿಕ)",
+  "reviewCommentHint": "ಸಮುದಾಯಕ್ಕೆ ಸಹಾಯ ಮಾಡಲು ನಿಮ್ಮ ಅನುಭವವನ್ನು ಹಂಚಿಕೊಳ್ಳಿ...",
+  "submitReviewBtn": "ಪರಿಶೀಲಿಸಿದ ವಿಮರ್ಶೆಯನ್ನು ಸಲ್ಲಿಸಿ",
+  "reportDisputeTitle": "ಕೆಲಸದ ವಿವಾದವನ್ನು ವರದಿ ಮಾಡಿ",
+  "disputeFreezeNotice": "ವಿವಾದ ಸಲ್ಲಿಸುವುದರಿಂದ ಎಸ್ಕ್ರೋ ಹಣ ಬಿಡುಗಡೆಯನ್ನು ತಡೆಹಿಡಿಯಲಾಗುತ್ತದೆ ಮತ್ತು ಪರಿಶೀಲನೆಗೆ ಕಳುಹಿಸಲಾಗುತ್ತದೆ.",
+  "disputeIssueTypeLabel": "ಸಮಸ್ಯೆಯ ಪ್ರಕಾರವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+  "disputeDetailsLabel": "ಸಮಸ್ಯೆಯ ವಿವರಗಳು ಮತ್ತು ಸಮಯಾವಧಿ",
+  "disputeDetailsHint": "ಏನು ಸಂಭವಿಸಿದೆ ಎಂಬುದನ್ನು ಸ್ಪಷ್ಟವಾಗಿ ವಿವರಿಸಿ...",
+  "disputeEvidenceLabel": "ಸಾಕ್ಷ್ಯಾಧಾರದ ಫೋಟೋಗಳು (ಐಚ್ಛಿಕ)",
+  "submitDisputeBtn": "ಔಪಚಾರಿಕ ವಿವಾದವನ್ನು ದಾಖಲಿಸಿ",
+  "disputeTypeNoShow": "ಬರದಿರುವುದು / ಗೈರುಹಾಜರಿ",
+  "disputeTypeIncompleteWork": "ಅಪೂರ್ಣ ಕೆಲಸ / ಬೇಗನೆ ನಿರ್ಗಮಿಸಿದ್ದು",
+  "disputeTypePoorQuality": "ಕಳಪೆ ಗುಣಮಟ್ಟದ ಕೆಲಸ",
+  "disputeTypeWrongProduct": "ತಪ್ಪಾದ ಉತ್ಪನ್ನ / ಗುಣಮಟ್ಟದ ಹೊಂದಾಣಿಕೆಯಿಲ್ಲ",
+  "disputeTypePaymentIssue": "ಪಾವತಿ ಸಮಸ್ಯೆ / ಎಸ್ಕ್ರೋ ವಿವಾದ",
+  "disputeTypeUnsafeConduct": "ಅಸುರಕ್ಷಿತ ವರ್ತನೆ / ನಿಯಮ ಉಲ್ಲಂಘನೆ",
+  "disputeTypeVerificationProblem": "ಪರಿಶೀಲನೆ / ಗುರುತಿನ ಹೊಂದಾಣಿಕೆಯಿಲ್ಲ",
+  "disputeTrackingTitle": "ವಿವಾದ ಸ್ಥಿತಿ ಟ್ರ್ಯಾಕಿಂಗ್",
+  "settingsSectionHeader": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+  "filterAll": "ಎಲ್ಲಾ",
+  "filterCompleted": "ಪೂರ್ಣಗೊಂಡಿದೆ",
+  "filterDisputed": "ವಿವಾದದಲ್ಲಿದೆ",
+  "filterInProgress": "ಪ್ರಗತಿಯಲ್ಲಿದೆ",
+  "filterCancelled": "ರದ್ದುಗೊಂಡಿದೆ"
 }

@@ -2569,4 +2569,98 @@ class AppLocalizationsTa extends AppLocalizations {
   String runningLateSuccessMsg(int minutes) {
     return '+$minutes நிமிடங்கள் தாமதம் தெரிவிக்கப்பட்டது. முதலாளிக்கு அறிவிக்கப்பட்டது.';
   }
+
+  @override
+  String get jobHistoryTitle => 'பணி வரலாறு மற்றும் மதிப்பீடுகள்';
+
+  @override
+  String get jobHistoryHeader => 'பணி வரலாறு';
+
+  @override
+  String get favouritesTitle => 'விருப்பமானவை மற்றும் நம்பிக்கை வட்டங்கள்';
+
+  @override
+  String get rateJobTitle => 'வேலைக்கு மதிப்பீடு மற்றும் கருத்து வழங்கவும்';
+
+  @override
+  String get quickTagsLabel => 'விரைவு குறிச்சொற்கள்';
+
+  @override
+  String get reviewCommentLabel => 'கருத்து மற்றும் மதிப்புரை (விருப்பமானது)';
+
+  @override
+  String get reviewCommentHint =>
+      'சமூகத்திற்கு உதவ உங்கள் அனுபவத்தைப் பகிரவும்...';
+
+  @override
+  String get submitReviewBtn =>
+      'சரிபார்க்கப்பட்ட மதிப்புரையைச் சமர்ப்பிக்கவும்';
+
+  @override
+  String get reportDisputeTitle => 'வேலை சர்ச்சையைப் புகாரளிக்கவும்';
+
+  @override
+  String get disputeFreezeNotice =>
+      'சர்ச்சையைப் பதிவு செய்வது எஸ்க்ரோ கட்டண வெளியீட்டை நிறுத்தி வைக்கும்.';
+
+  @override
+  String get disputeIssueTypeLabel => 'பிரச்சனை வகையைத் தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get disputeDetailsLabel => 'பிரச்சனை விவரங்கள் மற்றும் காலவரிசை';
+
+  @override
+  String get disputeDetailsHint =>
+      'என்ன நடந்தது என்பதைத் தெளிவாக விளக்கவும்...';
+
+  @override
+  String get disputeEvidenceLabel => 'ஆதாரப் புகைப்படங்கள் (விருப்பமானது)';
+
+  @override
+  String get submitDisputeBtn => 'முறையான சர்ச்சையைப் பதிவு செய்யவும்';
+
+  @override
+  String get disputeTypeNoShow => 'வரவில்லை / வருகை இல்லை';
+
+  @override
+  String get disputeTypeIncompleteWork =>
+      'முழுமையடையாத வேலை / முன்கூட்டியே சென்றார்';
+
+  @override
+  String get disputeTypePoorQuality => 'மோசமான தரமான வேலை';
+
+  @override
+  String get disputeTypeWrongProduct => 'தவறான தயாரிப்பு / தரப் பொருந்தாமை';
+
+  @override
+  String get disputeTypePaymentIssue =>
+      'பணம் செலுத்துவதில் பிரச்சனை / எஸ்க்ரோ சர்ச்சை';
+
+  @override
+  String get disputeTypeUnsafeConduct => 'பாதுகாப்பற்ற நடத்தை';
+
+  @override
+  String get disputeTypeVerificationProblem =>
+      'சரிபார்ப்பு / அடையாளப் பொருந்தாமை';
+
+  @override
+  String get disputeTrackingTitle => 'சர்ச்சை நிலை கண்காணிப்பு';
+
+  @override
+  String get settingsSectionHeader => 'அமைப்புகள்';
+
+  @override
+  String get filterAll => 'அனைத்தும்';
+
+  @override
+  String get filterCompleted => 'முடிந்தது';
+
+  @override
+  String get filterDisputed => 'சர்ச்சைக்குரியது';
+
+  @override
+  String get filterInProgress => 'செயலில் உள்ளது';
+
+  @override
+  String get filterCancelled => 'ரத்து செய்யப்பட்டது';
 }

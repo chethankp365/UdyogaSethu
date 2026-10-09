@@ -208,6 +208,32 @@
   - **Localization & Quality**:
     - Added 21 keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`) verified via `dart run tool/check_l10n.dart` (770 keys each, 100% complete) and regenerated via `flutter gen-l10n`.
     - Added comprehensive test suite in `test/no_show_recovery_test.dart` (5/5 tests passed). Full test suite: 341/341 tests passed cleanly (`flutter test`). Static analysis: `flutter analyze` 0 issues.
+- [x] **P4.11**: Job History, Ratings, Favourites (Trust Circles), Rebooking & Disputes (Status: Done | Features #37, #49)
+  - **Database Migration `0460_reviews_favourites_disputes.sql`**: Pushed cleanly to remote Supabase and verified live.
+    - `submit_job_review(...)`: Validates completed/payment_released status, validates caller membership, blocks duplicate reviews with strict error message, inserts into `ratings_reviews`, recomputes ratings via `trg_recompute_ratings`, logs `review_submitted` timeline event, and notifies target user.
+    - `create_assignment_dispute(...)`: Validates caller party, prevents duplicate open disputes, inserts into `disputes` & `dispute_evidence`, transitions `job_assignments.status = 'disputed'`, logs `dispute_opened` in `assignment_events`, and notifies counterparty.
+    - `get_job_history(...)`: Queries user's job history with counterparty details, status filter chips, user/counterparty reviews, disputes, favourites flag, and rebook eligibility.
+    - `get_favourites_list(...)`: Queries saved trust circle workers and farmers.
+    - `get_user_reviews(...)`: Fetches reviews received for user profile display.
+    - `nearby_workers(...)`: Updated to rank repeat, well-rated connections (rating >= 4.0) and saved favourites first in search without hiding other workers.
+    - Guard triggers (`guard_worker_profile_computed_columns`, `guard_provider_profile_computed_columns`, `guard_farmer_profile_computed_columns`): Updated to allow internal triggers (`pg_trigger_depth() > 1`) to update rating averages while strictly prohibiting direct client modifications.
+  - **Flutter Domain & Data Layers**:
+    - `JobReview` and `ReviewQuickTag` models with 8 localized tags (On Time, Professional, Good Quality, Fresh Produce, Safe & Polite, Skilled & Quick, Fair Price, Recommended).
+    - `DisputeRecord`, `DisputeIssueType` (7 types: no-show, incomplete work, poor quality, wrong product, payment issue, unsafe conduct, verification problem), and `DisputeStatus` (open, in review, resolved, rejected).
+    - `FavouriteItem` and `JobHistoryItem` domain models with rupee formatters and `timeAgo` calculator.
+    - `TrustRepository` & `SupabaseTrustRepository` implementation with Riverpod providers (`trustRepositoryProvider`, `jobHistoryProvider`, `favouritesListProvider`, `userReviewsProvider`).
+  - **Flutter Presentation & Navigation**:
+    - `JobHistoryScreen` (`/jobs/history`): Faithfully matches prototype Screen 37 with language banner card, status filter chips (`All`, `Completed`, `Disputed`, `In Progress`, `Cancelled`), job cards showing title, area, time ago, amounts in ₹, star ratings, and action buttons (`Rate`, `Dispute`, `Rebook`), plus settings links (`My Bookings`, `Privacy`, `Help & Support`).
+    - `RateJobDialog`: 5-star interactive rating, localized quick tag chips, review comments, and duplicate review refusal dialog error.
+    - `RaiseDisputeDialog`: 7 issue type chips, multi-line details input, evidence photos picker, and escrow freeze notice.
+    - `DisputeDetailsSheet`: Status tracking modal with evidence gallery and escrow freeze confirmation.
+    - `FavouritesScreen` (`/favourites`): List of saved trust circle partners with 1-tap rebooking.
+    - 1-Tap Rebooking: Directly pre-fills `BookingDraft` and opens the booking wizard (`/booking/service`).
+    - `ActiveJobScreen`: Integrated Rate & Review button on completion and Raise Formal Dispute option.
+    - `ProfileScreen`: Added quick access tiles for Job History and Favourites.
+  - **Localization & Quality**:
+    - Added 29 keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`) verified via `dart tool/check_l10n.dart` (799 keys each, 100% complete) and regenerated via `flutter gen-l10n`.
+    - Added unit & widget tests in `test/trust_reviews_favourites_disputes_test.dart` (9/9 passed). Full test suite: 350/350 tests passed cleanly (`flutter test`). Static analysis: `flutter analyze` 0 issues.
 
 ---
 

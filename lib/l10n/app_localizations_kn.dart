@@ -2570,4 +2570,96 @@ class AppLocalizationsKn extends AppLocalizations {
   String runningLateSuccessMsg(int minutes) {
     return '+$minutes ನಿಮಿಷ ವಿಳಂಬ ತಿಳಿಸಲಾಗಿದೆ. ಮಾಲೀಕರಿಗೆ ಸಂದೇಶ ತಲುಪಿದೆ.';
   }
+
+  @override
+  String get jobHistoryTitle => 'ಕೆಲಸದ ಇತಿಹಾಸ ಮತ್ತು ರೇಟಿಂಗ್‌ಗಳು';
+
+  @override
+  String get jobHistoryHeader => 'ಕೆಲಸದ ಇತಿಹಾಸ';
+
+  @override
+  String get favouritesTitle => 'ಮೆಚ್ಚಿನವರು ಮತ್ತು ನಂಬಿಕೆಯ ವಲಯಗಳು';
+
+  @override
+  String get rateJobTitle => 'ಕೆಲಸಕ್ಕೆ ರೇಟಿಂಗ್ ಮತ್ತು ವಿಮರ್ಶೆ ನೀಡಿ';
+
+  @override
+  String get quickTagsLabel => 'ತ್ವರಿತ ಟ್ಯಾಗ್‌ಗಳು';
+
+  @override
+  String get reviewCommentLabel => 'ಪ್ರತಿಕ್ರಿಯೆ ಮತ್ತು ವಿಮರ್ಶೆ (ಐಚ್ಛಿಕ)';
+
+  @override
+  String get reviewCommentHint =>
+      'ಸಮುದಾಯಕ್ಕೆ ಸಹಾಯ ಮಾಡಲು ನಿಮ್ಮ ಅನುಭವವನ್ನು ಹಂಚಿಕೊಳ್ಳಿ...';
+
+  @override
+  String get submitReviewBtn => 'ಪರಿಶೀಲಿಸಿದ ವಿಮರ್ಶೆಯನ್ನು ಸಲ್ಲಿಸಿ';
+
+  @override
+  String get reportDisputeTitle => 'ಕೆಲಸದ ವಿವಾದವನ್ನು ವರದಿ ಮಾಡಿ';
+
+  @override
+  String get disputeFreezeNotice =>
+      'ವಿವಾದ ಸಲ್ಲಿಸುವುದರಿಂದ ಎಸ್ಕ್ರೋ ಹಣ ಬಿಡುಗಡೆಯನ್ನು ತಡೆಹಿಡಿಯಲಾಗುತ್ತದೆ ಮತ್ತು ಪರಿಶೀಲನೆಗೆ ಕಳುಹಿಸಲಾಗುತ್ತದೆ.';
+
+  @override
+  String get disputeIssueTypeLabel => 'ಸಮಸ್ಯೆಯ ಪ್ರಕಾರವನ್ನು ಆಯ್ಕೆಮಾಡಿ';
+
+  @override
+  String get disputeDetailsLabel => 'ಸಮಸ್ಯೆಯ ವಿವರಗಳು ಮತ್ತು ಸಮಯಾವಧಿ';
+
+  @override
+  String get disputeDetailsHint =>
+      'ಏನು ಸಂಭವಿಸಿದೆ ಎಂಬುದನ್ನು ಸ್ಪಷ್ಟವಾಗಿ ವಿವರಿಸಿ...';
+
+  @override
+  String get disputeEvidenceLabel => 'ಸಾಕ್ಷ್ಯಾಧಾರದ ಫೋಟೋಗಳು (ಐಚ್ಛಿಕ)';
+
+  @override
+  String get submitDisputeBtn => 'ಔಪಚಾರಿಕ ವಿವಾದವನ್ನು ದಾಖಲಿಸಿ';
+
+  @override
+  String get disputeTypeNoShow => 'ಬರದಿರುವುದು / ಗೈರುಹಾಜರಿ';
+
+  @override
+  String get disputeTypeIncompleteWork => 'ಅಪೂರ್ಣ ಕೆಲಸ / ಬೇಗನೆ ನಿರ್ಗಮಿಸಿದ್ದು';
+
+  @override
+  String get disputeTypePoorQuality => 'ಕಳಪೆ ಗುಣಮಟ್ಟದ ಕೆಲಸ';
+
+  @override
+  String get disputeTypeWrongProduct =>
+      'ತಪ್ಪಾದ ಉತ್ಪನ್ನ / ಗುಣಮಟ್ಟದ ಹೊಂದಾಣಿಕೆಯಿಲ್ಲ';
+
+  @override
+  String get disputeTypePaymentIssue => 'ಪಾವತಿ ಸಮಸ್ಯೆ / ಎಸ್ಕ್ರೋ ವಿವಾದ';
+
+  @override
+  String get disputeTypeUnsafeConduct => 'ಅಸುರಕ್ಷಿತ ವರ್ತನೆ / ನಿಯಮ ಉಲ್ಲಂಘನೆ';
+
+  @override
+  String get disputeTypeVerificationProblem =>
+      'ಪರಿಶೀಲನೆ / ಗುರುತಿನ ಹೊಂದಾಣಿಕೆಯಿಲ್ಲ';
+
+  @override
+  String get disputeTrackingTitle => 'ವಿವಾದ ಸ್ಥಿತಿ ಟ್ರ್ಯಾಕಿಂಗ್';
+
+  @override
+  String get settingsSectionHeader => 'ಸೆಟ್ಟಿಂಗ್‌ಗಳು';
+
+  @override
+  String get filterAll => 'ಎಲ್ಲಾ';
+
+  @override
+  String get filterCompleted => 'ಪೂರ್ಣಗೊಂಡಿದೆ';
+
+  @override
+  String get filterDisputed => 'ವಿವಾದದಲ್ಲಿದೆ';
+
+  @override
+  String get filterInProgress => 'ಪ್ರಗತಿಯಲ್ಲಿದೆ';
+
+  @override
+  String get filterCancelled => 'ರದ್ದುಗೊಂಡಿದೆ';
 }

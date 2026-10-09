@@ -2561,4 +2561,93 @@ class AppLocalizationsTe extends AppLocalizations {
   String runningLateSuccessMsg(int minutes) {
     return '+$minutes నిమిషాల ఆలస్యం నివేదించబడింది. యజమానికి తెలియజేయబడింది.';
   }
+
+  @override
+  String get jobHistoryTitle => 'పని చరిత్ర & రేటింగ్‌లు';
+
+  @override
+  String get jobHistoryHeader => 'పని చరిత్ర';
+
+  @override
+  String get favouritesTitle => 'ఇష్టమైనవి & విశ్వాస వృత్తాలు';
+
+  @override
+  String get rateJobTitle => 'పనిని రేట్ చేసి సమీక్షించండి';
+
+  @override
+  String get quickTagsLabel => 'త్వరిత ట్యాగ్‌లు';
+
+  @override
+  String get reviewCommentLabel => 'అభిప్రాయం & సమీక్ష (ఐచ్ఛికం)';
+
+  @override
+  String get reviewCommentHint =>
+      'సమాజానికి సహాయపడటానికి మీ అనుభవాన్ని పంచుకోండి...';
+
+  @override
+  String get submitReviewBtn => 'ధృవీకరించిన సమీక్షను సమర్పించండి';
+
+  @override
+  String get reportDisputeTitle => 'పని వివాదాన్ని నివేదించండి';
+
+  @override
+  String get disputeFreezeNotice =>
+      'వివాదం నమోదు చేయడం వల్ల ఎస్క్రో విడుదల నిలిపివేయబడుతుంది మరియు సమీక్షకు పంపబడుతుంది.';
+
+  @override
+  String get disputeIssueTypeLabel => 'సమస్య రకాన్ని ఎంచుకోండి';
+
+  @override
+  String get disputeDetailsLabel => 'సమస్య వివరాలు & సమయక్రమం';
+
+  @override
+  String get disputeDetailsHint => 'ఏమి జరిగిందో స్పష్టంగా వివరించండి...';
+
+  @override
+  String get disputeEvidenceLabel => 'సాక్ష్యపు ఫోటోలు (ఐచ్ఛికం)';
+
+  @override
+  String get submitDisputeBtn => 'లాంఛనప్రాయ వివాదాన్ని నమోదు చేయండి';
+
+  @override
+  String get disputeTypeNoShow => 'రాలేదు / హాజరుకాలేదు';
+
+  @override
+  String get disputeTypeIncompleteWork => 'అసంపూర్ణ పని / త్వరగా వెళ్లిపోయారు';
+
+  @override
+  String get disputeTypePoorQuality => 'నాణ్యత లేని పని';
+
+  @override
+  String get disputeTypeWrongProduct => 'తప్పు ఉత్పత్తి / నాణ్యత తేడా';
+
+  @override
+  String get disputeTypePaymentIssue => 'చెల్లింపు సమస్య / ఎస్క్రో వివాదం';
+
+  @override
+  String get disputeTypeUnsafeConduct => 'అసురక్షిత ప్రవర్తన';
+
+  @override
+  String get disputeTypeVerificationProblem => 'ధృవీకరణ / గుర్తింపు సరిపోలలేదు';
+
+  @override
+  String get disputeTrackingTitle => 'వివాద స్థితి ట్రాకింగ్';
+
+  @override
+  String get settingsSectionHeader => 'సెట్టింగ్‌లు';
+
+  @override
+  String get filterAll => 'అన్నీ';
+
+  @override
+  String get filterCompleted => 'పూర్తయింది';
+
+  @override
+  String get filterDisputed => 'వివాదంలో ఉంది';
+
+  @override
+  String get filterInProgress => 'పురోగతిలో ఉంది';
+
+  @override
+  String get filterCancelled => 'రద్దయింది';
 }

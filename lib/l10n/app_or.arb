@@ -944,5 +944,34 @@
         "type": "int"
       }
     }
-  }
+  },
+  "jobHistoryTitle": "କାର୍ଯ୍ୟ ଇତିହାସ ଏବଂ ରେଟିଂ",
+  "jobHistoryHeader": "କାର୍ଯ୍ୟ ଇତିହାସ",
+  "favouritesTitle": "ପସନ୍ଦ ଏବଂ ବିଶ୍ୱାସ ମଣ୍ଡଳ",
+  "rateJobTitle": "କାର୍ଯ୍ୟକୁ ରେଟ୍ ଏବଂ ସମୀକ୍ଷା କରନ୍ତୁ",
+  "quickTagsLabel": "ଦ୍ରୁତ ଟ୍ୟାଗ୍",
+  "reviewCommentLabel": "ମତାମତ ଏବଂ ସମୀକ୍ଷା (ବୈକଳ୍ପିକ)",
+  "reviewCommentHint": "ସମୁଦାୟକୁ ସାହାଯ୍ୟ କରିବାକୁ ଆପଣଙ୍କ ଅଭିଜ୍ଞତା ବାଣ୍ଟନ୍ତୁ...",
+  "submitReviewBtn": "ଯାଞ୍ଚ ହୋଇଥିବା ସମୀକ୍ଷା ଦାଖଲ କରନ୍ତୁ",
+  "reportDisputeTitle": "କାର୍ଯ୍ୟ ବିବାଦ ରିପୋର୍ଟ କରନ୍ତୁ",
+  "disputeFreezeNotice": "ବିବାଦ ଦାଖଲ କରିବା ଦ୍ୱାରା ଏସ୍କ୍ରୋ ଟଙ୍କା ପ୍ରଦାନ ସ୍ଥଗିତ ରହେ ଏବଂ ସମୀକ୍ଷା ପାଇଁ ପଠାଯାଏ |",
+  "disputeIssueTypeLabel": "ସମସ୍ୟା ପ୍ରକାର ବାଛନ୍ତୁ",
+  "disputeDetailsLabel": "ସମସ୍ୟା ବିବରଣୀ ଏବଂ ସମୟସୀମା",
+  "disputeDetailsHint": "କଣ ଘଟିଲା ସ୍ପଷ୍ଟ ଭାବରେ ବର୍ଣ୍ଣନା କରନ୍ତୁ...",
+  "disputeEvidenceLabel": "ପ୍ରମାଣ ଫଟୋ (ବୈକଳ୍ପିକ)",
+  "submitDisputeBtn": "ଆନୁଷ୍ଠାନିକ ବିବାଦ ଦାଖଲ କରନ୍ତୁ",
+  "disputeTypeNoShow": "ଉପସ୍ଥିତ ହେଲେ ନାହିଁ / ଅନୁପସ୍ଥିତି",
+  "disputeTypeIncompleteWork": "ଅସମ୍ପୂର୍ଣ୍ଣ କାମ / ଶୀଘ୍ର ଚାଲିଗଲେ",
+  "disputeTypePoorQuality": "ନିମ୍ନ ମାନର କାମ",
+  "disputeTypeWrongProduct": "ଭୁଲ୍ ଉତ୍ପାଦ / ଗୁଣବତ୍ତା ଅମେଳ",
+  "disputeTypePaymentIssue": "ପେମେଣ୍ଟ ସମସ୍ୟା / ଏସ୍କ୍ରୋ ବିବାଦ",
+  "disputeTypeUnsafeConduct": "ଅସୁରକ୍ଷିତ ଆଚରଣ",
+  "disputeTypeVerificationProblem": "ଯାଞ୍ଚ / ପରିଚୟ ଅମେଳ",
+  "disputeTrackingTitle": "ବିବାଦ ସ୍ଥିତି ଟ୍ରାକିଂ",
+  "settingsSectionHeader": "ସେଟିଙ୍ଗ୍ସ",
+  "filterAll": "ସମସ୍ତ",
+  "filterCompleted": "ସମ୍ପନ୍ନ",
+  "filterDisputed": "ବିବାଦିତ",
+  "filterInProgress": "ଚାଲୁଅଛି",
+  "filterCancelled": "ବାତିଲ"
 }

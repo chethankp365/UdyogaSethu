@@ -42,6 +42,8 @@ import 'package:udyogasethu/features/trust/presentation/scan_verify_screen.dart'
 import 'package:udyogasethu/features/trust/presentation/student_verification_screen.dart';
 import 'package:udyogasethu/features/trust/presentation/trust_governance_rights_screen.dart';
 import 'package:udyogasethu/features/trust/presentation/trust_safety_centre_screen.dart';
+import 'package:udyogasethu/features/trust/presentation/job_history_screen.dart';
+import 'package:udyogasethu/features/trust/presentation/favourites_screen.dart';
 import 'package:udyogasethu/features/verification/presentation/face_check_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_home_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_wizard_screen.dart';
@@ -651,6 +653,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.recurringBookings,
         builder: (context, state) => const RecurringBookingsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.jobHistory,
+        builder: (context, state) => const JobHistoryScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.favourites,
+        builder: (context, state) => const FavouritesScreen(),
       ),
 
       // Debug Routes

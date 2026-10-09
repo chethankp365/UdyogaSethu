@@ -165,6 +165,14 @@ This document records key design, architectural, role model, and implementation 
   * **Worker Running Late Action**: Worker side displays a "Running late?" action with delay options (+10m, +15m, +30m, +45m) calling `report_running_late(assignment, eta)`. Pauses no-show timer once, sets `no_show_timer_paused = true`, and notifies provider.
   * **Fraud Flags Rule**: 3 no-shows within 30 days automatically creates an `open` row in `fraud_flags` with `rule_key: 'excessive_no_shows'` and severity `high` for admin review.
 
+* **D49 — Ratings & Reviews, Trust Circles (Favourites), Rebooking & Dispute Resolution**:
+  * **Verified Reviews & SQL Aggregate Triggers**: Completed and payment-released assignments allow exactly one review per party. Enforced server-side in `submit_job_review(...)` which strictly checks caller role and blocks duplicate reviews. Reviews recompute `rating_avg` and `rating_count` across worker, provider, and farmer profile tables via `trg_recompute_ratings`. Guard triggers (`guard_worker_profile_computed_columns`, `guard_provider_profile_computed_columns`, `guard_farmer_profile_computed_columns`) updated to allow internal trigger updates (`pg_trigger_depth() > 1`) while keeping direct client column mutations blocked.
+  * **Job History UI Prototype Match (Screen 37)**: Built `JobHistoryScreen` faithfully reflecting prototype Screen 37 with language banner card, filter chips (All, Completed, Disputed, In Progress, Cancelled), job cards with time ago, amount in rupees, star ratings, and action buttons (Rate, Dispute, Rebook). Added settings and support list entries (My Bookings, Privacy, Help & Support).
+  * **Favourites & Trust Circles**: Heart toggle on profiles persists to `public.favourites`. Enhanced `nearby_workers(...)` SQL procedure ranks repeat, well-rated connections (rating >= 4.0) and saved favourites first in search results without filtering out new or other workers. Built dedicated `FavouritesScreen` with 1-tap rebooking.
+  * **1-Tap Rebooking**: One-tap rebooking from history items or favourites pre-fills `BookingDraft` (worker ID, name, category, agreed daily wage) and opens the booking wizard directly.
+  * **Dispute Reporting & Escrow Freeze**: Implemented 7 canonical dispute issue types (`no_show`, `incomplete_work`, `poor_quality`, `wrong_product`, `payment_issue`, `unsafe_conduct`, `verification_problem`) with multi-line explanation and photo evidence attachments. `create_assignment_dispute(...)` marks `job_assignments.status = 'disputed'`, logs timeline event `dispute_opened`, and notifies counterparty. Escrow release is frozen on disputed assignments (completed in P5.3).
+
+
 
 
 

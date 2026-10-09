@@ -2544,4 +2544,95 @@ class AppLocalizationsEn extends AppLocalizations {
   String runningLateSuccessMsg(int minutes) {
     return 'Reported +$minutes minutes ETA. Employer notified.';
   }
+
+  @override
+  String get jobHistoryTitle => 'Job History & Ratings';
+
+  @override
+  String get jobHistoryHeader => 'Job History';
+
+  @override
+  String get favouritesTitle => 'Favourites & Trust Circles';
+
+  @override
+  String get rateJobTitle => 'Rate & Review Job';
+
+  @override
+  String get quickTagsLabel => 'Quick Tags';
+
+  @override
+  String get reviewCommentLabel => 'Feedback & Review (Optional)';
+
+  @override
+  String get reviewCommentHint =>
+      'Share your experience to help the community...';
+
+  @override
+  String get submitReviewBtn => 'Submit Verified Review';
+
+  @override
+  String get reportDisputeTitle => 'Report Job Dispute';
+
+  @override
+  String get disputeFreezeNotice =>
+      'Filing a dispute pauses automatic escrow release and assigns the case to UdyogaSethu Trust & Safety for review.';
+
+  @override
+  String get disputeIssueTypeLabel => 'Select Issue Type';
+
+  @override
+  String get disputeDetailsLabel => 'Issue Details & Timeline';
+
+  @override
+  String get disputeDetailsHint =>
+      'Please explain what happened clearly, including timestamps and any verbal agreements...';
+
+  @override
+  String get disputeEvidenceLabel => 'Evidence Photos (Optional)';
+
+  @override
+  String get submitDisputeBtn => 'Raise Formal Dispute';
+
+  @override
+  String get disputeTypeNoShow => 'No-Show / Unreported Absence';
+
+  @override
+  String get disputeTypeIncompleteWork => 'Incomplete Work / Left Early';
+
+  @override
+  String get disputeTypePoorQuality => 'Poor Quality / Substandard Work';
+
+  @override
+  String get disputeTypeWrongProduct => 'Wrong Product / Quality Mismatch';
+
+  @override
+  String get disputeTypePaymentIssue => 'Payment Issue / Escrow Dispute';
+
+  @override
+  String get disputeTypeUnsafeConduct => 'Unsafe Conduct / Behaviour Violation';
+
+  @override
+  String get disputeTypeVerificationProblem =>
+      'Verification / Identity Mismatch';
+
+  @override
+  String get disputeTrackingTitle => 'Dispute Status Tracking';
+
+  @override
+  String get settingsSectionHeader => 'Settings';
+
+  @override
+  String get filterAll => 'All';
+
+  @override
+  String get filterCompleted => 'Completed';
+
+  @override
+  String get filterDisputed => 'Disputed';
+
+  @override
+  String get filterInProgress => 'In Progress';
+
+  @override
+  String get filterCancelled => 'Cancelled';
 }

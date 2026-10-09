@@ -2544,4 +2544,94 @@ class AppLocalizationsBn extends AppLocalizations {
   String runningLateSuccessMsg(int minutes) {
     return '+$minutes মিনিট বিলম্বের তথ্য পাঠানো হয়েছে। নিয়োগকর্তা অবহিত।';
   }
+
+  @override
+  String get jobHistoryTitle => 'কাজের ইতিহাস এবং রেটিং';
+
+  @override
+  String get jobHistoryHeader => 'কাজের ইতিহাস';
+
+  @override
+  String get favouritesTitle => 'পছন্দের তালিকা এবং ট্রাস্ট সার্কেল';
+
+  @override
+  String get rateJobTitle => 'কাজে রেটিং এবং পর্যালোচনা দিন';
+
+  @override
+  String get quickTagsLabel => 'দ্রুত ট্যাগ';
+
+  @override
+  String get reviewCommentLabel => 'মতামত এবং পর্যালোচনা (ঐচ্ছিক)';
+
+  @override
+  String get reviewCommentHint =>
+      'সম্প্রদায়কে সাহায্য করতে আপনার অভিজ্ঞতা শেয়ার করুন...';
+
+  @override
+  String get submitReviewBtn => 'যাচাইকৃত পর্যালোচনা জমা দিন';
+
+  @override
+  String get reportDisputeTitle => 'কাজের বিরোধ রিপোর্ট করুন';
+
+  @override
+  String get disputeFreezeNotice =>
+      'বিরোধ দায়ের করলে এসক্রো অর্থ প্রদান স্থগিত করা হয় এবং পর্যালোচনার জন্য পাঠানো হয়।';
+
+  @override
+  String get disputeIssueTypeLabel => 'সমস্যার ধরন নির্বাচন করুন';
+
+  @override
+  String get disputeDetailsLabel => 'সমস্যার বিবরণ এবং সময়রেখা';
+
+  @override
+  String get disputeDetailsHint => 'কী ঘটেছে তা স্পষ্টভাবে ব্যাখ্যা করুন...';
+
+  @override
+  String get disputeEvidenceLabel => 'প্রমাণের ছবি (ঐচ্ছিক)';
+
+  @override
+  String get submitDisputeBtn => 'আনুষ্ঠানিক বিরোধ উত্থাপন করুন';
+
+  @override
+  String get disputeTypeNoShow => 'উপস্থিত হননি / অনুপস্থিতি';
+
+  @override
+  String get disputeTypeIncompleteWork =>
+      'অসম্পূর্ণ কাজ / তাড়াতাড়ি চলে গেছেন';
+
+  @override
+  String get disputeTypePoorQuality => 'নিম্নমানের কাজ';
+
+  @override
+  String get disputeTypeWrongProduct => 'ভুল পণ্য / মানের অমিল';
+
+  @override
+  String get disputeTypePaymentIssue => 'পেমেন্ট সমস্যা / এসক্রো বিরোধ';
+
+  @override
+  String get disputeTypeUnsafeConduct => 'নিরাপত্তাহীন আচরণ';
+
+  @override
+  String get disputeTypeVerificationProblem => 'যাচাইকরণ / পরিচয়ের অমিল';
+
+  @override
+  String get disputeTrackingTitle => 'বিরোধের অবস্থা ট্র্যাকিং';
+
+  @override
+  String get settingsSectionHeader => 'সেটিংস';
+
+  @override
+  String get filterAll => 'সব';
+
+  @override
+  String get filterCompleted => 'সম্পন্ন';
+
+  @override
+  String get filterDisputed => 'বিরোধপূর্ণ';
+
+  @override
+  String get filterInProgress => 'চলমান';
+
+  @override
+  String get filterCancelled => 'বাতিল';
 }

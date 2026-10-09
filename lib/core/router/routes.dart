@@ -70,6 +70,8 @@ class AppRoutes {
   static const String verifyPresence = '/jobs/verify-presence/:id';
   static const String jobCompletion = '/jobs/completion/:id';
   static const String workerSchedule = '/seeker/schedule';
+  static const String jobHistory = '/jobs/history';
+  static const String favourites = '/favourites';
 
   // Debug Routes (gated under kDebugMode)
   static const String devGallery = '/dev/gallery';

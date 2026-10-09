@@ -944,5 +944,34 @@
         "type": "int"
       }
     }
-  }
+  },
+  "jobHistoryTitle": "பணி வரலாறு மற்றும் மதிப்பீடுகள்",
+  "jobHistoryHeader": "பணி வரலாறு",
+  "favouritesTitle": "விருப்பமானவை மற்றும் நம்பிக்கை வட்டங்கள்",
+  "rateJobTitle": "வேலைக்கு மதிப்பீடு மற்றும் கருத்து வழங்கவும்",
+  "quickTagsLabel": "விரைவு குறிச்சொற்கள்",
+  "reviewCommentLabel": "கருத்து மற்றும் மதிப்புரை (விருப்பமானது)",
+  "reviewCommentHint": "சமூகத்திற்கு உதவ உங்கள் அனுபவத்தைப் பகிரவும்...",
+  "submitReviewBtn": "சரிபார்க்கப்பட்ட மதிப்புரையைச் சமர்ப்பிக்கவும்",
+  "reportDisputeTitle": "வேலை சர்ச்சையைப் புகாரளிக்கவும்",
+  "disputeFreezeNotice": "சர்ச்சையைப் பதிவு செய்வது எஸ்க்ரோ கட்டண வெளியீட்டை நிறுத்தி வைக்கும்.",
+  "disputeIssueTypeLabel": "பிரச்சனை வகையைத் தேர்ந்தெடுக்கவும்",
+  "disputeDetailsLabel": "பிரச்சனை விவரங்கள் மற்றும் காலவரிசை",
+  "disputeDetailsHint": "என்ன நடந்தது என்பதைத் தெளிவாக விளக்கவும்...",
+  "disputeEvidenceLabel": "ஆதாரப் புகைப்படங்கள் (விருப்பமானது)",
+  "submitDisputeBtn": "முறையான சர்ச்சையைப் பதிவு செய்யவும்",
+  "disputeTypeNoShow": "வரவில்லை / வருகை இல்லை",
+  "disputeTypeIncompleteWork": "முழுமையடையாத வேலை / முன்கூட்டியே சென்றார்",
+  "disputeTypePoorQuality": "மோசமான தரமான வேலை",
+  "disputeTypeWrongProduct": "தவறான தயாரிப்பு / தரப் பொருந்தாமை",
+  "disputeTypePaymentIssue": "பணம் செலுத்துவதில் பிரச்சனை / எஸ்க்ரோ சர்ச்சை",
+  "disputeTypeUnsafeConduct": "பாதுகாப்பற்ற நடத்தை",
+  "disputeTypeVerificationProblem": "சரிபார்ப்பு / அடையாளப் பொருந்தாமை",
+  "disputeTrackingTitle": "சர்ச்சை நிலை கண்காணிப்பு",
+  "settingsSectionHeader": "அமைப்புகள்",
+  "filterAll": "அனைத்தும்",
+  "filterCompleted": "முடிந்தது",
+  "filterDisputed": "சர்ச்சைக்குரியது",
+  "filterInProgress": "செயலில் உள்ளது",
+  "filterCancelled": "ரத்து செய்யப்பட்டது"
 }

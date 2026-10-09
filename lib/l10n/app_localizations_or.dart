@@ -2549,4 +2549,93 @@ class AppLocalizationsOr extends AppLocalizations {
   String runningLateSuccessMsg(int minutes) {
     return '+$minutes ମିନିଟ୍ ବିଳମ୍ବ ଜଣାଇ ଦିଆଗଲା। ନିୟୋକ୍ତାଙ୍କୁ ସୂଚନା ମିଳିଲା।';
   }
+
+  @override
+  String get jobHistoryTitle => 'କାର୍ଯ୍ୟ ଇତିହାସ ଏବଂ ରେଟିଂ';
+
+  @override
+  String get jobHistoryHeader => 'କାର୍ଯ୍ୟ ଇତିହାସ';
+
+  @override
+  String get favouritesTitle => 'ପସନ୍ଦ ଏବଂ ବିଶ୍ୱାସ ମଣ୍ଡଳ';
+
+  @override
+  String get rateJobTitle => 'କାର୍ଯ୍ୟକୁ ରେଟ୍ ଏବଂ ସମୀକ୍ଷା କରନ୍ତୁ';
+
+  @override
+  String get quickTagsLabel => 'ଦ୍ରୁତ ଟ୍ୟାଗ୍';
+
+  @override
+  String get reviewCommentLabel => 'ମତାମତ ଏବଂ ସମୀକ୍ଷା (ବୈକଳ୍ପିକ)';
+
+  @override
+  String get reviewCommentHint =>
+      'ସମୁଦାୟକୁ ସାହାଯ୍ୟ କରିବାକୁ ଆପଣଙ୍କ ଅଭିଜ୍ଞତା ବାଣ୍ଟନ୍ତୁ...';
+
+  @override
+  String get submitReviewBtn => 'ଯାଞ୍ଚ ହୋଇଥିବା ସମୀକ୍ଷା ଦାଖଲ କରନ୍ତୁ';
+
+  @override
+  String get reportDisputeTitle => 'କାର୍ଯ୍ୟ ବିବାଦ ରିପୋର୍ଟ କରନ୍ତୁ';
+
+  @override
+  String get disputeFreezeNotice =>
+      'ବିବାଦ ଦାଖଲ କରିବା ଦ୍ୱାରା ଏସ୍କ୍ରୋ ଟଙ୍କା ପ୍ରଦାନ ସ୍ଥଗିତ ରହେ ଏବଂ ସମୀକ୍ଷା ପାଇଁ ପଠାଯାଏ |';
+
+  @override
+  String get disputeIssueTypeLabel => 'ସମସ୍ୟା ପ୍ରକାର ବାଛନ୍ତୁ';
+
+  @override
+  String get disputeDetailsLabel => 'ସମସ୍ୟା ବିବରଣୀ ଏବଂ ସମୟସୀମା';
+
+  @override
+  String get disputeDetailsHint => 'କଣ ଘଟିଲା ସ୍ପଷ୍ଟ ଭାବରେ ବର୍ଣ୍ଣନା କରନ୍ତୁ...';
+
+  @override
+  String get disputeEvidenceLabel => 'ପ୍ରମାଣ ଫଟୋ (ବୈକଳ୍ପିକ)';
+
+  @override
+  String get submitDisputeBtn => 'ଆନୁଷ୍ଠାନିକ ବିବାଦ ଦାଖଲ କରନ୍ତୁ';
+
+  @override
+  String get disputeTypeNoShow => 'ଉପସ୍ଥିତ ହେଲେ ନାହିଁ / ଅନୁପସ୍ଥିତି';
+
+  @override
+  String get disputeTypeIncompleteWork => 'ଅସମ୍ପୂର୍ଣ୍ଣ କାମ / ଶୀଘ୍ର ଚାଲିଗଲେ';
+
+  @override
+  String get disputeTypePoorQuality => 'ନିମ୍ନ ମାନର କାମ';
+
+  @override
+  String get disputeTypeWrongProduct => 'ଭୁଲ୍ ଉତ୍ପାଦ / ଗୁଣବତ୍ତା ଅମେଳ';
+
+  @override
+  String get disputeTypePaymentIssue => 'ପେମେଣ୍ଟ ସମସ୍ୟା / ଏସ୍କ୍ରୋ ବିବାଦ';
+
+  @override
+  String get disputeTypeUnsafeConduct => 'ଅସୁରକ୍ଷିତ ଆଚରଣ';
+
+  @override
+  String get disputeTypeVerificationProblem => 'ଯାଞ୍ଚ / ପରିଚୟ ଅମେଳ';
+
+  @override
+  String get disputeTrackingTitle => 'ବିବାଦ ସ୍ଥିତି ଟ୍ରାକିଂ';
+
+  @override
+  String get settingsSectionHeader => 'ସେଟିଙ୍ଗ୍ସ';
+
+  @override
+  String get filterAll => 'ସମସ୍ତ';
+
+  @override
+  String get filterCompleted => 'ସମ୍ପନ୍ନ';
+
+  @override
+  String get filterDisputed => 'ବିବାଦିତ';
+
+  @override
+  String get filterInProgress => 'ଚାଲୁଅଛି';
+
+  @override
+  String get filterCancelled => 'ବାତିଲ';
 }
