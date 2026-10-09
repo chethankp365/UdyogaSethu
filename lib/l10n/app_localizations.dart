@@ -5009,6 +5009,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Completed daily wages and transfers will appear here.'**
   String get noTransactionsSubtitle;
+
+  /// No description provided for @paymentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment & Escrow Protection'**
+  String get paymentTitle;
+
+  /// No description provided for @paymentBillSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Bill Summary'**
+  String get paymentBillSummary;
+
+  /// No description provided for @paymentServiceWage.
+  ///
+  /// In en, this message translates to:
+  /// **'Service / Wage Amount'**
+  String get paymentServiceWage;
+
+  /// No description provided for @paymentPlatformFee.
+  ///
+  /// In en, this message translates to:
+  /// **'Platform Fee & GST'**
+  String get paymentPlatformFee;
+
+  /// No description provided for @paymentProtectionAddon.
+  ///
+  /// In en, this message translates to:
+  /// **'Protection & Safety Add-on'**
+  String get paymentProtectionAddon;
+
+  /// No description provided for @paymentTotalPayable.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Payable'**
+  String get paymentTotalPayable;
+
+  /// No description provided for @paymentEscrowNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Protected until verified completion. Money held in safe Escrow.'**
+  String get paymentEscrowNotice;
+
+  /// No description provided for @paymentChooseMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Payment Method'**
+  String get paymentChooseMethod;
+
+  /// No description provided for @paymentUpi.
+  ///
+  /// In en, this message translates to:
+  /// **'UPI (GPay / PhonePe / Paytm)'**
+  String get paymentUpi;
+
+  /// No description provided for @paymentCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit / Debit Card'**
+  String get paymentCard;
+
+  /// No description provided for @paymentWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'UdyogaSethu Wallet'**
+  String get paymentWallet;
+
+  /// No description provided for @paymentCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash on Completion'**
+  String get paymentCash;
+
+  /// No description provided for @paymentPaySecurely.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay Securely'**
+  String get paymentPaySecurely;
+
+  /// No description provided for @paymentConfirmCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Cash Booking'**
+  String get paymentConfirmCash;
+
+  /// No description provided for @paymentStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Status'**
+  String get paymentStatus;
+
+  /// No description provided for @paymentSuccessful.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Successful and Confirmed'**
+  String get paymentSuccessful;
+
+  /// No description provided for @paymentSuccessSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your payment is confirmed and safely held in escrow.'**
+  String get paymentSuccessSubtitle;
+
+  /// No description provided for @paymentConfirmingBank.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirming with Bank...'**
+  String get paymentConfirmingBank;
+
+  /// No description provided for @paymentConfirmingSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Awaiting confirmation from Razorpay and banking network. Your screen will update automatically.'**
+  String get paymentConfirmingSubtitle;
+
+  /// No description provided for @paymentFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Failed'**
+  String get paymentFailed;
+
+  /// No description provided for @paymentFailedSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your transaction could not be completed by the bank. No money was deducted.'**
+  String get paymentFailedSubtitle;
+
+  /// No description provided for @paymentReceiptNo.
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt No'**
+  String get paymentReceiptNo;
+
+  /// No description provided for @paymentDownloadPdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Share / Download PDF Receipt'**
+  String get paymentDownloadPdf;
+
+  /// No description provided for @paymentContinueJob.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to Job / Order'**
+  String get paymentContinueJob;
+
+  /// No description provided for @paymentTryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get paymentTryAgain;
 }
 
 class _AppLocalizationsDelegate

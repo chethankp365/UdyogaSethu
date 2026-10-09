@@ -53,11 +53,11 @@
 - [x] **P4.8**: QR job ticket and employer attendance scan (Status: Done)
 - [x] **P4.9**: Two-step verified start, timer, mid-job check, completion and evidence (Status: Done)
 - [x] **P4.10**: Smart no-show recovery (Status: Done | Feature #48)
-- [ ] **P4.11**: Ratings, reviews, favourites, rebooking and disputes (Status: Todo)
+- [x] **P4.11**: Ratings, reviews, favourites, rebooking and disputes (Status: Done)
 
 ## Phase 5 (Money: wallet, payments and escrow-style protection)
-- [ ] **P5.1**: Wallet screen and transaction history (Status: Todo)
-- [ ] **P5.2**: Razorpay test checkout, payment methods and receipts (Status: Todo)
+- [x] **P5.1**: Wallet screen and transaction history (Status: Done)
+- [x] **P5.2**: Razorpay test checkout, payment methods and receipts (Status: Done)
 - [ ] **P5.3**: Escrow release, refunds and auto-release (Status: Todo)
 - [ ] **P5.4**: Earnings dashboard and savings goal planner (Status: Todo)
 
@@ -258,13 +258,44 @@
     - Wired Seeker Home wallet balance card and quick action tile to navigate to `/wallet`.
     - Wired Profile screen Total Earnings stat and added "Wallet & Escrow" navigation tile to `/wallet`.
   - **Localization & Quality**:
-    - Added 17 keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`) verified via `dart tool/check_l10n.dart` (816 keys each, 100% complete) and regenerated via `flutter gen-l10n`.
-    - Added comprehensive unit, repository invariant, and widget tests in `test/wallet_test.dart` (9/9 passed). Full test suite: 359/359 tests passed cleanly (`flutter test`). Static analysis: `flutter analyze` 0 issues.
+    - Added 17 keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`) verified via `dart tool/check_l10n.dart` (816 keys each, 100% complete) and    - Added comprehensive unit, repository invariant, and widget tests in `test/wallet_test.dart` (9/9 passed). Full test suite: 359/359 tests passed cleanly (`flutter test`). Static analysis: `flutter analyze` 0 issues.
+
+- [x] **P5.2**: Razorpay test checkout, payment methods and receipts (Status: Done |
+  - **Database Migration `0480_payments_receipts_escrow.sql`**:
+    - Created sequence `public.receipt_no_seq` and trigger `trg_set_payment_receipt_no` generating human-readable sequential receipt numbers in format `RCP-YYYYMMDD-XXXXXX`.
+    - Created table `public.payment_webhook_events` for cryptographic webhook idempotency deduplication with service role RLS policy.
+    - Created `public.compute_payment_bill(p_ref_type, p_ref_id, p_protection_override)` computing server-authoritative fees in paise from `admin_settings`. Client cannot tamper with amounts.
+    - Created enhanced `public.hold_escrow(p_payment_id)` handling gateway deposits and debit/credit ledger escrow invariants.
+    - Created `public.record_payment_success(p_payment_id, p_razorpay_payment_id, p_signature_verified)`.
+    - Added RLS policy `payments_service` granting `service_role` full CRUD on `public.payments`.
+    - Pushed migration cleanly to remote Supabase project `mmzbpeqkfomnywuzoqii` via `npx supabase db push`.
+  - **Edge Functions**:
+    - `payment-create-order`: Authenticated Edge Function. Reads parameters, validates user JWT, calls `compute_payment_bill` on DB, creates `payments` row in `created` status, creates Razorpay order via Razorpay API, and returns `order_id`, `payment_id`, `amount_paise`, `receipt_no`, and public `key_id`. Flutter app never needs `RAZORPAY_KEY_ID` in client assets.
+    - `payment-webhook`: Deployed with `--no-verify-jwt`. Validates Razorpay constant-time HMAC-SHA256 signature against `RAZORPAY_WEBHOOK_SECRET` on raw request body. Idempotent deduplication against `payment_webhook_events`. On `payment.captured`, calls `hold_escrow` in database (holding funds in escrow and creating `ledger_entries` credit). On `payment.failed`, records failure reason and marks payment `failed` so customer can retry. Deployed via `npx supabase functions deploy payment-webhook --no-verify-jwt`.
+  - **Flutter Packages & Models**:
+    - Added `razorpay_flutter: ^1.4.7`, `pdf: ^3.13.1`, and `share_plus: ^13.3.1`.
+    - Built domain models `PaymentRecord`, `PaymentBillSummary`, `PaymentOrderResult`, `PaymentMethod`, and `PaymentStatus`.
+    - Built `PaymentReceiptPdf` generating official PDF receipt certificate and sharing via `SharePlus.instance.share(ShareParams(...))`.
+  - **Flutter Presentation**:
+    - `PaymentCheckoutScreen` (`/payments/checkout`): Multi-method payment selector (UPI, Credit/Debit Card, UdyogaSethu Wallet, Cash on completion), itemized bill summary (Service Wage, Platform Fee, Escrow Protection, Total), and escrow trust badge (*"Protected until verified completion"*).
+    - `PaymentStatusScreen` (`/payments/status/:id`): Realtime listener tracking database `payments` row via Supabase Realtime channel. Renders confirmed success state with receipt metadata, failed state with retry button, and PDF receipt share trigger.
+  - **Router & Localization**:
+    - Registered `AppRoutes.paymentCheckout` (`/payments/checkout`) and `AppRoutes.paymentStatus` (`/payments/status/:id`) in `app_router.dart`.
+    - Added 25 localized strings across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`) verified via `tool/check_l10n.dart` (841 keys each, 100% complete).
+  - **Automated Verification**:
+    - End-to-end live backend test suite (`scratch/test_full_payment_flow.js`): missing signature rejected (401), invalid signature rejected (403), valid payment capture holding escrow in DB ledger verified, duplicate webhook idempotency verified, and failed payment retry verified.
+    - Automated Flutter test suite `test/payments_test.dart` (8/8 tests passed).
+    - Full test suite: 367/367 tests passed cleanly (`flutter test`).
+    - Static analysis: `flutter analyze` 0 issues.
 
 ---
 
 ## Manual steps pending
-1. **Phone Installation (Xiaomi / MIUI USB Security Permission)**:
+1. **Razorpay Dashboard Webhook Configuration**:
+   - URL: `https://mmzbpeqkfomnywuzoqii.supabase.co/functions/v1/payment-webhook`
+   - Secret: Value of your `RAZORPAY_WEBHOOK_SECRET`
+   - Subscribed events: `payment.captured`, `payment.failed`, `order.paid`
+2. **Phone Installation (Xiaomi / MIUI USB Security Permission)**:
    - Your connected phone (`2201116SG`, Redmi Note 11) returned `INSTALL_FAILED_USER_RESTRICTED: Install canceled by user` during ADB installation.
    - On Xiaomi / MIUI / HyperOS devices, USB installation must be permitted:
      1. Open phone **Settings** -> **Additional settings** -> **Developer options**.
@@ -275,19 +306,10 @@
         & "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" -s db11f242e5b0 install -r "build\app\outputs\flutter-apk\app-debug.apk"
         ```
      5. When the MIUI confirmation dialog appears on the phone screen asking *"Install via USB?"*, tap **Install**.
-2. **Deploy Updated Edge Functions (remaining when ready)**:
-   Run the following commands using Supabase CLI (note: `qr-issue`, `qr-verify`, and `assignment-verify` are already deployed):
-   ```bash
-   npx supabase functions deploy face-enroll
-   npx supabase functions deploy face-verify
-   npx supabase functions deploy kyc-start
-   npx supabase functions deploy kyc-callback
-   npx supabase functions deploy ai-assist
-   ```
 
 ## Known issues
 - **Profile & Auth Foreign Key Cascade vs D11 Retention**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`. The financial retention refactor will decouple `auth.users` deletion from audit records in an upcoming migration.
-- **Phase 5.2**: Instant UPI Auto-Payout and payment gateway integration is the next planned step.
+- **Phase 5.3**: Escrow release, refunds and auto-release is the next planned step.
 - **Phase 9 (Admin Console)**: Admin console is built in a separate web/desktop project and is out of scope for this Flutter app.
 
 

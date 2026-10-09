@@ -2717,4 +2717,85 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get noTransactionsSubtitle =>
       'முடிக்கப்பட்ட தினசரி ஊதியம் மற்றும் இடமாற்றங்கள் இங்கே தோன்றும்.';
+
+  @override
+  String get paymentTitle => 'பணம் செலுத்துதல் & எஸ்க்ரோ பாதுகாப்பு';
+
+  @override
+  String get paymentBillSummary => 'பில் சுருக்கம்';
+
+  @override
+  String get paymentServiceWage => 'சேவை / கூலித் தொகை';
+
+  @override
+  String get paymentPlatformFee => 'தளக் கட்டணம் & ஜிஎஸ்டி';
+
+  @override
+  String get paymentProtectionAddon => 'பாதுகாப்பு கூடுதல் திட்டம்';
+
+  @override
+  String get paymentTotalPayable => 'மொத்தம் செலுத்த வேண்டியது';
+
+  @override
+  String get paymentEscrowNotice =>
+      'சரிபார்க்கப்பட்ட பணி முடியும் வரை பாதுகாக்கப்பட்டது. பணம் பாதுகாப்பான எஸ்க்ரோவில் வைக்கப்பட்டுள்ளது.';
+
+  @override
+  String get paymentChooseMethod =>
+      'பணம் செலுத்தும் முறையைத் தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get paymentUpi => 'யுபிஐ (GPay / PhonePe / Paytm)';
+
+  @override
+  String get paymentCard => 'கிரெடிட் / டெபிட் கார்டு';
+
+  @override
+  String get paymentWallet => 'உத்யோகசேது வாலட்';
+
+  @override
+  String get paymentCash => 'வேலை முடிந்ததும் ரொக்கம்';
+
+  @override
+  String get paymentPaySecurely => 'பாதுகாப்பாக பணம் செலுத்துங்கள்';
+
+  @override
+  String get paymentConfirmCash => 'ரொக்க முன்பதிவை உறுதிப்படுத்தவும்';
+
+  @override
+  String get paymentStatus => 'பணம் செலுத்திய நிலை';
+
+  @override
+  String get paymentSuccessful =>
+      'பணம் செலுத்துதல் வெற்றிகரமாக முடிந்தது & உறுதி செய்யப்பட்டது';
+
+  @override
+  String get paymentSuccessSubtitle =>
+      'உங்கள் கட்டணம் உறுதி செய்யப்பட்டு எஸ்க்ரோவில் பாதுகாக்கப்பட்டுள்ளது.';
+
+  @override
+  String get paymentConfirmingBank => 'வங்கியுடன் உறுதி செய்யப்படுகிறது...';
+
+  @override
+  String get paymentConfirmingSubtitle =>
+      'ரேஸர்பே மற்றும் வங்கி நெட்வொர்க்கிலிருந்து உறுதிப்படுத்தலுக்காக காத்திருக்கிறது. திரை தானாகவே புதுப்பிக்கப்படும்.';
+
+  @override
+  String get paymentFailed => 'பணம் செலுத்துதல் தோல்வியடைந்தது';
+
+  @override
+  String get paymentFailedSubtitle =>
+      'வங்கியால் உங்கள் பரிவர்த்தனையை முடிக்க முடியவில்லை. பணம் கழிக்கப்படவில்லை.';
+
+  @override
+  String get paymentReceiptNo => 'ரசீது எண்';
+
+  @override
+  String get paymentDownloadPdf => 'PDF ரசீதைப் பகிரவும் / பதிவிறக்கவும்';
+
+  @override
+  String get paymentContinueJob => 'வேலை / ஆர்டருக்கு தொடரவும்';
+
+  @override
+  String get paymentTryAgain => 'மீண்டும் முயற்சிக்கவும்';
 }

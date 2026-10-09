@@ -218,3 +218,56 @@ Implemented backend RPCs for Customer Hub, Multi-Filter Worker Search, Worker Pr
 
 4. **`public.toggle_user_favourite(p_target_id UUID, p_target_type TEXT DEFAULT 'worker')`**:
    - Inserts or deletes favourite relationship in `public.user_favourites`.
+
+---
+
+## Razorpay Payment Gateway & Escrow Vault Architecture (Step P5.2)
+
+### Supabase Edge Functions
+
+1. **`payment-create-order`**:
+   - **Auth**: Authenticated via Supabase user JWT (`verify_jwt = true`).
+   - **Endpoint**: `https://mmzbpeqkfomnywuzoqii.supabase.co/functions/v1/payment-create-order`
+   - **Security**: Never trusts amounts from the Flutter app. Computes base amount, platform fee (from `admin_settings`), and escrow protection fee strictly on the server in paise via `compute_payment_bill`.
+   - **Action**: Generates Razorpay Order via Razorpay REST API (`POST https://api.razorpay.com/v1/orders`) using server-stored secrets (`RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`).
+   - **Output**: Returns `order_id`, `payment_id`, server-computed `amount_paise`, sequential `receipt_no`, and public `key_id` (`RAZORPAY_KEY_ID`), eliminating any need to hardcode keys in client bundles or `env.json`.
+
+2. **`payment-webhook`**:
+   - **Auth**: Called by Razorpay servers without Supabase JWT (`verify_jwt = false`).
+   - **Endpoint**: `https://mmzbpeqkfomnywuzoqii.supabase.co/functions/v1/payment-webhook`
+   - **Security**: Cryptographically validated strictly via constant-time HMAC-SHA256 signature verification:
+     ```typescript
+     const expectedSig = createHmac("sha256", webhookSecret).update(rawBody).digest("hex");
+     // Compare expectedSig and x-razorpay-signature in constant time
+     ```
+     Rejects any payload with missing or invalid signature (HTTP 401/403).
+   - **Idempotency**: Logs event ID and payment ID in `payment_webhook_events`. Duplicate deliveries are acknowledged with HTTP 200 without double crediting.
+   - **Escrow Invariant**: On `payment.captured`, calls `hold_escrow(p_payment_id)`, marking payment status as `held` and crediting the recipient's escrow bucket in `ledger_entries` (type `escrow`, direction `credit`).
+   - **Failure Handling**: On `payment.failed`, records error description and marks payment `failed`, enabling seamless client retry.
+
+### Webhook Configuration in Razorpay Dashboard
+
+- **Webhook URL**:
+  `https://mmzbpeqkfomnywuzoqii.supabase.co/functions/v1/payment-webhook`
+- **Secret**: Enter the exact value configured in Supabase secret `RAZORPAY_WEBHOOK_SECRET`.
+- **Subscribed Events (Select these 3 events)**:
+  1. `payment.captured`
+  2. `payment.failed`
+  3. `order.paid`
+
+### Test Credentials for Testing
+
+In Razorpay Test Mode (`rzp_test_...`), use the following credentials to simulate transactions:
+
+#### 1. Razorpay Test Cards
+- **Card Number**: `4111 1111 1111 1111` (Visa) or `5123 4567 8901 2345` (Mastercard)
+- **Expiry Date**: Any future month and year (e.g. `12/30`)
+- **CVV**: `123`
+- **OTP**: `123456` (or click "Success" in the Razorpay test bank screen)
+
+#### 2. Razorpay Test UPI
+- **Success UPI ID**: `success@razorpay` (always succeeds immediately)
+- **Failure UPI ID**: `failure@razorpay` (simulates payment declined by bank)
+
+#### 3. Netbanking & Wallets
+- Choose any test bank (e.g. "HDFC", "SBI", "ICICI") and select "Success" or "Failure" on the mock bank redirect page.

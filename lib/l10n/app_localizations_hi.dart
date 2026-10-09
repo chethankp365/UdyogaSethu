@@ -2683,4 +2683,83 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get noTransactionsSubtitle =>
       'पूरा हुआ दैनिक वेतन और स्थानांतरण यहां दिखाई देगा।';
+
+  @override
+  String get paymentTitle => 'भुगतान और एस्क्रो सुरक्षा';
+
+  @override
+  String get paymentBillSummary => 'बिल सारांश';
+
+  @override
+  String get paymentServiceWage => 'सेवा / मजदूरी राशि';
+
+  @override
+  String get paymentPlatformFee => 'प्लेटफ़ॉर्म शुल्क और जीएसटी';
+
+  @override
+  String get paymentProtectionAddon => 'सुरक्षा और बचाव ऐड-ऑन';
+
+  @override
+  String get paymentTotalPayable => 'कुल देय राशि';
+
+  @override
+  String get paymentEscrowNotice =>
+      'सत्यापित कार्य पूरा होने तक सुरक्षित। धनराशि सुरक्षित एस्क्रो में रखी गई है।';
+
+  @override
+  String get paymentChooseMethod => 'भुगतान विधि चुनें';
+
+  @override
+  String get paymentUpi => 'यूपीआई (GPay / PhonePe / Paytm)';
+
+  @override
+  String get paymentCard => 'क्रेडिट / डेबिट कार्ड';
+
+  @override
+  String get paymentWallet => 'उद्योगसेतु वॉलेट';
+
+  @override
+  String get paymentCash => 'काम पूरा होने पर नकद';
+
+  @override
+  String get paymentPaySecurely => 'सुरक्षित भुगतान करें';
+
+  @override
+  String get paymentConfirmCash => 'नकद बुकिंग की पुष्टि करें';
+
+  @override
+  String get paymentStatus => 'भुगतान स्थिति';
+
+  @override
+  String get paymentSuccessful => 'भुगतान सफल और पुष्ट';
+
+  @override
+  String get paymentSuccessSubtitle =>
+      'आपका भुगतान पुष्ट हो चुका है और एस्क्रो में सुरक्षित है।';
+
+  @override
+  String get paymentConfirmingBank => 'बैंक से पुष्टि की जा रही है...';
+
+  @override
+  String get paymentConfirmingSubtitle =>
+      'रेज़रपे और बैंकिंग नेटवर्क से पुष्टि की प्रतीक्षा की जा रही है। स्क्रीन स्वचालित रूप से अपडेट होगी।';
+
+  @override
+  String get paymentFailed => 'भुगतान विफल';
+
+  @override
+  String get paymentFailedSubtitle =>
+      'बैंक द्वारा आपका लेन-देन पूरा नहीं किया जा सका। कोई राशि नहीं काटी गई।';
+
+  @override
+  String get paymentReceiptNo => 'रसीद संख्या';
+
+  @override
+  String get paymentDownloadPdf => 'पीडीएफ रसीद साझा / डाउनलोड करें';
+
+  @override
+  String get paymentContinueJob => 'कार्य / ऑर्डर जारी रखें';
+
+  @override
+  String get paymentTryAgain => 'पुनः प्रयास करें';
 }

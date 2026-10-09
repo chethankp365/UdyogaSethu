@@ -183,6 +183,15 @@ This document records key design, architectural, role model, and implementation 
     * **UPI QR Scanner**: Scans and parses `upi://pay` URI scheme (`pa`, `pn`, `am`, `cu`, `tn`). Marked with a prominent amber **Demo mode** disclaimer: *"Demo mode — Scanned details are displayed for verification only. No money is transferred or deducted."*
   * **Realtime Balance Updates**: `SupabaseWalletRepository` subscribes to Supabase Realtime channel on table `ledger_entries` for the authenticated user, automatically triggering wallet summary recalculation whenever new debits or credits are posted.
 
+* **D51 — Razorpay Checkout, Constant-Time Webhook Verification, Escrow Hold & Digital PDF Receipts**:
+  * **Server-Authoritative Bill Computation**: Amounts are never trusted from the client. `compute_payment_bill(ref_type, ref_id, protection_override)` in PostgreSQL calculates base wage/order total, fetches platform fee percentage and caps from `admin_settings`, and calculates total in paise.
+  * **Public Key Returned by Server**: Edge Function `payment-create-order` creates the payment record, calls Razorpay Orders API, and returns the public `key_id` along with `order_id`. The Flutter application does not require any Razorpay API keys in client assets or `env.json`.
+  * **Webhook Security & Constant-Time Verification**: `payment-webhook` runs with `verify_jwt = false` and is protected exclusively by constant-time HMAC-SHA256 signature comparison against `RAZORPAY_WEBHOOK_SECRET`. All requests with missing or bad signatures are rejected (HTTP 401/403).
+  * **Idempotency Deduplication**: Table `public.payment_webhook_events` logs every event ID and payment ID. Duplicate webhook deliveries return HTTP 200 without double-crediting escrow or creating duplicate ledger entries.
+  * **Automated Escrow Invariant**: On `payment.captured` for protected jobs, the webhook invokes `hold_escrow(payment_id)`, marking payment status as `held` and inserting an `escrow` credit in `ledger_entries` for the payee.
+  * **Sequential SQL Receipt Numbers**: Receipt numbers are generated via PostgreSQL sequence `receipt_no_seq` and trigger `trg_set_payment_receipt_no` in the format `RCP-YYYYMMDD-XXXXXX`.
+  * **Realtime State Tracking**: `PaymentStatusScreen` listens to Supabase Realtime updates on the `payments` row rather than relying solely on the client SDK callback, ensuring atomic consistency between payment capture, webhook receipt, and UI transition.
+  * **Digital PDF Receipts**: Built `PaymentReceiptPdf` generating an itemized tax invoice and escrow certificate, shareable via `share_plus`.
 
 
 

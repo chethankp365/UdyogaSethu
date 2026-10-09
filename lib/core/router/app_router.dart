@@ -45,6 +45,8 @@ import 'package:udyogasethu/features/trust/presentation/trust_safety_centre_scre
 import 'package:udyogasethu/features/trust/presentation/job_history_screen.dart';
 import 'package:udyogasethu/features/trust/presentation/favourites_screen.dart';
 import 'package:udyogasethu/features/wallet/presentation/wallet_screen.dart';
+import 'package:udyogasethu/features/payments/presentation/payment_checkout_screen.dart';
+import 'package:udyogasethu/features/payments/presentation/payment_status_screen.dart';
 import 'package:udyogasethu/features/verification/presentation/face_check_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_home_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_wizard_screen.dart';
@@ -666,6 +668,28 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.wallet,
         builder: (context, state) => const WalletScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.paymentCheckout,
+        builder: (context, state) {
+          final refType = state.uri.queryParameters['refType'] ?? (state.extra as Map?)?['refType'] ?? 'assignment';
+          final refId = state.uri.queryParameters['refId'] ?? (state.extra as Map?)?['refId'] ?? '';
+          final protection = state.uri.queryParameters['protection'] != null
+              ? state.uri.queryParameters['protection'] == 'true'
+              : (state.extra as Map?)?['protection'] as bool?;
+          return PaymentCheckoutScreen(
+            refType: refType,
+            refId: refId,
+            protectionOverride: protection,
+          );
+        },
+      ),
+      GoRoute(
+        path: '${AppRoutes.paymentStatus}/:id',
+        builder: (context, state) {
+          final paymentId = state.pathParameters['id'] ?? '';
+          return PaymentStatusScreen(paymentId: paymentId);
+        },
       ),
 
       // Debug Routes

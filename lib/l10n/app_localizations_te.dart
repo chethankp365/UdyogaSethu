@@ -2704,4 +2704,84 @@ class AppLocalizationsTe extends AppLocalizations {
   @override
   String get noTransactionsSubtitle =>
       'పూర్తయిన రోజువారీ వేతనాలు మరియు బదిలీలు ఇక్కడ కనిపిస్తాయి.';
+
+  @override
+  String get paymentTitle => 'చెల్లింపు మరియు ఎస్క్రో రక్షణ';
+
+  @override
+  String get paymentBillSummary => 'బిల్లు సారాంశం';
+
+  @override
+  String get paymentServiceWage => 'సేవ / వేతనం మొత్తం';
+
+  @override
+  String get paymentPlatformFee => 'ప్లాట్‌ఫారమ్ రుసుము మరియు జీఎస్టీ';
+
+  @override
+  String get paymentProtectionAddon => 'రక్షణ మరియు భద్రత యాడ్-ఆన్';
+
+  @override
+  String get paymentTotalPayable => 'మొత్తం చెల్లించవలసినది';
+
+  @override
+  String get paymentEscrowNotice =>
+      'ధృవీకరించబడిన ముగింపు వరకు రక్షించబడింది. డబ్బు సురక్షిత ఎస్క్రోలో ఉంది.';
+
+  @override
+  String get paymentChooseMethod => 'చెల్లింపు పద్ధతిని ఎంచుకోండి';
+
+  @override
+  String get paymentUpi => 'యూపీఐ (GPay / PhonePe / Paytm)';
+
+  @override
+  String get paymentCard => 'క్రెడిట్ / డెబిట్ కార్డ్';
+
+  @override
+  String get paymentWallet => 'ఉద్యోగసేతు వాలెట్';
+
+  @override
+  String get paymentCash => 'పూర్తయిన తర్వాత నగదు';
+
+  @override
+  String get paymentPaySecurely => 'సురక్షితంగా చెల్లించండి';
+
+  @override
+  String get paymentConfirmCash => 'నగదు బుకింగ్‌ను నిర్ధారించండి';
+
+  @override
+  String get paymentStatus => 'చెల్లింపు స్థితి';
+
+  @override
+  String get paymentSuccessful =>
+      'చెల్లింపు విజయవంతమైంది మరియు నిర్ధారించబడింది';
+
+  @override
+  String get paymentSuccessSubtitle =>
+      'మీ చెల్లింపు నిర్ధారించబడింది మరియు ఎస్క్రోలో భద్రంగా ఉంది.';
+
+  @override
+  String get paymentConfirmingBank => 'బ్యాంకుతో నిర్ధారిస్తోంది...';
+
+  @override
+  String get paymentConfirmingSubtitle =>
+      'రేజర్‌పే మరియు బ్యాంకింగ్ నెట్‌వర్క్ నుండి నిర్ధారణ కోసం వేచి ఉంది. స్క్రీన్ స్వయంచాలకంగా అప్‌డేట్ అవుతుంది.';
+
+  @override
+  String get paymentFailed => 'చెల్లింపు విఫలమైంది';
+
+  @override
+  String get paymentFailedSubtitle =>
+      'బ్యాంకు ద్వారా మీ లావాదేవీ పూర్తి కాలేదు. డబ్బు కట్ కాలేదు.';
+
+  @override
+  String get paymentReceiptNo => 'రశీదు సంఖ్య';
+
+  @override
+  String get paymentDownloadPdf => 'పీడీఎఫ్ రశీదును షేర్ / డౌన్‌లోడ్ చేయండి';
+
+  @override
+  String get paymentContinueJob => 'పని / ఆర్డర్‌కు కొనసాగండి';
+
+  @override
+  String get paymentTryAgain => 'మళ్ళీ ప్రయత్నించండి';
 }

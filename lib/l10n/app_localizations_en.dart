@@ -2689,4 +2689,83 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get noTransactionsSubtitle =>
       'Completed daily wages and transfers will appear here.';
+
+  @override
+  String get paymentTitle => 'Payment & Escrow Protection';
+
+  @override
+  String get paymentBillSummary => 'Bill Summary';
+
+  @override
+  String get paymentServiceWage => 'Service / Wage Amount';
+
+  @override
+  String get paymentPlatformFee => 'Platform Fee & GST';
+
+  @override
+  String get paymentProtectionAddon => 'Protection & Safety Add-on';
+
+  @override
+  String get paymentTotalPayable => 'Total Payable';
+
+  @override
+  String get paymentEscrowNotice =>
+      'Protected until verified completion. Money held in safe Escrow.';
+
+  @override
+  String get paymentChooseMethod => 'Choose Payment Method';
+
+  @override
+  String get paymentUpi => 'UPI (GPay / PhonePe / Paytm)';
+
+  @override
+  String get paymentCard => 'Credit / Debit Card';
+
+  @override
+  String get paymentWallet => 'UdyogaSethu Wallet';
+
+  @override
+  String get paymentCash => 'Cash on Completion';
+
+  @override
+  String get paymentPaySecurely => 'Pay Securely';
+
+  @override
+  String get paymentConfirmCash => 'Confirm Cash Booking';
+
+  @override
+  String get paymentStatus => 'Payment Status';
+
+  @override
+  String get paymentSuccessful => 'Payment Successful and Confirmed';
+
+  @override
+  String get paymentSuccessSubtitle =>
+      'Your payment is confirmed and safely held in escrow.';
+
+  @override
+  String get paymentConfirmingBank => 'Confirming with Bank...';
+
+  @override
+  String get paymentConfirmingSubtitle =>
+      'Awaiting confirmation from Razorpay and banking network. Your screen will update automatically.';
+
+  @override
+  String get paymentFailed => 'Payment Failed';
+
+  @override
+  String get paymentFailedSubtitle =>
+      'Your transaction could not be completed by the bank. No money was deducted.';
+
+  @override
+  String get paymentReceiptNo => 'Receipt No';
+
+  @override
+  String get paymentDownloadPdf => 'Share / Download PDF Receipt';
+
+  @override
+  String get paymentContinueJob => 'Continue to Job / Order';
+
+  @override
+  String get paymentTryAgain => 'Try Again';
 }

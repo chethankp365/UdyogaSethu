@@ -2716,4 +2716,84 @@ class AppLocalizationsKn extends AppLocalizations {
   @override
   String get noTransactionsSubtitle =>
       'ಪೂರ್ಣಗೊಂಡ ದೈನಂದಿನ ಕೂಲಿ ಮತ್ತು ವರ್ಗಾವಣೆಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.';
+
+  @override
+  String get paymentTitle => 'ಪಾವತಿ ಮತ್ತು ಎಸ್ಕ್ರೋ ರಕ್ಷಣೆ';
+
+  @override
+  String get paymentBillSummary => 'ಬಿಲ್ ವಿವರಣೆ';
+
+  @override
+  String get paymentServiceWage => 'ಸೇವೆ / ದಿನಗೂಲಿ ಮೊತ್ತ';
+
+  @override
+  String get paymentPlatformFee => 'ವೇದಿಕೆ ಶುಲ್ಕ ಮತ್ತು ಜಿಎಸ್ಟಿ';
+
+  @override
+  String get paymentProtectionAddon => 'ರಕ್ಷಣೆ ಮತ್ತು ಸುರಕ್ಷತೆ ಆಡ್-ಆನ್';
+
+  @override
+  String get paymentTotalPayable => 'ಒಟ್ಟು ಪಾವತಿಸಬೇಕಾದ ಮೊತ್ತ';
+
+  @override
+  String get paymentEscrowNotice =>
+      'ದೃಢೀಕೃತ ಮುಕ್ತಾಯದವರೆಗೆ ರಕ್ಷಿಸಲಾಗಿದೆ. ಹಣ ಸುರಕ್ಷಿತ ಎಸ್ಕ್ರೋ ಖಾತೆಯಲ್ಲಿದೆ.';
+
+  @override
+  String get paymentChooseMethod => 'ಪಾವತಿ ವಿಧಾನವನ್ನು ಆಯ್ಕೆಮಾಡಿ';
+
+  @override
+  String get paymentUpi => 'ಯುಪಿಐ (GPay / PhonePe / Paytm)';
+
+  @override
+  String get paymentCard => 'ಕ್ರೆಡಿಟ್ / ಡೆಬಿಟ್ ಕಾರ್ಡ್';
+
+  @override
+  String get paymentWallet => 'ಉದ್ಯೋಗಸೇತು ವಾಲೆಟ್';
+
+  @override
+  String get paymentCash => 'ಮುಕ್ತಾಯದ ನಂತರ ನಗದು';
+
+  @override
+  String get paymentPaySecurely => 'ಸುರಕ್ಷಿತವಾಗಿ ಪಾವತಿಸಿ';
+
+  @override
+  String get paymentConfirmCash => 'ನಗದು ಬುಕಿಂಗ್ ಖಚಿತಪಡಿಸಿ';
+
+  @override
+  String get paymentStatus => 'ಪಾವತಿ ಸ್ಥಿತಿ';
+
+  @override
+  String get paymentSuccessful => 'ಪಾವತಿ ಯಶಸ್ವಿ ಮತ್ತು ದೃಢೀಕರಿಸಲಾಗಿದೆ';
+
+  @override
+  String get paymentSuccessSubtitle =>
+      'ನಿಮ್ಮ ಪಾವತಿಯನ್ನು ದೃಢೀಕರಿಸಲಾಗಿದೆ ಮತ್ತು ಎಸ್ಕ್ರೋದಲ್ಲಿ ಸುರಕ್ಷಿತವಾಗಿ ಇರಿಸಲಾಗಿದೆ.';
+
+  @override
+  String get paymentConfirmingBank => 'ಬ್ಯಾಂಕ್‌ನೊಂದಿಗೆ ದೃಢೀಕರಿಸಲಾಗುತ್ತಿದೆ...';
+
+  @override
+  String get paymentConfirmingSubtitle =>
+      'ರೇಜರ್‌ಪೇ ಮತ್ತು ಬ್ಯಾಂಕ್ ನೆಟ್‌ವರ್ಕ್‌ನಿಂದ ದೃಢೀಕರಣಕ್ಕಾಗಿ ಕಾಯಲಾಗುತ್ತಿದೆ. ಪರದೆಯು ತಾನಾಗಿಯೇ ಅಪ್ಡೇಟ್ ಆಗುತ್ತದೆ.';
+
+  @override
+  String get paymentFailed => 'ಪಾವತಿ ವಿಫಲವಾಗಿದೆ';
+
+  @override
+  String get paymentFailedSubtitle =>
+      'ಬ್ಯಾಂಕ್‌ನಿಂದ ನಿಮ್ಮ ವಹಿವಾಟು ಪೂರ್ಣಗೊಳಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಯಾವುದೇ ಹಣ ಕಡಿತವಾಗಿಲ್ಲ.';
+
+  @override
+  String get paymentReceiptNo => 'ರಸೀದಿ ಸಂಖ್ಯೆ';
+
+  @override
+  String get paymentDownloadPdf =>
+      'ಪಿಡಿಎಫ್ ರಸೀದಿಯನ್ನು ಹಂಚಿಕೊಳ್ಳಿ / ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ';
+
+  @override
+  String get paymentContinueJob => 'ಕೆಲಸ / ಆರ್ಡರ್‌ಗೆ ಮುಂದುವರಿಯಿರಿ';
+
+  @override
+  String get paymentTryAgain => 'ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ';
 }
