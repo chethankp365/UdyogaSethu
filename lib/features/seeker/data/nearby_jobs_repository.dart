@@ -59,7 +59,16 @@ class SupabaseNearbyJobsRepository implements NearbyJobsRepository {
       final res = await client.rpc('nearby_jobs', params: params);
 
       if (res is List) {
-        return res.map((item) => JobPin.fromJson(item as Map<String, dynamic>)).toList();
+        final now = DateTime.now();
+        return res
+            .map((item) => JobPin.fromJson(item as Map<String, dynamic>))
+            .where((pin) {
+              if (pin.startAt != null && pin.startAt!.isBefore(now)) return false;
+              if (pin.slotsTotal > 0 && pin.slotsFilled >= pin.slotsTotal) return false;
+              if (pin.lat == 0.0 && pin.lng == 0.0) return false;
+              return true;
+            })
+            .toList();
       }
       return [];
     } catch (e, st) {

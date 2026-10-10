@@ -81,9 +81,10 @@ class SupabaseSeekerHomeRepository implements SeekerHomeRepository {
 
       final isStudentOrPartTime = seekerType == 'student' || seekerType == 'part_time';
 
-      // Strict client-side safety filter matching D-AUDIENCE
-      // Zero tolerance: trade jobs NEVER show to students; student gigs NEVER show to informal
+      final now = DateTime.now();
       final filteredList = rawList.where((job) {
+        if (job.startAt != null && job.startAt!.isBefore(now)) return false;
+        if (job.slotsTotal > 0 && job.slotsFilled >= job.slotsTotal) return false;
         if (isStudentOrPartTime) {
           if (tradeCategorySlugs.contains(job.categorySlug) && !job.isStudentFriendly) return false;
           return studentCategorySlugs.contains(job.categorySlug) || job.isStudentFriendly;

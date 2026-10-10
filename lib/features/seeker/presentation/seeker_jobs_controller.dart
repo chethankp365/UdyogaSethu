@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:udyogasethu/features/seeker/data/seeker_jobs_repository.dart';
 import 'package:udyogasethu/features/seeker/domain/seeker_job_item.dart';
@@ -41,10 +42,24 @@ class SeekerJobsState {
 
 class SeekerJobsNotifier extends Notifier<SeekerJobsState> {
   SeekerJobsRepository get _repo => ref.read(seekerJobsRepositoryProvider);
+  StreamSubscription? _subscription;
 
   @override
   SeekerJobsState build() {
-    Future.microtask(() => loadJobs());
+    _subscription?.cancel();
+    _subscription = _repo.watchSeekerJobs().listen(
+      (data) {
+        state = state.copyWith(isLoading: false, segments: data, error: null);
+      },
+      onError: (e) {
+        state = state.copyWith(isLoading: false, error: e.toString());
+      },
+    );
+
+    ref.onDispose(() {
+      _subscription?.cancel();
+    });
+
     return const SeekerJobsState(isLoading: true);
   }
 

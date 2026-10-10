@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -126,8 +127,15 @@ class SupabaseSeekerJobsRepository implements SeekerJobsRepository {
   }
 
   @override
-  Stream<Map<SeekerJobSegment, List<SeekerJobItem>>> watchSeekerJobs() async* {
-    yield await fetchSeekerJobs();
+  Stream<Map<SeekerJobSegment, List<SeekerJobItem>>> watchSeekerJobs() {
+    final controller = StreamController<Map<SeekerJobSegment, List<SeekerJobItem>>>.broadcast();
+
+    // Initial load
+    fetchSeekerJobs().then((data) {
+      if (!controller.isClosed) controller.add(data);
+    }).catchError((e) {
+      if (!controller.isClosed) controller.addError(e);
+    });
 
     if (_client != null && Supabase.instance.isInitialized) {
       final uid = _getUserId();
@@ -143,7 +151,10 @@ class SupabaseSeekerJobsRepository implements SeekerJobsRepository {
                 column: 'worker_id',
                 value: uid,
               ),
-              callback: (_) {},
+              callback: (_) async {
+                final fresh = await fetchSeekerJobs();
+                if (!controller.isClosed) controller.add(fresh);
+              },
             )
             .onPostgresChanges(
               event: PostgresChangeEvent.all,
@@ -154,11 +165,20 @@ class SupabaseSeekerJobsRepository implements SeekerJobsRepository {
                 column: 'worker_id',
                 value: uid,
               ),
-              callback: (_) {},
+              callback: (_) async {
+                final fresh = await fetchSeekerJobs();
+                if (!controller.isClosed) controller.add(fresh);
+              },
             )
             .subscribe();
+
+        controller.onCancel = () {
+          _client.removeChannel(channel);
+        };
       }
     }
+
+    return controller.stream;
   }
 
   @override
