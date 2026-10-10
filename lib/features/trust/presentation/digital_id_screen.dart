@@ -43,6 +43,11 @@ class _DigitalIdScreenState extends ConsumerState<DigitalIdScreen> {
   int _secondsLeft = 300;
   int _totalDurationSeconds = 300;
 
+  // Next accepted assignment rotating ticket QR state (E8)
+  String? _ticketQrToken;
+  int _ticketSecondsLeft = 120;
+  Timer? _ticketCountdownTimer;
+
   @override
   void initState() {
     super.initState();
@@ -52,6 +57,7 @@ class _DigitalIdScreenState extends ConsumerState<DigitalIdScreen> {
   @override
   void dispose() {
     _countdownTimer?.cancel();
+    _ticketCountdownTimer?.cancel();
     super.dispose();
   }
 
@@ -76,20 +82,40 @@ class _DigitalIdScreenState extends ConsumerState<DigitalIdScreen> {
       final isQrEnabled = ref.read(profileQrEnabledProvider);
 
       Map<String, dynamic>? ticket;
+      String? ticketToken;
+      int ticketLeft = 120;
+
       try {
         ticket = await ref.read(jobExecutionRepositoryProvider).getNextAcceptedTicket();
+        if (ticket != null && ticket['assignment_id'] != null) {
+          final aid = ticket['assignment_id'] as String;
+          final tokenData = await ref.read(jobExecutionRepositoryProvider).getRotatingTicketToken(aid);
+          ticketToken = tokenData['qr_token'] as String?;
+          final exp = tokenData['expires_at'] != null ? DateTime.tryParse(tokenData['expires_at'].toString()) : null;
+          final ttl = (tokenData['expires_in_seconds'] as num?)?.toInt() ?? 120;
+          ticketLeft = exp != null
+              ? exp.difference(DateTime.now()).inSeconds.clamp(0, ttl)
+              : ttl;
+        }
       } catch (_) {}
 
       if (mounted) {
         setState(() {
           _idCard = data;
           _nextTicket = ticket;
+          _ticketQrToken = ticketToken;
+          _ticketSecondsLeft = ticketLeft;
           _totalDurationSeconds = data.qrExpiresInSeconds;
           _secondsLeft = data.qrExpiresAt != null
               ? data.qrExpiresAt!.difference(DateTime.now()).inSeconds.clamp(0, data.qrExpiresInSeconds)
               : data.qrExpiresInSeconds;
           _isLoading = false;
         });
+
+        if (ticket != null && ticket['assignment_id'] != null) {
+          _startTicketCountdown(ticket['assignment_id'] as String);
+        }
+
         if (isQrEnabled) {
           _startCountdown();
         }
@@ -102,6 +128,38 @@ class _DigitalIdScreenState extends ConsumerState<DigitalIdScreen> {
         });
       }
     }
+  }
+
+  void _startTicketCountdown(String assignmentId) {
+    _ticketCountdownTimer?.cancel();
+    _ticketCountdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+      if (_ticketSecondsLeft <= 1) {
+        timer.cancel();
+        setState(() {
+          _ticketSecondsLeft = 0;
+        });
+        try {
+          final tokenData = await ref.read(jobExecutionRepositoryProvider).getRotatingTicketToken(assignmentId);
+          if (mounted) {
+            final newToken = tokenData['qr_token'] as String?;
+            final newTtl = (tokenData['expires_in_seconds'] as num?)?.toInt() ?? 120;
+            setState(() {
+              _ticketQrToken = newToken;
+              _ticketSecondsLeft = newTtl;
+            });
+            _startTicketCountdown(assignmentId);
+          }
+        } catch (_) {}
+      } else {
+        setState(() {
+          _ticketSecondsLeft--;
+        });
+      }
+    });
   }
 
   Future<void> _refreshQrToken() async {
@@ -461,38 +519,66 @@ class _DigitalIdScreenState extends ConsumerState<DigitalIdScreen> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 14),
+                        // QR Code container (tap opens full ticket)
+                        InkWell(
+                          onTap: () {
+                            context.push('/jobs/ticket/${_nextTicket!['assignment_id']}');
+                          },
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: _ticketQrToken != null
+                                ? QrImageView(
+                                    data: _ticketQrToken!,
+                                    version: QrVersions.auto,
+                                    size: 160,
+                                  )
+                                : const SizedBox(
+                                    width: 160,
+                                    height: 160,
+                                    child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                                  ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.timer_outlined, size: 14, color: Colors.white70),
+                            const SizedBox(width: 4),
+                            Text(
+                              'QR refreshes in ${_formatTime(_ticketSecondsLeft)}',
+                              style: const TextStyle(fontSize: 12, color: Colors.white70),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 14),
+                        // Job details directly under QR (E8)
                         Text(
                           _nextTicket!['job_title'] as String? ?? 'Upcoming Job',
-                          style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                          style: const TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
+                        if (_nextTicket!['start_at'] != null) ...[
+                          const SizedBox(height: 4),
+                          Text(
+                            'Shift Time: ${DateFormat('EEE, d MMM • h:mm a').format(DateTime.tryParse(_nextTicket!['start_at'].toString())?.toLocal() ?? DateTime.now())}',
+                            style: const TextStyle(color: Color(0xFFFDE68A), fontSize: 13, fontWeight: FontWeight.w600),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                         const SizedBox(height: 4),
                         Text(
                           'Employer: ${_nextTicket!['provider_name'] ?? 'Job Provider'}',
                           style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+                          textAlign: TextAlign.center,
                         ),
-                        if (_nextTicket!['start_at'] != null) ...[
-                          const SizedBox(height: 2),
-                          Text(
-                            'Start: ${DateFormat('EEE, d MMM • h:mm a').format(DateTime.tryParse(_nextTicket!['start_at'].toString())?.toLocal() ?? DateTime.now())}',
-                            style: const TextStyle(color: Color(0xFFFDE68A), fontSize: 12, fontWeight: FontWeight.w600),
-                          ),
-                        ],
-                        const SizedBox(height: 14),
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: QrImageView(
-                            data: 'TICKET-${_nextTicket!['booking_code']}',
-                            version: QrVersions.auto,
-                            size: 160,
-                          ),
-                        ),
-                        const SizedBox(height: 14),
+                        const SizedBox(height: 16),
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton.icon(
