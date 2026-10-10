@@ -75,7 +75,7 @@ class TransactionTile extends StatelessWidget {
               ),
               const SizedBox(width: 12),
 
-              // Title and Date
+              // Title, Subtitle, and Time
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,11 +90,22 @@ class TransactionTile extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 3),
+                    const SizedBox(height: 2),
+                    Text(
+                      transaction.subtitle,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF0D6548),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 2),
                     Text(
                       _formatDateTime(transaction.createdAt),
                       style: const TextStyle(
-                        fontSize: 12,
+                        fontSize: 11,
                         color: AppColors.textMuted,
                       ),
                     ),
@@ -103,7 +114,7 @@ class TransactionTile extends StatelessWidget {
               ),
               const SizedBox(width: 10),
 
-              // Amount & Completed Badge
+              // Signed Amount & Status Chip
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -117,17 +128,18 @@ class TransactionTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFE6F4EA),
+                      color: transaction.statusColor.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: transaction.statusColor.withValues(alpha: 0.3)),
                     ),
-                    child: const Text(
-                      '✓ Completed',
+                    child: Text(
+                      transaction.statusDisplay,
                       style: TextStyle(
                         fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF00875A),
+                        fontWeight: FontWeight.w700,
+                        color: transaction.statusColor,
                       ),
                     ),
                   ),

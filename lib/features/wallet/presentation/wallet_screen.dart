@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
-import 'package:udyogasethu/core/widgets/mic_fab.dart';
 import 'package:udyogasethu/features/wallet/data/wallet_repository.dart';
 import 'package:udyogasethu/features/wallet/domain/wallet_balance.dart';
 import 'package:udyogasethu/features/wallet/domain/wallet_transaction.dart';
@@ -22,18 +21,22 @@ class WalletScreen extends ConsumerStatefulWidget {
 }
 
 class _WalletScreenState extends ConsumerState<WalletScreen> {
-  String _selectedFilter = 'all'; // 'all', 'wages', 'transfers', 'farm_sales', 'rewards', 'refunds'
+  String _selectedFilter = 'all'; // 'all', 'wages', 'transfers', 'farm_produce', 'withdrawals', 'refunds'
   DateTime? _selectedStartDate;
   DateTime? _selectedEndDate;
+  int _currentLimit = 20;
 
   TransactionFilterCriteria get _currentCriteria => TransactionFilterCriteria(
         type: _selectedFilter,
         startDate: _selectedStartDate,
         endDate: _selectedEndDate,
-        limit: 50,
+        limit: _currentLimit,
       );
 
   Future<void> _refresh() async {
+    setState(() {
+      _currentLimit = 20;
+    });
     ref.invalidate(walletSummaryProvider);
     ref.invalidate(walletTransactionsProvider(_currentCriteria));
   }
@@ -134,7 +137,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
               ),
               const SizedBox(height: 10),
 
-              // Filter Chips Row
+              // Filter Chips Row (Prompt D1: All, Daily Wages, UPI Transfers, Farm Produce, Withdrawals, Refunds)
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -145,11 +148,9 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                     const SizedBox(width: 8),
                     _filterChip('transfers', 'UPI Transfers'),
                     const SizedBox(width: 8),
-                    _filterChip('escrow', 'Escrow Deposits'),
+                    _filterChip('farm_produce', 'Farm Produce'),
                     const SizedBox(width: 8),
-                    _filterChip('farm_sales', 'Farm Produce'),
-                    const SizedBox(width: 8),
-                    _filterChip('rewards', 'Rewards'),
+                    _filterChip('withdrawals', 'Withdrawals'),
                     const SizedBox(width: 8),
                     _filterChip('refunds', 'Refunds'),
                   ],
@@ -157,7 +158,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
               ),
               const SizedBox(height: 16),
 
-              // 3. TRANSACTIONS LIST (Grouped by Day & Month)
+              // 3. TRANSACTIONS LIST (Grouped by Day & Month with Pagination)
               transactionsAsync.when(
                 data: (transactions) {
                   if (transactions.isEmpty) {
@@ -174,13 +175,11 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                 error: (err, _) => _buildErrorState(err.toString()),
               ),
 
-              const SizedBox(height: 80), // Padding for MicFab
+              const SizedBox(height: 24),
             ],
           ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: MicFab(onTap: () {}),
     );
   }
 
@@ -448,7 +447,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
   }
 
   // ==========================================================================
-  // GROUPED TRANSACTIONS BUILDER
+  // GROUPED TRANSACTIONS BUILDER (Grouped by Day & Month - Prompt D1)
   // ==========================================================================
   Map<String, List<WalletTransaction>> _groupTransactions(List<WalletTransaction> transactions) {
     final Map<String, List<WalletTransaction>> grouped = {};
@@ -460,11 +459,11 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
       final txDate = DateTime(tx.createdAt.year, tx.createdAt.month, tx.createdAt.day);
       String header;
       if (txDate == today) {
-        header = 'TODAY';
+        header = 'TODAY • ${DateFormat('d MMMM yyyy').format(tx.createdAt).toUpperCase()}';
       } else if (txDate == yesterday) {
-        header = 'YESTERDAY';
+        header = 'YESTERDAY • ${DateFormat('d MMMM yyyy').format(tx.createdAt).toUpperCase()}';
       } else {
-        header = DateFormat('MMMM yyyy').format(tx.createdAt).toUpperCase();
+        header = DateFormat('d MMMM yyyy').format(tx.createdAt).toUpperCase();
       }
       grouped.putIfAbsent(header, () => []).add(tx);
     }
@@ -476,42 +475,67 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: groups.entries.map((entry) {
-        final header = entry.key;
-        final items = entry.value;
+      children: [
+        ...groups.entries.map((entry) {
+          final header = entry.key;
+          final items = entry.value;
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    header,
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 0.8,
-                      color: AppColors.textMuted,
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      header,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.8,
+                        color: AppColors.textMuted,
+                      ),
                     ),
-                  ),
-                  Text(
-                    '${items.length} ${items.length == 1 ? 'transaction' : 'transactions'}',
-                    style: const TextStyle(
-                      fontSize: 11,
-                      color: AppColors.textMuted,
+                    Text(
+                      '${items.length} ${items.length == 1 ? 'transaction' : 'transactions'}',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: AppColors.textMuted,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+              ...items.map((tx) => TransactionTile(transaction: tx)),
+              const SizedBox(height: 6),
+            ],
+          );
+        }),
+        if (transactions.length >= _currentLimit) ...[
+          const SizedBox(height: 12),
+          Center(
+            child: OutlinedButton.icon(
+              style: OutlinedButton.styleFrom(
+                foregroundColor: const Color(0xFF0D6548),
+                side: const BorderSide(color: Color(0xFF0D6548)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              ),
+              icon: const Icon(Icons.arrow_downward_rounded, size: 16),
+              label: const Text(
+                'Load Earlier Transactions',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+              ),
+              onPressed: () {
+                setState(() {
+                  _currentLimit += 20;
+                });
+              },
             ),
-            ...items.map((tx) => TransactionTile(transaction: tx)),
-            const SizedBox(height: 6),
-          ],
-        );
-      }).toList(),
+          ),
+        ],
+      ],
     );
   }
 

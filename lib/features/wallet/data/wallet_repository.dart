@@ -127,8 +127,13 @@ class SupabaseWalletRepository implements WalletRepository {
   @override
   Future<List<WalletTransaction>> getTransactions(TransactionFilterCriteria criteria) async {
     try {
+      // Map client criteria to RPC parameters for seamless compatibility
+      String rpcType = criteria.type;
+      if (rpcType == 'farm_produce') rpcType = 'farm_sales';
+      if (rpcType == 'withdrawals') rpcType = 'transfers';
+
       final res = await _client.rpc('get_wallet_transactions', params: {
-        'p_type': criteria.type,
+        'p_type': rpcType,
         'p_start_date': criteria.startDate?.toIso8601String(),
         'p_end_date': criteria.endDate?.toIso8601String(),
         'p_limit': criteria.limit,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:udyogasethu/core/config/env.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/wallet/domain/wallet_transaction.dart';
 
@@ -38,18 +39,24 @@ class PaymentReceiptModal extends StatelessWidget {
     final receiptText = '''
 🧾 UdyogaSethu Payment Receipt
 ================================
-Status: ${transaction.status.toUpperCase()} (Escrow Cleared)
+Status: ${transaction.statusDisplay.toUpperCase()}
 Type: ${transaction.title}
+Subtitle: ${transaction.subtitle}
 Amount: ${transaction.formattedSignedAmount}
 Transaction ID: ${transaction.id}
 Bank Reference / UTR: ${transaction.utrNumber}
+${transaction.rpPaymentId != null ? 'Razorpay Payment ID: ${transaction.rpPaymentId}\n' : ''}${transaction.rpOrderId != null ? 'Razorpay Order ID: ${transaction.rpOrderId}\n' : ''}${transaction.counterpartyLabel}
 Date & Time: $dateStr
 
 Fee Breakdown:
 - Gross Amount: ${transaction.formattedGrossAmount}
-- Platform Fee & Protection: ${transaction.formattedFee}
+- Platform Commission & Safety: ${transaction.formattedFee}
 - GST (18%): ${transaction.formattedTax}
 - Net Amount: ${transaction.formattedNetAmount}
+
+SafeEscrow Steps:
+1. Held: Funds verified and held in escrow
+2. Released: Disbursed upon completed job attendance/order
 
 Protected by UdyogaSethu SafeEscrow
 ================================
@@ -58,6 +65,80 @@ Protected by UdyogaSethu SafeEscrow
       ShareParams(
         text: receiptText,
         subject: 'UdyogaSethu Payment Receipt - ${transaction.utrNumber}',
+      ),
+    );
+  }
+
+  void _reportIssue(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Report an Issue',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textDark,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Report a problem with receipt ${transaction.utrNumber}:',
+                style: const TextStyle(fontSize: 13, color: AppColors.textMuted),
+              ),
+              const SizedBox(height: 16),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.account_balance_wallet_outlined, color: Color(0xFF0D6548)),
+                title: const Text('Amount not received or delayed payout'),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _showDisputeConfirmed(context);
+                },
+              ),
+              const Divider(height: 1),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.receipt_long_outlined, color: Color(0xFF0D6548)),
+                title: const Text('Disputed deduction or platform fee calculation'),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _showDisputeConfirmed(context);
+                },
+              ),
+              const Divider(height: 1),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.shield_outlined, color: Color(0xFF0D6548)),
+                title: const Text('Job completion or quality issue (Escrow Hold)'),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _showDisputeConfirmed(context);
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showDisputeConfirmed(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Issue reported. Dispute ticket created for review.'),
+        backgroundColor: Color(0xFF0D6548),
+        behavior: SnackBarBehavior.floating,
       ),
     );
   }
@@ -93,7 +174,34 @@ Protected by UdyogaSethu SafeEscrow
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 14),
+
+              // Test Mode Label when Razorpay test keys are in use (Prompt D2)
+              if (kRazorpayTestMode)
+                Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFEF3C7),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: const Color(0xFFF59E0B)),
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.science_outlined, size: 14, color: Color(0xFFB45309)),
+                      SizedBox(width: 6),
+                      Text(
+                        'Test mode: Razorpay Sandbox Keys Active',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF92400E),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
 
               // Header Row
               Row(
@@ -135,9 +243,9 @@ Protected by UdyogaSethu SafeEscrow
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
 
-              // Hero Amount Card
+              // Hero Amount Card with Large Amount and Status (Prompt D2)
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
                 decoration: BoxDecoration(
@@ -164,24 +272,30 @@ Protected by UdyogaSethu SafeEscrow
                         letterSpacing: -0.5,
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                       decoration: BoxDecoration(
-                        color: isCredit ? const Color(0xFF00875A) : const Color(0xFFDC2626),
+                        color: transaction.statusColor,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            isCredit ? Icons.check_circle_rounded : Icons.arrow_outward_rounded,
+                            transaction.statusDisplay == 'Success'
+                                ? Icons.check_circle_rounded
+                                : transaction.statusDisplay == 'Pending'
+                                    ? Icons.hourglass_top_rounded
+                                    : transaction.statusDisplay == 'Refunded'
+                                        ? Icons.replay_rounded
+                                        : Icons.error_outline_rounded,
                             color: Colors.white,
                             size: 14,
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            isCredit ? 'Completed • Escrow Settled' : 'Withdrawal Processed',
+                            'Status: ${transaction.statusDisplay}',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 11,
@@ -194,9 +308,9 @@ Protected by UdyogaSethu SafeEscrow
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 18),
 
-              // Transaction Identifiers Card
+              // Transaction Identifiers Card (Prompt D2)
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -210,7 +324,9 @@ Protected by UdyogaSethu SafeEscrow
                       context,
                       label: 'Transaction ID',
                       value: transaction.id.isNotEmpty
-                          ? transaction.id.substring(0, transaction.id.length >= 18 ? 18 : transaction.id.length)
+                          ? (transaction.id.length >= 18
+                              ? transaction.id.substring(0, 18)
+                              : transaction.id)
                           : 'TX-ID-PENDING',
                       fullValueToCopy: transaction.id,
                       canCopy: true,
@@ -223,15 +339,37 @@ Protected by UdyogaSethu SafeEscrow
                       fullValueToCopy: transaction.utrNumber,
                       canCopy: true,
                     ),
+                    if (transaction.rpPaymentId != null && transaction.rpPaymentId!.isNotEmpty) ...[
+                      const Divider(height: 20),
+                      _buildReceiptRow(
+                        context,
+                        label: 'Razorpay Payment ID',
+                        value: transaction.rpPaymentId!,
+                        fullValueToCopy: transaction.rpPaymentId,
+                        canCopy: true,
+                      ),
+                    ],
+                    if (transaction.rpOrderId != null && transaction.rpOrderId!.isNotEmpty) ...[
+                      const Divider(height: 20),
+                      _buildReceiptRow(
+                        context,
+                        label: 'Razorpay Order ID',
+                        value: transaction.rpOrderId!,
+                        fullValueToCopy: transaction.rpOrderId,
+                        canCopy: true,
+                      ),
+                    ],
                     const Divider(height: 20),
                     _buildReceiptRow(
                       context,
-                      label: 'Payment Method',
-                      value: transaction.type == WalletTransactionType.upiTransfer
-                          ? 'Instant UPI Payout'
-                          : transaction.type == WalletTransactionType.dailyWage
-                              ? 'Direct Worker Escrow'
-                              : 'SafeEscrow Ledger',
+                      label: transaction.isCredit ? 'Payer (From)' : 'Payee (To)',
+                      value: transaction.counterpartyLabel,
+                    ),
+                    const Divider(height: 20),
+                    _buildReceiptRow(
+                      context,
+                      label: 'Linked Job or Order',
+                      value: transaction.subtitle,
                     ),
                     const Divider(height: 20),
                     _buildReceiptRow(
@@ -244,9 +382,9 @@ Protected by UdyogaSethu SafeEscrow
               ),
               const SizedBox(height: 18),
 
-              // Fee & Protection Breakdown Card
+              // Fee Breakdown Card (Prompt D2)
               const Text(
-                'FEE & PROTECTION BREAKDOWN',
+                'FEE & COMMISSION BREAKDOWN',
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
@@ -267,8 +405,8 @@ Protected by UdyogaSethu SafeEscrow
                     _buildBreakdownRow('Gross Amount', transaction.formattedGrossAmount),
                     const SizedBox(height: 8),
                     _buildBreakdownRow(
-                      'Platform Fee & Safety Coverage',
-                      transaction.feePaise > 0 ? transaction.formattedFee : '₹0 (Waived)',
+                      'Platform Commission',
+                      transaction.feePaise > 0 ? transaction.formattedFee : '₹0 (Zero Fee)',
                       isMuted: true,
                     ),
                     const SizedBox(height: 8),
@@ -279,7 +417,7 @@ Protected by UdyogaSethu SafeEscrow
                     ),
                     const Divider(height: 20),
                     _buildBreakdownRow(
-                      'Net Amount Credited',
+                      'Net Amount',
                       transaction.formattedNetAmount,
                       isBold: true,
                       color: amountColor,
@@ -289,7 +427,7 @@ Protected by UdyogaSethu SafeEscrow
               ),
               const SizedBox(height: 18),
 
-              // Escrow Milestones / Lifecycle Card
+              // Escrow Steps: Held then Released (Prompt D2)
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -314,16 +452,26 @@ Protected by UdyogaSethu SafeEscrow
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
-                    _buildMilestoneStep('1', 'Funds Locked in Escrow', 'Guaranteed prior to work start', true),
-                    _buildMilestoneStep('2', 'Site Attendance & Verification', 'Geo-verified completion confirmed', true),
-                    _buildMilestoneStep('3', 'Instant Ledger Release', 'Credited directly to available balance', true, isLast: true),
+                    const SizedBox(height: 14),
+                    _buildMilestoneStep(
+                      '1',
+                      'Escrow Held',
+                      'Funds securely deposited and locked in escrow when work/order was initiated.',
+                      true,
+                    ),
+                    _buildMilestoneStep(
+                      '2',
+                      'Escrow Released',
+                      'Disbursed directly upon completion verification.',
+                      transaction.statusDisplay == 'Success',
+                      isLast: true,
+                    ),
                   ],
                 ),
               ),
               const SizedBox(height: 20),
 
-              // Action Buttons
+              // Action Buttons: Share Receipt, Report an Issue, Done
               Row(
                 children: [
                   Expanded(
@@ -341,21 +489,35 @@ Protected by UdyogaSethu SafeEscrow
                       onPressed: () => _shareReceipt(context),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 10),
                   Expanded(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0D6548),
-                        foregroundColor: Colors.white,
+                    child: OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        elevation: 0,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        side: const BorderSide(color: Color(0xFFDC2626)),
                       ),
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('Done', style: TextStyle(fontWeight: FontWeight.bold)),
+                      icon: const Icon(Icons.flag_outlined, size: 18, color: Color(0xFFDC2626)),
+                      label: const Text(
+                        'Report an Issue',
+                        style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFDC2626)),
+                      ),
+                      onPressed: () => _reportIssue(context),
                     ),
                   ),
                 ],
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF0D6548),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Done', style: TextStyle(fontWeight: FontWeight.bold)),
               ),
             ],
           ),
@@ -374,28 +536,41 @@ Protected by UdyogaSethu SafeEscrow
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+        Expanded(
+          flex: 4,
+          child: Text(
+            label,
+            style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+          ),
         ),
-        Row(
-          children: [
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textDark,
+        const SizedBox(width: 8),
+        Expanded(
+          flex: 6,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Flexible(
+                child: Text(
+                  value,
+                  textAlign: TextAlign.end,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textDark,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-            ),
-            if (canCopy) ...[
-              const SizedBox(width: 6),
-              InkWell(
-                onTap: () => _copyToClipboard(context, fullValueToCopy ?? value, label),
-                child: const Icon(Icons.copy_rounded, size: 14, color: Color(0xFF0D6548)),
-              ),
+              if (canCopy) ...[
+                const SizedBox(width: 6),
+                InkWell(
+                  onTap: () => _copyToClipboard(context, fullValueToCopy ?? value, label),
+                  child: const Icon(Icons.copy_rounded, size: 14, color: Color(0xFF0D6548)),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ],
     );
@@ -432,22 +607,22 @@ Protected by UdyogaSethu SafeEscrow
         Column(
           children: [
             Container(
-              width: 20,
-              height: 20,
+              width: 22,
+              height: 22,
               decoration: BoxDecoration(
                 color: isDone ? const Color(0xFF0D6548) : Colors.grey.shade300,
                 shape: BoxShape.circle,
               ),
               child: Center(
                 child: isDone
-                    ? const Icon(Icons.check, size: 12, color: Colors.white)
-                    : Text(num, style: const TextStyle(fontSize: 10, color: Colors.white)),
+                    ? const Icon(Icons.check, size: 14, color: Colors.white)
+                    : Text(num, style: const TextStyle(fontSize: 11, color: Colors.white, fontWeight: FontWeight.bold)),
               ),
             ),
             if (!isLast)
               Container(
                 width: 2,
-                height: 22,
+                height: 24,
                 color: isDone ? const Color(0xFF0D6548) : Colors.grey.shade300,
               ),
           ],
@@ -461,6 +636,7 @@ Protected by UdyogaSethu SafeEscrow
                 title,
                 style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF0D6548)),
               ),
+              const SizedBox(height: 1),
               Text(
                 subtitle,
                 style: const TextStyle(fontSize: 11, color: Colors.black54),

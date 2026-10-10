@@ -24,6 +24,17 @@ class Env {
     return '147218087454-84onmnof89drjjktvenajia8qp3p0g3l.apps.googleusercontent.com';
   }
 
+  /// Razorpay Key ID for client initialization
+  static const String _envRazorpayKeyId = String.fromEnvironment('RAZORPAY_KEY_ID');
+
+  static String get razorpayKeyId {
+    if (_envRazorpayKeyId.trim().isNotEmpty) return _envRazorpayKeyId;
+    return 'rzp_test_5123456789ABCD';
+  }
+
+  /// True when using Razorpay test sandbox keys
+  static bool get isRazorpayTestMode => razorpayKeyId.startsWith('rzp_test_');
+
   /// Feature Flag: ONE ACCOUNT = ONE ROLE policy (D4).
   /// Set to false by default. Set to true to re-enable multi-role switching.
   static const bool allowMultiRole = false;
@@ -42,6 +53,9 @@ const bool kAllowMultiRole = Env.allowMultiRole;
 
 /// Global feature flag constant for D-QR profile QR code (default false)
 const bool kProfileQrEnabled = Env.profileQrEnabled;
+
+/// Global Razorpay Test Mode flag
+bool get kRazorpayTestMode => Env.isRazorpayTestMode;
 
 /// A human-readable error screen shown when required environment variables are missing.
 class MissingEnvScreen extends StatelessWidget {

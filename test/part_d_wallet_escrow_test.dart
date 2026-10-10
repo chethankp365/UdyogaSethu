@@ -275,7 +275,7 @@ void main() {
       expect(find.text('WALLET BALANCE'), findsOneWidget);
       expect(find.text('SAVINGS PLANNER'), findsOneWidget);
       expect(find.text('RECENT TRANSACTIONS'), findsOneWidget);
-      expect(find.text('Escrow Deposits'), findsOneWidget);
+      expect(find.text('Farm Produce'), findsOneWidget);
       expect(find.text('Daily Wage - Campus Courier'), findsOneWidget);
     });
   });
