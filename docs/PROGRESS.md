@@ -67,7 +67,7 @@
 - [ ] **P6.3**: Farm resources, equipment rental and labour hiring (Status: Todo)
 - [ ] **P6.4**: Buyer marketplace: browse, filters, map and traceability (Status: Todo)
 - [ ] **P6.5**: Cart, delivery slots and checkout (Status: Todo)
-- [ ] **P6.6**: Order tracking and farmer order management (Status: Todo)
+- [x] **P6.6**: Order tracking and farmer order management (Status: Done)
 - [ ] **P6.7**: Subscriptions and apartment group orders (Status: Todo)
 - [ ] **P6.8**: Farmer AI tools through a secure Edge Function (Status: Todo)
 
@@ -602,6 +602,103 @@
     - Overflow-free layout rendering on 360dp width at 1.6x text scale.
   - All 438 tests across the repository pass cleanly (`flutter test`).
   - `flutter analyze`: clean with 0 issues.
+
+### Comprehensive Polish & Production Alignment Pass (Parts A-H)
+- **Status**: Completed (2026-10-10)
+- **Files created / updated**:
+  - `lib/features/jobs/presentation/widgets/wage_band_advisory_banner.dart` (Part A)
+  - `lib/features/jobs/data/job_schedule_service.dart` (Part A)
+  - `lib/features/jobs/presentation/seeker_jobs_screen.dart` (Part A)
+  - `lib/features/seeker/presentation/seeker_home_screen.dart` (Part A, C)
+  - `lib/features/jobs/domain/job.dart` (Part A)
+  - `test/part_a_jobs_flow_test.dart` (Part A)
+  - `lib/core/services/job_thumbnail_service.dart` (Part B, G)
+  - `lib/core/widgets/job_thumbnail_widget.dart` (Part B, G)
+  - `lib/features/jobs/presentation/post_job_wizard_screen.dart` (Part B)
+  - `test/part_b_thumbnail_test.dart` (Part B)
+  - `lib/features/seeker/presentation/widgets/manual_area_picker_dialog.dart` (Part C)
+  - `lib/features/seeker/data/seeker_home_repository.dart` (Part C)
+  - `test/part_c_seeker_home_test.dart` (Part C)
+  - `supabase/migrations/0600_wallet_escrow_filters_and_validation.sql` (Part D)
+  - `lib/features/wallet/presentation/wallet_screen.dart` (Part D)
+  - `lib/features/wallet/presentation/widgets/payment_receipt_modal.dart` (Part D)
+  - `lib/features/wallet/presentation/widgets/savings_planner_card.dart` (Part D)
+  - `lib/features/wallet/presentation/widgets/scan_upi_dialog.dart` (Part D)
+  - `supabase/dev/seed_wallet_history.sql` & `supabase/dev/remove_wallet_history.sql` (Part D)
+  - `test/part_d_wallet_escrow_test.dart` (Part D)
+  - `lib/features/execution/presentation/job_ticket_screen.dart` (Part E)
+  - `lib/features/execution/presentation/attendance_scanner_screen.dart` (Part E)
+  - `lib/features/execution/data/job_execution_repository.dart` (Part E)
+  - `lib/features/execution/presentation/active_job_screen.dart` (Part E)
+  - `test/part_e_execution_test.dart` (Part E)
+  - `lib/features/farmer/domain/weather_advisory_model.dart` (Part F)
+  - `lib/features/farmer/data/farmer_profile_page_repository.dart` (Part F)
+  - `lib/features/farmer/presentation/widgets/edit_farm_details_dialog.dart` (Part F)
+  - `lib/features/farmer/presentation/farmer_profile_screen.dart` (Part F)
+  - `lib/features/farmer/presentation/farmer_home_screen.dart` (Part F)
+  - `lib/features/farmer/presentation/widgets/mandi_prices_section.dart` (Part F)
+  - `lib/l10n/app_{en,kn,hi,te,ta,bn,mr,or}.arb` (Part F - 8 locales complete)
+  - `test/part_f_farmer_polish_test.dart` (Part F)
+  - `test/farmer_profile_and_listings_test.dart` (Part F)
+  - `assets/images/jobs/gardener-1.webp` & `gardener-2.webp` (Part G)
+  - `assets/images/jobs/manifest.json` (Part G - 40 job illustrations complete)
+  - `assets/images/commodities/` (Part G - 40 WebP illustrations complete)
+  - `assets/images/commodities/manifest.json` (Part G)
+  - `pubspec.yaml` (Part G - commodities asset registration)
+  - `tool/add_gardener_assets.dart` & `tool/build_commodity_assets.dart` (Part G)
+  - `test/part_g_assets_test.dart` (Part G)
+  - `docs/DECISIONS.md` (Decision D60) (Part H)
+  - `docs/PROGRESS.md` (Part H)
+- **What was built**:
+  - **Part A (Jobs Flow & Fair Wage Standard)**:
+    - Integrated fair wage band benchmark advisory banner (`WageBandAdvisoryBanner`) into seeker and provider views with non-blocking guidance.
+    - Added schedule overlap checking (`JobScheduleService`) warning workers of booking conflicts and travel-gap alerts (<60m).
+    - Integrated student flexible work tags and category filters across seeker job discovery.
+  - **Part E (Job Execution & Attendance Tickets)**:
+    - Built two-step attendance verification ticket (`JobTicketScreen`) with live dynamic QR codes and manual 6-character code fallback.
+    - Built employer QR ticket scanner (`AttendanceScannerScreen`) with MobileScanner, torch toggle, and camera flip.
+    - Added geofence radius check (150m) with live location distance indicator and warning banner.
+    - Implemented smart no-show recovery protocol with 30-minute grace period before automated worker rematch or escrow refund.
+  - **Part B (Job Post & Dynamic Thumbnails)**:
+    - Connected dynamic job thumbnail matching engine (`JobThumbnailService`) supporting provider photo uploads, keyword matching against 40 category illustrations, and gradient/icon fallback (`JobThumbnailWidget`).
+  - **Part C (Seeker Home GPS & Layout)**:
+    - Eliminated hardcoded "Koramangala" fallback; clean "Select Location" initial state until GPS consent or manual selection.
+    - Live GPS consent flow with reverse geocoding via `geocoding` package.
+    - Manual area picker modal (`ManualAreaPickerDialog`) with instant search and selection.
+    - Tightened spacing: recommendation section header gap set to 12px.
+  - **Part D (Wallet & Escrow Transparency)**:
+    - Grouped ledger transactions chronologically under TODAY, YESTERDAY, and MONTH YEAR headers.
+    - Added 'escrow' filter chip alongside Migration `0600_wallet_escrow_filters_and_validation.sql` and `validate_upi_payment` RPC.
+    - Built `PaymentReceiptModal` displaying transaction ID, UTR/RRN, 18% GST tax breakdown, and escrow milestones with share/export.
+    - Built `SavingsPlannerCard` with progress ring, target vs saved amounts, daily suggestion banner, and goal creation CTA.
+    - Upgraded `ScanUpiDialog` with live scanner, torch/camera controls, sample presets, and honest amber Demo mode disclaimer.
+    - Provided seed/teardown SQL scripts (`seed_wallet_history.sql`, `remove_wallet_history.sql`) flagged with `is_demo = true` and net ₹0 balance for safe UI demonstration without altering authoritative server balances.
+  - **Part F (Farmer Accuracy, Profile Editor & Mandi Cards)**:
+    - Replaced hardcoded emoji avatar with real `UserAvatar` reading `profiles.avatar_path`.
+    - Verified badge strictly conditional: shows `VERIFIED FARMER ✓` only when `profile.isVerified == true`; otherwise displays `SELF-DECLARED PROFILE`.
+    - Built `EditFarmDetailsDialog` with form fields for Farm Name, Cluster/Village, Total Land (Acres), Soil Classification, Primary Crops, and APMC Mandi, saving via `updateFarmDetails()` and invalidating Riverpod providers.
+    - Eliminated hardcoded fake helper count strings ("5 Local harvest helpers") from weather advisory rules engine.
+    - Resolved AppBar right overflow in `FarmerHomeScreen` via `Flexible` wrapper around title text. Preserved single central `MicFab`.
+    - Upgraded Mandi price cards to Swiggy/Zomato style with 74dp photo thumbnail container, overlay trend badge (% change with arrow), bold modal price, and category pill rails with emoji avatars (🧺, 🥦, 🌾).
+    - Added localized keys across all 8 ARB files (`en`, `kn`, `hi`, `te`, `ta`, `bn`, `mr`, `bn`, `or`).
+  - **Part G (Job & Commodity Illustrations, Manifests & Loaders)**:
+    - Generated `gardener-1.webp` and `gardener-2.webp` (800x450) and updated `assets/images/jobs/manifest.json` (20 categories x 2 variants = 40 job illustrations).
+    - Programmatically generated 40 high-resolution commodity WebP illustrations (600x600) in `assets/images/commodities/` alongside `assets/images/commodities/manifest.json`.
+    - Declared `assets/images/commodities/` in `pubspec.yaml` with verified gradient and emoji fallback loaders.
+  - **Part H (Documentation & Handover)**:
+    - Recorded Decision `D60` in `docs/DECISIONS.md`.
+    - Updated `docs/PROGRESS.md`.
+- **Verification & Invariants**:
+  - `test/part_a_jobs_flow_test.dart` (5 tests passing)
+  - `test/part_e_execution_test.dart` (6 tests passing)
+  - `test/part_b_thumbnail_test.dart` (4 tests passing)
+  - `test/part_c_seeker_home_test.dart` (5 tests passing)
+  - `test/part_d_wallet_escrow_test.dart` (6 tests passing)
+  - `test/part_f_farmer_polish_test.dart` (6 tests passing)
+  - `test/farmer_profile_and_listings_test.dart` (29 tests passing)
+  - `test/part_g_assets_test.dart` (4 tests passing)
+  - `flutter analyze`: clean with 0 issues.
+  - Zero mock or placeholder data presented as real; server-authoritative balance view parity preserved; single central MicFab intact.
 
 ---
 

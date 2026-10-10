@@ -321,3 +321,41 @@ This document records key design, architectural, role model, and implementation 
     * Disputes freeze escrow release immediately, change status to `disputed`, and insert dispute claim into `disputes` table with produce failure categories (`Damaged Produce`, `Spoiled / Rotten`, `Wrong Item`, `Weight / Quantity Mismatch`).
   * **1-Tap Reorder**:
     * Customer orders screen and tracking screen provide 1-tap "Reorder", which re-populates active cart state via `CartNotifier.addOrderItems`.
+* **D60 — Comprehensive Multi-Part Production Alignment & Fidelity Pass (Parts A-G)**:
+  * **Part A (Jobs Flow & Real Fair Wage)**:
+    * Standardized fair wage band advisory banner powered by `suggest_wage_band` RPC benchmark with warning without blocking.
+    * Enforced schedule overlap detection for concurrent assignments with 60-minute travel buffer warning.
+    * Integrated student flexible work tag and category filter chips across seeker job browsing.
+  * **Part E (Job Execution & Attendance Tickets)**:
+    * Built two-step attendance verification ticket (`JobTicketScreen`) with QR code generation and employer scanner (`AttendanceScannerScreen`).
+    * Added torch and camera-flip controls with fallback manual 6-character code entry.
+    * Geofence validation (150m radius) with live location distance check and status indicator.
+    * Smart no-show recovery protocol enforcing a 30-minute grace period before automated worker rematch and employer escrow refund trigger.
+  * **Part B (Job Post & Dynamic Thumbnails)**:
+    * Built dynamic job thumbnail selector with 40 WebP illustrations across 20 job categories in `assets/images/jobs/`.
+    * Implemented keyword-aware matching from job title and description with deterministic variant alternation.
+    * Provider site photo takes highest priority, falling back to keyword asset, and finally to green gradient/icon fallback (`JobThumbnailWidget`).
+  * **Part C (Seeker Home Real Location & Polish)**:
+    * Eliminated hardcoded "Koramangala" location fallback; initial state defaults cleanly to "Select Location" with lat=0, lng=0 until GPS consent or manual selection.
+    * Live GPS consent flow with reverse geocoding via `geocoding` package.
+    * Manual area selector modal with instant search and selection.
+    * Spacing alignment: recommendation section header gap set to 12px.
+  * **Part D (Wallet & Escrow Transparency)**:
+    * Grouped ledger transactions chronologically: TODAY, YESTERDAY, and MONTH YEAR with section headers.
+    * Added 'escrow' filter chip to transaction history alongside Migration `0600_wallet_escrow_filters_and_validation.sql` and `validate_upi_payment` RPC.
+    * Built `PaymentReceiptModal` displaying transaction ID, UTR/RRN, 18% GST tax breakdown, platform fees, and escrow milestone indicators with PDF/SharePlus export.
+    * Built `SavingsPlannerCard` with progress ring, target vs saved amounts, daily suggestion banner, and goal creation CTA.
+    * Upgraded `ScanUpiDialog` with live `MobileScanner`, torch/camera flip controls, sample presets, and honest amber Demo mode banner.
+    * Created demo seed scripts with `is_demo = true` and net ₹0 balance (`supabase/dev/seed_wallet_history.sql`, `supabase/dev/remove_wallet_history.sql`) strictly for developer demonstration without impacting server ledger balance.
+  * **Part F (Farmer Profile, Farm Editor & Visual Mandi Cards)**:
+    * Replaced hardcoded emoji avatar with real `UserAvatar` reading `profiles.avatar_path`.
+    * Verified badge strictly conditional: shows `VERIFIED FARMER ✓` only when `profile.isVerified == true`; otherwise displays `SELF-DECLARED PROFILE`.
+    * Built `EditFarmDetailsDialog` with form fields for Farm Name, Cluster/Village, Total Land (Acres), Soil Classification, Primary Crops, and APMC Mandi, persisting via `farmerProfilePageRepositoryProvider.updateFarmDetails` and invalidating Riverpod providers.
+    * Eliminated fake helper count string from weather advisory rules engine ("5 Local harvest helpers").
+    * Prevented AppBar right overflow in `FarmerHomeScreen` via `Flexible` wrapper around title text. Single central `MicFab` verified.
+    * Upgraded Mandi price cards to Swiggy/Zomato style with 74dp photo thumbnail container, overlay trend badge (% change with arrow), bold modal price, and category pill rails with emoji avatars (🧺, 🥦, 🌾).
+  * **Part G (Job & Commodity Illustrations & Asset Manifests)**:
+    * Generated `gardener-1.webp` and `gardener-2.webp` (800x450) and updated `assets/images/jobs/manifest.json` to complete 20 categories x 2 variants = 40 job illustrations.
+    * Generated 40 high-resolution commodity WebP illustrations (600x600) across 8 agricultural categories in `assets/images/commodities/` alongside `assets/images/commodities/manifest.json`.
+    * Declared `assets/images/commodities/` in `pubspec.yaml` with verified gradient and emoji fallback loaders.
+
