@@ -65,12 +65,67 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Select Your Area in Bengaluru',
+              'Choose Location',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark),
             ),
             const SizedBox(height: 12),
+            InkWell(
+              key: const Key('use_gps_location_button'),
+              onTap: () async {
+                Navigator.pop(ctx);
+                final success = await ref.read(seekerLocationProvider.notifier).requestGpsWithConsent();
+                if (!mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      success
+                          ? 'Location updated using live GPS'
+                          : 'Unable to access GPS location. Please check permissions.',
+                    ),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              },
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.paleMint,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.headerGreenDark.withValues(alpha: 0.3)),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.my_location_rounded, color: AppColors.headerGreenDark),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Use Current GPS Location',
+                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.headerGreenDark),
+                          ),
+                          Text(
+                            'Matches jobs within your exact distance radius',
+                            style: TextStyle(fontSize: 12, color: Colors.black54),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'OR SELECT AREA MANUALLY',
+              style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.black45, letterSpacing: 0.8),
+            ),
+            const SizedBox(height: 8),
             ...areas.map((area) {
               return ListTile(
+                dense: true,
                 leading: const Icon(Icons.location_on_outlined, color: AppColors.headerGreenDark),
                 title: Text(area['name'] as String, style: const TextStyle(fontSize: 14)),
                 onTap: () {
@@ -1237,7 +1292,7 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
           ],
         ),
 
-        const SizedBox(height: 10),
+        const SizedBox(height: 12),
 
         if (recommendationsAsync.hasError)
           Container(

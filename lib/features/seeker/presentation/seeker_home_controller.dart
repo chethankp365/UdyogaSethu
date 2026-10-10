@@ -44,9 +44,9 @@ class SeekerLocationNotifier extends Notifier<SeekerLocationState> {
     // Attempt async GPS initialization
     Future.microtask(() => initLocation());
     return const SeekerLocationState(
-      displayName: 'Koramangala, Bengaluru',
-      lat: 12.9352,
-      lng: 77.6101,
+      displayName: 'Select Location',
+      lat: 0.0,
+      lng: 0.0,
       isGps: false,
     );
   }
@@ -130,6 +130,88 @@ class SeekerLocationNotifier extends Notifier<SeekerLocationState> {
 
   Future<void> refreshGpsLocation() async {
     await initLocation();
+  }
+
+  Future<bool> requestGpsWithConsent() async {
+    try {
+      final consentRepo = ref.read(consentRepositoryProvider);
+      await consentRepo.recordConsent(
+        purpose: ConsentPurpose.gps,
+        granted: true,
+      );
+
+      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        return false;
+      }
+
+      LocationPermission perm = await Geolocator.checkPermission();
+      if (perm == LocationPermission.denied) {
+        perm = await Geolocator.requestPermission();
+      }
+
+      if (perm == LocationPermission.denied || perm == LocationPermission.deniedForever) {
+        return false;
+      }
+
+      final position = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.medium,
+          timeLimit: Duration(seconds: 4),
+        ),
+      );
+
+      String displayName = 'Current Location (GPS)';
+      try {
+        final placemarks = await Geocoding().placemarkFromCoordinates(position.latitude, position.longitude);
+        if (placemarks.isNotEmpty) {
+          final p = placemarks.first;
+          final subLocality = p.subLocality?.trim();
+          final locality = p.locality?.trim();
+          final subAdmin = p.subAdministrativeArea?.trim();
+          final admin = p.administrativeArea?.trim();
+
+          String? area;
+          if (subLocality != null && subLocality.isNotEmpty) {
+            area = subLocality;
+          } else if (locality != null && locality.isNotEmpty) {
+            area = locality;
+          } else if (p.name != null && p.name!.isNotEmpty) {
+            area = p.name;
+          }
+
+          String? city;
+          if (locality != null && locality.isNotEmpty && locality != area) {
+            city = locality;
+          } else if (subAdmin != null && subAdmin.isNotEmpty) {
+            city = subAdmin;
+          } else if (admin != null && admin.isNotEmpty) {
+            city = admin;
+          }
+
+          if (area != null && city != null) {
+            displayName = '$area, $city';
+          } else if (area != null) {
+            displayName = area;
+          } else if (city != null) {
+            displayName = city;
+          }
+        }
+      } catch (e) {
+        AppLogger.w('Reverse geocoding error: $e');
+      }
+
+      state = SeekerLocationState(
+        displayName: displayName,
+        lat: position.latitude,
+        lng: position.longitude,
+        isGps: true,
+      );
+      return true;
+    } catch (e) {
+      AppLogger.w('Error in requestGpsWithConsent: $e');
+      return false;
+    }
   }
 
   void setManualArea(String areaName, double lat, double lng) {
