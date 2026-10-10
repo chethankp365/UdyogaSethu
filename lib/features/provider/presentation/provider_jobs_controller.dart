@@ -189,10 +189,21 @@ class PostJobWizardNotifier extends Notifier<JobPostDraft> {
     state = state.copyWith(sitePhotoUrl: url);
   }
 
-  Future<void> setCategory(String categoryId, String categoryName) async {
+  Future<void> setCategory(String categoryId, String categoryName, {bool allowsStudent = false}) async {
+    final updatedSuitableFor = List<String>.from(state.suitableFor);
+    bool updatedStudentsOk = state.studentsOk;
+    if (!allowsStudent) {
+      updatedStudentsOk = false;
+      updatedSuitableFor.remove('student');
+      if (updatedSuitableFor.isEmpty) {
+        updatedSuitableFor.add('informal');
+      }
+    }
     state = state.copyWith(
       categoryId: categoryId,
       categoryName: categoryName,
+      studentsOk: updatedStudentsOk,
+      suitableFor: updatedSuitableFor,
     );
     await checkWageBand(categoryId);
   }

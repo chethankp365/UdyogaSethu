@@ -1,11 +1,15 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image/image.dart' as img;
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/errors/app_exception.dart';
 import 'package:udyogasethu/features/provider/domain/job_post_draft.dart';
@@ -35,10 +39,12 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
   final _landmarkController = TextEditingController();
   final _searchAddressController = TextEditingController();
   final MapController _mapController = MapController();
+  final ImagePicker _imagePicker = ImagePicker();
 
   bool _isPublishing = false;
   bool _isLocating = false;
   bool _isSearchingAddress = false;
+  bool _isUploadingPhoto = false;
   static const double _defaultBengaluruLat = 12.9716;
   static const double _defaultBengaluruLng = 77.5946;
 
@@ -244,6 +250,105 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
     }
   }
 
+  Future<void> _pickAndUploadSitePhoto(ImageSource source) async {
+    try {
+      final picked = await _imagePicker.pickImage(
+        source: source,
+        maxWidth: 1200,
+        imageQuality: 80,
+      );
+      if (picked == null) return;
+
+      setState(() => _isUploadingPhoto = true);
+      final bytes = await picked.readAsBytes();
+
+      // Compress to max 800 width/height
+      Uint8List compressed = bytes;
+      try {
+        final decoded = img.decodeImage(bytes);
+        if (decoded != null && (decoded.width > 800 || decoded.height > 800)) {
+          final resized = img.copyResize(
+            decoded,
+            width: decoded.width >= decoded.height ? 800 : null,
+            height: decoded.height > decoded.width ? 800 : null,
+          );
+          compressed = Uint8List.fromList(img.encodeJpg(resized, quality: 80));
+        }
+      } catch (_) {}
+
+      // Upload to listing-images bucket
+      String? photoUrl;
+      try {
+        if (Supabase.instance.isInitialized) {
+          final client = Supabase.instance.client;
+          final uid = client.auth.currentUser?.id ?? 'anonymous';
+          final filename = '${DateTime.now().millisecondsSinceEpoch}.jpg';
+          final storagePath = '$uid/jobs/$filename';
+
+          await client.storage.from('listing-images').uploadBinary(
+            storagePath,
+            compressed,
+            fileOptions: const FileOptions(contentType: 'image/jpeg', upsert: true),
+          );
+          photoUrl = client.storage.from('listing-images').getPublicUrl(storagePath);
+        }
+      } catch (uploadErr) {
+        AppLogger.w('Failed to upload site photo to storage: $uploadErr');
+      }
+
+      photoUrl ??= picked.path; // Local path fallback
+      ref.read(postJobWizardProvider.notifier).setSitePhotoUrl(photoUrl);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Site photo attached successfully! ✓'),
+            backgroundColor: AppColors.headerGreenDark,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to pick photo: $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isUploadingPhoto = false);
+    }
+  }
+
+  void _showPhotoPickerSheet() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt_rounded, color: AppColors.headerGreenDark),
+              title: const Text('Take Photo with Camera'),
+              onTap: () {
+                Navigator.pop(ctx);
+                _pickAndUploadSitePhoto(ImageSource.camera);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library_rounded, color: AppColors.amberOrange),
+              title: const Text('Choose from Gallery'),
+              onTap: () {
+                Navigator.pop(ctx);
+                _pickAndUploadSitePhoto(ImageSource.gallery);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -409,7 +514,8 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
                       : const Icon(Icons.work_outline_rounded, size: 16, color: AppColors.headerGreenDark),
                   onSelected: (selected) {
                     if (selected) {
-                      notifier.setCategory(cat.id, catName);
+                      final allowsStudent = cat.audience.contains('student') || cat.audience.contains('part_time');
+                      notifier.setCategory(cat.id, catName, allowsStudent: allowsStudent);
                     }
                   },
                 );
@@ -444,7 +550,132 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
           ),
           onChanged: notifier.setDescription,
         ),
+        const SizedBox(height: 18),
+        _buildSitePhotoSection(draft),
       ],
+    );
+  }
+
+  Widget _buildSitePhotoSection(JobPostDraft draft) {
+    final notifier = ref.read(postJobWizardProvider.notifier);
+    final hasPhoto = draft.sitePhotoUrl != null && draft.sitePhotoUrl!.isNotEmpty;
+
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.grey.shade300),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.add_a_photo_outlined, size: 20, color: AppColors.headerGreenDark),
+              const SizedBox(width: 8),
+              const Expanded(
+                child: Text(
+                  'Site Photo (Optional)',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+              ),
+              if (hasPhoto)
+                TextButton.icon(
+                  style: TextButton.styleFrom(visualDensity: VisualDensity.compact),
+                  onPressed: () => notifier.setSitePhotoUrl(null),
+                  icon: const Icon(Icons.delete_outline, size: 16, color: Colors.red),
+                  label: const Text('Remove', style: TextStyle(color: Colors.red, fontSize: 12)),
+                ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'Upload a real photo of the workplace or site to build trust with workers.',
+            style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+          ),
+          const SizedBox(height: 12),
+          if (_isUploadingPhoto)
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                child: CircularProgressIndicator(color: AppColors.headerGreenDark),
+              ),
+            )
+          else if (hasPhoto)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Stack(
+                children: [
+                  draft.sitePhotoUrl!.startsWith('http')
+                      ? Image.network(
+                          draft.sitePhotoUrl!,
+                          width: double.infinity,
+                          height: 140,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => Container(
+                            height: 140,
+                            color: Colors.grey.shade200,
+                            child: const Center(child: Icon(Icons.broken_image, size: 36)),
+                          ),
+                        )
+                      : Container(
+                          height: 140,
+                          color: AppColors.paleMint,
+                          child: const Center(
+                            child: Icon(Icons.photo_camera_rounded, size: 40, color: AppColors.headerGreenDark),
+                          ),
+                        ),
+                  Positioned(
+                    bottom: 8,
+                    right: 8,
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black.withValues(alpha: 0.7),
+                        foregroundColor: Colors.white,
+                        visualDensity: VisualDensity.compact,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                      onPressed: _showPhotoPickerSheet,
+                      icon: const Icon(Icons.edit, size: 14),
+                      label: const Text('Change', style: TextStyle(fontSize: 11)),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          else
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      side: BorderSide(color: Colors.grey.shade400),
+                    ),
+                    onPressed: () => _pickAndUploadSitePhoto(ImageSource.camera),
+                    icon: const Icon(Icons.camera_alt_rounded, size: 18, color: AppColors.headerGreenDark),
+                    label: const Text('Camera', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.textDark)),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      side: BorderSide(color: Colors.grey.shade400),
+                    ),
+                    onPressed: () => _pickAndUploadSitePhoto(ImageSource.gallery),
+                    icon: const Icon(Icons.photo_library_rounded, size: 18, color: AppColors.amberOrange),
+                    label: const Text('Gallery', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.textDark)),
+                  ),
+                ),
+              ],
+            ),
+        ],
+      ),
     );
   }
 
