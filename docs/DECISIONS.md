@@ -30,6 +30,7 @@ This document records key design, architectural, role model, and implementation 
 | D55 | Farmer Profile Page, Produce Inventory Management, Auto-Status & Buyer Gating | Adopted | Farmer Profile & Produce Listings |
 | D61 | Real Jobs, Job Posting, Seeker Home, 4a Bug Resolution & Thumbnail Resolver (Prompt 1 of 3) | Adopted | Marketplace Real Data & Polish |
 | D62 | Job Execution Lifecycle, QR Ticket Windows, Rejection Codes, Step 2 Presence & Digital ID Card (Prompt 2 of 3) | Adopted | Execution, Attendance & Digital ID |
+| D63 | Wallet & Escrow Ledger Invariants, Farmer Real Profile & Mandi Rails, Manifest Fallbacks & Single Voice Mic (Prompt 3 of 3) | Adopted | Wallet, Farmer, Assets & Honesty |
 
 ## Known Issues & Planned Fixes (Pre-P5.1)
 
@@ -435,5 +436,38 @@ This document records key design, architectural, role model, and implementation 
   * **Edge Functions & Secrets (E7)**:
     * Edge functions (`qr-issue`, `qr-verify`, `face-verify`) strictly return structured JSON with typed codes and support `{ "health": true }` probes. Bare 500 responses eliminated.
     * Required secret names: `QR_SIGNING_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`, `FACE_MATCHER` (optional).
+
+* **D63 — Wallet & Escrow Ledger Invariants, Farmer Real Profiles, Manifest Fallbacks & Single Voice Mic (Prompt 3 of 3)**:
+  * **Wallet & Escrow Real Data & Demo Ledger Seed Policy (D1-D5)**:
+    * Server-authoritative balances: Wallet balances and pending escrow are computed strictly from `wallet_balances` view backed by `ledger_entries`. Fresh and test accounts show real ₹0.00 / 0 paise without hardcoded mock defaults.
+    * Database migration `0620_ledger_is_demo_and_savings_planner.sql` introduced `is_demo BOOLEAN NOT NULL DEFAULT FALSE` to `ledger_entries` and updated the immutability trigger `trg_prevent_ledger_mutation` so deletions are permitted ONLY when `OLD.is_demo = true`.
+    * Demo seed script `supabase/dev/seed_wallet_history.sql` injects 5 months of ledger history strictly flagged with `is_demo = true` using a user ID CTE: wage credits via escrow release, platform fee deductions, bank withdrawals with 12-digit UTR numbers, UPI transfers, and a refund, mathematically balanced so the net ledger balance and pending escrow are exactly ₹0.00.
+    * Teardown script `supabase/dev/remove_wallet_history.sql` and `clean_demo_wallet_history(p_user_id)` SECURITY DEFINER function (restricted to `service_role`) safely clean demo records without breaching ledger append-only constraints.
+    * Exclusion invariant: `is_demo = true` rows are strictly excluded from platform financial reporting, admin totals, and real earnings summaries.
+    * Receipt modal (`PaymentReceiptModal`) reflects realistic payment app standards: large status, gross/commission/GST fee breakdown, masked UPI/account counterparties, 12-digit UTR/RRN numbers, Razorpay IDs, escrow progression, and an explicit "Test mode" badge when Razorpay test keys are active.
+    * Earnings analytics and savings goal planner compute 6-month historical earnings, average monthly income, best month, completed jobs, and category distribution directly from the ledger, with a graceful zero-history empty state.
+  * **Camera UPI QR Scanner & Server-Side VPA Validation (D6)**:
+    * Replaced simulated dialog with real `mobile_scanner` camera viewfinder with torch and camera switch controls.
+    * Robust parsing of `upi://pay` URI parameters: `pa` (payee VPA), `pn` (payee name), `am` (amount), `tn` (transaction note), `cu` (currency), `mc` (merchant code), `tr` (reference). Malformed and non-UPI barcodes are rejected with clear user-facing errors.
+    * Server-side VPA validation via Deno Edge Function `supabase/functions/validate-vpa/index.ts` calling Razorpay `POST /v1/payments/validate/vpa` (using `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET`). Signed-in callers only, rate-limited, masked UPI IDs in logs, zero third-party data stored.
+    * If Razorpay VPA validation is unconfigured or fails, the scanner safely displays QR parameters with "Not verified by bank" and the exact error description.
+    * The Pay button displays "Test mode: no money is moved". Sample preset chips are excluded from normal builds.
+  * **Farmer Real Profiles, Self-Declared Badges & Honesty Invariant (F1-F4)**:
+    * Migration `0630_farmer_profile_fields.sql` adds canonical farm schema fields: `farm_name`, `farm_location_name`, `farm_latitude`, `farm_longitude`, `acres`, `soil_type`, `farming_method`, `primary_crops`, `delivery_radius_km`, `allows_pickup`, `lead_time_days`, `farm_photo_url`, `apmc_registration_no`, `kcc_status`, `organic_cert_no`, `organic_cert_doc_url`.
+    * Removed all fake/mock statistics and credentials: 420 kg, ₹48,500, "Red Loam Soil (pH 6.8)", "Mandya APMC #4812", "KCC Approved", and "Zero-Pesticide Organic Certificate, Validated by Karnataka Organic Farmers Board".
+    * New farmer accounts initialize with real order stats of 0 (0 kg produce sold, ₹0 revenue).
+    * Honest badge policy: "Verified Farmer" appears strictly when KYC verification is completed (`is_verified == true`). Self-declared credentials (APMC number, KCC status, organic certificate number) are explicitly displayed under a `"Self-declared, not verified yet"` banner. Never claim "Validated by ..." without admin verification backed by documented evidence.
+    * Built `EditFarmDetailsDialog` with form fields, coordinate picking, delivery radiuses, pickup toggles, and photo upload with validation, updating Home and Profile immediately upon save.
+    * Weather advisory thresholds calibrated to real meteorological figures: precipitation < 35% (e.g. 22%) is classified as clear/favourable skies, not moderate rain. Removed unverified helper counts (e.g. "5 local harvest helpers").
+  * **Single Voice Mic Architecture & AppBar Polish (F3)**:
+    * Resolved AppBar right overflow on Farmer Home by removing redundant action buttons and nesting secondary actions in a popup menu.
+    * Audited all screens in the codebase and removed duplicate `MicFab` floating buttons from `farmer_home_screen.dart`, `job_history_screen.dart`, `favourites_screen.dart`, `payment_status_screen.dart`, `payment_checkout_screen.dart`, and `savings_goals_screen.dart`.
+    * Enforced single voice mic rule: the shell's central `RoleBottomNavBar` mic FAB is the sole voice interface in the app.
+  * **Swiggy/Zomato Style Mandi Cards & Multi-Tier Manifest Asset Architecture (F5, G1-G5)**:
+    * 2-column Mandi price grid with horizontal category rails (Vegetables, Fruits, Grains & Pulses, Spices, Flowers), bold modal prices, unit toggles (kg vs quintal), percentage change indicators, demand chips, skeleton loading, and offline caching.
+    * Multi-tier asset resolver: checks disk asset -> commodity manifest entry -> fallback gradient with first letter and category emoji.
+    * `docs/IMAGE_PROMPTS.md` documents 40 job prompts (800x450, <70 KB) and 40 crop prompts (600x600, <50 KB) in warm, bright Indian illustration style.
+    * `tool/check_images.dart` audits asset completeness and file sizes against size thresholds.
+
 
 

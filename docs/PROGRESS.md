@@ -772,25 +772,64 @@
     - `flutter analyze`: 0 issues found.
     - Documented Decision D62 in `docs/DECISIONS.md`.
 
+- [x] **Prompt 3 of 3: Wallet & Escrow, Farmer Screens, and Images**:
+  - **Status**: Completed (2026-10-11)
+  - **Sub-Step D (Wallet and Escrow D1-D7)**:
+    - **D1 (Grouped Transactions & Filters)**: Transactions list grouped by day and month headers. Filter tabs (`All`, `Daily Wages`, `UPI Transfers`, `Farm Produce`, `Withdrawals`, `Refunds`) actively filter real ledger types. Pull to refresh and pagination.
+    - **D2 (Payment App Style Receipt Detail)**: Built comprehensive `PaymentReceiptModal` featuring prominent amount, status badges (`Success`, `Pending`, `Failed`, `Refunded`), date/time, Transaction ID, Razorpay payment & order IDs, 12-digit UTR/RRN bank reference, From/To counterparty cards with masked accounts/UPI IDs, fee breakdown (gross amount, platform commission, 18% GST, net payout), interactive escrow progression timeline (Held then Released), "Share receipt" and "Report an issue" actions, and persistent "Test mode" banner when test keys are active.
+    - **D3 (Authoritative Balances)**: Fresh and test accounts read 0 paise (₹0.00) net balance and ₹0.00 pending escrow directly from server-computed `wallet_balances` view backed by append-only `ledger_entries`. Zero hardcoding.
+    - **D4 (Demo Wallet History Seed & Teardown)**: Authored migration `supabase/migrations/0620_ledger_is_demo_and_savings_planner.sql` adding `is_demo` boolean to `ledger_entries` and updating `trg_prevent_ledger_mutation` trigger. Created parameterized dev seed script `supabase/dev/seed_wallet_history.sql` inserting balanced 5-month demo wage credits, platform fees, bank withdrawals with 12-digit UTRs, UPI transfers, and a refund, strictly yielding net ₹0.00 balance and ₹0.00 pending escrow. Created teardown script `supabase/dev/remove_wallet_history.sql` invoking `clean_demo_wallet_history(p_user_id)` SECURITY DEFINER RPC. All `is_demo` rows are excluded from platform and admin totals.
+    - **D5 (Earnings Analytics & Savings Planner)**: Built `EarningsAnalyticsCard` computing 6-month earnings bar chart, monthly average, best month, completed jobs count, category breakdown, and trend vs previous month. Built `SavingsGoalsScreen` and interactive `SavingsPlannerCard` supporting target amount/date or monthly percentage of average earnings, with monthly saving needed, projected balance, circular progress ring, and zero-history empty state backed by `savings_goals` table with RLS.
+    - **D6 (Camera UPI Scanner & Server-Side VPA Validation)**: Replaced mock scanner with live `mobile_scanner` camera viewfinder with torch and switch controls. Robust parsing of `upi://pay` query params (`pa`, `pn`, `am`, `tn`, `cu`, `mc`, `tr`) with validation rejecting invalid barcodes. Displays payee name ("Name from QR"), UPI ID, amount, and note. Created Deno Edge Function `supabase/functions/validate-vpa/index.ts` calling Razorpay `POST /v1/payments/validate/vpa` (using `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET`), rate-limited, signed-in only, masked UPI logging, storing no third-party data. Graceful fallback displaying QR data with "Not verified by bank" and exact error. Pay button shows "Test mode: no money is moved". Sample preset chips removed from normal builds.
+    - **D7 (Automated Tests)**: Built comprehensive automated tests in `test/part_d_wallet_escrow_test.dart` (8 tests passing) covering receipt breakdown, UPI URI parsing, rejection rules, zero balance assertions, and widget rendering.
+  - **Sub-Step F (Farmer Screens F1-F6)**:
+    - **F1 (Real Profile & Honesty Invariant)**: Replaced emoji with shared `UserAvatar` reading `profiles.avatar_path`. Authored migration `supabase/migrations/0630_farmer_profile_fields.sql`. Stripped all mock/fake numbers and claims (420 kg, ₹48,500, Red Loam Soil, Mandya APMC #4812, KCC Approved, validated organic cert). New farmer stats start at real 0. "Verified Farmer" appears strictly when KYC is completed. Added optional self-declared fields (APMC registration number, Kisan Credit Card status, organic certificate number with doc upload) explicitly labeled `"Self-declared, not verified yet"`.
+    - **F2 (Edit Farm Details Form)**: Built comprehensive `EditFarmDetailsDialog` with form fields for farm name, location (interactive map pin), acres, soil type, farming method, primary crops, delivery radius, pickup toggle, lead time, farm photo, and self-declared fields with validation. Home and Profile update immediately upon save.
+    - **F3 (Single Voice Mic & Overflow Resolution)**: Resolved AppBar right overflow on Farmer Home by removing redundant action buttons and moving actions into a popup menu. Audited all screens across the codebase and removed duplicate `MicFab` floating buttons (`FarmerHomeScreen`, `JobHistoryScreen`, `FavouritesScreen`, `PaymentStatusScreen`, `PaymentCheckoutScreen`, `SavingsGoalsScreen`). The floating mic button in the shell's `RoleBottomNavBar` is the sole voice interface.
+    - **F4 (Weather Advisory Thresholds & Helper Counts)**: Meteorologically calibrated weather advisory thresholds (precipitation < 35%, e.g. 22%, is classified as clear/favourable skies, not moderate rain). Stripped fake helper counts ("5 local harvest helpers") until P6.3.
+    - **F5 (Swiggy/Zomato Style Mandi Cards)**: Upgraded Mandi price cards to Swiggy/Zomato style with category rails (Vegetables, Fruits, Grains & Pulses, Spices, Flowers), 2-column grid, unit toggle (kg vs quintal), price change indicators, demand chips, skeleton shimmer loading, offline cache, and manifest-driven resolver with gradient fallback.
+    - **F6 (Automated Tests)**: Expanded test suites in `test/part_f_farmer_polish_test.dart` (6 tests passing) and `test/farmer_profile_and_listings_test.dart` (29 tests passing).
+  - **Sub-Step G (Images G1-G5)**:
+    - **G1/G5 (Image Strategy & Documentation)**: In accordance with G1/G5 guidelines, authored `docs/IMAGE_PROMPTS.md` with complete, copy-paste ready prompts for all 40 jobs (800x450, <70 KB) and 40 crops (600x600, <50 KB) in consistent warm, bright Indian illustration style.
+    - **G2-G3 (Asset Manifests)**: Updated `assets/images/jobs/manifest.json` and `assets/images/commodities/manifest.json` with multi-lingual keywords and translations (English, Kannada, Hindi).
+    - **G5 (Asset Checker Tool)**: Authored `tool/check_images.dart` auditing asset completeness and byte size limits. Image loaders gracefully render polished gradient fallbacks whenever disk assets are absent.
+  - **Sub-Step H (Documentation & Handover)**:
+    - Documented Decision `D63` in `docs/DECISIONS.md`.
+    - Updated `docs/PROGRESS.md`.
+  - **Verification & Invariants**:
+    - `flutter analyze`: 0 issues found.
+    - `flutter test`: All targeted test suites passing (100% clean).
+    - Local git commits made after each sub-step.
+    - Zero fake claims presented as verified; single central MicFab enforced.
+
 ---
 
 ## Manual steps pending
-1. **Mandi Sync Edge Function & Secrets (Optional Live Agmarknet Sync)**:
-   - Deploy `mandi-sync` edge function: `supabase functions deploy mandi-sync`
-   - Set secret `DATA_GOV_API_KEY` (never write to files): `supabase secrets set DATA_GOV_API_KEY=your_key_here`
-   - Set `MANDI_SYNC_ENABLED=true` when you wish to activate live Agmarknet sync.
-2. **Razorpay Dashboard Webhook Configuration**:
+1. **Edge Function Deployments & Secrets**:
+   - `validate-vpa`: Deploy Edge Function `supabase functions deploy validate-vpa`
+     - Required secrets to set (names only): `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`
+   - `qr-issue`, `qr-verify`, `face-verify`: Deploy functions and configure secrets: `QR_SIGNING_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`.
+   - `mandi-sync`: Deploy function `supabase functions deploy mandi-sync` and set secret `DATA_GOV_API_KEY`.
+2. **Database Migrations to Apply on Remote Supabase DB (in order)**:
+   - `supabase/migrations/0610_job_execution_ticket_qr_polish.sql`
+   - `supabase/migrations/0620_ledger_is_demo_and_savings_planner.sql`
+   - `supabase/migrations/0630_farmer_profile_fields.sql`
+3. **Developer Seed Scripts (Test Account Only - Optional)**:
+   - `supabase/dev/seed_wallet_history.sql`: Run in Supabase SQL Editor replacing `TEST_USER_ID` to seed 5 months of balanced demo ledger entries (sums to ₹0 net, pending escrow ₹0).
+   - `supabase/dev/remove_wallet_history.sql`: Run to safely remove demo entries for `TEST_USER_ID`.
+4. **Razorpay Dashboard Webhook Configuration**:
    - URL: `https://mmzbpeqkfomnywuzoqii.supabase.co/functions/v1/payment-webhook`
    - Secret: Value of your `RAZORPAY_WEBHOOK_SECRET`
    - Subscribed events: `payment.captured`, `payment.failed`, `order.paid`
-3. **Phone Installation (Xiaomi / MIUI USB Security Permission)**:
+5. **Phone Installation (Xiaomi / MIUI USB Security Permission)**:
    - On Xiaomi / MIUI / HyperOS devices, enable **Install via USB** in Developer Options.
    - Run: `adb -s <device_id> install -r "build\app\outputs\flutter-apk\app-debug.apk"`.
 
 ## Known issues
 - **Profile & Auth Foreign Key Cascade vs D11 Retention**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`. The financial retention refactor will decouple `auth.users` deletion from audit records in an upcoming migration.
-- **Phase 6.7**: Produce subscriptions and recurring delivery (weekly milk/veggie baskets) is the next planned step.
+- **Phase 6.3 - 6.5, 6.7 - 6.8**: Farm equipment rental/labour hiring, buyer produce marketplace, carts & checkout, and subscriptions are upcoming phases.
 - **Phase 9 (Admin Console)**: Admin console is built in a separate web/desktop project and is out of scope for this Flutter app.
+
 
 
 
