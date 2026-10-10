@@ -388,6 +388,27 @@
         "daily labour",
         "manual work"
       ]
+    },
+    {
+      "slug": "gardener",
+      "name": "Gardening & Landscaping",
+      "icon": "yard",
+      "variants": [
+        "assets/images/jobs/gardener-1.webp",
+        "assets/images/jobs/gardener-2.webp"
+      ],
+      "keywords": [
+        "gardener",
+        "gardening",
+        "landscaping",
+        "plants",
+        "lawn",
+        "mowing",
+        "nursery",
+        "horticulture",
+        "tree pruning",
+        "watering"
+      ]
     }
   ]
 }

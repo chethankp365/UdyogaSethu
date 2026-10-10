@@ -97,6 +97,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/jobs/
+    - assets/images/commodities/
     - assets/models/
 
   # For details regarding adding assets from package dependencies, see

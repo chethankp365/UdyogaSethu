@@ -1,0 +1,534 @@
+{
+  "version": "1.0.0",
+  "total": 40,
+  "commodities": [
+    {
+      "slug": "tomato",
+      "name": "Tomato",
+      "category": "Vegetables",
+      "emoji": "🍅",
+      "assetPath": "assets/images/commodities/tomato.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "tomato",
+        "tomatoes",
+        "hybrid tomato",
+        "desi tomato"
+      ]
+    },
+    {
+      "slug": "onion",
+      "name": "Onion",
+      "category": "Vegetables",
+      "emoji": "🧅",
+      "assetPath": "assets/images/commodities/onion.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "onion",
+        "onions",
+        "red onion",
+        "bellary onion",
+        "nasik onion"
+      ]
+    },
+    {
+      "slug": "potato",
+      "name": "Potato",
+      "category": "Vegetables",
+      "emoji": "🥔",
+      "assetPath": "assets/images/commodities/potato.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "potato",
+        "potatoes",
+        "jyoti potato",
+        "baby potato"
+      ]
+    },
+    {
+      "slug": "green_chilli",
+      "name": "Green Chilli",
+      "category": "Vegetables",
+      "emoji": "🌶️",
+      "assetPath": "assets/images/commodities/green_chilli.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "green chilli",
+        "chilli",
+        "mirchi",
+        "g4 chilli"
+      ]
+    },
+    {
+      "slug": "carrot",
+      "name": "Carrot",
+      "category": "Vegetables",
+      "emoji": "🥕",
+      "assetPath": "assets/images/commodities/carrot.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "carrot",
+        "carrots",
+        "orange carrot",
+        "desi carrot"
+      ]
+    },
+    {
+      "slug": "cabbage",
+      "name": "Cabbage",
+      "category": "Vegetables",
+      "emoji": "🥬",
+      "assetPath": "assets/images/commodities/cabbage.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "cabbage",
+        "green cabbage"
+      ]
+    },
+    {
+      "slug": "cauliflower",
+      "name": "Cauliflower",
+      "category": "Vegetables",
+      "emoji": "🥦",
+      "assetPath": "assets/images/commodities/cauliflower.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "cauliflower",
+        "gobi"
+      ]
+    },
+    {
+      "slug": "beans",
+      "name": "French Beans",
+      "category": "Vegetables",
+      "emoji": "🫘",
+      "assetPath": "assets/images/commodities/beans.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "beans",
+        "french beans",
+        "ring beans"
+      ]
+    },
+    {
+      "slug": "brinjal",
+      "name": "Brinjal / Eggplant",
+      "category": "Vegetables",
+      "emoji": "🍆",
+      "assetPath": "assets/images/commodities/brinjal.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "brinjal",
+        "eggplant",
+        "baingan",
+        "purple brinjal"
+      ]
+    },
+    {
+      "slug": "beetroot",
+      "name": "Beetroot",
+      "category": "Vegetables",
+      "emoji": "🫒",
+      "assetPath": "assets/images/commodities/beetroot.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "beetroot",
+        "beet"
+      ]
+    },
+    {
+      "slug": "cucumber",
+      "name": "Cucumber",
+      "category": "Vegetables",
+      "emoji": "🥒",
+      "assetPath": "assets/images/commodities/cucumber.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "cucumber",
+        "kheera",
+        "green cucumber"
+      ]
+    },
+    {
+      "slug": "capsicum",
+      "name": "Capsicum / Bell Pepper",
+      "category": "Vegetables",
+      "emoji": "🫑",
+      "assetPath": "assets/images/commodities/capsicum.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "capsicum",
+        "bell pepper",
+        "shimla mirch"
+      ]
+    },
+    {
+      "slug": "garlic",
+      "name": "Garlic",
+      "category": "Vegetables",
+      "emoji": "🧄",
+      "assetPath": "assets/images/commodities/garlic.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "garlic",
+        "lahsun",
+        "desi garlic"
+      ]
+    },
+    {
+      "slug": "ginger",
+      "name": "Ginger",
+      "category": "Vegetables",
+      "emoji": "🫚",
+      "assetPath": "assets/images/commodities/ginger.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "ginger",
+        "adrak",
+        "fresh ginger"
+      ]
+    },
+    {
+      "slug": "rice",
+      "name": "Rice",
+      "category": "Cereals & Grains",
+      "emoji": "🌾",
+      "assetPath": "assets/images/commodities/rice.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "rice",
+        "sona masoori",
+        "basmati",
+        "raw rice"
+      ]
+    },
+    {
+      "slug": "paddy",
+      "name": "Paddy",
+      "category": "Cereals & Grains",
+      "emoji": "🌾",
+      "assetPath": "assets/images/commodities/paddy.webp",
+      "defaultUnit": "qtl",
+      "keywords": [
+        "paddy",
+        "dhan",
+        "unhusked paddy"
+      ]
+    },
+    {
+      "slug": "wheat",
+      "name": "Wheat",
+      "category": "Cereals & Grains",
+      "emoji": "🌾",
+      "assetPath": "assets/images/commodities/wheat.webp",
+      "defaultUnit": "qtl",
+      "keywords": [
+        "wheat",
+        "gehun",
+        "sharbati wheat"
+      ]
+    },
+    {
+      "slug": "ragi",
+      "name": "Finger Millet (Ragi)",
+      "category": "Cereals & Grains",
+      "emoji": "🌾",
+      "assetPath": "assets/images/commodities/ragi.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "ragi",
+        "finger millet",
+        "nachni"
+      ]
+    },
+    {
+      "slug": "maize",
+      "name": "Maize / Corn",
+      "category": "Cereals & Grains",
+      "emoji": "🌽",
+      "assetPath": "assets/images/commodities/maize.webp",
+      "defaultUnit": "qtl",
+      "keywords": [
+        "maize",
+        "corn",
+        "makka",
+        "sweet corn"
+      ]
+    },
+    {
+      "slug": "jowar",
+      "name": "Sorghum (Jowar)",
+      "category": "Cereals & Grains",
+      "emoji": "🌾",
+      "assetPath": "assets/images/commodities/jowar.webp",
+      "defaultUnit": "qtl",
+      "keywords": [
+        "jowar",
+        "sorghum",
+        "white jowar"
+      ]
+    },
+    {
+      "slug": "bajra",
+      "name": "Pearl Millet (Bajra)",
+      "category": "Cereals & Grains",
+      "emoji": "🌾",
+      "assetPath": "assets/images/commodities/bajra.webp",
+      "defaultUnit": "qtl",
+      "keywords": [
+        "bajra",
+        "pearl millet",
+        "sajje"
+      ]
+    },
+    {
+      "slug": "red_gram",
+      "name": "Red Gram / Tur Dal",
+      "category": "Pulses",
+      "emoji": "🥣",
+      "assetPath": "assets/images/commodities/red_gram.webp",
+      "defaultUnit": "qtl",
+      "keywords": [
+        "red gram",
+        "tur dal",
+        "toor dal",
+        "arhar"
+      ]
+    },
+    {
+      "slug": "bengal_gram",
+      "name": "Bengal Gram / Chana",
+      "category": "Pulses",
+      "emoji": "🥣",
+      "assetPath": "assets/images/commodities/bengal_gram.webp",
+      "defaultUnit": "qtl",
+      "keywords": [
+        "bengal gram",
+        "chana",
+        "chickpea"
+      ]
+    },
+    {
+      "slug": "green_gram",
+      "name": "Green Gram / Moong",
+      "category": "Pulses",
+      "emoji": "🥣",
+      "assetPath": "assets/images/commodities/green_gram.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "green gram",
+        "moong",
+        "mung bean"
+      ]
+    },
+    {
+      "slug": "black_gram",
+      "name": "Black Gram / Urad",
+      "category": "Pulses",
+      "emoji": "🥣",
+      "assetPath": "assets/images/commodities/black_gram.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "black gram",
+        "urad",
+        "black dal"
+      ]
+    },
+    {
+      "slug": "groundnut",
+      "name": "Groundnut / Peanut",
+      "category": "Oilseeds",
+      "emoji": "🥜",
+      "assetPath": "assets/images/commodities/groundnut.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "groundnut",
+        "peanut",
+        "moongfali"
+      ]
+    },
+    {
+      "slug": "soybean",
+      "name": "Soybean",
+      "category": "Oilseeds",
+      "emoji": "🫘",
+      "assetPath": "assets/images/commodities/soybean.webp",
+      "defaultUnit": "qtl",
+      "keywords": [
+        "soybean",
+        "soya",
+        "yellow soybean"
+      ]
+    },
+    {
+      "slug": "sunflower",
+      "name": "Sunflower Seed",
+      "category": "Oilseeds",
+      "emoji": "🌻",
+      "assetPath": "assets/images/commodities/sunflower.webp",
+      "defaultUnit": "qtl",
+      "keywords": [
+        "sunflower",
+        "sunflower seed"
+      ]
+    },
+    {
+      "slug": "sugarcane",
+      "name": "Sugarcane",
+      "category": "Commercial",
+      "emoji": "🎋",
+      "assetPath": "assets/images/commodities/sugarcane.webp",
+      "defaultUnit": "tonne",
+      "keywords": [
+        "sugarcane",
+        "cane",
+        "co 86032"
+      ]
+    },
+    {
+      "slug": "cotton",
+      "name": "Cotton",
+      "category": "Commercial",
+      "emoji": "🧶",
+      "assetPath": "assets/images/commodities/cotton.webp",
+      "defaultUnit": "qtl",
+      "keywords": [
+        "cotton",
+        "kapas",
+        "dch-32"
+      ]
+    },
+    {
+      "slug": "coconut",
+      "name": "Coconut",
+      "category": "Plantation",
+      "emoji": "🥥",
+      "assetPath": "assets/images/commodities/coconut.webp",
+      "defaultUnit": "piece",
+      "keywords": [
+        "coconut",
+        "tender coconut",
+        "copra"
+      ]
+    },
+    {
+      "slug": "arecanut",
+      "name": "Arecanut / Betel Nut",
+      "category": "Plantation",
+      "emoji": "🌰",
+      "assetPath": "assets/images/commodities/arecanut.webp",
+      "defaultUnit": "qtl",
+      "keywords": [
+        "arecanut",
+        "supari",
+        "betel nut",
+        "rashi"
+      ]
+    },
+    {
+      "slug": "coffee",
+      "name": "Coffee Beans",
+      "category": "Plantation",
+      "emoji": "☕",
+      "assetPath": "assets/images/commodities/coffee.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "coffee",
+        "arabica",
+        "robusta coffee"
+      ]
+    },
+    {
+      "slug": "black_pepper",
+      "name": "Black Pepper",
+      "category": "Spices",
+      "emoji": "🌿",
+      "assetPath": "assets/images/commodities/black_pepper.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "black pepper",
+        "pepper",
+        "kali mirch"
+      ]
+    },
+    {
+      "slug": "cardamom",
+      "name": "Green Cardamom",
+      "category": "Spices",
+      "emoji": "🫚",
+      "assetPath": "assets/images/commodities/cardamom.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "cardamom",
+        "elaichi",
+        "green cardamom"
+      ]
+    },
+    {
+      "slug": "turmeric",
+      "name": "Turmeric",
+      "category": "Spices",
+      "emoji": "🧂",
+      "assetPath": "assets/images/commodities/turmeric.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "turmeric",
+        "haldi",
+        "yellow turmeric"
+      ]
+    },
+    {
+      "slug": "banana",
+      "name": "Banana",
+      "category": "Fruits",
+      "emoji": "🍌",
+      "assetPath": "assets/images/commodities/banana.webp",
+      "defaultUnit": "dozen",
+      "keywords": [
+        "banana",
+        "elakki banana",
+        "robusta banana",
+        "rasabale"
+      ]
+    },
+    {
+      "slug": "mango",
+      "name": "Mango",
+      "category": "Fruits",
+      "emoji": "🥭",
+      "assetPath": "assets/images/commodities/mango.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "mango",
+        "alphonso",
+        "badami",
+        "kesar mango"
+      ]
+    },
+    {
+      "slug": "papaya",
+      "name": "Papaya",
+      "category": "Fruits",
+      "emoji": "🍈",
+      "assetPath": "assets/images/commodities/papaya.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "papaya",
+        "red lady papaya"
+      ]
+    },
+    {
+      "slug": "pomegranate",
+      "name": "Pomegranate",
+      "category": "Fruits",
+      "emoji": "🍎",
+      "assetPath": "assets/images/commodities/pomegranate.webp",
+      "defaultUnit": "kg",
+      "keywords": [
+        "pomegranate",
+        "anar",
+        "bhagwa pomegranate"
+      ]
+    }
+  ]
+}

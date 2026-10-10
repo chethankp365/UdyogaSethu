@@ -56,6 +56,7 @@ class JobThumbnailService {
     'design-data-work': ['design', 'graphic', 'photoshop', 'illustrator', 'data entry', 'excel', 'editing', 'presentation', 'digital'],
     'tutoring-academics': ['tutoring', 'tutor', 'teacher', 'maths', 'science', 'coaching', 'tuition', 'academic', 'lessons'],
     'campus-brand-promotion': ['campus', 'brand', 'promotion', 'college', 'flyer', 'ambassador', 'marketing', 'event', 'sampling'],
+    'gardener': ['gardener', 'gardening', 'landscaping', 'plants', 'lawn', 'mowing', 'nursery', 'horticulture', 'tree pruning', 'watering'],
     'general': ['general', 'helper', 'assistant', 'utility', 'support', 'daily labour', 'manual work'],
   };
 
@@ -202,6 +203,9 @@ class JobThumbnailService {
       case 'retail-food-service':
       case 'storefront':
         return Icons.storefront_rounded;
+      case 'gardener':
+      case 'yard':
+        return Icons.yard_rounded;
       case 'delivery':
       case 'delivery-gig-work':
       case 'two_wheeler':
