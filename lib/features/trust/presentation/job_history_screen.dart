@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:udyogasethu/core/l10n/locale_controller.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
-import 'package:udyogasethu/core/widgets/mic_fab.dart';
 import 'package:udyogasethu/features/booking/domain/booking_draft.dart';
 import 'package:udyogasethu/features/trust/data/trust_repository.dart';
 import 'package:udyogasethu/features/trust/domain/job_history_item.dart';
@@ -49,14 +48,6 @@ class _JobHistoryScreenState extends ConsumerState<JobHistoryScreen> {
             onPressed: () => context.push(AppRoutes.favourites),
           ),
         ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: MicFab(
-        onTap: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('AI Multilingual Voice Assistant arrives in P8.1.')),
-          );
-        },
       ),
       body: RefreshIndicator(
         onRefresh: () async {

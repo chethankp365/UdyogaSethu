@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:udyogasethu/core/widgets/mic_fab.dart';
 import 'package:udyogasethu/features/earnings/data/earnings_repository.dart';
 import 'package:udyogasethu/features/earnings/domain/savings_goal_model.dart';
 import 'package:udyogasethu/features/earnings/presentation/widgets/allocate_savings_dialog.dart';
@@ -91,8 +90,6 @@ class _SavingsGoalsScreenState extends ConsumerState<SavingsGoalsScreen> {
           ),
         ],
       ),
-      floatingActionButton: MicFab(onTap: () {}),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: RefreshIndicator(
         onRefresh: _refresh,
         color: const Color(0xFF0D6548),

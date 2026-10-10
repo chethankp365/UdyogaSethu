@@ -83,7 +83,7 @@ class WeatherAdvisory {
     bool isSimulated = false,
   }) {
     // 1. Heavy rain alert
-    if (precipitationMm >= 25.0 || weatherCode >= 80) {
+    if (precipitationMm >= 25.0 || (rainProbability >= 80 && precipitationMm >= 15.0) || weatherCode >= 80) {
       return WeatherAdvisory(
         locationName: locationName,
         currentTemp: currentTemp,
@@ -102,8 +102,8 @@ class WeatherAdvisory {
       );
     }
 
-    // 2. Moderate rain forecast (Prompt & Screen 26 match)
-    if (rainProbability >= 45 || precipitationMm >= 4.0 || (weatherCode >= 50 && weatherCode <= 65)) {
+    // 2. Moderate rain forecast (Realistic threshold: probability >= 60% with rain, or code 61-65 with >= 2.5mm)
+    if ((rainProbability >= 60 && precipitationMm >= 3.0) || precipitationMm >= 6.0 || (weatherCode >= 61 && weatherCode <= 65 && precipitationMm >= 2.5)) {
       return WeatherAdvisory(
         locationName: locationName,
         currentTemp: currentTemp,
@@ -142,7 +142,27 @@ class WeatherAdvisory {
       );
     }
 
-    // 4. Optimal clear weather
+    // 4. Light rain / isolated drizzle (35% to 59%)
+    if (rainProbability >= 35 || precipitationMm >= 1.0) {
+      return WeatherAdvisory(
+        locationName: locationName,
+        currentTemp: currentTemp,
+        maxTemp: maxTemp,
+        minTemp: minTemp,
+        rainProbability: rainProbability,
+        precipitationMm: precipitationMm,
+        weatherCode: weatherCode,
+        advisoryTitle: 'Passing Showers Possible ($rainProbability%)',
+        advisoryBody:
+            'Light isolated showers possible ($rainProbability% probability, ${precipitationMm.toStringAsFixed(1)}mm). Low agricultural risk. Normal harvesting and weeding can proceed.',
+        actionLabel: null,
+        severity: WeatherAdvisorySeverity.info,
+        date: DateTime.now(),
+        isSimulated: isSimulated,
+      );
+    }
+
+    // 5. Optimal clear weather (< 35% rain probability, e.g. 22%)
     return WeatherAdvisory(
       locationName: locationName,
       currentTemp: currentTemp,
@@ -153,7 +173,7 @@ class WeatherAdvisory {
       weatherCode: weatherCode,
       advisoryTitle: 'Favourable Field Weather',
       advisoryBody:
-          'Clear skies and dry field conditions expected for next 48 hours. Optimal window for intercultural operations, bio-fertilizer application, and weed management.',
+          'Clear skies and dry field conditions ($rainProbability% rain chance). Optimal window for intercultural operations, bio-fertilizer application, and weed management.',
       actionLabel: null,
       severity: WeatherAdvisorySeverity.info,
       date: DateTime.now(),

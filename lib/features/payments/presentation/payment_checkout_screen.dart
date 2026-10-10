@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/router/routes.dart';
-import 'package:udyogasethu/core/widgets/mic_fab.dart';
 import 'package:udyogasethu/features/payments/data/payment_repository.dart';
 import 'package:udyogasethu/features/payments/domain/payment_bill_summary.dart';
 import 'package:udyogasethu/features/payments/domain/payment_models.dart';
@@ -152,8 +151,6 @@ class _PaymentCheckoutScreenState extends ConsumerState<PaymentCheckoutScreen> {
         backgroundColor: isDark ? const Color(0xFF1E293B) : Colors.white,
         foregroundColor: isDark ? Colors.white : const Color(0xFF0F172A),
       ),
-      floatingActionButton: MicFab(onTap: () {}),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: billAsync.when(
         loading: () => const Center(
           child: CircularProgressIndicator(color: Color(0xFF0D6548)),

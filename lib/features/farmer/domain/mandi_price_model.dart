@@ -4,7 +4,10 @@ import 'package:intl/intl.dart';
 enum CropCategoryTab {
   allCrops,
   vegetables,
-  grainsAndPulses;
+  fruits,
+  grainsAndPulses,
+  spices,
+  flowers;
 
   String get label {
     switch (this) {
@@ -12,8 +15,31 @@ enum CropCategoryTab {
         return 'All Crops';
       case CropCategoryTab.vegetables:
         return 'Vegetables';
+      case CropCategoryTab.fruits:
+        return 'Fruits';
       case CropCategoryTab.grainsAndPulses:
         return 'Grains & Pulses';
+      case CropCategoryTab.spices:
+        return 'Spices';
+      case CropCategoryTab.flowers:
+        return 'Flowers';
+    }
+  }
+
+  String get emoji {
+    switch (this) {
+      case CropCategoryTab.allCrops:
+        return '🧺';
+      case CropCategoryTab.vegetables:
+        return '🥦';
+      case CropCategoryTab.fruits:
+        return '🍎';
+      case CropCategoryTab.grainsAndPulses:
+        return '🌾';
+      case CropCategoryTab.spices:
+        return '🌶️';
+      case CropCategoryTab.flowers:
+        return '🌸';
     }
   }
 }
@@ -73,25 +99,56 @@ class MandiPrice {
 
   CropCategoryTab get category {
     final lower = commodity.toLowerCase();
-    if (lower.contains('tomato') ||
-        lower.contains('onion') ||
-        lower.contains('potato') ||
-        lower.contains('chilli') ||
-        lower.contains('carrot') ||
-        lower.contains('ginger')) {
-      return CropCategoryTab.vegetables;
+    // Flowers
+    if (lower.contains('marigold') ||
+        lower.contains('rose') ||
+        lower.contains('jasmine') ||
+        lower.contains('flower')) {
+      return CropCategoryTab.flowers;
     }
+    // Spices
+    if (lower.contains('turmeric') ||
+        lower.contains('ginger') ||
+        lower.contains('garlic') ||
+        lower.contains('cardamom') ||
+        lower.contains('pepper') ||
+        lower.contains('areca')) {
+      return CropCategoryTab.spices;
+    }
+    // Fruits
+    if (lower.contains('banana') ||
+        lower.contains('mango') ||
+        lower.contains('grapes') ||
+        lower.contains('pomegranate') ||
+        lower.contains('papaya') ||
+        lower.contains('lemon') ||
+        lower.contains('coconut') ||
+        lower.contains('apple') ||
+        lower.contains('orange') ||
+        lower.contains('guava')) {
+      return CropCategoryTab.fruits;
+    }
+    // Grains & Pulses
     if (lower.contains('rice') ||
         lower.contains('paddy') ||
         lower.contains('ragi') ||
         lower.contains('maize') ||
         lower.contains('wheat') ||
-        lower.contains('soybean') ||
+        lower.contains('jowar') ||
+        lower.contains('bajra') ||
+        lower.contains('dal') ||
         lower.contains('gram') ||
+        lower.contains('groundnut') ||
+        lower.contains('sunflower') ||
+        lower.contains('sugarcane') ||
+        lower.contains('cotton') ||
+        lower.contains('coffee') ||
+        lower.contains('soybean') ||
         lower.contains('pulse')) {
       return CropCategoryTab.grainsAndPulses;
     }
-    return CropCategoryTab.allCrops;
+    // Vegetables
+    return CropCategoryTab.vegetables;
   }
 
   Color get demandTagColor {

@@ -6,11 +6,13 @@ import 'package:udyogasethu/l10n/app_localizations.dart';
 class MandiPricesSection extends StatefulWidget {
   final List<MandiPrice> prices;
   final VoidCallback? onRefresh;
+  final bool isLoading;
 
   const MandiPricesSection({
     super.key,
     required this.prices,
     this.onRefresh,
+    this.isLoading = false,
   });
 
   @override
@@ -27,8 +29,14 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
         return l10n?.farmerAllCrops ?? 'All Crops';
       case CropCategoryTab.vegetables:
         return l10n?.farmerVegetables ?? 'Vegetables';
+      case CropCategoryTab.fruits:
+        return 'Fruits';
       case CropCategoryTab.grainsAndPulses:
         return l10n?.farmerGrainsAndPulses ?? 'Grains & Pulses';
+      case CropCategoryTab.spices:
+        return 'Spices';
+      case CropCategoryTab.flowers:
+        return 'Flowers';
     }
   }
 
@@ -54,12 +62,17 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+
+    if (widget.isLoading) {
+      return _buildSkeletonGrid();
+    }
+
     final filteredPrices = widget.prices.where((p) {
       if (_selectedTab == CropCategoryTab.allCrops) return true;
       return p.category == _selectedTab;
     }).toList();
 
-    // Determine the newest arrival date
+    // Determine newest arrival date
     DateTime? newestDate;
     for (final p in widget.prices) {
       if (newestDate == null || p.arrivalDate.isAfter(newestDate)) {
@@ -160,7 +173,7 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
         ),
         const SizedBox(height: 12),
 
-        // 2. Crop Category Filter Chips (All Crops, Vegetables, Grains & Pulses)
+        // 2. Crop Category Filter Chips / Rails per group (Vegetables, Fruits, Grains & Pulses, Spices, Flowers)
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -169,7 +182,7 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
               return Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: ChoiceChip(
-                  avatar: Text(_getCategoryEmoji(tab)),
+                  avatar: Text(tab.emoji),
                   label: Text(_getCategoryLabel(tab, l10n)),
                   selected: isSelected,
                   selectedColor: const Color(0xFF0D6548),
@@ -192,7 +205,7 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
         ),
         const SizedBox(height: 14),
 
-        // 3. Grid of Mandi Price Cards (Screen 22 layout)
+        // 3. Grid of Mandi Price Cards (Swiggy / Zomato style with 2-column grid and group rails)
         if (filteredPrices.isEmpty)
           Container(
             padding: const EdgeInsets.all(24),
@@ -225,9 +238,9 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
             itemCount: filteredPrices.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 0.72,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              childAspectRatio: 0.68,
             ),
             itemBuilder: (context, index) {
               final price = filteredPrices[index];
@@ -236,39 +249,6 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
           ),
       ],
     );
-  }
-
-  String _getCategoryEmoji(CropCategoryTab tab) {
-    switch (tab) {
-      case CropCategoryTab.allCrops:
-        return '🧺';
-      case CropCategoryTab.vegetables:
-        return '🥦';
-      case CropCategoryTab.grainsAndPulses:
-        return '🌾';
-    }
-  }
-
-  String _getCommodityEmoji(String commodity) {
-    final lower = commodity.toLowerCase();
-    if (lower.contains('tomato')) return '🍅';
-    if (lower.contains('onion')) return '🧅';
-    if (lower.contains('potato')) return '🥔';
-    if (lower.contains('chilli') || lower.contains('chili')) return '🌶️';
-    if (lower.contains('carrot')) return '🥕';
-    if (lower.contains('ginger') || lower.contains('garlic')) return '🧄';
-    if (lower.contains('banana')) return '🍌';
-    if (lower.contains('mango')) return '🥭';
-    if (lower.contains('rice') ||
-        lower.contains('paddy') ||
-        lower.contains('wheat') ||
-        lower.contains('ragi') ||
-        lower.contains('maize') ||
-        lower.contains('gram') ||
-        lower.contains('pulse')) {
-      return '🌾';
-    }
-    return '🌱';
   }
 
   Widget _buildUnitToggleBtn(String label, bool isSelected, VoidCallback onTap) {
@@ -311,7 +291,6 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
         ? price.formattedPricePerKg
         : price.formattedModalPricePerQtl;
 
-    final emoji = _getCommodityEmoji(price.commodity);
     final slug = price.commodity.toLowerCase().replaceAll(' ', '_');
     final assetPath = 'assets/images/commodities/$slug.webp';
 
@@ -332,9 +311,9 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Top Photo Thumbnail container with Swiggy/Zomato-style overlay trend badge
+          // 1. Large Top Photo with Gradient & First-Letter Fallback
           SizedBox(
-            height: 74,
+            height: 94,
             width: double.infinity,
             child: Stack(
               fit: StackFit.expand,
@@ -343,31 +322,17 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
                   assetPath,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Color(0xFFECFDF5), Color(0xFFD1FAE5)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          emoji,
-                          style: const TextStyle(fontSize: 32),
-                        ),
-                      ),
-                    );
+                    return _buildGradientFallback(price);
                   },
                 ),
-                // Trend badge pinned on top right of the thumbnail
+                // Top Right Change Arrow Badge
                 Positioned(
                   top: 6,
                   right: 6,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.92),
+                      color: Colors.white.withValues(alpha: 0.95),
                       borderRadius: BorderRadius.circular(8),
                       boxShadow: [
                         BoxShadow(
@@ -395,11 +360,31 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
                     ),
                   ),
                 ),
+                // Bottom Left Demand Chip in Overlay
+                Positioned(
+                  bottom: 6,
+                  left: 6,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.7),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      _getDemandTagText(price.demandTag, l10n),
+                      style: const TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
 
-          // Content body
+          // 2. Card Content Body
           Expanded(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
@@ -415,13 +400,14 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
                       Text(
                         price.commodity,
                         style: const TextStyle(
-                          fontSize: 13.5,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF1E293B),
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
+                      const SizedBox(height: 1),
                       Text(
                         price.variety,
                         style: const TextStyle(
@@ -435,7 +421,7 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
                     ],
                   ),
 
-                  // Price
+                  // Big Price per kg
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -446,7 +432,7 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
                         child: Text(
                           displayPrice,
                           style: const TextStyle(
-                            fontSize: 17,
+                            fontSize: 18,
                             fontWeight: FontWeight.w900,
                             color: Color(0xFF0D6548),
                           ),
@@ -463,46 +449,22 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
                     ],
                   ),
 
-                  // Bottom: Demand Tag & Market
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
+                  // Market & District location row
+                  Row(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: price.demandTagColor.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
+                      const Icon(Icons.location_on_outlined, size: 11, color: Color(0xFF94A3B8)),
+                      const SizedBox(width: 3),
+                      Expanded(
                         child: Text(
-                          _getDemandTagText(price.demandTag, l10n),
-                          style: TextStyle(
+                          '${price.market}, ${price.district}',
+                          style: const TextStyle(
                             fontSize: 9.5,
-                            fontWeight: FontWeight.bold,
-                            color: price.demandTagColor,
+                            color: Color(0xFF64748B),
+                            fontWeight: FontWeight.w500,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                      const SizedBox(height: 3),
-                      Row(
-                        children: [
-                          const Icon(Icons.location_on_outlined, size: 11, color: Color(0xFF94A3B8)),
-                          const SizedBox(width: 2),
-                          Expanded(
-                            child: Text(
-                              price.market,
-                              style: const TextStyle(
-                                fontSize: 9.5,
-                                color: Color(0xFF64748B),
-                                fontWeight: FontWeight.w500,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
                       ),
                     ],
                   ),
@@ -512,6 +474,121 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildGradientFallback(MandiPrice price) {
+    final firstLetter = price.commodity.isNotEmpty ? price.commodity[0].toUpperCase() : 'C';
+
+    List<Color> gradientColors;
+    switch (price.category) {
+      case CropCategoryTab.vegetables:
+        gradientColors = [const Color(0xFFE8F5E9), const Color(0xFFA5D6A7)];
+        break;
+      case CropCategoryTab.fruits:
+        gradientColors = [const Color(0xFFFFF3E0), const Color(0xFFFFCC80)];
+        break;
+      case CropCategoryTab.grainsAndPulses:
+        gradientColors = [const Color(0xFFFFFDE7), const Color(0xFFFFF59D)];
+        break;
+      case CropCategoryTab.spices:
+        gradientColors = [const Color(0xFFFBE9E7), const Color(0xFFFFAB91)];
+        break;
+      case CropCategoryTab.flowers:
+        gradientColors = [const Color(0xFFFCE4EC), const Color(0xFFF48FB1)];
+        break;
+      case CropCategoryTab.allCrops:
+        gradientColors = [const Color(0xFFECFDF5), const Color(0xFFA7F3D0)];
+        break;
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: gradientColors,
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Center(
+        child: Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.65),
+            shape: BoxShape.circle,
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            firstLetter,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w900,
+              color: Color(0xFF064E3B),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSkeletonGrid() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 180,
+          height: 18,
+          decoration: BoxDecoration(
+            color: Colors.grey.shade300,
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ),
+        const SizedBox(height: 14),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: 4,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 0.68,
+          ),
+          itemBuilder: (context, index) {
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFFE2E8F0)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 94,
+                    width: double.infinity,
+                    color: Colors.grey.shade200,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(width: 80, height: 12, color: Colors.grey.shade200),
+                        const SizedBox(height: 6),
+                        Container(width: 50, height: 10, color: Colors.grey.shade100),
+                        const SizedBox(height: 16),
+                        Container(width: 60, height: 16, color: Colors.grey.shade200),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
 }

@@ -7,7 +7,6 @@ import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/widgets/compact_language_selector.dart';
-import 'package:udyogasethu/core/widgets/mic_fab.dart';
 import 'package:udyogasethu/features/account/presentation/role_switcher_bottom_sheet.dart';
 import 'package:udyogasethu/features/farmer/data/farm_resources_repository.dart';
 import 'package:udyogasethu/features/farmer/data/farmer_home_repository.dart';
@@ -446,11 +445,6 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
           ],
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.receipt_long_rounded, color: Colors.white),
-            tooltip: 'Customer Orders',
-            onPressed: () => context.push(AppRoutes.farmerOrders),
-          ),
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert_rounded),
             tooltip: 'Options',
@@ -556,8 +550,6 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
           const CompactLanguageSelector(),
         ],
       ),
-      floatingActionButton: MicFab(onTap: () {}),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: RefreshIndicator(
         onRefresh: _refresh,
         color: AppColors.headerGreenDark,

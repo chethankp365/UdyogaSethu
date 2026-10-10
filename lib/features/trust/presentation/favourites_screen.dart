@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
-import 'package:udyogasethu/core/widgets/mic_fab.dart';
 import 'package:udyogasethu/core/widgets/user_avatar.dart';
 import 'package:udyogasethu/features/booking/domain/booking_draft.dart';
 import 'package:udyogasethu/features/trust/data/trust_repository.dart';
@@ -30,14 +29,6 @@ class FavouritesScreen extends ConsumerWidget {
         backgroundColor: AppColors.headerGreenDark,
         foregroundColor: Colors.white,
         elevation: 0,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: MicFab(
-        onTap: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('AI Multilingual Voice Assistant arrives in P8.1.')),
-          );
-        },
       ),
       body: RefreshIndicator(
         onRefresh: () async => ref.refresh(favouritesListProvider),

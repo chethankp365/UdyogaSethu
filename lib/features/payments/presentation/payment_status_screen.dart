@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:udyogasethu/core/router/routes.dart';
-import 'package:udyogasethu/core/widgets/mic_fab.dart';
 import 'package:udyogasethu/features/payments/data/payment_repository.dart';
 import 'package:udyogasethu/features/payments/domain/payment_models.dart';
 import 'package:udyogasethu/features/payments/domain/payment_receipt_pdf.dart';
@@ -55,8 +54,6 @@ class _PaymentStatusScreenState extends ConsumerState<PaymentStatusScreen> {
         backgroundColor: isDark ? const Color(0xFF1E293B) : Colors.white,
         foregroundColor: isDark ? Colors.white : const Color(0xFF0F172A),
       ),
-      floatingActionButton: MicFab(onTap: () {}),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: paymentStream.when(
         loading: () => _buildPendingState(context, isDark),
         error: (err, stack) => _buildErrorState(context, err.toString()),
