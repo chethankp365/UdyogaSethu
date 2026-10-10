@@ -48,20 +48,26 @@ class ProviderActiveBooking {
     }
 
     final now = DateTime.now();
+    final aid = json['assignment_id'] as String? ?? json['id'] as String? ?? '';
+    final code = json['booking_code'] as String?;
+    final resolvedCode = (code != null && code.isNotEmpty)
+        ? code
+        : (aid.length >= 6 ? 'BOOK-${aid.substring(0, 6).toUpperCase()}' : '');
+
     return ProviderActiveBooking(
-      assignmentId: json['assignment_id'] as String? ?? '',
+      assignmentId: aid,
       jobId: json['job_id'] as String? ?? '',
-      bookingCode: json['booking_code'] as String? ?? 'BOOK-7842',
-      jobTitle: json['job_title'] as String? ?? 'Commercial Electrical Repair',
-      roleName: json['role_name'] as String? ?? 'Electrician',
+      bookingCode: resolvedCode,
+      jobTitle: json['job_title'] as String? ?? '',
+      roleName: json['role_name'] as String? ?? '',
       workerId: json['worker_id'] as String? ?? '',
-      workerName: json['worker_name'] as String? ?? 'Chethan Kumar',
+      workerName: json['worker_name'] as String? ?? '',
       workerAvatar: json['worker_avatar'] as String?,
-      workerVerified: json['worker_verified'] != false,
-      addressText: json['address_text'] as String? ?? 'Koramangala 4th Block',
+      workerVerified: json['worker_verified'] == true,
+      addressText: json['address_text'] as String? ?? '',
       scheduledStart: parseDate(json['scheduled_start'], now),
       scheduledEnd: parseDate(json['scheduled_end'], now.add(const Duration(hours: 8))),
-      escrowWagePaise: (json['escrow_wage_paise'] as num?)?.toInt() ?? 88000,
+      escrowWagePaise: (json['escrow_wage_paise'] as num?)?.toInt() ?? 0,
       status: json['status'] as String? ?? 'accepted',
       arrivedAt: json['arrived_at'] != null ? DateTime.tryParse(json['arrived_at'].toString()) : null,
       isWorkerLate: json['is_worker_late'] == true,

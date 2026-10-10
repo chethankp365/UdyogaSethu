@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -88,8 +89,22 @@ class _JobTicketScreenState extends ConsumerState<JobTicketScreen> {
       bool trulyOffline = false;
       try {
         final conn = await Connectivity().checkConnectivity();
-        trulyOffline = conn.contains(ConnectivityResult.none);
-      } catch (_) {}
+        final hasMedium = conn.any((c) => c != ConnectivityResult.none);
+        if (!hasMedium) {
+          trulyOffline = true;
+        } else {
+          // Verify actual socket connectivity
+          try {
+            final lookup = await InternetAddress.lookup('google.com')
+                .timeout(const Duration(seconds: 2));
+            trulyOffline = lookup.isEmpty || lookup.first.rawAddress.isEmpty;
+          } catch (_) {
+            trulyOffline = true;
+          }
+        }
+      } catch (_) {
+        trulyOffline = false;
+      }
       if (mounted) {
         setState(() {
           _isRefreshing = false;

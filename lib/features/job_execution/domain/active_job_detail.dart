@@ -119,13 +119,21 @@ class ActiveJobDetail {
 
   factory ActiveJobDetail.fromJson(Map<String, dynamic> json) {
     final statusStr = json['status'] as String? ?? 'requested';
+    final id = json['assignment_id'] as String? ?? json['id'] as String? ?? '';
+    final code = json['booking_code'] as String?;
+    final resolvedCode = (code != null && code.isNotEmpty)
+        ? code
+        : (id.length >= 6 ? 'BOOK-${id.substring(0, 6).toUpperCase()}' : 'BOOK-PENDING');
+
     return ActiveJobDetail(
-      assignmentId: json['assignment_id'] as String? ?? json['id'] as String? ?? '',
+      assignmentId: id,
       jobId: json['job_id'] as String? ?? '',
-      bookingCode: json['booking_code'] as String? ?? 'BOOK-DEMO',
+      bookingCode: resolvedCode,
       status: statusStr,
       stage: AssignmentStage.fromString(statusStr),
-      agreedWagePaise: (json['agreed_wage_paise'] as num?)?.toInt() ?? 60000,
+      agreedWagePaise: (json['agreed_wage_paise'] as num?)?.toInt() ??
+          (json['wage_amount_paise'] as num?)?.toInt() ??
+          0,
       protectionSelected: json['protection_selected'] as bool? ?? false,
       arrivedAt: json['arrived_at'] != null ? DateTime.tryParse(json['arrived_at'].toString()) : null,
       startedAt: json['started_at'] != null ? DateTime.tryParse(json['started_at'].toString()) : null,
@@ -145,28 +153,28 @@ class ActiveJobDetail {
           : null,
       noShowTimerPaused: json['no_show_timer_paused'] as bool? ?? false,
       replacedBy: json['replaced_by'] as String?,
-      jobTitle: json['job_title'] as String? ?? json['title'] as String? ?? 'General Work',
+      jobTitle: json['job_title'] as String? ?? json['title'] as String? ?? '',
       jobDescription: json['job_description'] as String? ?? json['description'] as String?,
       startAt: json['start_at'] != null
           ? DateTime.tryParse(json['start_at'].toString()) ?? DateTime.now()
           : DateTime.now(),
-      estDurationMinutes: (json['est_duration_minutes'] as num?)?.toInt() ?? 480,
-      addressText: json['address_text'] as String? ?? 'Koramangala, Bengaluru',
-      jobLat: (json['job_lat'] as num?)?.toDouble() ?? 12.9352,
-      jobLng: (json['job_lng'] as num?)?.toDouble() ?? 77.6245,
-      categoryName: json['category_name'] as String? ?? 'General Work',
-      categorySlug: json['category_slug'] as String? ?? 'general',
-      categoryIcon: json['category_icon'] as String? ?? 'handyman',
+      estDurationMinutes: (json['est_duration_minutes'] as num?)?.toInt() ?? 240,
+      addressText: json['address_text'] as String? ?? '',
+      jobLat: (json['job_lat'] as num?)?.toDouble() ?? (json['lat'] as num?)?.toDouble() ?? 0.0,
+      jobLng: (json['job_lng'] as num?)?.toDouble() ?? (json['lng'] as num?)?.toDouble() ?? 0.0,
+      categoryName: json['category_name'] as String? ?? '',
+      categorySlug: json['category_slug'] as String? ?? '',
+      categoryIcon: json['category_icon'] as String? ?? 'work',
       providerId: json['provider_id'] as String? ?? '',
-      providerName: json['provider_name'] as String? ?? 'Verified Employer',
+      providerName: json['provider_name'] as String? ?? '',
       providerPhone: json['provider_phone'] as String?,
       providerAvatar: json['provider_avatar'] as String?,
-      providerVerified: json['provider_verified'] as bool? ?? true,
+      providerVerified: json['provider_verified'] as bool? ?? false,
       workerId: json['worker_id'] as String? ?? '',
-      workerName: json['worker_name'] as String? ?? 'Verified Worker',
+      workerName: json['worker_name'] as String? ?? '',
       workerPhone: json['worker_phone'] as String?,
       workerAvatar: json['worker_avatar'] as String?,
-      workerVerified: json['worker_verified'] as bool? ?? true,
+      workerVerified: json['worker_verified'] as bool? ?? false,
       workerLat: (json['worker_lat'] as num?)?.toDouble(),
       workerLng: (json['worker_lng'] as num?)?.toDouble(),
     );

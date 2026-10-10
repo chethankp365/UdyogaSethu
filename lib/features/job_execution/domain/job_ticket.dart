@@ -104,16 +104,22 @@ class JobTicketData {
       return DateTime.now();
     }
 
+    final aid = json['assignment_id'] as String? ?? json['id'] as String? ?? '';
+    final code = json['booking_code'] as String?;
+    final resolvedCode = (code != null && code.isNotEmpty)
+        ? code
+        : (aid.length >= 6 ? 'BOOK-${aid.substring(0, 6).toUpperCase()}' : '');
+
     return JobTicketData(
-      assignmentId: json['assignment_id'] as String? ?? json['id'] as String? ?? '',
-      bookingCode: json['booking_code'] as String? ?? 'BOOK-000000',
+      assignmentId: aid,
+      bookingCode: resolvedCode,
       status: json['status'] as String? ?? 'ticket_issued',
       jobId: json['job_id'] as String? ?? '',
-      jobTitle: json['job_title'] as String? ?? 'Job Assignment',
-      categoryName: json['category_name'] as String? ?? 'General Services',
+      jobTitle: json['job_title'] as String? ?? '',
+      categoryName: json['category_name'] as String? ?? '',
       categoryIcon: json['category_icon'] as String? ?? 'work',
       startAt: parseDate(json['start_at']),
-      estDurationMinutes: (json['est_duration_minutes'] as num?)?.toInt() ?? 480,
+      estDurationMinutes: (json['est_duration_minutes'] as num?)?.toInt() ?? 240,
       agreedWagePaise: (json['agreed_wage_paise'] as num?)?.toInt() ?? 0,
       wageType: json['wage_type'] as String? ?? 'daily',
       paymentMode: json['payment_mode'] as String? ?? 'escrow',
@@ -121,12 +127,12 @@ class JobTicketData {
       lat: (json['lat'] as num?)?.toDouble(),
       lng: (json['lng'] as num?)?.toDouble(),
       workerId: json['worker_id'] as String? ?? '',
-      workerName: json['worker_name'] as String? ?? 'Assigned Worker',
+      workerName: json['worker_name'] as String? ?? '',
       workerAvatar: json['worker_avatar'] as String?,
       isWorkerVerified: json['is_worker_verified'] == true,
       workerSeekerType: json['worker_seeker_type'] as String?,
       providerId: json['provider_id'] as String? ?? '',
-      providerName: json['provider_name'] as String? ?? 'Job Provider',
+      providerName: json['provider_name'] as String? ?? '',
       qrToken: json['qr_token'] as String?,
       qrExpiresAt: json['qr_expires_at'] != null ? parseDate(json['qr_expires_at']) : null,
       qrExpiresInSeconds: (json['qr_expires_in_seconds'] as num?)?.toInt() ?? 120,
