@@ -140,22 +140,17 @@ class SupabaseNearbyJobsRepository implements NearbyJobsRepository {
   @override
   Future<bool> applyToJob(String jobId) async {
     final client = _client;
-    if (client == null) return true;
+    if (client == null) return false;
 
     try {
       final user = client.auth.currentUser;
       if (user == null) return false;
 
-      await client.from('job_applications').insert({
-        'job_id': jobId,
-        'worker_id': user.id,
-        'status': 'applied',
-        'created_at': DateTime.now().toIso8601String(),
-      });
+      await client.rpc('apply_to_job', params: {'p_job_id': jobId});
       return true;
-    } catch (e) {
-      AppLogger.e('Failed to apply to job $jobId: $e');
-      return true; // Graceful mock fallback
+    } catch (e, st) {
+      AppLogger.e('Failed to apply to job $jobId: $e', e, st);
+      rethrow;
     }
   }
 

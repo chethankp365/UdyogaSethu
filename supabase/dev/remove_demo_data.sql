@@ -14,15 +14,25 @@ SELECT id FROM public.jobs
 WHERE is_demo = true
    OR title ILIKE '%[TEST]%'
    OR title ILIKE '%Escrow E2E Job%'
-   OR title ILIKE '%Sharma Site%';
+   OR title ILIKE '%Sharma Site%'
+   OR provider_id IN (
+     SELECT id FROM public.profiles WHERE full_name ILIKE '%Local Employer%'
+     UNION
+     SELECT user_id FROM public.provider_profiles WHERE org_name ILIKE '%Local Employer%'
+   );
 
--- 2. Identify target demo assignments
+-- 2. Identify target demo assignments (invitations & bookings)
 CREATE TEMP TABLE target_demo_assignments ON COMMIT DROP AS
 SELECT id FROM public.job_assignments
 WHERE job_id IN (SELECT id FROM target_demo_jobs)
    OR booking_code ILIKE '%TEST%'
    OR booking_code ILIKE '%BOOK-7842%'
-   OR booking_code ILIKE '%DEMO%';
+   OR booking_code ILIKE '%DEMO%'
+   OR provider_id IN (
+     SELECT id FROM public.profiles WHERE full_name ILIKE '%Local Employer%'
+     UNION
+     SELECT user_id FROM public.provider_profiles WHERE org_name ILIKE '%Local Employer%'
+   );
 
 -- 3. Delete evidence and timeline events attached to demo assignments
 DELETE FROM public.assignment_events
