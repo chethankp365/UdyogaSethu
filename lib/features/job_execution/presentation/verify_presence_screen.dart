@@ -1,13 +1,18 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
+import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
+import 'package:udyogasethu/core/supabase/edge_api.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/job_execution/data/job_execution_repository.dart';
 import 'package:udyogasethu/features/job_execution/domain/job_verification.dart';
+import 'package:udyogasethu/features/trust/data/face_embedding_service.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 enum LocationSimulationMode { real, atSite, acrossTownSofa, mockedGps }
@@ -36,13 +41,27 @@ class _VerifyPresenceScreenState extends ConsumerState<VerifyPresenceScreen> {
 
   JobGeofenceStatus? _geofenceStatus;
   File? _selfieFile;
+  int _failedAttempts = 0;
+  FaceDetector? _faceDetector;
 
   LocationSimulationMode _simulationMode = LocationSimulationMode.real;
 
   @override
   void initState() {
     super.initState();
+    _faceDetector = FaceDetector(
+      options: FaceDetectorOptions(
+        performanceMode: FaceDetectorMode.accurate,
+        minFaceSize: 0.15,
+      ),
+    );
     _checkLocation();
+  }
+
+  @override
+  void dispose() {
+    _faceDetector?.close();
+    super.dispose();
   }
 
   Future<void> _checkLocation() async {
@@ -130,6 +149,30 @@ class _VerifyPresenceScreenState extends ConsumerState<VerifyPresenceScreen> {
     }
   }
 
+  bool _isImageTooDark(Uint8List bytes) {
+    try {
+      final decoded = img.decodeImage(bytes);
+      if (decoded == null) return false;
+      int totalLuma = 0;
+      int sampled = 0;
+      final stepX = max(1, decoded.width ~/ 16);
+      final stepY = max(1, decoded.height ~/ 16);
+      for (int y = 0; y < decoded.height; y += stepY) {
+        for (int x = 0; x < decoded.width; x += stepX) {
+          final pixel = decoded.getPixel(x, y);
+          final luma = (0.299 * pixel.r + 0.587 * pixel.g + 0.114 * pixel.b).round();
+          totalLuma += luma;
+          sampled++;
+        }
+      }
+      if (sampled == 0) return false;
+      final avgLuma = totalLuma / sampled;
+      return avgLuma < 35.0;
+    } catch (_) {
+      return false;
+    }
+  }
+
   Future<void> _submitVerification() async {
     if (_isSubmitting) return;
 
@@ -138,37 +181,183 @@ class _VerifyPresenceScreenState extends ConsumerState<VerifyPresenceScreen> {
       if (_currentLat == null || _currentLng == null) return;
     }
 
+    if (_selfieFile == null) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please capture a live selfie with your workplace in the background.'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
     setState(() {
       _isSubmitting = true;
     });
 
     try {
       final repo = ref.read(jobExecutionRepositoryProvider);
+      final detail = await repo.fetchActiveJob(widget.assignmentId);
 
-      String? selfiePath;
-      if (_selfieFile != null) {
-        final bytes = await _selfieFile!.readAsBytes();
-        selfiePath = await repo.uploadJobEvidence(
-          assignmentId: widget.assignmentId,
-          fileBytes: bytes,
-          fileName: 'start_selfie.jpg',
-        );
-      } else {
-        selfiePath = 'demo_selfie_start_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      // 1. Mock GPS Check
+      if (_isMocked) {
+        setState(() => _isSubmitting = false);
+        _showRefusalBottomSheet(JobVerificationResult.error(
+          code: 'mock_location_rejected',
+          message: 'Mock or simulated GPS detected. Please turn off developer mock locations.',
+        ));
+        return;
       }
 
+      // 2. Geofence Check (job radius, default 150m)
+      final geo = await repo.checkJobGeofence(
+        jobId: detail.jobId,
+        lat: _currentLat!,
+        lng: _currentLng!,
+      );
+
+      if (!geo.withinGeofence) {
+        setState(() => _isSubmitting = false);
+        final dist = geo.distanceMeters.round();
+        final radius = geo.radiusMeters;
+        final exceeded = (geo.distanceMeters - geo.radiusMeters).round();
+        _showRefusalBottomSheet(JobVerificationResult.error(
+          code: 'outside_geofence',
+          message: 'Outside the site geofence by ${exceeded > 0 ? exceeded : dist}m ($dist m away, limit $radius m). Please move closer to the workplace.',
+          distanceMeters: geo.distanceMeters,
+          radiusMeters: geo.radiusMeters,
+        ));
+        return;
+      }
+
+      // 3. Image Brightness Check
+      final bytes = await _selfieFile!.readAsBytes();
+      if (_isImageTooDark(bytes)) {
+        _failedAttempts++;
+        setState(() => _isSubmitting = false);
+        if (_failedAttempts >= 3) {
+          _showRefusalBottomSheet(JobVerificationResult.error(
+            code: 'manual_review_required',
+            message: 'Three failed verification attempts reached. Your presence verification has been queued for manual review by an administrator.',
+          ));
+        } else {
+          _showRefusalBottomSheet(JobVerificationResult.error(
+            code: 'image_too_dark',
+            message: 'The selfie is too dark. Please take a photo in a well-lit area with your workplace in the background (Attempt $_failedAttempts of 3).',
+          ));
+        }
+        return;
+      }
+
+      // 4. Face Verification against enrolled template
+      List<double>? vector;
+      try {
+        if (_simulationMode != LocationSimulationMode.real && kDebugMode) {
+          vector = FaceEmbeddingService.generateMockVector();
+        } else {
+          final embeddingService = ref.read(faceEmbeddingServiceProvider);
+          await embeddingService.initialize();
+          if (_faceDetector != null) {
+            vector = await embeddingService.extractEmbeddingFromPhoto(
+              photoFile: _selfieFile!,
+              faceDetector: _faceDetector!,
+            );
+          }
+        }
+      } catch (e) {
+        if (_simulationMode != LocationSimulationMode.real && kDebugMode) {
+          vector = FaceEmbeddingService.generateMockVector();
+        } else {
+          _failedAttempts++;
+          setState(() => _isSubmitting = false);
+          if (_failedAttempts >= 3) {
+            _showRefusalBottomSheet(JobVerificationResult.error(
+              code: 'manual_review_required',
+              message: 'Three failed verification attempts reached. Your presence verification has been queued for manual review by an administrator.',
+            ));
+          } else {
+            _showRefusalBottomSheet(JobVerificationResult.error(
+              code: 'face_not_detected',
+              message: 'No face detected in photo. Please frame your face clearly with your workplace in the background (Attempt $_failedAttempts of 3).',
+            ));
+          }
+          return;
+        }
+      }
+
+      // 5. Server face-verify invocation
+      double faceScore = 0.90;
+      try {
+        final edgeApi = ref.read(edgeApiClientProvider);
+        final faceRes = await edgeApi.faceVerifyVector(
+          embedding: vector ?? FaceEmbeddingService.generateMockVector(),
+          context: 'job_start',
+          assignmentId: widget.assignmentId,
+        );
+
+        if (faceRes['result'] == 'fail') {
+          _failedAttempts++;
+          setState(() => _isSubmitting = false);
+          final attemptsCount = (faceRes['attempts_count'] as num?)?.toInt() ?? _failedAttempts;
+          if (attemptsCount >= 3 || _failedAttempts >= 3) {
+            _showRefusalBottomSheet(JobVerificationResult.error(
+              code: 'manual_review_required',
+              message: 'Three failed verification attempts reached. Your presence verification has been flagged and submitted for admin manual review.',
+            ));
+          } else {
+            _showRefusalBottomSheet(JobVerificationResult.error(
+              code: 'face_mismatch',
+              message: 'Face verification failed: Face does not match your enrolled identity template (Attempt $_failedAttempts of 3).',
+            ));
+          }
+          return;
+        }
+
+        faceScore = (faceRes['similarity'] as num?)?.toDouble() ??
+            (faceRes['match_score'] as num?)?.toDouble() ??
+            0.90;
+      } catch (err) {
+        if (kDebugMode && _simulationMode != LocationSimulationMode.real) {
+          faceScore = 0.92;
+        } else {
+          _failedAttempts++;
+          setState(() => _isSubmitting = false);
+          if (_failedAttempts >= 3) {
+            _showRefusalBottomSheet(JobVerificationResult.error(
+              code: 'manual_review_required',
+              message: 'Three failed verification attempts reached. Presence check submitted for admin manual review.',
+            ));
+          } else {
+            _showRefusalBottomSheet(JobVerificationResult.error(
+              code: 'face_mismatch',
+              message: 'Face verification failed: $err (Attempt $_failedAttempts of 3).',
+            ));
+          }
+          return;
+        }
+      }
+
+      // 6. Upload selfie to private bucket 'job-evidence'
+      final selfiePath = await repo.uploadJobEvidence(
+        assignmentId: widget.assignmentId,
+        fileBytes: bytes,
+        fileName: 'start_selfie.jpg',
+      );
+
+      // 7. Atomic record_step2_verification in database
       final result = await repo.recordStep2Verification(
         assignmentId: widget.assignmentId,
         lat: _currentLat!,
         lng: _currentLng!,
         selfiePath: selfiePath,
+        faceScore: faceScore,
       );
 
       if (!mounted) return;
 
       if (result.success) {
         setState(() => _isSubmitting = false);
-        // Refresh active job detail provider
         ref.invalidate(activeJobDetailProvider(widget.assignmentId));
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -181,21 +370,16 @@ class _VerifyPresenceScreenState extends ConsumerState<VerifyPresenceScreen> {
 
         context.pop();
       } else {
-        setState(() {
-          _isSubmitting = false;
-        });
+        setState(() => _isSubmitting = false);
         _showRefusalBottomSheet(result);
       }
     } catch (e) {
       if (mounted) {
-        final errResult = JobVerificationResult.error(
+        setState(() => _isSubmitting = false);
+        _showRefusalBottomSheet(JobVerificationResult.error(
           code: 'error',
           message: e.toString().replaceAll('Exception: ', ''),
-        );
-        setState(() {
-          _isSubmitting = false;
-        });
-        _showRefusalBottomSheet(errResult);
+        ));
       }
     }
   }
@@ -207,6 +391,46 @@ class _VerifyPresenceScreenState extends ConsumerState<VerifyPresenceScreen> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) {
+        final isManual = result.isManualReviewRequired;
+        final isDark = result.isTooDarkRejected;
+        final isFace = result.isFaceRejected;
+        final isMock = result.isMockedRejected;
+        final isGeo = result.isGeofenceRejected;
+
+        final Color iconBg = isManual
+            ? Colors.amber.shade100
+            : isDark
+                ? Colors.orange.shade100
+                : Colors.red.shade100;
+        final Color iconColor = isManual
+            ? Colors.amber.shade900
+            : isDark
+                ? Colors.orange.shade900
+                : Colors.red;
+        final IconData icon = isManual
+            ? Icons.admin_panel_settings_rounded
+            : isDark
+                ? Icons.brightness_low_rounded
+                : isFace
+                    ? Icons.face_retouching_off_rounded
+                    : isMock
+                        ? Icons.security_update_warning_rounded
+                        : isGeo
+                            ? Icons.location_off_rounded
+                            : Icons.cancel_outlined;
+
+        final String title = isManual
+            ? 'Submitted for Manual Review'
+            : isDark
+                ? 'Selfie Too Dark'
+                : isFace
+                    ? 'Face Verification Failed'
+                    : isMock
+                        ? (l10n?.mockLocationDetected ?? 'Mock Location Detected')
+                        : isGeo
+                            ? (l10n?.outsidePerimeter ?? 'Outside Site Boundary')
+                            : (l10n?.verificationFailed ?? 'Verification Refused');
+
         return Container(
           padding: const EdgeInsets.all(24),
           decoration: const BoxDecoration(
@@ -220,18 +444,14 @@ class _VerifyPresenceScreenState extends ConsumerState<VerifyPresenceScreen> {
                 width: 56,
                 height: 56,
                 decoration: BoxDecoration(
-                  color: Colors.red.shade100,
+                  color: iconBg,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.location_off, color: Colors.red, size: 36),
+                child: Icon(icon, color: iconColor, size: 36),
               ),
               const SizedBox(height: 16),
               Text(
-                result.isMockedRejected
-                    ? (l10n?.mockLocationDetected ?? 'Mock Location Detected')
-                    : result.isGeofenceRejected
-                        ? (l10n?.outsidePerimeter ?? 'Outside Site Boundary')
-                        : (l10n?.verificationFailed ?? 'Verification Refused'),
+                title,
                 style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF0F172A)),
                 textAlign: TextAlign.center,
               ),
@@ -267,9 +487,14 @@ class _VerifyPresenceScreenState extends ConsumerState<VerifyPresenceScreen> {
                       ),
                       onPressed: () {
                         Navigator.pop(ctx);
-                        _checkLocation();
+                        if (!isManual) {
+                          _checkLocation();
+                        }
                       },
-                      child: Text(l10n?.retry ?? 'Retry', style: const TextStyle(color: Colors.white)),
+                      child: Text(
+                        isManual ? 'Understood' : (l10n?.retry ?? 'Retry'),
+                        style: const TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                 ],

@@ -10,6 +10,8 @@ class JobVerificationResult {
   final bool isMockedRejected;
   final bool isGeofenceRejected;
   final bool isFaceRejected;
+  final bool isTooDarkRejected;
+  final bool isManualReviewRequired;
   final double? distanceMeters;
   final int? radiusMeters;
   final String? errorCode;
@@ -26,6 +28,8 @@ class JobVerificationResult {
     this.isMockedRejected = false,
     this.isGeofenceRejected = false,
     this.isFaceRejected = false,
+    this.isTooDarkRejected = false,
+    this.isManualReviewRequired = false,
     this.distanceMeters,
     this.radiusMeters,
     this.errorCode,
@@ -96,10 +100,16 @@ class JobVerificationResult {
     int? radiusMeters,
     bool? isMockedRejected,
     bool? isGeofenceRejected,
+    bool? isFaceRejected,
+    bool? isTooDarkRejected,
+    bool? isManualReviewRequired,
   }) {
-    final isMock = isMockedRejected ?? (code == 'mock_location_rejected');
-    final isGeo = isGeofenceRejected ?? (code == 'out_of_geofence');
-    final isFace = code == 'face_mismatch';
+    final lower = code.toLowerCase();
+    final isMock = isMockedRejected ?? (lower == 'mock_location_rejected' || lower == 'mock_location');
+    final isGeo = isGeofenceRejected ?? (lower == 'out_of_geofence' || lower == 'outside_geofence');
+    final isFace = isFaceRejected ?? (lower == 'face_mismatch' || lower == 'face_verify_failed');
+    final isDark = isTooDarkRejected ?? (lower == 'image_too_dark' || lower == 'too_dark');
+    final isManual = isManualReviewRequired ?? (lower == 'manual_review_required' || lower == 'repeated_face_fail');
 
     return JobVerificationResult(
       success: false,
@@ -108,6 +118,8 @@ class JobVerificationResult {
       isMockedRejected: isMock,
       isGeofenceRejected: isGeo,
       isFaceRejected: isFace,
+      isTooDarkRejected: isDark,
+      isManualReviewRequired: isManual,
       distanceMeters: distanceMeters,
       radiusMeters: radiusMeters,
     );
@@ -117,11 +129,11 @@ class JobVerificationResult {
     final success = json['success'] == true;
     if (!success) {
       final err = json['error'] as Map<String, dynamic>?;
-      final code = err?['code']?.toString() ?? json['code']?.toString() ?? 'error';
+      final code = err?['code']?.toString() ?? json['reason_code']?.toString() ?? json['code']?.toString() ?? 'error';
       final msg = err?['message']?.toString() ?? json['message']?.toString() ?? 'Verification failed';
       final details = err?['details'] as Map<String, dynamic>?;
-      final dist = (details?['distance_meters'] as num?)?.toDouble();
-      final rad = (details?['radius_meters'] as num?)?.toInt();
+      final dist = (details?['distance_meters'] as num?)?.toDouble() ?? (json['distance_meters'] as num?)?.toDouble();
+      final rad = (details?['radius_meters'] as num?)?.toInt() ?? (json['radius_meters'] as num?)?.toInt();
 
       return JobVerificationResult.error(
         code: code,
@@ -163,6 +175,8 @@ class JobVerificationResult {
       'is_mocked_rejected': isMockedRejected,
       'is_geofence_rejected': isGeofenceRejected,
       'is_face_rejected': isFaceRejected,
+      'is_too_dark_rejected': isTooDarkRejected,
+      'is_manual_review_required': isManualReviewRequired,
       'distance_meters': distanceMeters,
       'radius_meters': radiusMeters,
       'error_code': errorCode,
