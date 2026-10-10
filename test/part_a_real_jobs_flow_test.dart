@@ -78,6 +78,33 @@ void main() {
       expect(eligibility.reasonCode, 'ALREADY_APPLIED');
       expect(eligibility.alreadyApplied, isTrue);
     });
+
+    test('4a bug fix: Infers studentGated and AUDIENCE_MISMATCH from server message', () {
+      // Simulating exact 4a server payload for "Content Writer" where server returned no boolean flags
+      final json = {
+        'is_eligible': false,
+        'reasons': ['This role is reserved for student or part-time seekers.'],
+      };
+
+      final eligibility = JobEligibility.fromJson(json);
+
+      expect(eligibility.isEligible, isFalse);
+      expect(eligibility.studentGated, isTrue);
+      expect(eligibility.reasonCode, 'AUDIENCE_MISMATCH');
+    });
+
+    test('Infers scheduleOverlap and SCHEDULE_CLASH from server message', () {
+      final json = {
+        'is_eligible': false,
+        'reasons': ['Schedule clash with already accepted job #123'],
+      };
+
+      final eligibility = JobEligibility.fromJson(json);
+
+      expect(eligibility.isEligible, isFalse);
+      expect(eligibility.scheduleOverlap, isTrue);
+      expect(eligibility.reasonCode, 'SCHEDULE_CLASH');
+    });
   });
 
   group('Part A3 & B1: Job Post Location & Target Workers Validation', () {

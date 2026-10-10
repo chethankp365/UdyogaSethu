@@ -702,6 +702,42 @@
   - Zero mock or placeholder data presented as real; server-authoritative balance view parity preserved; single central MicFab intact.
   - Build stabilization audit: verified clean working tree, 0 analyzer errors, and 0 test failures.
 
+- [x] **Prompt 1 of 3: Real Jobs, Job Posting, Seeker Home & Bug 4a Resolution**: (Status: Done | Completed sub-steps 1 through 7)
+  - **Sub-Step 1 (Cleanup & Demo Data Isolation)**:
+    - Removed debug build helper card "Seed 2 overlapping invitations" and hardcoded jobs/employers from normal builds.
+    - Authored `supabase/dev/list_demo_data.sql` (SELECT only) and `supabase/dev/remove_demo_data.sql` (DELETE in transaction with dependency ordering and row-count checks).
+  - **Sub-Step 2 (Provider Job Post Flow)**:
+    - Real location step with "Use my current location", "Search address" (geocoding), and "Pick on map" (draggable pin on OSM with reverse geocoding).
+    - Address validation rejecting bare house numbers (`#55`, `Plot 12`).
+    - Map preview in Preview step.
+    - Script `supabase/dev/list_jobs_missing_coordinates.sql` (SELECT only). Hidden 0,0 jobs from map/feed.
+    - Explicit `studentsOk` boolean (default false), shown only for categories with student/part_time audience.
+    - Optional site photo upload to Supabase storage.
+  - **Sub-Step 3 (Real Seeker Job Lists & Filtering)**:
+    - Jobs tab connected exclusively to database with realtime streams on `job_applications` and `job_assignments` across Applied, Requests, Accepted, Active, Completed tabs.
+    - Realtime stream for pending invitations in Requests with Accept, Decline, and Details actions.
+    - Feeds and map hide past jobs (`startAt < now`), full slots (`slotsFilled >= slotsTotal`), and zero coordinates.
+  - **Sub-Step 4 (Apply & Applicants / Bug 4a Resolution)**:
+    - **Root Cause of 4a**: Server migration `0410_fix_polish_p4.sql` returned `{ "is_eligible": false, "reasons": [...] }` without boolean flags (`student_gated: true`). Client checklist evaluated `!studentGated` as `true` (all green), while the apply button checked `is_eligible = false` and displayed generic text `'Ineligible to Apply'`.
+    - **Fix**: Inferred flags and stable reason codes (`AUDIENCE_MISMATCH`, `SCHEDULE_CLASH`, `EXPIRED`, `SLOTS_FILLED`, `ALREADY_APPLIED`, `OWN_JOB`) inside `JobEligibility.fromJson` from reasons/reason_code. Failing checklist rule turns RED with alert icon, and button displays exact localized failure reason. Added `kDebugMode` logging.
+    - **Provider Job Detail Applicants**: Embedded "Applicants (n)" list on provider job detail showing worker photo, name, seeker type, badge, rating, distance, message, timestamp, and actions (Accept, Decline, Shortlist). Accepting updates slot counter and moves seeker application to Accepted in realtime.
+  - **Sub-Step 5 (Seeker Home Real Location Flow & Polish)**:
+    - In-app location explanation sheet precedes OS dialog.
+    - GPS consent recorded in Privacy Centre (`consentRepository`).
+    - Reverse-geocoded area and city displayed with a "From GPS" badge.
+    - "Set your area" manual address search and transit hubs (scrubbed all "Koramangala" fallbacks).
+    - Auto-refresh on resume when moved > 1 km or cache older than 30 minutes.
+    - Fixed spacing under "STUDENT & FLEXIBLE GIGS" heading to exactly 12 px.
+  - **Sub-Step 6 (Thumbnail Resolver)**:
+    - Updated `assets/images/jobs/manifest.json` with keyword library rules (e.g. "wall paint" -> `painting-interior`).
+    - Priority chain: 1. Provider site photo (network) -> 2. Library image (asset) -> 3. Gradient + category icon.
+    - Safe gradient fallback container renders whenever asset files do not exist yet on disk.
+    - Integrated across Home feed, map list, search, detail, provider's job list, and seeker's jobs list.
+  - **Verification & Invariants**:
+    - `flutter analyze`: 0 issues found.
+    - `flutter test`: 484/484 tests passing across the repository.
+    - Local commits made after each sub-step.
+
 ---
 
 ## Manual steps pending

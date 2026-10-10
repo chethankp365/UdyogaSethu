@@ -77,9 +77,30 @@ class JobEligibility {
         !isOverlap &&
         !isAlreadyApplied;
 
+    String? effectiveReasonCode = reasonCode;
+    if (effectiveReasonCode == null) {
+      if (isStudentGated) {
+        effectiveReasonCode = 'AUDIENCE_MISMATCH';
+      } else if (isOwnJob) {
+        effectiveReasonCode = 'OWN_JOB';
+      } else if (isPastStart) {
+        effectiveReasonCode = 'EXPIRED';
+      } else if (isSlotsFilled) {
+        effectiveReasonCode = 'SLOTS_FILLED';
+      } else if (isOverlap) {
+        effectiveReasonCode = 'SCHEDULE_CLASH';
+      } else if (isAlreadyApplied) {
+        effectiveReasonCode = 'ALREADY_APPLIED';
+      } else if (isLicenceNeeded) {
+        effectiveReasonCode = 'LICENCE_REQUIRED';
+      } else if (isVerifiedNeeded) {
+        effectiveReasonCode = 'VERIFIED_REQUIRED';
+      }
+    }
+
     return JobEligibility(
       isEligible: isEligible,
-      reasonCode: reasonCode,
+      reasonCode: effectiveReasonCode,
       licenceNeeded: isLicenceNeeded,
       hasLicence: json['has_licence'] as bool? ?? false,
       verifiedNeeded: isVerifiedNeeded,

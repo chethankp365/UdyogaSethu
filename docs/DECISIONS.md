@@ -359,3 +359,34 @@ This document records key design, architectural, role model, and implementation 
     * Generated 40 high-resolution commodity WebP illustrations (600x600) across 8 agricultural categories in `assets/images/commodities/` alongside `assets/images/commodities/manifest.json`.
     * Declared `assets/images/commodities/` in `pubspec.yaml` with verified gradient and emoji fallback loaders.
 
+* **D61 — Real Jobs, Job Posting, Seeker Home, 4a Bug Resolution & Thumbnail Resolver (Prompt 1 of 3)**:
+  * **Cleanup & Real Data Isolation (Sub-Step 1)**:
+    * Stripped hardcoded overlapping invitation demo card and mock rows from normal production builds.
+    * Authored `supabase/dev/list_demo_data.sql` (SELECT only) and `supabase/dev/remove_demo_data.sql` (DELETE in dependency order with count checks in one transaction).
+  * **Provider Real Location & Explicit Students Welcome (Sub-Step 2)**:
+    * Built location picker with three modes: "Use my current location" (GPS), "Search address" (geocoding), and "Pick on map" (draggable pin on OpenStreetMap) with full reverse-geocoded address and landmark.
+    * Address validation rejects house-number-only entries (`#55`, `Plot 12`).
+    * Generated `supabase/dev/list_jobs_missing_coordinates.sql` (SELECT only) and hid zero/null coordinate jobs from seeker feed and map.
+    * `students_ok` is strictly an explicit boolean (default false), shown only for categories with student/part_time audience.
+    * Optional site photo upload to Supabase storage.
+  * **Seeker Realtime Jobs Lists & Filtering (Sub-Step 3)**:
+    * Jobs tab powered exclusively by database with realtime stream on `job_applications` and `job_assignments` across Applied, Requests, Accepted, Active, and Completed tabs.
+    * Map and Home feeds filter out past jobs (`startAt < now`), fully filled jobs (`slotsFilled >= slotsTotal`), and invalid coordinates.
+  * **4a "Ineligible to Apply" Bug Resolution & Provider Applicants (Sub-Step 4)**:
+    * **Root Cause Identified**: Server migration `0410_fix_polish_p4.sql` returned `{ "is_eligible": false, "reasons": [...] }` without explicit boolean keys (`student_gated`, etc.). The client checklist checked `!eligibility.studentGated` (evaluating `!false = true`), rendering all 4 checklist rules green. Meanwhile, the apply button checked `is_eligible = false`, fell back to a generic `'Ineligible to Apply'`, creating a confusing UI contradiction.
+    * **Fix**: Inferred flags and stable reason codes (`AUDIENCE_MISMATCH`, `SCHEDULE_CLASH`, `EXPIRED`, `SLOTS_FILLED`, `ALREADY_APPLIED`, `OWN_JOB`) inside `JobEligibility.fromJson` from reasons/reason_code. Merged client rules so the failing rule turns RED with an alert icon in the checklist, and the button displays the exact localized failure reason. Added `kDebugMode` logging.
+    * **Provider Applicants Section**: Embedded "Applicants (n)" list on provider job detail with applicant photo, name, seeker type, badge, rating, distance, message, timestamp, and actions (Accept, Decline, Shortlist). Accepting updates slot counter and transitions seeker application to Accepted in realtime.
+  * **Seeker Home Real Location Flow & Polish (Sub-Step 5)**:
+    * In-app location permission explanation sheet precedes OS permission dialog.
+    * GPS consent recorded into Privacy Centre (`consentRepository`).
+    * Detected coordinates reverse-geocoded to area and city with a "From GPS" badge.
+    * If denied, shows "Set your area" with manual address search and transit hubs (completely removed "Koramangala" default and fallbacks).
+    * Auto-refresh on resume when moved > 1 km or cache older than 30 minutes, cached in `SharedPreferences`.
+    * Spacing under "STUDENT & FLEXIBLE GIGS" heading fixed to exactly 12 px.
+  * **Job Thumbnail Keyword Resolver (Sub-Step 6)**:
+    * `assets/images/jobs/manifest.json` updated with library keyword rules (e.g., "wall paint" -> `painting-interior`).
+    * Strict priority: 1. Provider site photo (network) -> 2. Library image (asset) -> 3. Category icon + gradient fallback.
+    * Safe gradient fallback container renders whenever asset files do not exist yet on disk.
+    * Adopted across Home, map list, search, detail, provider's job list, and seeker's jobs list.
+
+
