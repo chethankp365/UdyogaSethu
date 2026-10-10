@@ -37,11 +37,20 @@ class FarmerProfilePageRepository {
         if (profileRes != null || farmerProfileRes != null) {
           final fullName = profileRes?['full_name']?.toString() ??
               farmerProfileRes?['farmer_name']?.toString() ??
-              'Chethan Gowda';
-          final phone = profileRes?['phone']?.toString() ?? '+91 98450 77889';
-          final farmName = farmerProfileRes?['farm_name']?.toString() ?? 'Greenfield Organic Farm';
-          final cluster = farmerProfileRes?['cluster_village']?.toString() ?? 'Mandya Cluster';
-          final acres = (farmerProfileRes?['acres'] as num?)?.toDouble() ?? 4.2;
+              'Farmer';
+          final phone = profileRes?['phone']?.toString() ?? '';
+          final avatarPath = profileRes?['avatar_path']?.toString();
+          final isVerified = profileRes?['is_verified'] == true;
+          final farmName = farmerProfileRes?['farm_name']?.toString() ?? 'My Farm';
+          final cluster = farmerProfileRes?['cluster_village']?.toString() ?? 'Agri Cluster';
+          final acres = (farmerProfileRes?['acres'] as num?)?.toDouble() ?? 0.0;
+          final soil = farmerProfileRes?['soil_type']?.toString() ?? 'Self-Declared';
+          final crops = farmerProfileRes?['primary_crops'] is List
+              ? (farmerProfileRes!['primary_crops'] as List).join(', ')
+              : (farmerProfileRes?['primary_crops']?.toString() ?? 'Seasonal Crops');
+          final apmc = farmerProfileRes?['apmc_mandi']?.toString() ?? 'Local Mandi';
+          final soldKg = (farmerProfileRes?['produce_sold_kg'] as num?)?.toDouble() ?? 0.0;
+          final salesPaise = (farmerProfileRes?['direct_sales_paise'] as num?)?.toInt() ?? 0;
 
           return FarmerProfileData(
             id: uid,
@@ -49,22 +58,23 @@ class FarmerProfilePageRepository {
             farmName: farmName,
             clusterVillage: cluster,
             phone: phone,
-            isVerified: true,
+            avatarUrl: avatarPath,
+            isVerified: isVerified,
             landAcres: acres,
-            produceSoldKgMonth: 420.0,
-            directSalesPaise: 4850000,
-            badges: const FarmInfrastructureBadges(
-              soilClassification: 'Red Loam Soil (pH 6.8)',
-              primaryCrops: 'Tomatoes, Paddy, Banana',
-              apmcRegistration: 'Mandya APMC #4812',
-              kisanCreditCardStatus: 'KCC Approved ✓',
-              isKccApproved: true,
+            produceSoldKgMonth: soldKg,
+            directSalesPaise: salesPaise,
+            badges: FarmInfrastructureBadges(
+              soilClassification: soil,
+              primaryCrops: crops,
+              apmcRegistration: apmc,
+              kisanCreditCardStatus: isVerified ? 'KCC Verified ✓' : 'Self-Declared',
+              isKccApproved: isVerified,
             ),
-            certificate: const OrganicCertificate(
+            certificate: OrganicCertificate(
               title: 'Zero-Pesticide Organic Certificate',
-              issuer: 'Verified by Karnataka Organic Farmers Board',
-              statusLabel: 'VALIDATED ✓',
-              isValidated: true,
+              issuer: 'Karnataka Organic Farmers Board',
+              statusLabel: isVerified ? 'VALIDATED ✓' : 'SELF-DECLARED',
+              isValidated: isVerified,
             ),
           );
         }
@@ -73,31 +83,57 @@ class FarmerProfilePageRepository {
       }
     }
 
-    // Default mock data exactly matching "Farmer profile page" (Page 7 Phone 1)
+    // Default mock data (Zero stats for fresh user, honest self-declared status)
     return const FarmerProfileData(
       id: 'demo-farmer-id',
       fullName: 'Chethan Gowda',
       farmName: 'Greenfield Organic Farm',
       clusterVillage: 'Mandya Cluster',
       phone: '+91 98450 77889',
-      isVerified: true,
+      isVerified: false,
       landAcres: 4.2,
-      produceSoldKgMonth: 420.0,
-      directSalesPaise: 4850000,
+      produceSoldKgMonth: 0.0,
+      directSalesPaise: 0,
       badges: FarmInfrastructureBadges(
         soilClassification: 'Red Loam Soil (pH 6.8)',
         primaryCrops: 'Tomatoes, Paddy, Banana',
         apmcRegistration: 'Mandya APMC #4812',
-        kisanCreditCardStatus: 'KCC Approved ✓',
-        isKccApproved: true,
+        kisanCreditCardStatus: 'Self-Declared',
+        isKccApproved: false,
       ),
       certificate: OrganicCertificate(
         title: 'Zero-Pesticide Organic Certificate',
-        issuer: 'Verified by Karnataka Organic Farmers Board',
-        statusLabel: 'VALIDATED ✓',
-        isValidated: true,
+        issuer: 'Karnataka Organic Farmers Board',
+        statusLabel: 'SELF-DECLARED',
+        isValidated: false,
       ),
     );
+  }
+
+  Future<void> updateFarmDetails({
+    required String farmName,
+    required String clusterVillage,
+    required double acres,
+    required String soilType,
+    required String primaryCrops,
+    String? apmcMandi,
+  }) async {
+    final uid = _supabase?.auth.currentUser?.id;
+    if (_supabase != null && uid != null) {
+      final payload = <String, dynamic>{
+        'user_id': uid,
+        'farm_name': farmName,
+        'cluster_village': clusterVillage,
+        'acres': acres,
+        'soil_type': soilType,
+        'primary_crops': primaryCrops,
+        'updated_at': DateTime.now().toIso8601String(),
+      };
+      if (apmcMandi != null) {
+        payload['apmc_mandi'] = apmcMandi;
+      }
+      await _supabase.from('farmer_profiles').upsert(payload);
+    }
   }
 }
 

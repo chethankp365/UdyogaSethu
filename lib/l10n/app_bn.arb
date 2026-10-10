@@ -1326,5 +1326,15 @@
   "statusAccepted": "গৃহীত",
   "statusPacked": "প্যাক করা হয়েছে",
   "statusDelivered": "ডেলিভার করা হয়েছে",
-  "statusDisputed": "বিরোধপূর্ণ"
+  "statusDisputed": "বিরোধপূর্ণ",
+  "editFarmDetails": "খামারের বিবরণ সম্পাদনা করুন",
+  "editFarmDetailsSubtitle": "জমির পরিমাণ, মাটি ও ফসলের বিবরণ আপডেট করুন",
+  "farmNameLabel": "খামার / বাগানের নাম",
+  "clusterVillageLabel": "ক্লাস্টার / গ্রামের অবস্থান",
+  "acresLabel": "মোট জমি (একর)",
+  "soilTypeLabel": "মাটির প্রকারভেদ",
+  "primaryCropsLabel": "প্রধান উৎপাদিত ফসল",
+  "apmcMandiLabel": "নিবন্ধিত এপিএমসি মান্ডি",
+  "farmDetailsUpdatedSuccess": "খামারের বিবরণ সফলভাবে আপডেট হয়েছে",
+  "selfDeclaredProfile": "স্বঘোষিত প্রোফাইল"
 }

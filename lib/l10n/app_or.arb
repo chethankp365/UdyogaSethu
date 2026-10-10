@@ -1326,5 +1326,15 @@
   "statusAccepted": "ଗ୍ରହଣ କରାଯାଇଛି",
   "statusPacked": "ପ୍ୟାକ୍ ହୋଇଛି",
   "statusDelivered": "ବିତରଣ କରାଯାଇଛି",
-  "statusDisputed": "ବିବାଦୀୟ"
+  "statusDisputed": "ବିବାଦୀୟ",
+  "editFarmDetails": "କୃଷି ବିବରଣୀ ସମ୍ପାଦନ କରନ୍ତୁ",
+  "editFarmDetailsSubtitle": "ଜମି କ୍ଷେତ୍ର, ମାଟି ଏବଂ ଫସଲ ବିବରଣୀ ଅପଡେଟ୍ କରନ୍ତୁ",
+  "farmNameLabel": "ଫାର୍ମ / ବଗିଚା ନାମ",
+  "clusterVillageLabel": "କ୍ଲଷ୍ଟର / ଗ୍ରାମ ଅବସ୍ଥିତି",
+  "acresLabel": "ମୋଟ ଜମି (ଏକର)",
+  "soilTypeLabel": "ମୃତ୍ତିକା ବର୍ଗୀକରଣ",
+  "primaryCropsLabel": "ମୁଖ୍ୟ ଫସଲ",
+  "apmcMandiLabel": "ପଞ୍ଜୀକୃତ ଏପିଏମସି ମଣ୍ଡି",
+  "farmDetailsUpdatedSuccess": "କୃଷି ବିବରଣୀ ସଫଳତାର ସହିତ ଅପଡେଟ୍ ହୋଇଛି",
+  "selfDeclaredProfile": "ସ୍ୱୟଂ ଘୋଷିତ ପ୍ରୋଫାଇଲ୍"
 }

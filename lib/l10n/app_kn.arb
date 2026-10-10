@@ -1326,5 +1326,15 @@
   "statusAccepted": "ಸ್ವೀಕರಿಸಲಾಗಿದೆ",
   "statusPacked": "ಪ್ಯಾಕ್ ಮಾಡಲಾಗಿದೆ",
   "statusDelivered": "ತಲುಪಿಸಲಾಗಿದೆ",
-  "statusDisputed": "ವಿವಾದದಲ್ಲಿದೆ"
+  "statusDisputed": "ವಿವಾದದಲ್ಲಿದೆ",
+  "editFarmDetails": "ಕೃಷಿ ವಿವರಗಳನ್ನು ಸಂಪಾದಿಸಿ",
+  "editFarmDetailsSubtitle": "ಭೂಮಿ ವಿಸ್ತೀರ್ಣ, ಮಣ್ಣು ಮತ್ತು ಬೆಳೆ ವಿವರಗಳನ್ನು ನವೀಕರಿಸಿ",
+  "farmNameLabel": "ತೋಟ / ಕೃಷಿ ಭೂಮಿಯ ಹೆಸರು",
+  "clusterVillageLabel": "ಕ್ಲಸ್ಟರ್ / ಗ್ರಾಮದ ಸ್ಥಳ",
+  "acresLabel": "ಒಟ್ಟು ಭೂಮಿ (ಎಕರೆಗಳು)",
+  "soilTypeLabel": "ಮಣ್ಣಿನ ವಿಧ",
+  "primaryCropsLabel": "ಮುಖ್ಯವಾಗಿ ಬೆಳೆಯುವ ಬೆಳೆಗಳು",
+  "apmcMandiLabel": "ನೋಂದಾಯಿತ ಎಪಿಎಂಸಿ ಮಂಡಿ",
+  "farmDetailsUpdatedSuccess": "ಕೃಷಿ ವಿವರಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ",
+  "selfDeclaredProfile": "ಸ್ವಯಂ ಘೋಷಿತ ವಿವರ"
 }

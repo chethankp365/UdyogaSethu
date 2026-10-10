@@ -756,7 +756,7 @@ class AppLocalizationsKn extends AppLocalizations {
       'ನಿಮ್ಮ ರೈತ ಪ್ರೊಫೈಲ್ ವಿವರಗಳನ್ನು ಪರಿಶೀಲಿಸಿ ಪೂರ್ಣಗೊಳಿಸಿ.';
 
   @override
-  String get farmNameLabel => 'ಜಮೀನಿನ / ತೋಟದ ಹೆಸರು';
+  String get farmNameLabel => 'ತೋಟ / ಕೃಷಿ ಭೂಮಿಯ ಹೆಸರು';
 
   @override
   String get farmNameHint => 'ಉದಾ: ಗ್ರೀನ್ ವ್ಯಾಲಿ ಆರ್ಗ್ಯಾನಿಕ್ ಫಾರ್ಮ್';
@@ -771,16 +771,16 @@ class AppLocalizationsKn extends AppLocalizations {
   String get farmLocationLabel => 'ಮ್ಯಾಪ್‌ನಲ್ಲಿ ಜಮೀನಿನ ಸ್ಥಳ';
 
   @override
-  String get acresLabel => 'ಜಮೀನಿನ ವಿಸ್ತೀರ್ಣ (ಎಕರೆ)';
+  String get acresLabel => 'ಒಟ್ಟು ಭೂಮಿ (ಎಕರೆಗಳು)';
 
   @override
-  String get soilTypeLabel => 'ಮಣ್ಣಿನ ಮಾದರಿ';
+  String get soilTypeLabel => 'ಮಣ್ಣಿನ ವಿಧ';
 
   @override
   String get soilPhLabel => 'ಮಣ್ಣಿನ pH (ಐಚ್ಛಿಕ)';
 
   @override
-  String get primaryCropsLabel => 'ಮುಖ್ಯ ಬೆಳೆಗಳು';
+  String get primaryCropsLabel => 'ಮುಖ್ಯವಾಗಿ ಬೆಳೆಯುವ ಬೆಳೆಗಳು';
 
   @override
   String get farmingMethodLabel => 'ಕೃಷಿ ಪದ್ಧತಿ';
@@ -3790,4 +3790,24 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get statusDisputed => 'ವಿವಾದದಲ್ಲಿದೆ';
+
+  @override
+  String get editFarmDetails => 'ಕೃಷಿ ವಿವರಗಳನ್ನು ಸಂಪಾದಿಸಿ';
+
+  @override
+  String get editFarmDetailsSubtitle =>
+      'ಭೂಮಿ ವಿಸ್ತೀರ್ಣ, ಮಣ್ಣು ಮತ್ತು ಬೆಳೆ ವಿವರಗಳನ್ನು ನವೀಕರಿಸಿ';
+
+  @override
+  String get clusterVillageLabel => 'ಕ್ಲಸ್ಟರ್ / ಗ್ರಾಮದ ಸ್ಥಳ';
+
+  @override
+  String get apmcMandiLabel => 'ನೋಂದಾಯಿತ ಎಪಿಎಂಸಿ ಮಂಡಿ';
+
+  @override
+  String get farmDetailsUpdatedSuccess =>
+      'ಕೃಷಿ ವಿವರಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ';
+
+  @override
+  String get selfDeclaredProfile => 'ಸ್ವಯಂ ಘೋಷಿತ ವಿವರ';
 }

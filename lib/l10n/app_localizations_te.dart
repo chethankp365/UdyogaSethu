@@ -752,7 +752,7 @@ class AppLocalizationsTe extends AppLocalizations {
       'మీ రైతు ప్రొఫైల్ వివరాలను సమీక్షించి సెటప్ పూర్తి చేయండి.';
 
   @override
-  String get farmNameLabel => 'పొలం / తోట పేరు';
+  String get farmNameLabel => 'తోట / వ్యవసాయ క్షేత్రం పేరు';
 
   @override
   String get farmNameHint => 'ఉదా. గ్రీన్ వ్యాలీ ఆర్గానిక్ ఫార్మ్';
@@ -767,16 +767,16 @@ class AppLocalizationsTe extends AppLocalizations {
   String get farmLocationLabel => 'మ్యాప్‌లో పొలం ప్రదేశం';
 
   @override
-  String get acresLabel => 'పొలం విస్తీర్ణం (ఎకరాలు)';
+  String get acresLabel => 'మొత్తం భూమి (ఎకరాలు)';
 
   @override
-  String get soilTypeLabel => 'నేల రకం';
+  String get soilTypeLabel => 'నేల వర్గీకరణ';
 
   @override
   String get soilPhLabel => 'నేల pH (ఐచ్ఛికం)';
 
   @override
-  String get primaryCropsLabel => 'ప్రధాన పంటలు';
+  String get primaryCropsLabel => 'ప్రధానంగా పండించే పంటలు';
 
   @override
   String get farmingMethodLabel => 'వ్యవసాయ పద్ధతి';
@@ -3780,4 +3780,24 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get statusDisputed => 'వివాదంలో ఉంది';
+
+  @override
+  String get editFarmDetails => 'వ్యవసాయ వివరాలను సవరించండి';
+
+  @override
+  String get editFarmDetailsSubtitle =>
+      'భూమి విస్తీర్ణం, నేల మరియు పంట వివరాలను నవీకరించండి';
+
+  @override
+  String get clusterVillageLabel => 'క్లస్టర్ / గ్రామం స్థానం';
+
+  @override
+  String get apmcMandiLabel => 'నమోదిత ఏపీఎంసీ మార్కెట్';
+
+  @override
+  String get farmDetailsUpdatedSuccess =>
+      'వ్యవసాయ వివరాలు విజయవంతంగా నవీకరించబడ్డాయి';
+
+  @override
+  String get selfDeclaredProfile => 'స్వయం ప్రకటిత ప్రొఫైల్';
 }

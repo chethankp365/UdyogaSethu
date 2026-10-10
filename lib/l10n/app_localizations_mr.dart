@@ -747,7 +747,7 @@ class AppLocalizationsMr extends AppLocalizations {
       'Verify your farm profile details before completing setup.';
 
   @override
-  String get farmNameLabel => 'Farm Name';
+  String get farmNameLabel => 'शेत / बागेचे नाव';
 
   @override
   String get farmNameHint => 'e.g. Green Valley Organic Farm';
@@ -762,16 +762,16 @@ class AppLocalizationsMr extends AppLocalizations {
   String get farmLocationLabel => 'Farm Location on Map';
 
   @override
-  String get acresLabel => 'Farm Area (Acres)';
+  String get acresLabel => 'एकूण जमीन (एकर)';
 
   @override
-  String get soilTypeLabel => 'Soil Type';
+  String get soilTypeLabel => 'माती वर्गीकरण';
 
   @override
   String get soilPhLabel => 'Soil pH (Optional)';
 
   @override
-  String get primaryCropsLabel => 'Primary Crops';
+  String get primaryCropsLabel => 'मुख्य पिके';
 
   @override
   String get farmingMethodLabel => 'Farming Method';
@@ -3748,4 +3748,23 @@ class AppLocalizationsMr extends AppLocalizations {
 
   @override
   String get statusDisputed => 'विवादास्पद';
+
+  @override
+  String get editFarmDetails => 'शेती तपशील संपादित करा';
+
+  @override
+  String get editFarmDetailsSubtitle =>
+      'जमीन क्षेत्र, माती आणि पीक तपशील अपडेट करा';
+
+  @override
+  String get clusterVillageLabel => 'क्लस्टर / गावाचे स्थान';
+
+  @override
+  String get apmcMandiLabel => 'नोंदणीकृत एपीएमसी मार्केट';
+
+  @override
+  String get farmDetailsUpdatedSuccess => 'शेती तपशील यशस्वीरित्या अपडेट केले';
+
+  @override
+  String get selfDeclaredProfile => 'स्वयं-घोषित प्रोफाइल';
 }

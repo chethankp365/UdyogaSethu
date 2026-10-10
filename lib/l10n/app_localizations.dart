@@ -1421,7 +1421,7 @@ abstract class AppLocalizations {
   /// No description provided for @farmNameLabel.
   ///
   /// In en, this message translates to:
-  /// **'Farm Name'**
+  /// **'Farm / Plantation Name'**
   String get farmNameLabel;
 
   /// No description provided for @farmNameHint.
@@ -1451,13 +1451,13 @@ abstract class AppLocalizations {
   /// No description provided for @acresLabel.
   ///
   /// In en, this message translates to:
-  /// **'Farm Area (Acres)'**
+  /// **'Total Land (Acres)'**
   String get acresLabel;
 
   /// No description provided for @soilTypeLabel.
   ///
   /// In en, this message translates to:
-  /// **'Soil Type'**
+  /// **'Soil Classification'**
   String get soilTypeLabel;
 
   /// No description provided for @soilPhLabel.
@@ -1469,7 +1469,7 @@ abstract class AppLocalizations {
   /// No description provided for @primaryCropsLabel.
   ///
   /// In en, this message translates to:
-  /// **'Primary Crops'**
+  /// **'Primary Crops Grown'**
   String get primaryCropsLabel;
 
   /// No description provided for @farmingMethodLabel.
@@ -7025,6 +7025,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Disputed'**
   String get statusDisputed;
+
+  /// No description provided for @editFarmDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Farm Details'**
+  String get editFarmDetails;
+
+  /// No description provided for @editFarmDetailsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update land area, soil, and crop specializations'**
+  String get editFarmDetailsSubtitle;
+
+  /// No description provided for @clusterVillageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cluster / Village Location'**
+  String get clusterVillageLabel;
+
+  /// No description provided for @apmcMandiLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Registered APMC Mandi'**
+  String get apmcMandiLabel;
+
+  /// No description provided for @farmDetailsUpdatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm details updated successfully'**
+  String get farmDetailsUpdatedSuccess;
+
+  /// No description provided for @selfDeclaredProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'SELF-DECLARED PROFILE'**
+  String get selfDeclaredProfile;
 }
 
 class _AppLocalizationsDelegate

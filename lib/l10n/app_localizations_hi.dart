@@ -746,7 +746,7 @@ class AppLocalizationsHi extends AppLocalizations {
       'समाप्त करने से पहले अपने किसान प्रोफाइल विवरण की जांच करें।';
 
   @override
-  String get farmNameLabel => 'खेत का नाम';
+  String get farmNameLabel => 'खेत / बागान का नाम';
 
   @override
   String get farmNameHint => 'उदा. ग्रीन वैली ऑर्गेनिक फार्म';
@@ -761,16 +761,16 @@ class AppLocalizationsHi extends AppLocalizations {
   String get farmLocationLabel => 'मानचित्र पर खेत का स्थान';
 
   @override
-  String get acresLabel => 'खेत का क्षेत्रफल (एकड़)';
+  String get acresLabel => 'कुल भूमि (एकड़)';
 
   @override
-  String get soilTypeLabel => 'मिट्टी का प्रकार';
+  String get soilTypeLabel => 'मिट्टी का वर्गीकरण';
 
   @override
   String get soilPhLabel => 'मिट्टी का pH (वैकल्पिक)';
 
   @override
-  String get primaryCropsLabel => 'मुख्य फसलें';
+  String get primaryCropsLabel => 'मुख्य उगाई जाने वाली फसलें';
 
   @override
   String get farmingMethodLabel => 'खेती की पद्धति';
@@ -3751,4 +3751,24 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get statusDisputed => 'विवादित';
+
+  @override
+  String get editFarmDetails => 'खेती का विवरण संपादित करें';
+
+  @override
+  String get editFarmDetailsSubtitle =>
+      'भूमि क्षेत्र, मिट्टी और फसल का विवरण अपडेट करें';
+
+  @override
+  String get clusterVillageLabel => 'क्लस्टर / गांव का स्थान';
+
+  @override
+  String get apmcMandiLabel => 'पंजीकृत एपीएमसी मंडी';
+
+  @override
+  String get farmDetailsUpdatedSuccess =>
+      'खेत का विवरण सफलतापूर्वक अपडेट किया गया';
+
+  @override
+  String get selfDeclaredProfile => 'स्व-घोषित प्रोफ़ाइल';
 }

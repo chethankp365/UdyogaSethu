@@ -1326,5 +1326,15 @@
   "statusAccepted": "స్వీకరించబడింది",
   "statusPacked": "ప్యాక్ చేయబడింది",
   "statusDelivered": "డెలివరీ చేయబడింది",
-  "statusDisputed": "వివాదంలో ఉంది"
+  "statusDisputed": "వివాదంలో ఉంది",
+  "editFarmDetails": "వ్యవసాయ వివరాలను సవరించండి",
+  "editFarmDetailsSubtitle": "భూమి విస్తీర్ణం, నేల మరియు పంట వివరాలను నవీకరించండి",
+  "farmNameLabel": "తోట / వ్యవసాయ క్షేత్రం పేరు",
+  "clusterVillageLabel": "క్లస్టర్ / గ్రామం స్థానం",
+  "acresLabel": "మొత్తం భూమి (ఎకరాలు)",
+  "soilTypeLabel": "నేల వర్గీకరణ",
+  "primaryCropsLabel": "ప్రధానంగా పండించే పంటలు",
+  "apmcMandiLabel": "నమోదిత ఏపీఎంసీ మార్కెట్",
+  "farmDetailsUpdatedSuccess": "వ్యవసాయ వివరాలు విజయవంతంగా నవీకరించబడ్డాయి",
+  "selfDeclaredProfile": "స్వయం ప్రకటిత ప్రొఫైల్"
 }

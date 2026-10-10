@@ -3,6 +3,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:udyogasethu/features/farmer/data/farmer_listings_repository.dart';
+import 'package:udyogasethu/features/farmer/data/farmer_profile_page_repository.dart';
+import 'package:udyogasethu/features/farmer/domain/farmer_profile_model.dart';
 import 'package:udyogasethu/features/farmer/domain/produce_listing_model.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_listings_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_profile_screen.dart';
@@ -116,11 +118,39 @@ void main() {
   });
 
   group('Farmer Profile Screen UI Fidelity & Accessibility Tests', () {
+    const page7Profile = FarmerProfileData(
+      id: 'demo-farmer-id',
+      fullName: 'Chethan Gowda',
+      farmName: 'Greenfield Organic Farm',
+      clusterVillage: 'Mandya Cluster',
+      phone: '+91 98450 77889',
+      isVerified: true,
+      landAcres: 4.2,
+      produceSoldKgMonth: 420.0,
+      directSalesPaise: 4850000,
+      badges: FarmInfrastructureBadges(
+        soilClassification: 'Red Loam Soil (pH 6.8)',
+        primaryCrops: 'Tomatoes, Paddy, Banana',
+        apmcRegistration: 'Mandya APMC #4812',
+        kisanCreditCardStatus: 'KCC Approved ✓',
+        isKccApproved: true,
+      ),
+      certificate: OrganicCertificate(
+        title: 'Zero-Pesticide Organic Certificate',
+        issuer: 'Verified by Karnataka Organic Farmers Board',
+        statusLabel: 'VALIDATED ✓',
+        isValidated: true,
+      ),
+    );
+
     testWidgets('Renders all elements of Page 7 Phone 1 visual reference', (tester) async {
       await tester.binding.setSurfaceSize(const Size(400, 900));
 
       await tester.pumpWidget(createTestApp(
         child: const FarmerProfileScreen(),
+        overrides: [
+          farmerProfileDataProvider.overrideWith((ref) => Future.value(page7Profile)),
+        ],
       ));
       await tester.pumpAndSettle();
 
@@ -166,18 +196,13 @@ void main() {
       await tester.binding.setSurfaceSize(const Size(380, 850));
 
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            localizationsDelegates: [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            home: MediaQuery(
-              data: MediaQueryData(textScaler: TextScaler.linear(1.3)),
-              child: FarmerProfileScreen(),
-            ),
+        createTestApp(
+          overrides: [
+            farmerProfileDataProvider.overrideWith((ref) => Future.value(page7Profile)),
+          ],
+          child: const MediaQuery(
+            data: MediaQueryData(textScaler: TextScaler.linear(1.3)),
+            child: FarmerProfileScreen(),
           ),
         ),
       );

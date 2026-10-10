@@ -1388,5 +1388,15 @@
   "statusAccepted": "Accepted",
   "statusPacked": "Packed",
   "statusDelivered": "Delivered",
-  "statusDisputed": "Disputed"
+  "statusDisputed": "Disputed",
+  "editFarmDetails": "Edit Farm Details",
+  "editFarmDetailsSubtitle": "Update land area, soil, and crop specializations",
+  "farmNameLabel": "Farm / Plantation Name",
+  "clusterVillageLabel": "Cluster / Village Location",
+  "acresLabel": "Total Land (Acres)",
+  "soilTypeLabel": "Soil Classification",
+  "primaryCropsLabel": "Primary Crops Grown",
+  "apmcMandiLabel": "Registered APMC Mandi",
+  "farmDetailsUpdatedSuccess": "Farm details updated successfully",
+  "selfDeclaredProfile": "SELF-DECLARED PROFILE"
 }

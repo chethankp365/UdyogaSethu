@@ -114,7 +114,7 @@ class WeatherAdvisory {
         weatherCode: weatherCode,
         advisoryTitle: 'Moderate Rain Expected Tomorrow Afternoon',
         advisoryBody:
-            'Moderate Rain Expected Tomorrow Afternoon - Protect ready tomato crops by harvesting before 12 PM. 5 Local harvest helpers are available nearby for booking.',
+            'Moderate Rain Expected Tomorrow Afternoon - Protect ready tomato crops by harvesting before 12 PM. Tap below to post a harvest shift.',
         actionLabel: 'Book Harvest Helpers',
         severity: WeatherAdvisorySeverity.warning,
         date: DateTime.now(),

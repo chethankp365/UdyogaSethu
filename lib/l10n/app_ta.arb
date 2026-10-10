@@ -1326,5 +1326,15 @@
   "statusAccepted": "ஏற்றுக்கொள்ளப்பட்டது",
   "statusPacked": "பேக் செய்யப்பட்டது",
   "statusDelivered": "டெலிவரி செய்யப்பட்டது",
-  "statusDisputed": "சர்ச்சையில் உள்ளது"
+  "statusDisputed": "சர்ச்சையில் உள்ளது",
+  "editFarmDetails": "பண்ணை விவரங்களைத் திருத்துக",
+  "editFarmDetailsSubtitle": "நிலப்பரப்பு, மண் மற்றும் பயிர் விவரங்களை புதுப்பிக்கவும்",
+  "farmNameLabel": "பண்ணை / தோட்டத்தின் பெயர்",
+  "clusterVillageLabel": "கிளஸ்டர் / கிராமத்தின் இருப்பிடம்",
+  "acresLabel": "மொத்த நிலம் (ஏக்கர்)",
+  "soilTypeLabel": "மண் வகைப்பாடு",
+  "primaryCropsLabel": "முக்கிய பயிர்கள்",
+  "apmcMandiLabel": "பதிவுசெய்யப்பட்ட ஏபிஎம்சி மண்டி",
+  "farmDetailsUpdatedSuccess": "பண்ணை விவரங்கள் வெற்றிகரமாக புதுப்பிக்கப்பட்டன",
+  "selfDeclaredProfile": "சுய அறிவிப்பு சுயவிவரம்"
 }

@@ -751,7 +751,7 @@ class AppLocalizationsTa extends AppLocalizations {
       'முடிப்பதற்கு முன் உங்கள் விவசாயி சுயவிவர விவரங்களைச் சரிபார்க்கவும்.';
 
   @override
-  String get farmNameLabel => 'பண்ணை பெயர்';
+  String get farmNameLabel => 'பண்ணை / தோட்டத்தின் பெயர்';
 
   @override
   String get farmNameHint => 'எ.கா. கிரீன் வேலி ஆர்கானிக் ஃபார்ம்';
@@ -766,16 +766,16 @@ class AppLocalizationsTa extends AppLocalizations {
   String get farmLocationLabel => 'வரைபடத்தில் பண்ணை இடம்';
 
   @override
-  String get acresLabel => 'பண்ணை பரப்பு (ஏக்கர்)';
+  String get acresLabel => 'மொத்த நிலம் (ஏக்கர்)';
 
   @override
-  String get soilTypeLabel => 'மண் வகை';
+  String get soilTypeLabel => 'மண் வகைப்பாடு';
 
   @override
   String get soilPhLabel => 'மண் pH (விருப்பத்தேர்வு)';
 
   @override
-  String get primaryCropsLabel => 'முதன்மை பயிர்கள்';
+  String get primaryCropsLabel => 'முக்கிய பயிர்கள்';
 
   @override
   String get farmingMethodLabel => 'விவசாய முறை';
@@ -3795,4 +3795,24 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get statusDisputed => 'சர்ச்சையில் உள்ளது';
+
+  @override
+  String get editFarmDetails => 'பண்ணை விவரங்களைத் திருத்துக';
+
+  @override
+  String get editFarmDetailsSubtitle =>
+      'நிலப்பரப்பு, மண் மற்றும் பயிர் விவரங்களை புதுப்பிக்கவும்';
+
+  @override
+  String get clusterVillageLabel => 'கிளஸ்டர் / கிராமத்தின் இருப்பிடம்';
+
+  @override
+  String get apmcMandiLabel => 'பதிவுசெய்யப்பட்ட ஏபிஎம்சி மண்டி';
+
+  @override
+  String get farmDetailsUpdatedSuccess =>
+      'பண்ணை விவரங்கள் வெற்றிகரமாக புதுப்பிக்கப்பட்டன';
+
+  @override
+  String get selfDeclaredProfile => 'சுய அறிவிப்பு சுயவிவரம்';
 }

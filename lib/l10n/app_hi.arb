@@ -1326,5 +1326,15 @@
   "statusAccepted": "स्वीकृत",
   "statusPacked": "पैक किया गया",
   "statusDelivered": "डिलीवर किया गया",
-  "statusDisputed": "विवादित"
+  "statusDisputed": "विवादित",
+  "editFarmDetails": "खेती का विवरण संपादित करें",
+  "editFarmDetailsSubtitle": "भूमि क्षेत्र, मिट्टी और फसल का विवरण अपडेट करें",
+  "farmNameLabel": "खेत / बागान का नाम",
+  "clusterVillageLabel": "क्लस्टर / गांव का स्थान",
+  "acresLabel": "कुल भूमि (एकड़)",
+  "soilTypeLabel": "मिट्टी का वर्गीकरण",
+  "primaryCropsLabel": "मुख्य उगाई जाने वाली फसलें",
+  "apmcMandiLabel": "पंजीकृत एपीएमसी मंडी",
+  "farmDetailsUpdatedSuccess": "खेत का विवरण सफलतापूर्वक अपडेट किया गया",
+  "selfDeclaredProfile": "स्व-घोषित प्रोफ़ाइल"
 }

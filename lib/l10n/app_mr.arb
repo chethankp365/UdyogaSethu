@@ -1326,5 +1326,15 @@
   "statusAccepted": "स्वीकारले",
   "statusPacked": "पॅक केले",
   "statusDelivered": "वितरित केले",
-  "statusDisputed": "विवादास्पद"
+  "statusDisputed": "विवादास्पद",
+  "editFarmDetails": "शेती तपशील संपादित करा",
+  "editFarmDetailsSubtitle": "जमीन क्षेत्र, माती आणि पीक तपशील अपडेट करा",
+  "farmNameLabel": "शेत / बागेचे नाव",
+  "clusterVillageLabel": "क्लस्टर / गावाचे स्थान",
+  "acresLabel": "एकूण जमीन (एकर)",
+  "soilTypeLabel": "माती वर्गीकरण",
+  "primaryCropsLabel": "मुख्य पिके",
+  "apmcMandiLabel": "नोंदणीकृत एपीएमसी मार्केट",
+  "farmDetailsUpdatedSuccess": "शेती तपशील यशस्वीरित्या अपडेट केले",
+  "selfDeclaredProfile": "स्वयं-घोषित प्रोफाइल"
 }

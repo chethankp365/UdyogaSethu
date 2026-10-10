@@ -169,6 +169,7 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
               return Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: ChoiceChip(
+                  avatar: Text(_getCategoryEmoji(tab)),
                   label: Text(_getCategoryLabel(tab, l10n)),
                   selected: isSelected,
                   selectedColor: const Color(0xFF0D6548),
@@ -226,7 +227,7 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
               crossAxisCount: 2,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
-              childAspectRatio: 0.88,
+              childAspectRatio: 0.72,
             ),
             itemBuilder: (context, index) {
               final price = filteredPrices[index];
@@ -235,6 +236,39 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
           ),
       ],
     );
+  }
+
+  String _getCategoryEmoji(CropCategoryTab tab) {
+    switch (tab) {
+      case CropCategoryTab.allCrops:
+        return '🧺';
+      case CropCategoryTab.vegetables:
+        return '🥦';
+      case CropCategoryTab.grainsAndPulses:
+        return '🌾';
+    }
+  }
+
+  String _getCommodityEmoji(String commodity) {
+    final lower = commodity.toLowerCase();
+    if (lower.contains('tomato')) return '🍅';
+    if (lower.contains('onion')) return '🧅';
+    if (lower.contains('potato')) return '🥔';
+    if (lower.contains('chilli') || lower.contains('chili')) return '🌶️';
+    if (lower.contains('carrot')) return '🥕';
+    if (lower.contains('ginger') || lower.contains('garlic')) return '🧄';
+    if (lower.contains('banana')) return '🍌';
+    if (lower.contains('mango')) return '🥭';
+    if (lower.contains('rice') ||
+        lower.contains('paddy') ||
+        lower.contains('wheat') ||
+        lower.contains('ragi') ||
+        lower.contains('maize') ||
+        lower.contains('gram') ||
+        lower.contains('pulse')) {
+      return '🌾';
+    }
+    return '🌱';
   }
 
   Widget _buildUnitToggleBtn(String label, bool isSelected, VoidCallback onTap) {
@@ -277,6 +311,10 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
         ? price.formattedPricePerKg
         : price.formattedModalPricePerQtl;
 
+    final emoji = _getCommodityEmoji(price.commodity);
+    final slug = price.commodity.toLowerCase().replaceAll(' ', '_');
+    final assetPath = 'assets/images/commodities/$slug.webp';
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -284,42 +322,59 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
         border: Border.all(color: const Color(0xFFE2E8F0)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
-      padding: const EdgeInsets.all(12),
+      clipBehavior: Clip.antiAlias,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Top: Commodity Name & Trend Pill
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      price.commodity,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E293B),
+          // Top Photo Thumbnail container with Swiggy/Zomato-style overlay trend badge
+          SizedBox(
+            height: 74,
+            width: double.infinity,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Image.asset(
+                  assetPath,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Color(0xFFECFDF5), Color(0xFFD1FAE5)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  // Trend Badge (% change)
-                  Container(
+                      child: Center(
+                        child: Text(
+                          emoji,
+                          style: const TextStyle(fontSize: 32),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                // Trend badge pinned on top right of the thumbnail
+                Positioned(
+                  top: 6,
+                  right: 6,
+                  child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
-                      color: trendColor.withValues(alpha: 0.1),
+                      color: Colors.white.withValues(alpha: 0.92),
                       borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.08),
+                          blurRadius: 4,
+                        ),
+                      ],
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -339,84 +394,121 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
                       ],
                     ),
                   ),
+                ),
+              ],
+            ),
+          ),
+
+          // Content body
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Commodity name & variety
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        price.commodity,
+                        style: const TextStyle(
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1E293B),
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        price.variety,
+                        style: const TextStyle(
+                          fontSize: 10.5,
+                          color: Color(0xFF64748B),
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+
+                  // Price
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          displayPrice,
+                          style: const TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w900,
+                            color: Color(0xFF0D6548),
+                          ),
+                        ),
+                      ),
+                      Text(
+                        _showPerKg ? price.formattedModalPricePerQtl : price.formattedPricePerKg,
+                        style: const TextStyle(
+                          fontSize: 9.5,
+                          color: Color(0xFF94A3B8),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // Bottom: Demand Tag & Market
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: price.demandTagColor.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Text(
+                          _getDemandTagText(price.demandTag, l10n),
+                          style: TextStyle(
+                            fontSize: 9.5,
+                            fontWeight: FontWeight.bold,
+                            color: price.demandTagColor,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Row(
+                        children: [
+                          const Icon(Icons.location_on_outlined, size: 11, color: Color(0xFF94A3B8)),
+                          const SizedBox(width: 2),
+                          Expanded(
+                            child: Text(
+                              price.market,
+                              style: const TextStyle(
+                                fontSize: 9.5,
+                                color: Color(0xFF64748B),
+                                fontWeight: FontWeight.w500,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ],
               ),
-              const SizedBox(height: 2),
-              Text(
-                price.variety,
-                style: const TextStyle(
-                  fontSize: 11,
-                  color: Color(0xFF64748B),
-                  fontWeight: FontWeight.w500,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-
-          // Middle: Price
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  displayPrice,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF0D6548),
-                  ),
-                ),
-              ),
-              Text(
-                _showPerKg ? price.formattedModalPricePerQtl : price.formattedPricePerKg,
-                style: const TextStyle(
-                  fontSize: 10,
-                  color: Color(0xFF94A3B8),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-
-          // Bottom: Demand Tag Pill & Market Location
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Demand Tag Pill
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-                decoration: BoxDecoration(
-                  color: price.demandTagColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(
-                  _getDemandTagText(price.demandTag, l10n),
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                    color: price.demandTagColor,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              const SizedBox(height: 4),
-              // APMC Market
-              Text(
-                price.market,
-                style: const TextStyle(
-                  fontSize: 10,
-                  color: Color(0xFF64748B),
-                  fontWeight: FontWeight.w500,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
+            ),
           ),
         ],
       ),

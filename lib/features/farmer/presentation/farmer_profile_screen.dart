@@ -5,8 +5,10 @@ import 'package:intl/intl.dart';
 import 'package:udyogasethu/core/l10n/locale_controller.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
+import 'package:udyogasethu/core/widgets/user_avatar.dart';
 import 'package:udyogasethu/features/farmer/data/farmer_profile_page_repository.dart';
 import 'package:udyogasethu/features/farmer/domain/farmer_profile_model.dart';
+import 'package:udyogasethu/features/farmer/presentation/widgets/edit_farm_details_dialog.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class FarmerProfileScreen extends ConsumerWidget {
@@ -80,7 +82,7 @@ class FarmerProfileScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       // 2. FARM INFRASTRUCTURE & CROP BADGES
-                      _buildInfrastructureSection(profile.badges, l10n),
+                      _buildInfrastructureSection(context, profile, l10n),
 
                       const SizedBox(height: 14),
 
@@ -144,10 +146,14 @@ class FarmerProfileScreen extends ConsumerWidget {
                     width: 2.2,
                   ),
                 ),
-                child: const Center(
-                  child: Text(
-                    '🧑‍🌾',
-                    style: TextStyle(fontSize: 34),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: UserAvatar(
+                    avatarPath: profile.avatarUrl,
+                    name: profile.fullName,
+                    radius: 34,
+                    backgroundColor: const Color(0xFF042F2E),
+                    textColor: Colors.white,
                   ),
                 ),
               ),
@@ -172,17 +178,19 @@ class FarmerProfileScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 5),
 
-                    // Verified Farmer Tag
+                    // Verified Farmer Tag vs Self-Declared Tag
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3.5),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF2DD4BF), // Bright mint cyan
+                        color: profile.isVerified ? const Color(0xFF2DD4BF) : Colors.amber.shade200,
                         borderRadius: BorderRadius.circular(14),
                       ),
                       child: Text(
-                        l10n?.verifiedFarmer ?? 'VERIFIED FARMER ✓',
-                        style: const TextStyle(
-                          color: Color(0xFF064E3B),
+                        profile.isVerified
+                            ? (l10n?.verifiedFarmer ?? 'VERIFIED FARMER ✓')
+                            : (l10n?.selfDeclaredProfile ?? 'SELF-DECLARED PROFILE'),
+                        style: TextStyle(
+                          color: profile.isVerified ? const Color(0xFF064E3B) : Colors.brown.shade900,
                           fontWeight: FontWeight.w800,
                           fontSize: 10.5,
                           letterSpacing: 0.5,
@@ -342,6 +350,24 @@ class FarmerProfileScreen extends ConsumerWidget {
               ],
             ),
           ),
+
+          const SizedBox(height: 14),
+
+          // Edit Farm Details Button
+          OutlinedButton.icon(
+            key: const Key('hero_edit_farm_button'),
+            onPressed: () => EditFarmDetailsDialog.show(context, profile),
+            icon: const Icon(Icons.edit_note_rounded, size: 18, color: Colors.white),
+            label: Text(
+              l10n?.editFarmDetails ?? 'Edit Farm Details',
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+            ),
+            style: OutlinedButton.styleFrom(
+              side: BorderSide(color: Colors.white.withValues(alpha: 0.35)),
+              minimumSize: const Size(double.infinity, 44),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+          ),
         ],
       ),
     );
@@ -351,9 +377,11 @@ class FarmerProfileScreen extends ConsumerWidget {
   // 2. FARM INFRASTRUCTURE & CROP BADGES
   // ---------------------------------------------------------------------------
   Widget _buildInfrastructureSection(
-    FarmInfrastructureBadges badges,
+    BuildContext context,
+    FarmerProfileData profile,
     AppLocalizations? l10n,
   ) {
+    final badges = profile.badges;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -383,6 +411,19 @@ class FarmerProfileScreen extends ConsumerWidget {
                     fontWeight: FontWeight.w800,
                     letterSpacing: 0.5,
                     color: Color(0xFF1E293B),
+                  ),
+                ),
+              ),
+              TextButton.icon(
+                key: const Key('edit_farm_details_button'),
+                onPressed: () => EditFarmDetailsDialog.show(context, profile),
+                icon: const Icon(Icons.edit_outlined, size: 16, color: Color(0xFF064E3B)),
+                label: Text(
+                  l10n?.edit ?? 'Edit',
+                  style: const TextStyle(
+                    color: Color(0xFF064E3B),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
                   ),
                 ),
               ),

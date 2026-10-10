@@ -436,9 +436,12 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
           children: [
             const Icon(Icons.agriculture_rounded, size: 20),
             const SizedBox(width: 8),
-            Text(
-              l10n?.farmerHomeTitle ?? 'Farmer Home',
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+            Flexible(
+              child: Text(
+                l10n?.farmerHomeTitle ?? 'Farmer Home',
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),

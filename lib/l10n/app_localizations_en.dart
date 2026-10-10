@@ -747,7 +747,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Verify your farm profile details before completing setup.';
 
   @override
-  String get farmNameLabel => 'Farm Name';
+  String get farmNameLabel => 'Farm / Plantation Name';
 
   @override
   String get farmNameHint => 'e.g. Green Valley Organic Farm';
@@ -762,16 +762,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get farmLocationLabel => 'Farm Location on Map';
 
   @override
-  String get acresLabel => 'Farm Area (Acres)';
+  String get acresLabel => 'Total Land (Acres)';
 
   @override
-  String get soilTypeLabel => 'Soil Type';
+  String get soilTypeLabel => 'Soil Classification';
 
   @override
   String get soilPhLabel => 'Soil pH (Optional)';
 
   @override
-  String get primaryCropsLabel => 'Primary Crops';
+  String get primaryCropsLabel => 'Primary Crops Grown';
 
   @override
   String get farmingMethodLabel => 'Farming Method';
@@ -3760,4 +3760,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statusDisputed => 'Disputed';
+
+  @override
+  String get editFarmDetails => 'Edit Farm Details';
+
+  @override
+  String get editFarmDetailsSubtitle =>
+      'Update land area, soil, and crop specializations';
+
+  @override
+  String get clusterVillageLabel => 'Cluster / Village Location';
+
+  @override
+  String get apmcMandiLabel => 'Registered APMC Mandi';
+
+  @override
+  String get farmDetailsUpdatedSuccess => 'Farm details updated successfully';
+
+  @override
+  String get selfDeclaredProfile => 'SELF-DECLARED PROFILE';
 }
