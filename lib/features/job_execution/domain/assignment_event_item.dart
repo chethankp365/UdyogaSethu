@@ -82,6 +82,8 @@ class AssignmentEventItem {
     required this.createdAt,
   });
 
+  bool get isCompleted => stage == AssignmentStage.completed || stage == AssignmentStage.paymentReleased;
+
   factory AssignmentEventItem.fromJson(Map<String, dynamic> json) {
     final eventType = json['event_type'] as String? ?? 'requested';
     final metaData = json['meta'] is Map ? (json['meta'] as Map<String, dynamic>) : <String, dynamic>{};

@@ -177,16 +177,22 @@ class RoutingService {
     final lng = destination.longitude;
     final query = label != null ? Uri.encodeComponent(label) : '$lat,$lng';
 
-    // 1. Try Google Maps navigation intent
-    final googleMapsUrl = Uri.parse('https://www.google.com/maps/dir/?api=1&destination=$lat,$lng');
-    if (await canLaunchUrl(googleMapsUrl)) {
-      return await launchUrl(googleMapsUrl, mode: LaunchMode.externalApplication);
-    }
-
-    // 2. Fallback to generic geo URI
+    // 1. Try generic geo URI (works across Android and iOS map handlers)
     final geoUrl = Uri.parse('geo:$lat,$lng?q=$lat,$lng($query)');
     if (await canLaunchUrl(geoUrl)) {
       return await launchUrl(geoUrl, mode: LaunchMode.externalApplication);
+    }
+
+    // 2. Try Google Maps navigation intent (Android Turn-by-Turn navigation)
+    final navUrl = Uri.parse('google.navigation:q=$lat,$lng');
+    if (await canLaunchUrl(navUrl)) {
+      return await launchUrl(navUrl, mode: LaunchMode.externalApplication);
+    }
+
+    // 3. Fallback to Google Maps Web / universal directions intent
+    final googleMapsUrl = Uri.parse('https://www.google.com/maps/dir/?api=1&destination=$lat,$lng');
+    if (await canLaunchUrl(googleMapsUrl)) {
+      return await launchUrl(googleMapsUrl, mode: LaunchMode.externalApplication);
     }
 
     return false;

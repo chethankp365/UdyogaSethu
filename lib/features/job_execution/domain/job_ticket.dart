@@ -219,18 +219,18 @@ class AttendanceScanResult {
     return AttendanceScanResult(
       valid: json['valid'] == true,
       purpose: json['purpose'] as String? ?? 'ticket',
-      status: json['status'] as String? ?? 'arrived',
+      status: json['status'] as String? ?? (json['valid'] == true ? 'arrived' : 'error'),
       assignmentId: json['assignment_id'] as String?,
       bookingCode: json['booking_code'] as String?,
       workerId: json['worker_id'] as String?,
       workerName: json['worker_name'] as String?,
       workerAvatar: json['worker_avatar'] as String?,
-      isVerifiedBadge: json['is_verified_badge'] == true,
+      isVerifiedBadge: json['is_verified_badge'] == true || json['is_worker_verified'] == true,
       jobTitle: json['job_title'] as String?,
       arrivedAt: arrived,
       message: json['message'] as String?,
-      errorCode: json['error_code'] as String?,
-      errorMessage: json['error_message'] as String?,
+      errorCode: json['error_code'] as String? ?? (json['valid'] != true ? json['status_code'] as String? : null),
+      errorMessage: json['error_message'] as String? ?? (json['valid'] != true ? json['message'] as String? : null),
     );
   }
 }

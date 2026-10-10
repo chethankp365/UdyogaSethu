@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:udyogasethu/core/router/routes.dart';
@@ -95,14 +96,18 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
     setState(() => _isLoadingRoute = true);
     final routing = ref.read(routingServiceProvider);
 
-    // Default coordinates in Bengaluru (Worker in Jayanagar, Job in Koramangala)
-    const workerFallback = LatLng(12.9279, 77.6271);
-    const jobFallback = LatLng(12.9352, 77.6245);
+    LatLng? currentWorkerLoc;
+    try {
+      final pos = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(timeLimit: Duration(seconds: 3)),
+      );
+      currentWorkerLoc = LatLng(pos.latitude, pos.longitude);
+    } catch (_) {}
 
     try {
       final detail = await ref.read(jobExecutionRepositoryProvider).fetchActiveJob(widget.assignmentId);
-      final start = detail.workerLocation ?? workerFallback;
       final dest = detail.jobLocation;
+      final start = currentWorkerLoc ?? detail.workerLocation ?? dest;
 
       final res = await routing.getRoute(start: start, destination: dest);
       if (mounted) {
@@ -112,10 +117,8 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
         });
       }
     } catch (e) {
-      final res = routing.computeStraightLineFallback(workerFallback, jobFallback);
       if (mounted) {
         setState(() {
-          _routingResult = res;
           _isLoadingRoute = false;
         });
       }

@@ -62,6 +62,15 @@ abstract class JobExecutionRepository {
     required String assignmentId,
     required String replacementWorkerId,
   });
+  Future<Map<String, dynamic>> getRotatingTicketToken(String assignmentId, {bool debugShortTtl = false});
+  Future<Map<String, dynamic>?> getNextAcceptedTicket();
+  Future<JobVerificationResult> recordStep2Verification({
+    required String assignmentId,
+    required String selfiePath,
+    required double lat,
+    required double lng,
+    double? faceScore,
+  });
 }
 
 class SupabaseJobExecutionRepository implements JobExecutionRepository {
@@ -77,8 +86,8 @@ class SupabaseJobExecutionRepository implements JobExecutionRepository {
         'p_assignment_id': assignmentId,
       });
 
-      if (res != null && res is Map<String, dynamic>) {
-        return ActiveJobDetail.fromJson(res);
+      if (res != null && res is Map) {
+        return ActiveJobDetail.fromJson(Map<String, dynamic>.from(res));
       }
     } catch (e) {
       if (kDebugMode) {
@@ -87,25 +96,36 @@ class SupabaseJobExecutionRepository implements JobExecutionRepository {
       try {
         final row = await _client
             .from('job_assignments')
-            .select('*, jobs(*, service_categories(*))')
+            .select('*, jobs(*, service_categories(*)), profiles!job_assignments_worker_id_fkey(*)')
             .eq('id', assignmentId)
             .maybeSingle();
 
         if (row != null) {
           final job = row['jobs'] as Map<String, dynamic>? ?? {};
           final cat = job['service_categories'] as Map<String, dynamic>? ?? {};
+          final worker = row['profiles'] as Map<String, dynamic>? ?? {};
+          final provRow = await _client.from('profiles').select().eq('id', job['provider_id']).maybeSingle();
+          final statusStr = row['status'] as String? ?? 'requested';
+          final startedAt = row['started_at'] != null ? DateTime.tryParse(row['started_at'].toString()) : null;
+          final endedAt = row['ended_at'] != null ? DateTime.tryParse(row['ended_at'].toString()) : null;
+          int? elapsed;
+          if (startedAt != null) {
+            elapsed = (endedAt ?? DateTime.now()).difference(startedAt).inSeconds;
+            if (elapsed < 0) elapsed = 0;
+          }
+
           return ActiveJobDetail(
             assignmentId: assignmentId,
-            jobId: row['job_id'] as String? ?? '',
-            bookingCode: row['booking_code'] as String? ?? 'BOOK-DEMO',
-            status: row['status'] as String? ?? 'requested',
-            stage: AssignmentStage.fromString(row['status'] as String? ?? 'requested'),
-            agreedWagePaise: (row['agreed_wage_paise'] as num?)?.toInt() ?? 60000,
+            jobId: row['job_id'] as String? ?? job['id'] as String? ?? '',
+            bookingCode: row['booking_code'] as String? ?? 'BOOK-UNKNOWN',
+            status: statusStr,
+            stage: AssignmentStage.fromString(statusStr),
+            agreedWagePaise: (row['agreed_wage_paise'] as num?)?.toInt() ?? (job['wage_amount_paise'] as num?)?.toInt() ?? 0,
             protectionSelected: row['protection_selected'] as bool? ?? false,
             arrivedAt: row['arrived_at'] != null ? DateTime.tryParse(row['arrived_at'].toString()) : null,
-            startedAt: row['started_at'] != null ? DateTime.tryParse(row['started_at'].toString()) : null,
-            endedAt: row['ended_at'] != null ? DateTime.tryParse(row['ended_at'].toString()) : null,
-            elapsedSeconds: (row['elapsed_seconds'] as num?)?.toInt(),
+            startedAt: startedAt,
+            endedAt: endedAt,
+            elapsedSeconds: elapsed,
             midjobVerifiedAt: row['midjob_verified_at'] != null
                 ? DateTime.tryParse(row['midjob_verified_at'].toString())
                 : null,
@@ -115,23 +135,23 @@ class SupabaseJobExecutionRepository implements JobExecutionRepository {
             startAt: job['start_at'] != null
                 ? DateTime.tryParse(job['start_at'].toString()) ?? DateTime.now()
                 : DateTime.now(),
-            estDurationMinutes: (job['est_duration_minutes'] as num?)?.toInt() ?? 480,
-            addressText: job['address_text'] as String? ?? 'Koramangala, Bengaluru',
-            jobLat: 12.9352,
-            jobLng: 77.6245,
-            categoryName: cat['name'] is Map ? (cat['name']['en'] ?? 'General') : 'General',
+            estDurationMinutes: (job['est_duration_minutes'] as num?)?.toInt() ?? 240,
+            addressText: job['address_text'] as String? ?? '',
+            jobLat: (job['lat'] as num?)?.toDouble() ?? 0.0,
+            jobLng: (job['lng'] as num?)?.toDouble() ?? 0.0,
+            categoryName: cat['name'] is Map ? (cat['name']['en'] ?? 'General') : (cat['name'] as String? ?? 'General'),
             categorySlug: cat['slug'] as String? ?? 'general',
             categoryIcon: cat['icon'] as String? ?? 'handyman',
             providerId: job['provider_id'] as String? ?? '',
-            providerName: 'Verified Employer',
-            providerPhone: '+91 99000 00002',
+            providerName: provRow?['full_name'] as String? ?? 'Job Provider',
+            providerPhone: provRow?['phone_number'] as String?,
+            providerAvatar: provRow?['avatar_path'] as String?,
             providerVerified: true,
             workerId: row['worker_id'] as String? ?? '',
-            workerName: 'Verified Worker',
-            workerPhone: '+91 99000 00001',
+            workerName: worker['full_name'] as String? ?? 'Assigned Worker',
+            workerPhone: worker['phone_number'] as String?,
+            workerAvatar: worker['avatar_path'] as String?,
             workerVerified: true,
-            workerLat: 12.9279,
-            workerLng: 77.6271,
           );
         }
       } catch (err) {
@@ -141,38 +161,7 @@ class SupabaseJobExecutionRepository implements JobExecutionRepository {
       }
     }
 
-    // Demo fallback for preview / offline demo
-    return ActiveJobDetail(
-      assignmentId: assignmentId,
-      jobId: 'job-demo-401',
-      bookingCode: 'BOOK-DEMO78',
-      status: 'in_progress_verified',
-      stage: AssignmentStage.jobInProgress,
-      agreedWagePaise: 75000,
-      protectionSelected: true,
-      arrivedAt: DateTime.now().subtract(const Duration(minutes: 45)),
-      startedAt: DateTime.now().subtract(const Duration(minutes: 30)),
-      jobTitle: 'Commercial Electrical Repair & Wiring',
-      jobDescription: 'Fix main switchboard and verify secondary circuits with earthing check.',
-      startAt: DateTime.now().subtract(const Duration(minutes: 30)),
-      estDurationMinutes: 180,
-      addressText: '4th Block, Koramangala, Bengaluru - 560034',
-      jobLat: 12.9352,
-      jobLng: 77.6245,
-      categoryName: 'Electrician',
-      categorySlug: 'electrician',
-      categoryIcon: 'flash_on',
-      providerId: 'provider-demo-1',
-      providerName: 'SK Sharma Builders',
-      providerPhone: '+91 98450 12345',
-      providerVerified: true,
-      workerId: 'worker-demo-1',
-      workerName: 'Chethan Kumar',
-      workerPhone: '+91 91234 56789',
-      workerVerified: true,
-      workerLat: 12.9279,
-      workerLng: 77.6271,
-    );
+    throw AppException.validation('Active job assignment $assignmentId not found');
   }
 
   @override
@@ -193,52 +182,7 @@ class SupabaseJobExecutionRepository implements JobExecutionRepository {
       }
     }
 
-    // Default seeded events for demo/offline fallback
-    final now = DateTime.now();
-    return [
-      AssignmentEventItem(
-        id: 'evt-1',
-        assignmentId: assignmentId,
-        rawEventType: 'requested',
-        stage: AssignmentStage.requestCreated,
-        createdAt: now.subtract(const Duration(hours: 3)),
-      ),
-      AssignmentEventItem(
-        id: 'evt-2',
-        assignmentId: assignmentId,
-        rawEventType: 'accepted',
-        stage: AssignmentStage.accepted,
-        createdAt: now.subtract(const Duration(hours: 2, minutes: 30)),
-      ),
-      AssignmentEventItem(
-        id: 'evt-3',
-        assignmentId: assignmentId,
-        rawEventType: 'ticket_issued',
-        stage: AssignmentStage.ticketIssued,
-        createdAt: now.subtract(const Duration(hours: 2)),
-      ),
-      AssignmentEventItem(
-        id: 'evt-4',
-        assignmentId: assignmentId,
-        rawEventType: 'arrived',
-        stage: AssignmentStage.workerArrived,
-        createdAt: now.subtract(const Duration(minutes: 45)),
-      ),
-      AssignmentEventItem(
-        id: 'evt-5',
-        assignmentId: assignmentId,
-        rawEventType: 'verification_completed',
-        stage: AssignmentStage.verificationCompleted,
-        createdAt: now.subtract(const Duration(minutes: 35)),
-      ),
-      AssignmentEventItem(
-        id: 'evt-6',
-        assignmentId: assignmentId,
-        rawEventType: 'in_progress_verified',
-        stage: AssignmentStage.jobInProgress,
-        createdAt: now.subtract(const Duration(minutes: 30)),
-      ),
-    ];
+    return const [];
   }
 
   @override
@@ -335,7 +279,7 @@ class SupabaseJobExecutionRepository implements JobExecutionRepository {
 
       if (res != null && res is List) {
         final list = res.map((item) => WorkerScheduleItem.fromJson(item as Map<String, dynamic>)).toList();
-        if (list.isNotEmpty) return list;
+        return list;
       }
     } catch (e) {
       if (kDebugMode) {
@@ -343,99 +287,42 @@ class SupabaseJobExecutionRepository implements JobExecutionRepository {
       }
     }
 
-    // Demo realistic schedule for testing Day & Week views and Travel Warning chip
-    final now = DateTime.now();
-    final today10am = DateTime(now.year, now.month, now.day, 10, 0);
-    final today12pm = DateTime(now.year, now.month, now.day, 12, 0);
-    final today1220pm = DateTime(now.year, now.month, now.day, 12, 20); // 20 min gap!
-    final today3pm = DateTime(now.year, now.month, now.day, 15, 0);
-
-    return [
-      WorkerScheduleItem(
-        assignmentId: 'assign-sched-1',
-        jobId: 'job-sched-1',
-        title: 'Ceiling Fan Installation & Switch Check',
-        status: 'accepted',
-        bookingCode: 'BOOK-7801',
-        agreedWagePaise: 50000,
-        startAt: today10am,
-        endAt: today12pm,
-        estDurationMinutes: 120,
-        addressText: 'Jayanagar 4th T Block, Bengaluru',
-        jobLat: 12.9250,
-        jobLng: 77.5938,
-        categorySlug: 'electrician',
-        categoryIcon: 'flash_on',
-        providerName: 'Anil Kumar',
-        gapFromPrevMinutes: null,
-        gapToNextMinutes: 20.0,
-        estimatedTravelMinutes: 35,
-      ),
-      WorkerScheduleItem(
-        assignmentId: 'assign-sched-2',
-        jobId: 'job-sched-2',
-        title: 'Office MCB Fuse & Power Outage Repair',
-        status: 'accepted',
-        bookingCode: 'BOOK-7802',
-        agreedWagePaise: 80000,
-        startAt: today1220pm,
-        endAt: today3pm,
-        estDurationMinutes: 160,
-        addressText: 'Indiranagar 100ft Road, Bengaluru',
-        jobLat: 12.9719,
-        jobLng: 77.6412,
-        categorySlug: 'electrician',
-        categoryIcon: 'flash_on',
-        providerName: 'TechHub Solutions',
-        gapFromPrevMinutes: 20.0, // Only 20 min gap, travel time is ~35 min -> Travel warning!
-        gapToNextMinutes: 120.0,
-        estimatedTravelMinutes: 35,
-      ),
-      WorkerScheduleItem(
-        assignmentId: 'assign-sched-3',
-        jobId: 'job-sched-3',
-        title: 'Living Room Wall Socket Setup',
-        status: 'requested',
-        bookingCode: 'BOOK-7803',
-        agreedWagePaise: 45000,
-        startAt: today10am.add(const Duration(days: 1)),
-        endAt: today12pm.add(const Duration(days: 1)),
-        estDurationMinutes: 120,
-        addressText: 'HSR Layout Sector 2, Bengaluru',
-        jobLat: 12.9121,
-        jobLng: 77.6446,
-        categorySlug: 'electrician',
-        categoryIcon: 'flash_on',
-        providerName: 'Sneha Rao',
-        gapFromPrevMinutes: null,
-        gapToNextMinutes: null,
-        estimatedTravelMinutes: 25,
-      ),
-    ];
+    return const [];
   }
 
   @override
   Future<JobTicketData> fetchJobTicket(String assignmentId) async {
     Map<String, dynamic>? data;
+
     try {
-      final res = await _client.rpc('get_job_ticket_details', params: {
+      final res = await _client.rpc('issue_job_ticket', params: {
         'p_assignment_id': assignmentId,
       });
-      if (res != null && res is Map<String, dynamic>) {
-        data = res;
-        // Save to offline cache
-        try {
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setString('job_ticket_cache_$assignmentId', jsonEncode(data));
-        } catch (_) {}
+      if (res != null && res is Map) {
+        data = Map<String, dynamic>.from(res);
       }
-    } catch (e) {
-      if (kDebugMode) {
-        debugPrint('[JobExecutionRepository] get_job_ticket_details RPC failed: $e. Checking offline cache.');
+    } catch (_) {
+      try {
+        final res = await _client.rpc('get_job_ticket_details', params: {
+          'p_assignment_id': assignmentId,
+        });
+        if (res != null && res is Map) {
+          data = Map<String, dynamic>.from(res);
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('[JobExecutionRepository] ticket details RPC failed: $e. Checking offline cache.');
+        }
       }
     }
 
-    if (data == null) {
+    if (data != null) {
+      // Save to offline cache
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('job_ticket_cache_$assignmentId', jsonEncode(data));
+      } catch (_) {}
+    } else {
       // Try offline cache
       try {
         final prefs = await SharedPreferences.getInstance();
@@ -446,48 +333,27 @@ class SupabaseJobExecutionRepository implements JobExecutionRepository {
       } catch (_) {}
     }
 
-    data ??= {
-      // Fallback demo ticket if completely missing
-      'assignment_id': assignmentId,
-      'booking_code': 'BOOK-7842',
-      'status': 'ticket_issued',
-      'job_id': 'job-demo',
-      'job_title': 'Commercial Electrical Repair',
-      'category_name': 'Electrician',
-      'category_icon': 'flash_on',
-      'start_at': DateTime.now().add(const Duration(hours: 1)).toIso8601String(),
-      'est_duration_minutes': 240,
-      'agreed_wage_paise': 80000,
-      'wage_type': 'daily',
-      'payment_mode': 'escrow',
-      'address_text': 'MG Road, Bengaluru',
-      'lat': 12.9716,
-      'lng': 77.5946,
-      'worker_id': _client.auth.currentUser?.id ?? 'worker-demo',
-      'worker_name': 'Assigned Worker',
-      'worker_avatar': null,
-      'is_worker_verified': true,
-      'provider_id': 'provider-demo',
-      'provider_name': 'Bengaluru Metro Office',
-    };
+    if (data == null) {
+      throw AppException.validation('Job ticket not found for assignment $assignmentId');
+    }
 
     var ticket = JobTicketData.fromJson(data);
 
-    // Try issuing fresh QR token
+    // Obtain fresh rotating QR token
     try {
-      final qrRes = await _edgeApi.qrIssue(purpose: 'ticket', assignmentId: assignmentId);
-      if (qrRes['success'] == true && qrRes['data'] != null) {
-        final d = qrRes['data'] as Map<String, dynamic>;
-        ticket = ticket.copyWith(
-          qrToken: d['qr_token'] as String?,
-          qrExpiresInSeconds: (d['expires_in_seconds'] as num?)?.toInt() ?? 120,
-          qrExpiresAt: d['expires_at'] != null ? DateTime.tryParse(d['expires_at'].toString()) : null,
-          status: 'ticket_issued',
-        );
-      }
+      final tokenRes = await getRotatingTicketToken(assignmentId);
+      final token = tokenRes['qr_token'] as String?;
+      final exp = tokenRes['expires_at'] != null ? DateTime.tryParse(tokenRes['expires_at'].toString()) : null;
+      final ttl = (tokenRes['expires_in_seconds'] as num?)?.toInt() ?? 120;
+      ticket = ticket.copyWith(
+        qrToken: token,
+        qrExpiresAt: exp,
+        qrExpiresInSeconds: ttl,
+        status: 'ticket_issued',
+      );
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('[JobExecutionRepository] qrIssue failed: $e');
+        debugPrint('[JobExecutionRepository] rotating ticket token failed: $e');
       }
     }
 
@@ -496,6 +362,25 @@ class SupabaseJobExecutionRepository implements JobExecutionRepository {
 
   @override
   Future<Map<String, dynamic>> refreshTicketQr(String assignmentId) async {
+    return getRotatingTicketToken(assignmentId);
+  }
+
+  @override
+  Future<Map<String, dynamic>> getRotatingTicketToken(String assignmentId, {bool debugShortTtl = false}) async {
+    try {
+      final res = await _client.rpc('get_rotating_ticket_token', params: {
+        'p_assignment_id': assignmentId,
+        'p_debug_short_ttl': debugShortTtl,
+      });
+      if (res != null && res is Map) {
+        return Map<String, dynamic>.from(res);
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[JobExecutionRepository] get_rotating_ticket_token RPC failed: $e, falling back to edge api');
+      }
+    }
+
     final res = await _edgeApi.qrIssue(purpose: 'ticket', assignmentId: assignmentId);
     if (res['success'] == true && res['data'] != null) {
       return Map<String, dynamic>.from(res['data'] as Map);
@@ -507,6 +392,21 @@ class SupabaseJobExecutionRepository implements JobExecutionRepository {
 
   @override
   Future<AttendanceScanResult> verifyAttendanceScan({required String qrToken, double? lat, double? lng}) async {
+    try {
+      final res = await _client.rpc('verify_ticket_scan', params: {
+        'p_token': qrToken,
+        'p_provider_lat': lat,
+        'p_provider_lng': lng,
+      });
+      if (res != null && res is Map) {
+        return AttendanceScanResult.fromJson(Map<String, dynamic>.from(res));
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[JobExecutionRepository] verify_ticket_scan RPC error: $e, trying edge api');
+      }
+    }
+
     try {
       final res = await _edgeApi.qrVerify(qrToken: qrToken, lat: lat, lng: lng);
       if (res['success'] == true && res['data'] != null) {
@@ -529,6 +429,68 @@ class SupabaseJobExecutionRepository implements JobExecutionRepository {
         message: e.toString().replaceAll('Exception: ', ''),
       );
     }
+  }
+
+  @override
+  Future<Map<String, dynamic>?> getNextAcceptedTicket() async {
+    try {
+      final res = await _client.rpc('get_next_accepted_ticket');
+      if (res != null && res is Map && res['has_ticket'] == true) {
+        return Map<String, dynamic>.from(res);
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[JobExecutionRepository] get_next_accepted_ticket failed: $e');
+      }
+    }
+    return null;
+  }
+
+  @override
+  Future<JobVerificationResult> recordStep2Verification({
+    required String assignmentId,
+    required String selfiePath,
+    required double lat,
+    required double lng,
+    double? faceScore,
+  }) async {
+    try {
+      final res = await _client.rpc('record_step2_verification', params: {
+        'p_assignment_id': assignmentId,
+        'p_selfie_path': selfiePath,
+        'p_lat': lat,
+        'p_lng': lng,
+        'p_face_score': faceScore,
+      });
+      if (res != null && res is Map) {
+        final d = Map<String, dynamic>.from(res);
+        if (d['success'] == true) {
+          return JobVerificationResult.success(
+            status: d['status'] as String? ?? 'in_progress_verified',
+            startedAt: DateTime.now(),
+          );
+        } else {
+          return JobVerificationResult.error(
+            code: d['reason_code'] as String? ?? 'verification_failed',
+            message: d['message'] as String? ?? 'Geofence verification failed',
+            distanceMeters: (d['distance_meters'] as num?)?.toDouble(),
+            radiusMeters: (d['radius_meters'] as num?)?.toInt(),
+          );
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[JobExecutionRepository] record_step2_verification RPC error: $e');
+      }
+    }
+
+    return await verifyJobStart(
+      assignmentId: assignmentId,
+      lat: lat,
+      lng: lng,
+      isMocked: false,
+      selfiePath: selfiePath,
+    );
   }
 
   @override

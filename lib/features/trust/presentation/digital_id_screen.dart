@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/config/env.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/widgets/user_avatar.dart';
+import 'package:udyogasethu/features/job_execution/data/job_execution_repository.dart';
 import 'package:udyogasethu/features/trust/data/digital_id_repository.dart';
 import 'package:udyogasethu/features/trust/domain/digital_id_card.dart';
 
@@ -31,6 +34,7 @@ class DigitalIdScreen extends ConsumerStatefulWidget {
 class _DigitalIdScreenState extends ConsumerState<DigitalIdScreen> {
   final GlobalKey _cardBoundaryKey = GlobalKey();
   DigitalIdCardData? _idCard;
+  Map<String, dynamic>? _nextTicket;
   bool _isLoading = true;
   bool _isRefreshing = false;
   String? _errorMessage;
@@ -70,9 +74,16 @@ class _DigitalIdScreenState extends ConsumerState<DigitalIdScreen> {
       final repo = ref.read(digitalIdRepositoryProvider);
       final data = await repo.fetchDigitalId(_getUserId());
       final isQrEnabled = ref.read(profileQrEnabledProvider);
+
+      Map<String, dynamic>? ticket;
+      try {
+        ticket = await ref.read(jobExecutionRepositoryProvider).getNextAcceptedTicket();
+      } catch (_) {}
+
       if (mounted) {
         setState(() {
           _idCard = data;
+          _nextTicket = ticket;
           _totalDurationSeconds = data.qrExpiresInSeconds;
           _secondsLeft = data.qrExpiresAt != null
               ? data.qrExpiresAt!.difference(DateTime.now()).inSeconds.clamp(0, data.qrExpiresInSeconds)
@@ -405,8 +416,104 @@ class _DigitalIdScreenState extends ConsumerState<DigitalIdScreen> {
                 const Divider(height: 1),
                 const SizedBox(height: 18),
 
-                if (isQrEnabled) ...[
-                  // QR Code
+                if (_nextTicket != null) ...[
+                  // Next Job Ticket Section (E8)
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF0F172A),
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withAlpha(20),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: AppColors.headerGreenDark,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: const Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.confirmation_number_rounded, color: Colors.white, size: 14),
+                                  SizedBox(width: 4),
+                                  Text(
+                                    'UPCOMING JOB TICKET',
+                                    style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              '#${_nextTicket!['booking_code'] ?? ''}',
+                              style: const TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          _nextTicket!['job_title'] as String? ?? 'Upcoming Job',
+                          style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Employer: ${_nextTicket!['provider_name'] ?? 'Job Provider'}',
+                          style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+                        ),
+                        if (_nextTicket!['start_at'] != null) ...[
+                          const SizedBox(height: 2),
+                          Text(
+                            'Start: ${DateFormat('EEE, d MMM • h:mm a').format(DateTime.tryParse(_nextTicket!['start_at'].toString())?.toLocal() ?? DateTime.now())}',
+                            style: const TextStyle(color: Color(0xFFFDE68A), fontSize: 12, fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                        const SizedBox(height: 14),
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: QrImageView(
+                            data: 'TICKET-${_nextTicket!['booking_code']}',
+                            version: QrVersions.auto,
+                            size: 160,
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.headerGreenDark,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                            ),
+                            icon: const Icon(Icons.open_in_new_rounded, size: 16),
+                            label: const Text('Open Full Ticket & Route', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                            onPressed: () {
+                              context.push('/jobs/ticket/${_nextTicket!['assignment_id']}');
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ] else if (isQrEnabled) ...[
+                  // Identity Verification QR Code
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
@@ -447,7 +554,7 @@ class _DigitalIdScreenState extends ConsumerState<DigitalIdScreen> {
                     style: TextStyle(fontSize: 11, color: AppColors.textMuted, fontWeight: FontWeight.w500),
                   ),
                 ] else ...[
-                  // Job Check-in QR Placeholder Card
+                  // Clean No Active Ticket Info Card
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
@@ -471,11 +578,11 @@ class _DigitalIdScreenState extends ConsumerState<DigitalIdScreen> {
                               ),
                             ],
                           ),
-                          child: Icon(Icons.qr_code_2_rounded, size: 48, color: Colors.blueGrey.shade700),
+                          child: const Icon(Icons.confirmation_number_outlined, size: 44, color: AppColors.headerGreenDark),
                         ),
                         const SizedBox(height: 14),
                         const Text(
-                          'Job Check-in QR',
+                          'No Active Job Ticket',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -484,13 +591,26 @@ class _DigitalIdScreenState extends ConsumerState<DigitalIdScreen> {
                         ),
                         const SizedBox(height: 6),
                         const Text(
-                          'Your QR ticket for each job appears here after you are selected.',
+                          'When a job provider accepts your application, your live digital check-in QR ticket will appear here automatically.',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 13,
                             color: AppColors.textMuted,
                             height: 1.35,
                           ),
+                        ),
+                        const SizedBox(height: 16),
+                        OutlinedButton.icon(
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppColors.headerGreenDark,
+                            side: const BorderSide(color: AppColors.cardBorderGreen),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          ),
+                          icon: const Icon(Icons.search_rounded, size: 16),
+                          label: const Text('Browse Available Jobs', style: TextStyle(fontWeight: FontWeight.bold)),
+                          onPressed: () {
+                            context.push('/seeker/jobs');
+                          },
                         ),
                       ],
                     ),

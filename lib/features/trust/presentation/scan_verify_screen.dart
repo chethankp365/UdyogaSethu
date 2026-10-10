@@ -7,6 +7,7 @@ import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/marketplace/data/produce_marketplace_repository.dart';
 import 'package:udyogasethu/features/marketplace/domain/lot_traceability_data.dart';
 import 'package:udyogasethu/features/marketplace/presentation/widgets/farm_traceability_modal.dart';
+import 'package:udyogasethu/features/job_execution/data/job_execution_repository.dart';
 import 'package:udyogasethu/features/trust/data/digital_id_repository.dart';
 import 'package:udyogasethu/features/trust/domain/digital_id_card.dart';
 
@@ -92,7 +93,41 @@ class _ScanVerifyScreenState extends ConsumerState<ScanVerifyScreen> with Widget
         return;
       }
 
-      // 2. Otherwise verify through digitalId repository
+      // 2. Check if token represents a job ticket
+      if (rawCode.startsWith('TK-') || rawCode.startsWith('TICKET-') || payload?['pur'] == 'ticket') {
+        final jobRepo = ref.read(jobExecutionRepositoryProvider);
+        final ticketRes = await jobRepo.verifyAttendanceScan(qrToken: rawCode);
+        if (mounted) {
+          setState(() {
+            _isProcessing = false;
+            if (ticketRes.valid) {
+              _verificationResult = PublicVerificationResult(
+                valid: true,
+                nameInitial: ticketRes.workerName != null && ticketRes.workerName!.isNotEmpty
+                    ? '${ticketRes.workerName![0].toUpperCase()}.'
+                    : 'W.',
+                displayId: ticketRes.bookingCode ?? 'TICKET',
+                isVerifiedBadge: ticketRes.isVerifiedBadge,
+                level: 1,
+                levelName: 'Verified Worker',
+                purpose: 'ticket',
+                assignmentId: ticketRes.assignmentId,
+                bookingCode: ticketRes.bookingCode,
+                workerName: ticketRes.workerName,
+                jobTitle: ticketRes.jobTitle,
+              );
+            } else {
+              _verificationResult = PublicVerificationResult.error(
+                code: ticketRes.errorCode ?? 'TICKET_INVALID',
+                message: ticketRes.errorMessage ?? ticketRes.message ?? 'Ticket verification failed.',
+              );
+            }
+          });
+        }
+        return;
+      }
+
+      // 3. Otherwise verify through digitalId repository
       final repo = ref.read(digitalIdRepositoryProvider);
       final result = await repo.verifyQrToken(rawCode);
 

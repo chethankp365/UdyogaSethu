@@ -134,6 +134,26 @@ class MockJobExecutionRepository implements JobExecutionRepository {
     required String assignmentId,
     required String replacementWorkerId,
   }) async => {'success': true};
+
+  @override
+  Future<Map<String, dynamic>> getRotatingTicketToken(String assignmentId, {bool debugShortTtl = false}) async => {
+        'qr_token': 'REFRESHED_HMAC_TOKEN_999',
+        'expires_in_seconds': 120,
+        'expires_at': DateTime.now().add(const Duration(seconds: 120)).toIso8601String(),
+      };
+
+  @override
+  Future<Map<String, dynamic>?> getNextAcceptedTicket() async => null;
+
+  @override
+  Future<JobVerificationResult> recordStep2Verification({
+    required String assignmentId,
+    required String selfiePath,
+    required double lat,
+    required double lng,
+    double? faceScore,
+  }) async =>
+      JobVerificationResult.success(status: 'in_progress_verified');
 }
 
 void main() {

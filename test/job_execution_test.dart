@@ -205,6 +205,25 @@ class FakeJobExecutionRepository implements JobExecutionRepository {
     required String assignmentId,
     required String replacementWorkerId,
   }) async => {'success': true};
+
+  @override
+  Future<Map<String, dynamic>> getRotatingTicketToken(String assignmentId, {bool debugShortTtl = false}) async => {
+        'qr_token': 'TK-test-token',
+        'expires_in_seconds': 120,
+      };
+
+  @override
+  Future<Map<String, dynamic>?> getNextAcceptedTicket() async => null;
+
+  @override
+  Future<JobVerificationResult> recordStep2Verification({
+    required String assignmentId,
+    required String selfiePath,
+    required double lat,
+    required double lng,
+    double? faceScore,
+  }) async =>
+      JobVerificationResult.success(status: 'in_progress_verified');
 }
 
 void main() {
@@ -455,6 +474,8 @@ void main() {
       expect(find.text('₹750'), findsOneWidget);
       expect(find.text('Complete Job'), findsOneWidget);
       expect(find.text('Open in Maps'), findsOneWidget);
+      await tester.pump(const Duration(seconds: 4));
+      await tester.pumpWidget(const SizedBox());
     });
 
     testWidgets('WorkerScheduleScreen renders day view, week view and travel warning chip', (tester) async {

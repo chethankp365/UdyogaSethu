@@ -36,7 +36,6 @@ class _VerifyPresenceScreenState extends ConsumerState<VerifyPresenceScreen> {
 
   JobGeofenceStatus? _geofenceStatus;
   File? _selfieFile;
-  List<double>? _simulatedEmbedding;
 
   LocationSimulationMode _simulationMode = LocationSimulationMode.real;
 
@@ -121,15 +120,12 @@ class _VerifyPresenceScreenState extends ConsumerState<VerifyPresenceScreen> {
       if (picked != null) {
         setState(() {
           _selfieFile = File(picked.path);
-          // Standard mock embedding vector of 128 float values for demo/on-device
-          _simulatedEmbedding = List.generate(128, (i) => 0.08);
         });
       }
     } catch (_) {
       // In simulator without physical camera: provide simulated selfie bytes
       setState(() {
         _selfieFile = null;
-        _simulatedEmbedding = List.generate(128, (i) => 0.08);
       });
     }
   }
@@ -161,12 +157,10 @@ class _VerifyPresenceScreenState extends ConsumerState<VerifyPresenceScreen> {
         selfiePath = 'demo_selfie_start_${DateTime.now().millisecondsSinceEpoch}.jpg';
       }
 
-      final result = await repo.verifyJobStart(
+      final result = await repo.recordStep2Verification(
         assignmentId: widget.assignmentId,
         lat: _currentLat!,
         lng: _currentLng!,
-        isMocked: _isMocked,
-        embedding: _simulatedEmbedding ?? List.generate(128, (i) => 0.08),
         selfiePath: selfiePath,
       );
 

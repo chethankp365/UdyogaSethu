@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -84,10 +85,15 @@ class _JobTicketScreenState extends ConsumerState<JobTicketScreen> {
         });
       }
     } catch (_) {
+      bool trulyOffline = false;
+      try {
+        final conn = await Connectivity().checkConnectivity();
+        trulyOffline = conn.contains(ConnectivityResult.none);
+      } catch (_) {}
       if (mounted) {
         setState(() {
           _isRefreshing = false;
-          _isOfflineNotice = true;
+          _isOfflineNotice = trulyOffline;
         });
       }
     }
@@ -157,7 +163,7 @@ class _JobTicketScreenState extends ConsumerState<JobTicketScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             child: Column(
               children: [
-                if (_isOfflineNotice || ticket.isQrExpired)
+                if (_isOfflineNotice)
                   _buildOfflineNoticeBanner(context, ticket),
                 const SizedBox(height: 12),
                 _buildTicketCard(context, ticket, qrData),
