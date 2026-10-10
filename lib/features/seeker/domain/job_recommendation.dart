@@ -82,7 +82,7 @@ class JobRecommendation {
       slotsFilled: (json['slots_filled'] as num?)?.toInt() ?? 0,
       addressText: json['address_text'] as String?,
       distanceM: (json['distance_m'] as num?)?.toDouble() ?? 1500.0,
-      employerName: json['employer_name'] as String? ?? 'Local Employer',
+      employerName: json['employer_name'] as String? ?? 'Employer',
       employerAvatar: json['employer_avatar'] as String?,
       employerVerified: json['employer_verified'] as bool? ?? true,
       employerRating: (json['employer_rating'] as num?)?.toDouble() ?? 4.8,

@@ -21,6 +21,7 @@ class JobPostDraft {
   final bool licenceRequired;
   final bool studentsOk;
   final String addressText;
+  final String landmark;
   final double? latitude;
   final double? longitude;
   final int geofenceRadiusM;
@@ -45,8 +46,9 @@ class JobPostDraft {
     this.paymentMode = 'escrow',
     this.verifiedOnly = false,
     this.licenceRequired = false,
-    this.studentsOk = true,
+    this.studentsOk = false,
     this.addressText = '',
+    this.landmark = '',
     this.latitude,
     this.longitude,
     this.geofenceRadiusM = 150,
@@ -94,6 +96,7 @@ class JobPostDraft {
     bool? licenceRequired,
     bool? studentsOk,
     String? addressText,
+    String? landmark,
     double? latitude,
     double? longitude,
     int? geofenceRadiusM,
@@ -120,6 +123,7 @@ class JobPostDraft {
       licenceRequired: licenceRequired ?? this.licenceRequired,
       studentsOk: studentsOk ?? this.studentsOk,
       addressText: addressText ?? this.addressText,
+      landmark: landmark ?? this.landmark,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       geofenceRadiusM: geofenceRadiusM ?? this.geofenceRadiusM,

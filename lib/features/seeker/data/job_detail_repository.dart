@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:udyogasethu/core/errors/app_exception.dart';
 import 'package:udyogasethu/features/seeker/domain/job_detail.dart';
 import 'package:udyogasethu/features/seeker/domain/job_eligibility.dart';
 
@@ -102,22 +103,8 @@ class SupabaseJobDetailRepository implements JobDetailRepository {
       return (detail: diskDetail, isOffline: true);
     }
 
-    // 4. Default mocked detail if completely absent
-    final fallbackDetail = JobDetail(
-      id: jobId,
-      providerId: 'demo-provider',
-      providerName: 'Sharma Builders ✓',
-      title: 'Construction Helper',
-      description: 'We are looking for a reliable construction helper to assist in daily site work. No prior experience required.',
-      wagePaise: 60000,
-      startAt: DateTime.now().add(const Duration(hours: 14)),
-      estDurationMinutes: 480,
-      materialsProvided: true,
-      paymentMode: 'escrow',
-      slotsTotal: 5,
-      slotsFilled: 0,
-    );
-    return (detail: fallbackDetail, isOffline: true);
+    // 4. If absent from network and cache, throw UnknownException
+    throw const UnknownException('Job details not found or offline cache unavailable');
   }
 
   @override

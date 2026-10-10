@@ -32,10 +32,10 @@ class JobDetail {
     required this.providerId,
     required this.providerName,
     this.providerAvatar,
-    this.providerVerified = true,
-    this.providerRating = 4.8,
-    this.providerReviewsCount = 127,
-    this.backgroundVerified = true,
+    this.providerVerified = false,
+    this.providerRating = 0.0,
+    this.providerReviewsCount = 0,
+    this.backgroundVerified = false,
     required this.title,
     required this.description,
     this.categoryId,
@@ -51,14 +51,15 @@ class JobDetail {
     this.materialsProvided = false,
     this.paymentMode = 'escrow',
     this.requirements = const {},
-    this.addressText = 'Koramangala, Bengaluru',
-    this.distanceKm = 2.0,
-    this.walkingMinutes = 12,
+    this.addressText = '',
+    this.distanceKm = 0.0,
+    this.walkingMinutes = 0,
     this.status = 'open',
   });
 
   int get slotsOpen => (slotsTotal - slotsFilled).clamp(0, slotsTotal);
   int get wageRupees => wagePaise ~/ 100;
+  bool get studentsOk => requirements['students_ok'] == true;
 
   String get paymentModeDisplay {
     switch (paymentMode.toLowerCase()) {
@@ -82,19 +83,19 @@ class JobDetail {
     return JobDetail(
       id: json['id'] as String? ?? '',
       providerId: json['provider_id'] as String? ?? '',
-      providerName: json['provider_name'] as String? ?? 'Verified Employer',
+      providerName: json['provider_name'] as String? ?? 'Employer',
       providerAvatar: json['provider_avatar'] as String?,
-      providerVerified: json['provider_verified'] as bool? ?? true,
-      providerRating: (json['provider_rating'] as num?)?.toDouble() ?? 4.8,
-      providerReviewsCount: (json['provider_reviews_count'] as num?)?.toInt() ?? 127,
-      backgroundVerified: json['background_verified'] as bool? ?? true,
+      providerVerified: json['provider_verified'] as bool? ?? false,
+      providerRating: (json['provider_rating'] as num?)?.toDouble() ?? 0.0,
+      providerReviewsCount: (json['provider_reviews_count'] as num?)?.toInt() ?? 0,
+      backgroundVerified: json['background_verified'] as bool? ?? false,
       title: json['title'] as String? ?? 'Daily Work',
       description: json['description'] as String? ?? '',
       categoryId: json['category_id'] as String?,
       categoryName: json['category_name'] as String? ?? 'General Work',
       categorySlug: json['category_slug'] as String? ?? 'general',
       categoryIcon: json['category_icon'] as String? ?? 'handyman',
-      wagePaise: (json['wage_paise'] as num?)?.toInt() ?? 60000,
+      wagePaise: (json['wage_paise'] as num?)?.toInt() ?? 0,
       wageType: json['wage_type'] as String? ?? 'daily',
       estDurationMinutes: (json['est_duration_minutes'] as num?)?.toInt() ?? 480,
       startAt: json['start_at'] != null
@@ -107,9 +108,9 @@ class JobDetail {
       requirements: json['requirements'] is Map<String, dynamic>
           ? json['requirements'] as Map<String, dynamic>
           : {},
-      addressText: json['address_text'] as String? ?? 'Koramangala, Bengaluru',
-      distanceKm: (json['distance_km'] as num?)?.toDouble() ?? 2.0,
-      walkingMinutes: (json['walking_minutes'] as num?)?.toInt() ?? 12,
+      addressText: json['address_text'] as String? ?? '',
+      distanceKm: (json['distance_km'] as num?)?.toDouble() ?? 0.0,
+      walkingMinutes: (json['walking_minutes'] as num?)?.toInt() ?? 0,
       status: json['status'] as String? ?? 'open',
     );
   }

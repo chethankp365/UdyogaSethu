@@ -62,7 +62,7 @@ class ProviderJob {
 
   bool get verifiedOnly => requirements['verified_only'] == true;
   bool get licenceRequired => requirements['licence_required'] == true;
-  bool get studentsOk => requirements['students_ok'] != false;
+  bool get studentsOk => requirements['students_ok'] == true;
 
   String get formattedWage {
     final rupees = (wagePaise / 100).toStringAsFixed(0);

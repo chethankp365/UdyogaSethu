@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -496,6 +497,20 @@ void main() {
       expect(find.text('Worker Requirements'), findsOneWidget);
       expect(find.text('Background & Identity Verified Only'), findsOneWidget);
       expect(find.text('Geofence Check-in Radius'), findsOneWidget);
+
+      // Enter address and landmark, and set coordinates
+      final textFields = find.byType(TextField);
+      await tester.enterText(textFields.at(1), '#42, 5th Cross, Koramangala 4th Block, Bengaluru');
+      await tester.enterText(textFields.at(2), 'Opposite Forum Mall');
+      final element = tester.element(find.byType(PostJobWizardScreen));
+      final container = ProviderScope.containerOf(element);
+      container.read(postJobWizardProvider.notifier).setLocation(
+        address: '#42, 5th Cross, Koramangala 4th Block, Bengaluru',
+        landmark: 'Opposite Forum Mall',
+        lat: 12.9352,
+        lng: 77.6101,
+      );
+      await tester.pumpAndSettle();
 
       // Step 5: Preview & Publish
       await tester.tap(find.text('Next'));

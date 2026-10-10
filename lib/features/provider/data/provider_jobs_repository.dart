@@ -153,6 +153,7 @@ class SupabaseProviderJobsRepository implements ProviderJobsRepository {
         'p_location_lng': draft.longitude,
         'p_geofence_radius_m': draft.geofenceRadiusM,
         'p_suitable_for': draft.suitableFor,
+        'p_landmark': draft.landmark,
       });
 
       return res?.toString() ?? '';
@@ -184,6 +185,7 @@ class SupabaseProviderJobsRepository implements ProviderJobsRepository {
         'p_location_lng': draft.longitude,
         'p_geofence_radius_m': draft.geofenceRadiusM,
         'p_suitable_for': draft.suitableFor,
+        'p_landmark': draft.landmark,
       });
 
       return res == true;

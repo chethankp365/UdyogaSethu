@@ -38,7 +38,7 @@ class SupabaseNearbyJobsRepository implements NearbyJobsRepository {
   }) async {
     final client = _client;
     if (client == null) {
-      return _mockJobPins();
+      return const [];
     }
 
     try {
@@ -190,37 +190,6 @@ class SupabaseNearbyJobsRepository implements NearbyJobsRepository {
         slug: 'electrician',
         names: {'en': 'Electrician', 'kn': 'ವಿದ್ಯುತ್ ತಜ್ಞ'},
         icon: 'electrical_services',
-      ),
-    ];
-  }
-
-  List<JobPin> _mockJobPins() {
-    return const [
-      JobPin(
-        id: 'mock-1',
-        providerId: 'p1',
-        title: 'Electrician',
-        wagePaise: 88000,
-        addressText: 'Sai Electricals • Koramangala, Bengaluru',
-        lat: 12.9340,
-        lng: 77.6180,
-        distanceM: 800,
-        employerName: 'Sai Electricals',
-        employerVerified: true,
-        employerRating: 4.9,
-      ),
-      JobPin(
-        id: 'mock-2',
-        providerId: 'p2',
-        title: 'Construction Helper',
-        wagePaise: 70000,
-        addressText: 'Sharma Builders • Koramangala 4th Block, Bengaluru',
-        lat: 12.9310,
-        lng: 77.6250,
-        distanceM: 1900,
-        employerName: 'Sharma Builders',
-        employerVerified: true,
-        employerRating: 4.8,
       ),
     ];
   }

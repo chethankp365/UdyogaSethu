@@ -251,12 +251,14 @@ class PostJobWizardNotifier extends Notifier<JobPostDraft> {
 
   void setLocation({
     required String address,
+    String? landmark,
     double? lat,
     double? lng,
     int? radiusM,
   }) {
     state = state.copyWith(
       addressText: address,
+      landmark: landmark ?? state.landmark,
       latitude: lat ?? state.latitude,
       longitude: lng ?? state.longitude,
       geofenceRadiusM: radiusM ?? state.geofenceRadiusM,

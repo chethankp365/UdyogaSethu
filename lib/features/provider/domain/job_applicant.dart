@@ -10,6 +10,9 @@ class JobApplicant {
   final DateTime createdAt;
   final String workerName;
   final String? workerAvatar;
+  final String seekerType;
+  final String badgeName;
+  final int levelNumber;
   final bool isVerified;
   final double rating;
   final int reviewCount;
@@ -27,6 +30,9 @@ class JobApplicant {
     required this.createdAt,
     required this.workerName,
     this.workerAvatar,
+    this.seekerType = 'informal',
+    this.badgeName = 'Registered Worker',
+    this.levelNumber = 1,
     this.isVerified = false,
     this.rating = 4.8,
     this.reviewCount = 0,
@@ -60,6 +66,9 @@ class JobApplicant {
           : DateTime.now(),
       workerName: json['worker_name'] as String? ?? 'Worker',
       workerAvatar: json['worker_avatar'] as String?,
+      seekerType: json['seeker_type'] as String? ?? 'informal',
+      badgeName: json['badge_name'] as String? ?? 'Registered Worker',
+      levelNumber: (json['level_number'] as num?)?.toInt() ?? 1,
       isVerified: json['is_verified'] as bool? ?? false,
       rating: (json['rating'] as num?)?.toDouble() ?? 4.8,
       reviewCount: (json['review_count'] as num?)?.toInt() ?? 0,
@@ -84,6 +93,9 @@ class JobApplicant {
       'created_at': createdAt.toIso8601String(),
       'worker_name': workerName,
       'worker_avatar': workerAvatar,
+      'seeker_type': seekerType,
+      'badge_name': badgeName,
+      'level_number': levelNumber,
       'is_verified': isVerified,
       'rating': rating,
       'review_count': reviewCount,
@@ -106,6 +118,9 @@ class JobApplicant {
       createdAt: createdAt,
       workerName: workerName,
       workerAvatar: workerAvatar,
+      seekerType: seekerType,
+      badgeName: badgeName,
+      levelNumber: levelNumber,
       isVerified: isVerified,
       rating: rating,
       reviewCount: reviewCount,

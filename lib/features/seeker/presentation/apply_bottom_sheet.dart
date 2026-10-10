@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -34,6 +35,23 @@ class _ApplyBottomSheetState extends ConsumerState<ApplyBottomSheet> {
   void dispose() {
     _messageController.dispose();
     super.dispose();
+  }
+
+  String _getIneligibleReason(JobEligibility eligibility) {
+    if (eligibility.alreadyApplied) return 'Already Applied';
+    if (eligibility.isOwnJob) return 'Cannot Apply to Your Own Job';
+    if (eligibility.isPastStart) return 'Start Time Has Passed';
+    if (eligibility.isSlotsFilled) return 'All Slots Are Filled';
+    if (eligibility.scheduleOverlap) {
+      return eligibility.overlapJobTitle != null
+          ? 'Schedule Clash: "${eligibility.overlapJobTitle}"'
+          : 'Schedule Clash with Job';
+    }
+    if (eligibility.studentGated) return 'Audience Mismatch for Category';
+    if (eligibility.licenceNeeded && !eligibility.hasLicence) return 'Driving Licence Required';
+    if (eligibility.verifiedNeeded && !eligibility.isVerified) return 'Verified Badge Required';
+    if (eligibility.reasons.isNotEmpty) return eligibility.reasons.first;
+    return 'Ineligible to Apply';
   }
 
   @override
@@ -187,9 +205,26 @@ class _ApplyBottomSheetState extends ConsumerState<ApplyBottomSheet> {
 
                     const SizedBox(height: 16),
 
-                    // Apply Button
+                    // Apply Button & Ineligibility Reason
                     eligibilityAsync.when(
                       data: (eligibility) {
+                        if (kDebugMode) {
+                          debugPrint('[ApplyBottomSheet] --- Job Eligibility Evaluation ---');
+                          debugPrint('[ApplyBottomSheet] Job ID: ${widget.job.id} ("${widget.job.title}")');
+                          debugPrint('[ApplyBottomSheet] isEligible: ${eligibility.isEligible}');
+                          debugPrint('[ApplyBottomSheet] reasonCode: ${eligibility.reasonCode}');
+                          debugPrint('[ApplyBottomSheet] alreadyApplied: ${eligibility.alreadyApplied}');
+                          debugPrint('[ApplyBottomSheet] isOwnJob: ${eligibility.isOwnJob}');
+                          debugPrint('[ApplyBottomSheet] isPastStart: ${eligibility.isPastStart}');
+                          debugPrint('[ApplyBottomSheet] isSlotsFilled: ${eligibility.isSlotsFilled}');
+                          debugPrint('[ApplyBottomSheet] licenceNeeded: ${eligibility.licenceNeeded}, hasLicence: ${eligibility.hasLicence}');
+                          debugPrint('[ApplyBottomSheet] verifiedNeeded: ${eligibility.verifiedNeeded}, isVerified: ${eligibility.isVerified}');
+                          debugPrint('[ApplyBottomSheet] studentGated: ${eligibility.studentGated}');
+                          debugPrint('[ApplyBottomSheet] scheduleOverlap: ${eligibility.scheduleOverlap} (title: ${eligibility.overlapJobTitle})');
+                          debugPrint('[ApplyBottomSheet] serverReasons: ${eligibility.reasons}');
+                          debugPrint('[ApplyBottomSheet] Resolved reason: ${_getIneligibleReason(eligibility)}');
+                        }
+
                         final canApply = eligibility.isEligible && !eligibility.alreadyApplied;
 
                         if (eligibility.alreadyApplied) {
@@ -204,51 +239,88 @@ class _ApplyBottomSheetState extends ConsumerState<ApplyBottomSheet> {
                           );
                         }
 
-                        return SizedBox(
-                          width: double.infinity,
-                          height: 48,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: canApply ? AppColors.headerGreenDark : Colors.grey.shade400,
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                              elevation: canApply ? 2 : 0,
-                            ),
-                            onPressed: canApply && !applyState.isLoading
-                                ? () async {
-                                    final ok = await ref.read(jobApplyControllerProvider.notifier).apply(
-                                          jobId: widget.job.id,
-                                          message: _messageController.text.trim().isNotEmpty
-                                              ? _messageController.text.trim()
-                                              : null,
-                                        );
-                                    if (ok) {
-                                      ref.read(seekerJobsControllerProvider.notifier).loadJobs();
-                                      setState(() => _isSubmitted = true);
-                                    } else {
-                                      final err = applyState.error?.toString() ?? 'Failed to apply';
-                                      if (context.mounted) {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(
-                                            content: Text(err),
-                                            backgroundColor: Colors.red.shade700,
-                                          ),
-                                        );
+                        final blockReason = _getIneligibleReason(eligibility);
+
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (!canApply) ...[
+                              Container(
+                                width: double.infinity,
+                                margin: const EdgeInsets.only(bottom: 12),
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                                decoration: BoxDecoration(
+                                  color: Colors.red.shade50,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: Colors.red.shade200),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.info_outline_rounded, color: Colors.red.shade700, size: 18),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        blockReason,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.red.shade900,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                            SizedBox(
+                              width: double.infinity,
+                              height: 48,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: canApply ? AppColors.headerGreenDark : Colors.grey.shade400,
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                                  elevation: canApply ? 2 : 0,
+                                ),
+                                onPressed: canApply && !applyState.isLoading
+                                    ? () async {
+                                        final ok = await ref.read(jobApplyControllerProvider.notifier).apply(
+                                              jobId: widget.job.id,
+                                              message: _messageController.text.trim().isNotEmpty
+                                                  ? _messageController.text.trim()
+                                                  : null,
+                                            );
+                                        if (ok) {
+                                          ref.read(seekerJobsControllerProvider.notifier).loadJobs();
+                                          setState(() => _isSubmitted = true);
+                                        } else {
+                                          final err = applyState.error?.toString() ?? 'Failed to apply';
+                                          if (context.mounted) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(
+                                                content: Text(err),
+                                                backgroundColor: Colors.red.shade700,
+                                              ),
+                                            );
+                                          }
+                                        }
                                       }
-                                    }
-                                  }
-                                : null,
-                            child: applyState.isLoading
-                                ? const SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                                  )
-                                : Text(
-                                    canApply ? 'Confirm Application ✈️' : 'Ineligible to Apply',
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                                  ),
-                          ),
+                                    : null,
+                                child: applyState.isLoading
+                                    ? const SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                                      )
+                                    : Text(
+                                        canApply ? 'Confirm Application ✈️' : blockReason,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                      ),
+                              ),
+                            ),
+                          ],
                         );
                       },
                       loading: () => const SizedBox(
@@ -343,6 +415,33 @@ class _ApplyBottomSheetState extends ConsumerState<ApplyBottomSheet> {
             isSatisfied: !eligibility.scheduleOverlap,
             statusText: eligibility.scheduleOverlap ? 'Overlap Conflict ✖' : 'Available ✓',
           ),
+          if (eligibility.isOwnJob) ...[
+            const Divider(height: 16),
+            _buildCheckRow(
+              label: 'Job Ownership',
+              subtitle: 'Cannot apply to a job posted by your account',
+              isSatisfied: false,
+              statusText: 'Own Job ✖',
+            ),
+          ],
+          if (eligibility.isPastStart) ...[
+            const Divider(height: 16),
+            _buildCheckRow(
+              label: 'Job Schedule Timing',
+              subtitle: 'Scheduled start time has already passed',
+              isSatisfied: false,
+              statusText: 'Expired ✖',
+            ),
+          ],
+          if (eligibility.isSlotsFilled) ...[
+            const Divider(height: 16),
+            _buildCheckRow(
+              label: 'Slot Availability',
+              subtitle: 'All positions for this job are filled',
+              isSatisfied: false,
+              statusText: 'Slots Full ✖',
+            ),
+          ],
         ],
       ),
     );

@@ -57,8 +57,8 @@ class SupabaseSeekerJobsRepository implements SeekerJobsRepository {
         result[SeekerJobSegment.applied]!.add(SeekerJobItem(
           id: a['id'] as String,
           jobId: a['job_id'] as String,
-          title: job['title'] as String? ?? 'General Work',
-          providerName: provider?['full_name'] as String? ?? 'Verified Employer',
+          title: job['title'] as String? ?? 'Work',
+          providerName: provider?['full_name'] as String? ?? 'Employer',
           providerVerified: true,
           wagePaise: (job['wage_paise'] as num?)?.toInt() ?? 60000,
           startAt: job['start_at'] != null ? DateTime.parse(job['start_at']) : DateTime.now(),
@@ -67,7 +67,7 @@ class SupabaseSeekerJobsRepository implements SeekerJobsRepository {
           segment: SeekerJobSegment.applied,
           categorySlug: cat?['slug'] as String? ?? 'general',
           categoryIcon: cat?['icon'] as String? ?? 'handyman',
-          addressText: job['address_text'] as String? ?? 'Koramangala, Bengaluru',
+          addressText: job['address_text'] as String? ?? '',
           message: a['message'] as String?,
         ));
       }
@@ -103,7 +103,7 @@ class SupabaseSeekerJobsRepository implements SeekerJobsRepository {
           id: asg['id'] as String,
           jobId: asg['job_id'] as String,
           title: job['title'] as String? ?? 'Direct Work Booking',
-          providerName: provider?['full_name'] as String? ?? 'Verified Employer',
+          providerName: provider?['full_name'] as String? ?? 'Employer',
           providerVerified: true,
           wagePaise: (asg['agreed_wage_paise'] as num?)?.toInt() ?? (job['wage_paise'] as num?)?.toInt() ?? 75000,
           startAt: job['start_at'] != null ? DateTime.parse(job['start_at']) : DateTime.now(),
@@ -113,7 +113,7 @@ class SupabaseSeekerJobsRepository implements SeekerJobsRepository {
           bookingCode: asg['booking_code'] as String?,
           categorySlug: cat?['slug'] as String? ?? 'general',
           categoryIcon: cat?['icon'] as String? ?? 'handyman',
-          addressText: job['address_text'] as String? ?? 'Koramangala, Bengaluru',
+          addressText: job['address_text'] as String? ?? '',
         ));
       }
     } catch (e) {

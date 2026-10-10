@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -196,85 +195,11 @@ class _SeekerJobsScreenState extends ConsumerState<SeekerJobsScreen> {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        // Debug helper panel in Requests tab (strictly visible in kDebugMode)
-        if (state.selectedSegment == SeekerJobSegment.requests && kDebugMode)
-          _buildDebugHelperCard(context),
-
         if (list.isEmpty)
           _buildEmptyState(state.selectedSegment)
         else
           ...list.map((item) => _buildJobCard(context, item, state.selectedSegment)),
       ],
-    );
-  }
-
-  Widget _buildDebugHelperCard(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFFBEB), // Amber 50
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFF59E0B), width: 1.5),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(6),
-                decoration: const BoxDecoration(
-                  color: Color(0xFFF59E0B),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.bug_report_rounded, color: Colors.white, size: 14),
-              ),
-              const SizedBox(width: 8),
-              const Expanded(
-                child: Text(
-                  'DEBUG BUILD HELPER • TEST DOUBLE-BOOKING',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 11,
-                    letterSpacing: 0.5,
-                    color: Color(0xFF92400E),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          const Text(
-            'Generates 2 direct-booking requests with overlapping times (Slot A: 10 AM-2 PM, Slot B: 1 PM-5 PM) from demo employers to test acceptance & conflict refusal.',
-            style: TextStyle(fontSize: 12, color: Color(0xFF78350F), height: 1.3),
-          ),
-          const SizedBox(height: 10),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFD97706),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                padding: const EdgeInsets.symmetric(vertical: 8),
-              ),
-              onPressed: () async {
-                await ref.read(seekerJobsControllerProvider.notifier).debugSeedOverlappingRequests();
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Seeded 2 overlapping requests in Requests segment! ✓')),
-                  );
-                }
-              },
-              icon: const Icon(Icons.flash_on_rounded, size: 16),
-              label: const Text('Seed 2 Overlapping Invitations', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -556,14 +481,16 @@ class _SeekerJobsScreenState extends ConsumerState<SeekerJobsScreen> {
               style: const TextStyle(fontSize: 13, color: AppColors.textMuted),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
+            ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.headerGreenDark,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               ),
-              onPressed: () => context.go(AppRoutes.seekerHome),
-              child: const Text('Browse Recommended Jobs →'),
+              onPressed: () => context.go(AppRoutes.seekerMap),
+              icon: const Icon(Icons.explore_outlined, size: 18),
+              label: const Text('Find jobs near you 📍', style: TextStyle(fontWeight: FontWeight.bold)),
             ),
           ],
         ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
@@ -29,9 +31,13 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
   final _descController = TextEditingController();
   final _wageController = TextEditingController();
   final _addressController = TextEditingController();
+  final _landmarkController = TextEditingController();
+  final _searchAddressController = TextEditingController();
   final MapController _mapController = MapController();
 
   bool _isPublishing = false;
+  bool _isLocating = false;
+  bool _isSearchingAddress = false;
   static const double _defaultBengaluruLat = 12.9716;
   static const double _defaultBengaluruLng = 77.5946;
 
@@ -68,12 +74,14 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
         ? (profile.isHousehold ? profile.longitude : profile.siteLongitude)
         : null;
 
+    // Never default coordinates! Only use real profile coordinates if present
     notifier.initForNewJob(
       defaultAddress: defaultAddr,
-      lat: defaultLat ?? _defaultBengaluruLat,
-      lng: defaultLng ?? _defaultBengaluruLng,
+      lat: defaultLat,
+      lng: defaultLng,
     );
     _addressController.text = defaultAddr;
+    _landmarkController.text = '';
     _wageController.text = '700';
   }
 
@@ -83,7 +91,156 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
     _descController.dispose();
     _wageController.dispose();
     _addressController.dispose();
+    _landmarkController.dispose();
+    _searchAddressController.dispose();
     super.dispose();
+  }
+
+  bool _isInvalidAddress(String address) {
+    final trimmed = address.trim();
+    if (trimmed.length < 8) return true;
+    final houseOnlyRegex = RegExp(r'^(#|no\.?|plot|flat|door|h\.?no\.?)?\s*\d+[\w\s\-/]*$', caseSensitive: false);
+    return houseOnlyRegex.hasMatch(trimmed);
+  }
+
+  Future<void> _useCurrentLocation() async {
+    setState(() => _isLocating = true);
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please enable location services on your device')),
+          );
+        }
+        return;
+      }
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Location permission denied')),
+            );
+          }
+          return;
+        }
+      }
+      if (permission == LocationPermission.deniedForever) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permission permanently denied. Please allow in settings.')),
+          );
+        }
+        return;
+      }
+      final pos = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
+      );
+      String address = '';
+      String landmark = '';
+      try {
+        final placemarks = await Geocoding().placemarkFromCoordinates(pos.latitude, pos.longitude);
+        if (placemarks.isNotEmpty) {
+          final p = placemarks.first;
+          landmark = p.name ?? '';
+          final parts = <String>[];
+          if (p.street != null && p.street!.isNotEmpty && p.street != p.name) parts.add(p.street!);
+          if (p.subLocality != null && p.subLocality!.isNotEmpty) parts.add(p.subLocality!);
+          if (p.locality != null && p.locality!.isNotEmpty) parts.add(p.locality!);
+          if (p.postalCode != null && p.postalCode!.isNotEmpty) parts.add(p.postalCode!);
+          address = [if (landmark.isNotEmpty) landmark, ...parts].join(', ');
+        }
+      } catch (_) {}
+
+      if (address.isEmpty) {
+        address = 'Coordinates: ${pos.latitude.toStringAsFixed(4)}, ${pos.longitude.toStringAsFixed(4)}';
+      }
+
+      if (mounted) {
+        setState(() {
+          _addressController.text = address;
+          if (landmark.isNotEmpty) _landmarkController.text = landmark;
+        });
+        ref.read(postJobWizardProvider.notifier).setLocation(
+          address: address,
+          landmark: landmark.isNotEmpty ? landmark : _landmarkController.text,
+          lat: pos.latitude,
+          lng: pos.longitude,
+        );
+        _mapController.move(LatLng(pos.latitude, pos.longitude), 15.0);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Location updated from GPS successfully!'), backgroundColor: AppColors.headerGreenDark),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error detecting location: $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLocating = false);
+    }
+  }
+
+  Future<void> _searchAddress(String query) async {
+    final clean = query.trim();
+    if (clean.isEmpty) return;
+    setState(() => _isSearchingAddress = true);
+    try {
+      final locations = await Geocoding().locationFromAddress(clean);
+      if (locations.isNotEmpty) {
+        final loc = locations.first;
+        String resolvedAddr = clean;
+        String landmark = '';
+        try {
+          final placemarks = await Geocoding().placemarkFromCoordinates(loc.latitude, loc.longitude);
+          if (placemarks.isNotEmpty) {
+            final p = placemarks.first;
+            landmark = p.name ?? '';
+            final parts = <String>[];
+            if (p.street != null && p.street!.isNotEmpty && p.street != p.name) parts.add(p.street!);
+            if (p.subLocality != null && p.subLocality!.isNotEmpty) parts.add(p.subLocality!);
+            if (p.locality != null && p.locality!.isNotEmpty) parts.add(p.locality!);
+            if (p.postalCode != null && p.postalCode!.isNotEmpty) parts.add(p.postalCode!);
+            resolvedAddr = [if (landmark.isNotEmpty) landmark, ...parts].join(', ');
+          }
+        } catch (_) {}
+
+        if (mounted) {
+          setState(() {
+            _addressController.text = resolvedAddr;
+            if (landmark.isNotEmpty) _landmarkController.text = landmark;
+          });
+          ref.read(postJobWizardProvider.notifier).setLocation(
+            address: resolvedAddr,
+            landmark: landmark.isNotEmpty ? landmark : _landmarkController.text,
+            lat: loc.latitude,
+            lng: loc.longitude,
+          );
+          _mapController.move(LatLng(loc.latitude, loc.longitude), 15.0);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Address found and map updated!'), backgroundColor: AppColors.headerGreenDark),
+          );
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('No coordinates found for this address. Please refine search.')),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Geocoding search failed: $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isSearchingAddress = false);
+    }
   }
 
   @override
@@ -208,7 +365,7 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
       case 3:
         return _buildStep3SlotsAndPayment(draft, l10n);
       case 4:
-        return _buildStep4RequirementsAndLocation(draft, l10n);
+        return _buildStep4RequirementsAndLocation(draft, l10n, categoriesAsync);
       case 5:
       default:
         return _buildStep5Preview(draft, l10n);
@@ -733,9 +890,16 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
   }
 
   // STEP 4: Requirements & Location
-  Widget _buildStep4RequirementsAndLocation(JobPostDraft draft, AppLocalizations l10n) {
+  Widget _buildStep4RequirementsAndLocation(
+    JobPostDraft draft,
+    AppLocalizations l10n,
+    AsyncValue<List<ServiceCategoryItem>> categoriesAsync,
+  ) {
     final notifier = ref.read(postJobWizardProvider.notifier);
     final mapCenter = LatLng(draft.latitude ?? _defaultBengaluruLat, draft.longitude ?? _defaultBengaluruLng);
+    final selectedCat = categoriesAsync.asData?.value.where((c) => c.id == draft.categoryId).firstOrNull;
+    final showStudentsWelcome = selectedCat != null &&
+        (selectedCat.audience.contains('student') || selectedCat.audience.contains('part_time'));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -761,37 +925,156 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
           activeColor: AppColors.headerGreenDark,
           onChanged: (val) => notifier.setRequirements(licenceRequired: val ?? false),
         ),
-        const SizedBox(height: 8),
-        CheckboxListTile(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          tileColor: Colors.white,
-          title: Text(l10n.postJobReqStudents, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-          subtitle: const Text('Flexible shift friendly for college students', style: TextStyle(fontSize: 12)),
-          value: draft.studentsOk,
-          activeColor: AppColors.headerGreenDark,
-          onChanged: (val) => notifier.setRequirements(studentsOk: val ?? true),
-        ),
+        if (showStudentsWelcome) ...[
+          const SizedBox(height: 8),
+          CheckboxListTile(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            tileColor: Colors.white,
+            title: Text(l10n.postJobReqStudents, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+            subtitle: const Text('Flexible shift friendly for college students', style: TextStyle(fontSize: 12)),
+            value: draft.studentsOk,
+            activeColor: AppColors.headerGreenDark,
+            onChanged: (val) => notifier.setRequirements(studentsOk: val ?? false),
+          ),
+        ],
         const SizedBox(height: 24),
-        Text(l10n.postJobLocationLabel, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(l10n.postJobLocationLabel, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textDark)),
+            if (draft.latitude != null && draft.longitude != null)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: AppColors.paleMint,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppColors.cardBorderGreen),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.check_circle, size: 13, color: AppColors.headerGreenDark),
+                    SizedBox(width: 4),
+                    Text('GPS Set', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.headerGreenDark)),
+                  ],
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 10),
+
+        // Quick GPS Button
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.paleMint,
+              foregroundColor: AppColors.headerGreenDark,
+              elevation: 0,
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: const BorderSide(color: AppColors.cardBorderGreen, width: 1.5),
+              ),
+            ),
+            onPressed: _isLocating ? null : _useCurrentLocation,
+            icon: _isLocating
+                ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.headerGreenDark))
+                : const Icon(Icons.my_location, size: 18),
+            label: Text(
+              _isLocating ? 'Detecting GPS...' : 'Use My Current Location',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 12),
+
+        // Address Search Bar
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _searchAddressController,
+                decoration: InputDecoration(
+                  hintText: 'Search address / area (e.g. Indiranagar)',
+                  prefixIcon: const Icon(Icons.search, size: 20, color: AppColors.textMuted),
+                  filled: true,
+                  fillColor: Colors.white,
+                  isDense: true,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey.shade300)),
+                ),
+                onSubmitted: _searchAddress,
+              ),
+            ),
+            const SizedBox(width: 8),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.headerGreenDark,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              ),
+              onPressed: _isSearchingAddress ? null : () => _searchAddress(_searchAddressController.text),
+              child: _isSearchingAddress
+                  ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                  : const Text('Search', style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 14),
+
+        // Full Address field
+        Text('Full Address (Street, Area, City)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey.shade800)),
         const SizedBox(height: 6),
         TextField(
           controller: _addressController,
+          maxLines: 2,
           decoration: InputDecoration(
-            hintText: l10n.postJobAddressHint,
+            hintText: 'e.g. #42, 5th Cross, Koramangala 4th Block, Bengaluru',
             prefixIcon: const Icon(Icons.location_on, color: AppColors.headerGreenDark),
             filled: true,
             fillColor: Colors.white,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey.shade300)),
           ),
           onChanged: (val) => notifier.setLocation(address: val),
         ),
+
         const SizedBox(height: 12),
+
+        // Landmark field
+        Text('Landmark (Required)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey.shade800)),
+        const SizedBox(height: 6),
+        TextField(
+          controller: _landmarkController,
+          decoration: InputDecoration(
+            hintText: 'e.g. Near Forum Mall, Opposite Metro Pillar 124',
+            prefixIcon: const Icon(Icons.storefront_rounded, color: AppColors.amberOrange),
+            filled: true,
+            fillColor: Colors.white,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey.shade300)),
+          ),
+          onChanged: (val) => notifier.setLocation(address: _addressController.text, landmark: val),
+        ),
+
+        const SizedBox(height: 12),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text('Pick on Map (Tap or drag pin)', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.textMuted)),
+            if (draft.latitude == null)
+              Text('⚠️ Please tap map to set pin', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.amber.shade900)),
+          ],
+        ),
+        const SizedBox(height: 6),
+
         // Interactive FlutterMap with Geofence circle
         Container(
           height: 220,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.grey.shade300),
+            border: Border.all(color: draft.latitude == null ? Colors.amber.shade400 : Colors.grey.shade300, width: draft.latitude == null ? 2 : 1),
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(16),
@@ -800,12 +1083,40 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
               options: MapOptions(
                 initialCenter: mapCenter,
                 initialZoom: 14.5,
-                onTap: (_, point) {
+                onTap: (_, point) async {
                   notifier.setLocation(
                     address: _addressController.text,
+                    landmark: _landmarkController.text,
                     lat: point.latitude,
                     lng: point.longitude,
                   );
+                  try {
+                    final placemarks = await Geocoding().placemarkFromCoordinates(point.latitude, point.longitude);
+                    if (placemarks.isNotEmpty && mounted) {
+                      final p = placemarks.first;
+                      final landmark = p.name ?? '';
+                      final parts = <String>[];
+                      if (p.street != null && p.street!.isNotEmpty && p.street != p.name) parts.add(p.street!);
+                      if (p.subLocality != null && p.subLocality!.isNotEmpty) parts.add(p.subLocality!);
+                      if (p.locality != null && p.locality!.isNotEmpty) parts.add(p.locality!);
+                      if (p.postalCode != null && p.postalCode!.isNotEmpty) parts.add(p.postalCode!);
+                      final addr = [if (landmark.isNotEmpty) landmark, ...parts].join(', ');
+                      if (addr.isNotEmpty) {
+                        setState(() {
+                          _addressController.text = addr;
+                          if (_landmarkController.text.isEmpty && landmark.isNotEmpty) {
+                            _landmarkController.text = landmark;
+                          }
+                        });
+                        notifier.setLocation(
+                          address: addr,
+                          landmark: _landmarkController.text.isNotEmpty ? _landmarkController.text : landmark,
+                          lat: point.latitude,
+                          lng: point.longitude,
+                        );
+                      }
+                    }
+                  } catch (_) {}
                 },
               ),
               children: [
@@ -813,28 +1124,30 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
                   urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                   userAgentPackageName: 'in.udyogasethu',
                 ),
-                CircleLayer(
-                  circles: [
-                    CircleMarker(
-                      point: mapCenter,
-                      radius: draft.geofenceRadiusM.toDouble(),
-                      useRadiusInMeter: true,
-                      color: AppColors.headerGreenDark.withValues(alpha: 0.15),
-                      borderColor: AppColors.headerGreenDark,
-                      borderStrokeWidth: 2,
-                    ),
-                  ],
-                ),
-                MarkerLayer(
-                  markers: [
-                    Marker(
-                      point: mapCenter,
-                      width: 44,
-                      height: 44,
-                      child: const Icon(Icons.location_pin, color: AppColors.amberOrange, size: 44),
-                    ),
-                  ],
-                ),
+                if (draft.latitude != null && draft.longitude != null) ...[
+                  CircleLayer(
+                    circles: [
+                      CircleMarker(
+                        point: LatLng(draft.latitude!, draft.longitude!),
+                        radius: draft.geofenceRadiusM.toDouble(),
+                        useRadiusInMeter: true,
+                        color: AppColors.headerGreenDark.withValues(alpha: 0.15),
+                        borderColor: AppColors.headerGreenDark,
+                        borderStrokeWidth: 2,
+                      ),
+                    ],
+                  ),
+                  MarkerLayer(
+                    markers: [
+                      Marker(
+                        point: LatLng(draft.latitude!, draft.longitude!),
+                        width: 44,
+                        height: 44,
+                        child: const Icon(Icons.location_pin, color: AppColors.amberOrange, size: 44),
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),
@@ -899,7 +1212,8 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
             _buildPreviewRow('Start Time', DateFormat('EEE, dd MMM • hh:mm a').format(draft.startAt)),
             _buildPreviewRow('Duration', '${(draft.estDurationMinutes / 60).round()} Hours'),
             _buildPreviewRow('Materials', draft.materialsProvided ? 'Provided by Employer' : 'Worker must bring tools'),
-            _buildPreviewRow('Site Address', draft.addressText.isNotEmpty ? draft.addressText : 'Bengaluru Site'),
+            _buildPreviewRow('Site Address', draft.addressText.isNotEmpty ? draft.addressText : 'Not specified'),
+            _buildPreviewRow('Landmark', draft.landmark.isNotEmpty ? draft.landmark : 'Not specified'),
             _buildPreviewRow('Geofence Radius', '${draft.geofenceRadiusM} meters'),
             _buildPreviewRow(
               'Target Workers',
@@ -936,6 +1250,56 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
                   ),
               ],
             ),
+            if (draft.latitude != null && draft.longitude != null) ...[
+              const SizedBox(height: 16),
+              const Text('Site Location Preview:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.textDark)),
+              const SizedBox(height: 8),
+              Container(
+                height: 150,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey.shade300),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: FlutterMap(
+                    options: MapOptions(
+                      initialCenter: LatLng(draft.latitude!, draft.longitude!),
+                      initialZoom: 14.5,
+                      interactionOptions: const InteractionOptions(flags: InteractiveFlag.none),
+                    ),
+                    children: [
+                      TileLayer(
+                        urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        userAgentPackageName: 'in.udyogasethu',
+                      ),
+                      CircleLayer(
+                        circles: [
+                          CircleMarker(
+                            point: LatLng(draft.latitude!, draft.longitude!),
+                            radius: draft.geofenceRadiusM.toDouble(),
+                            useRadiusInMeter: true,
+                            color: AppColors.headerGreenDark.withValues(alpha: 0.15),
+                            borderColor: AppColors.headerGreenDark,
+                            borderStrokeWidth: 2,
+                          ),
+                        ],
+                      ),
+                      MarkerLayer(
+                        markers: [
+                          Marker(
+                            point: LatLng(draft.latitude!, draft.longitude!),
+                            width: 36,
+                            height: 36,
+                            child: const Icon(Icons.location_pin, color: AppColors.amberOrange, size: 36),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
             if (draft.description.isNotEmpty) ...[
               const SizedBox(height: 16),
               const Text('Description:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
@@ -1070,6 +1434,26 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
                           SnackBar(content: Text(l10n.postJobAudienceRequired)),
                         );
                         return;
+                      }
+                      if (draft.currentStep == 4) {
+                        if (draft.latitude == null || draft.longitude == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Please choose site coordinates using GPS, address search, or map pin')),
+                          );
+                          return;
+                        }
+                        if (_isInvalidAddress(_addressController.text)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Please enter a full address with street/locality. A house number alone is not sufficient.')),
+                          );
+                          return;
+                        }
+                        if (_landmarkController.text.trim().isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Please specify a landmark to help workers locate the site')),
+                          );
+                          return;
+                        }
                       }
                       if (draft.currentStep < 5) {
                         notifier.nextStep();

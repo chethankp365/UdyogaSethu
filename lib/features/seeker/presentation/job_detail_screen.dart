@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/widgets/job_row.dart';
 import 'package:udyogasethu/features/seeker/domain/job_detail.dart';
@@ -24,6 +27,14 @@ class JobDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _JobDetailScreenState extends ConsumerState<JobDetailScreen> {
+  bool _isCurrentUserProvider(String providerId) {
+    try {
+      return Supabase.instance.client.auth.currentUser?.id == providerId;
+    } catch (_) {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final detailAsync = ref.watch(jobDetailFutureProvider(widget.jobId));
@@ -248,6 +259,42 @@ class _JobDetailScreenState extends ConsumerState<JobDetailScreen> {
                       ),
 
                       const SizedBox(height: 16),
+
+                      if (_isCurrentUserProvider(job.providerId)) ...[
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 16),
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: AppColors.paleMint,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: AppColors.cardBorderGreen, width: 1.5),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.people_alt_rounded, color: AppColors.headerGreenDark, size: 28),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text('Applicants Management', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.textDark)),
+                                    Text('${job.slotsOpen} open slots of ${job.slotsTotal} total', style: const TextStyle(fontSize: 12, color: AppColors.textMuted)),
+                                  ],
+                                ),
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.headerGreenDark,
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                ),
+                                onPressed: () => context.push(AppRoutes.providerJobApplicants.replaceAll(':id', job.id)),
+                                child: const Text('View Applicants', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
 
                       // SPECS BAR (Rate, Distance, Walking Time)
                       Container(
@@ -482,32 +529,47 @@ class _JobDetailScreenState extends ConsumerState<JobDetailScreen> {
 
               const SizedBox(width: 12),
 
-              // Apply Now Button
+              // Apply Now or Manage Applicants Button
               Expanded(
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isOffline ? Colors.grey.shade400 : AppColors.headerGreenDark,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    elevation: isOffline ? 0 : 2,
-                  ),
-                  onPressed: isOffline
-                      ? () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Cannot apply while offline. Please connect to the internet to submit your application.'),
-                              backgroundColor: Colors.amber,
-                            ),
-                          );
-                        }
-                      : () => ApplyBottomSheet.show(context, job),
-                  icon: Icon(isOffline ? Icons.cloud_off_rounded : Icons.send_rounded, size: 18),
-                  label: Text(
-                    isOffline ? 'Offline - Reconnect to Apply' : 'Apply Now (Quick & Easy ✨)',
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                  ),
-                ),
+                child: _isCurrentUserProvider(job.providerId)
+                    ? ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.headerGreenDark,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        onPressed: () => context.push(AppRoutes.providerJobApplicants.replaceAll(':id', job.id)),
+                        icon: const Icon(Icons.group_rounded, size: 20),
+                        label: const Text(
+                          'Manage Applicants',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                        ),
+                      )
+                    : ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isOffline ? Colors.grey.shade400 : AppColors.headerGreenDark,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          elevation: isOffline ? 0 : 2,
+                        ),
+                        onPressed: isOffline
+                            ? () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Cannot apply while offline. Please connect to the internet to submit your application.'),
+                                    backgroundColor: Colors.amber,
+                                  ),
+                                );
+                              }
+                            : () => ApplyBottomSheet.show(context, job),
+                        icon: Icon(isOffline ? Icons.cloud_off_rounded : Icons.send_rounded, size: 18),
+                        label: Text(
+                          isOffline ? 'Offline - Reconnect to Apply' : 'Apply Now (Quick & Easy ✨)',
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                        ),
+                      ),
               ),
             ],
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
@@ -364,7 +365,7 @@ class _ApplicantCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top Row: Avatar, Name, Rating, Distance
+            // Top Row: Avatar, Name, Rating, Distance & Seeker Type
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -391,6 +392,48 @@ class _ApplicantCard extends StatelessWidget {
                       const SizedBox(height: 2),
                       Row(
                         children: [
+                          // Seeker Type Chip
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: applicant.seekerType == 'student'
+                                  ? Colors.purple.shade50
+                                  : applicant.seekerType == 'part_time'
+                                      ? Colors.blue.shade50
+                                      : Colors.amber.shade50,
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(
+                                color: applicant.seekerType == 'student'
+                                    ? Colors.purple.shade200
+                                    : applicant.seekerType == 'part_time'
+                                        ? Colors.blue.shade200
+                                        : Colors.amber.shade200,
+                              ),
+                            ),
+                            child: Text(
+                              applicant.seekerType.toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: applicant.seekerType == 'student'
+                                    ? Colors.purple.shade900
+                                    : applicant.seekerType == 'part_time'
+                                        ? Colors.blue.shade900
+                                        : Colors.amber.shade900,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          // Badge / Level
+                          Text(
+                            'Lv.${applicant.levelNumber} • ${applicant.badgeName}',
+                            style: const TextStyle(fontSize: 11, color: AppColors.textMuted, fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
                           const Icon(Icons.star_rounded, color: AppColors.amberOrange, size: 16),
                           const SizedBox(width: 2),
                           Text(applicant.rating.toStringAsFixed(1), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
@@ -409,8 +452,18 @@ class _ApplicantCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Status Chip
-                _buildStatusChip(applicant.status, l10n),
+                // Status Chip & Applied Time
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    _buildStatusChip(applicant.status, l10n),
+                    const SizedBox(height: 4),
+                    Text(
+                      DateFormat('dd MMM, h:mm a').format(applicant.createdAt),
+                      style: const TextStyle(fontSize: 10, color: AppColors.textMuted),
+                    ),
+                  ],
+                ),
               ],
             ),
 
@@ -449,37 +502,52 @@ class _ApplicantCard extends StatelessWidget {
 
             const Divider(height: 20),
 
-            // Actions row: View Profile, Chat, Reject, Shortlist, Hire
-            Row(
+            // Actions row: View Profile, Chat, Reject, Shortlist, Hire (Icon + Text)
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              alignment: WrapAlignment.end,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                OutlinedButton(
+                OutlinedButton.icon(
                   style: OutlinedButton.styleFrom(
                     visualDensity: VisualDensity.compact,
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
                   onPressed: onViewProfile,
-                  child: Text(l10n.applicantActionProfile, style: const TextStyle(fontSize: 12)),
+                  icon: const Icon(Icons.person_outline, size: 16),
+                  label: Text(l10n.applicantActionProfile, style: const TextStyle(fontSize: 12)),
                 ),
-                const SizedBox(width: 6),
-                IconButton.outlined(
-                  visualDensity: VisualDensity.compact,
-                  icon: const Icon(Icons.chat_bubble_outline_rounded, size: 16),
-                  tooltip: l10n.applicantActionChat,
+                OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    visualDensity: VisualDensity.compact,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
                   onPressed: onChat,
+                  icon: const Icon(Icons.chat_bubble_outline_rounded, size: 16),
+                  label: Text(l10n.applicantActionChat, style: const TextStyle(fontSize: 12)),
                 ),
-                const Spacer(),
                 if (applicant.isPending || applicant.isShortlisted) ...[
-                  IconButton(
-                    icon: const Icon(Icons.close_rounded, color: Colors.grey, size: 20),
-                    tooltip: l10n.applicantActionReject,
+                  OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.red.shade700,
+                      visualDensity: VisualDensity.compact,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
                     onPressed: onReject,
+                    icon: const Icon(Icons.close_rounded, size: 16),
+                    label: Text(l10n.applicantActionReject, style: const TextStyle(fontSize: 12)),
                   ),
                   if (applicant.isPending)
-                    IconButton(
-                      icon: const Icon(Icons.bookmark_add_outlined, color: Colors.blue, size: 20),
-                      tooltip: l10n.applicantActionShortlist,
+                    OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.blue.shade700,
+                        visualDensity: VisualDensity.compact,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
                       onPressed: onShortlist,
+                      icon: const Icon(Icons.bookmark_add_outlined, size: 16),
+                      label: Text(l10n.applicantActionShortlist, style: const TextStyle(fontSize: 12)),
                     ),
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
