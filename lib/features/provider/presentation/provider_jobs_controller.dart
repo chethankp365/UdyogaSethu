@@ -178,7 +178,15 @@ class PostJobWizardNotifier extends Notifier<JobPostDraft> {
   }
 
   void setSuitableFor(List<String> types) {
-    state = state.copyWith(suitableFor: types);
+    final hasStudent = types.contains('student');
+    state = state.copyWith(
+      suitableFor: types,
+      studentsOk: hasStudent,
+    );
+  }
+
+  void setSitePhotoUrl(String? url) {
+    state = state.copyWith(sitePhotoUrl: url);
   }
 
   Future<void> setCategory(String categoryId, String categoryName) async {
@@ -242,10 +250,21 @@ class PostJobWizardNotifier extends Notifier<JobPostDraft> {
     bool? licenceRequired,
     bool? studentsOk,
   }) {
+    final newStudentsOk = studentsOk ?? state.studentsOk;
+    final updatedSuitableFor = List<String>.from(state.suitableFor);
+    if (newStudentsOk && !updatedSuitableFor.contains('student')) {
+      updatedSuitableFor.add('student');
+    } else if (!newStudentsOk && (studentsOk != null)) {
+      updatedSuitableFor.remove('student');
+      if (updatedSuitableFor.isEmpty) {
+        updatedSuitableFor.add('informal');
+      }
+    }
     state = state.copyWith(
       verifiedOnly: verifiedOnly ?? state.verifiedOnly,
       licenceRequired: licenceRequired ?? state.licenceRequired,
-      studentsOk: studentsOk ?? state.studentsOk,
+      studentsOk: newStudentsOk,
+      suitableFor: updatedSuitableFor,
     );
   }
 

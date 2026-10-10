@@ -1,0 +1,393 @@
+{
+  "version": "1.0.0",
+  "categories": [
+    {
+      "slug": "electrician",
+      "name": "Electrician",
+      "icon": "flash_on",
+      "variants": [
+        "assets/images/jobs/electrician-1.webp",
+        "assets/images/jobs/electrician-2.webp"
+      ],
+      "keywords": [
+        "electrician",
+        "electrical",
+        "wiring",
+        "switchboard",
+        "circuit",
+        "fuse",
+        "inverter",
+        "motor",
+        "appliance",
+        "ac repair",
+        "lighting",
+        "wire"
+      ]
+    },
+    {
+      "slug": "plumbing",
+      "name": "Plumbing",
+      "icon": "plumbing",
+      "variants": [
+        "assets/images/jobs/plumbing-1.webp",
+        "assets/images/jobs/plumbing-2.webp"
+      ],
+      "keywords": [
+        "plumbing",
+        "plumber",
+        "pipe",
+        "leak",
+        "tap",
+        "drainage",
+        "sink",
+        "faucet",
+        "sanitary",
+        "bathroom",
+        "water tank"
+      ]
+    },
+    {
+      "slug": "carpenter",
+      "name": "Carpenter",
+      "icon": "carpenter",
+      "variants": [
+        "assets/images/jobs/carpenter-1.webp",
+        "assets/images/jobs/carpenter-2.webp"
+      ],
+      "keywords": [
+        "carpenter",
+        "wood",
+        "furniture",
+        "door",
+        "table",
+        "chair",
+        "cabinet",
+        "plywood",
+        "carpentry",
+        "wooden"
+      ]
+    },
+    {
+      "slug": "painting",
+      "name": "Painting",
+      "icon": "format_paint",
+      "variants": [
+        "assets/images/jobs/painting-1.webp",
+        "assets/images/jobs/painting-2.webp"
+      ],
+      "keywords": [
+        "painting",
+        "painter",
+        "whitewash",
+        "distemper",
+        "texture",
+        "varnish",
+        "spray paint",
+        "wall paint"
+      ]
+    },
+    {
+      "slug": "cleaner",
+      "name": "Cleaning & Housekeeping",
+      "icon": "cleaning_services",
+      "variants": [
+        "assets/images/jobs/cleaner-1.webp",
+        "assets/images/jobs/cleaner-2.webp"
+      ],
+      "keywords": [
+        "cleaning",
+        "cleaner",
+        "housekeeping",
+        "sweep",
+        "mop",
+        "sanitation",
+        "wash",
+        "dusting",
+        "hygiene",
+        "office cleaning",
+        "janitor"
+      ]
+    },
+    {
+      "slug": "construction",
+      "name": "Construction",
+      "icon": "handyman",
+      "variants": [
+        "assets/images/jobs/construction-1.webp",
+        "assets/images/jobs/construction-2.webp"
+      ],
+      "keywords": [
+        "construction",
+        "builder",
+        "cement",
+        "concrete",
+        "site",
+        "brick",
+        "civil",
+        "scaffolding",
+        "building work"
+      ]
+    },
+    {
+      "slug": "mason",
+      "name": "Masonry",
+      "icon": "handyman",
+      "variants": [
+        "assets/images/jobs/mason-1.webp",
+        "assets/images/jobs/mason-2.webp"
+      ],
+      "keywords": [
+        "mason",
+        "masonry",
+        "tile",
+        "tiles",
+        "plaster",
+        "bricklayer",
+        "flooring",
+        "stone",
+        "granite"
+      ]
+    },
+    {
+      "slug": "loader",
+      "name": "Loading & Shifting",
+      "icon": "inventory_2",
+      "variants": [
+        "assets/images/jobs/loader-1.webp",
+        "assets/images/jobs/loader-2.webp"
+      ],
+      "keywords": [
+        "loader",
+        "unloader",
+        "loading",
+        "unloading",
+        "warehouse",
+        "shifting",
+        "packers",
+        "movers",
+        "luggage",
+        "lifting"
+      ]
+    },
+    {
+      "slug": "driver",
+      "name": "Driver",
+      "icon": "drive_eta",
+      "variants": [
+        "assets/images/jobs/driver-1.webp",
+        "assets/images/jobs/driver-2.webp"
+      ],
+      "keywords": [
+        "driver",
+        "driving",
+        "chauffeur",
+        "cab",
+        "taxi",
+        "car driver",
+        "truck driver",
+        "tempo",
+        "vehicle"
+      ]
+    },
+    {
+      "slug": "agri_labour",
+      "name": "Agricultural Labour",
+      "icon": "agriculture",
+      "variants": [
+        "assets/images/jobs/agri_labour-1.webp",
+        "assets/images/jobs/agri_labour-2.webp"
+      ],
+      "keywords": [
+        "agriculture",
+        "farming",
+        "farm",
+        "harvest",
+        "crop",
+        "field",
+        "tractor",
+        "plantation",
+        "seed",
+        "dairy",
+        "cattle",
+        "agri"
+      ]
+    },
+    {
+      "slug": "domestic_help",
+      "name": "Domestic Help & Cooking",
+      "icon": "home_repair_service",
+      "variants": [
+        "assets/images/jobs/domestic_help-1.webp",
+        "assets/images/jobs/domestic_help-2.webp"
+      ],
+      "keywords": [
+        "domestic help",
+        "maid",
+        "cook",
+        "cooking",
+        "babysitter",
+        "caregiver",
+        "nanny",
+        "elder care",
+        "household"
+      ]
+    },
+    {
+      "slug": "delivery",
+      "name": "Logistics & Delivery",
+      "icon": "two_wheeler",
+      "variants": [
+        "assets/images/jobs/delivery-1.webp",
+        "assets/images/jobs/delivery-2.webp"
+      ],
+      "keywords": [
+        "delivery",
+        "courier",
+        "parcel",
+        "transport",
+        "dispatch",
+        "rider",
+        "cargo"
+      ]
+    },
+    {
+      "slug": "delivery-gig-work",
+      "name": "Food & Grocery Delivery",
+      "icon": "two_wheeler",
+      "variants": [
+        "assets/images/jobs/delivery-gig-work-1.webp",
+        "assets/images/jobs/delivery-gig-work-2.webp"
+      ],
+      "keywords": [
+        "delivery gig",
+        "food delivery",
+        "swiggy",
+        "zomato",
+        "zepto",
+        "blinkit",
+        "quick commerce",
+        "package delivery",
+        "instant delivery"
+      ]
+    },
+    {
+      "slug": "retail-food-service",
+      "name": "Retail & Food Counter",
+      "icon": "storefront",
+      "variants": [
+        "assets/images/jobs/retail-food-service-1.webp",
+        "assets/images/jobs/retail-food-service-2.webp"
+      ],
+      "keywords": [
+        "retail",
+        "store",
+        "shop assistant",
+        "cashier",
+        "waiter",
+        "restaurant",
+        "cafe",
+        "billing",
+        "counter",
+        "sales assistant"
+      ]
+    },
+    {
+      "slug": "content-writing",
+      "name": "Content Writing & Translation",
+      "icon": "edit_note",
+      "variants": [
+        "assets/images/jobs/content-writing-1.webp",
+        "assets/images/jobs/content-writing-2.webp"
+      ],
+      "keywords": [
+        "content",
+        "writing",
+        "copywriting",
+        "blog",
+        "article",
+        "translation",
+        "proofreading",
+        "typing",
+        "data entry"
+      ]
+    },
+    {
+      "slug": "design-data-work",
+      "name": "Design & Digital Work",
+      "icon": "computer",
+      "variants": [
+        "assets/images/jobs/design-data-work-1.webp",
+        "assets/images/jobs/design-data-work-2.webp"
+      ],
+      "keywords": [
+        "design",
+        "graphic",
+        "photoshop",
+        "illustrator",
+        "data entry",
+        "excel",
+        "editing",
+        "presentation",
+        "digital"
+      ]
+    },
+    {
+      "slug": "tutoring-academics",
+      "name": "Tutoring & Teaching",
+      "icon": "school",
+      "variants": [
+        "assets/images/jobs/tutoring-academics-1.webp",
+        "assets/images/jobs/tutoring-academics-2.webp"
+      ],
+      "keywords": [
+        "tutoring",
+        "tutor",
+        "teacher",
+        "maths",
+        "science",
+        "coaching",
+        "tuition",
+        "academic",
+        "lessons"
+      ]
+    },
+    {
+      "slug": "campus-brand-promotion",
+      "name": "Campus & Brand Promotion",
+      "icon": "campaign",
+      "variants": [
+        "assets/images/jobs/campus-brand-promotion-1.webp",
+        "assets/images/jobs/campus-brand-promotion-2.webp"
+      ],
+      "keywords": [
+        "campus",
+        "brand",
+        "promotion",
+        "college",
+        "flyer",
+        "ambassador",
+        "marketing",
+        "event",
+        "sampling"
+      ]
+    },
+    {
+      "slug": "general",
+      "name": "General Work",
+      "icon": "work",
+      "variants": [
+        "assets/images/jobs/general-1.webp",
+        "assets/images/jobs/general-2.webp"
+      ],
+      "keywords": [
+        "general",
+        "helper",
+        "assistant",
+        "utility",
+        "support",
+        "daily labour",
+        "manual work"
+      ]
+    }
+  ]
+}

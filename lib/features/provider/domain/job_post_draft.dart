@@ -26,6 +26,7 @@ class JobPostDraft {
   final double? longitude;
   final int geofenceRadiusM;
   final List<String> suitableFor; // 'informal', 'student', 'part_time'
+  final String? sitePhotoUrl;
   final int currentStep;
 
   const JobPostDraft({
@@ -52,7 +53,8 @@ class JobPostDraft {
     this.latitude,
     this.longitude,
     this.geofenceRadiusM = 150,
-    this.suitableFor = const ['informal', 'student', 'part_time'],
+    this.suitableFor = const ['informal'],
+    this.sitePhotoUrl,
     this.currentStep = 0,
   });
 
@@ -101,6 +103,7 @@ class JobPostDraft {
     double? longitude,
     int? geofenceRadiusM,
     List<String>? suitableFor,
+    String? sitePhotoUrl,
     int? currentStep,
   }) {
     return JobPostDraft(
@@ -128,6 +131,7 @@ class JobPostDraft {
       longitude: longitude ?? this.longitude,
       geofenceRadiusM: geofenceRadiusM ?? this.geofenceRadiusM,
       suitableFor: suitableFor ?? this.suitableFor,
+      sitePhotoUrl: sitePhotoUrl ?? this.sitePhotoUrl,
       currentStep: currentStep ?? this.currentStep,
     );
   }

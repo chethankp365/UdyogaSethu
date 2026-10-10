@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:udyogasethu/core/services/job_thumbnail_service.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/seeker/domain/job_recommendation.dart';
 
@@ -18,32 +19,14 @@ class JobRow extends StatelessWidget {
     this.seekerType,
   });
 
-  static const Set<String> _knownSlugs = {
-    'agri_labour',
-    'campus-brand-promotion',
-    'carpenter',
-    'cleaner',
-    'construction',
-    'content-writing',
-    'delivery',
-    'delivery-gig-work',
-    'design-data-work',
-    'domestic_help',
-    'driver',
-    'electrician',
-    'loader',
-    'mason',
-    'painting',
-    'plumbing',
-    'retail-food-service',
-    'tutoring-academics',
-    'general',
-  };
-
-  static String getCategoryAsset(String slug, String jobId) {
-    final effectiveSlug = _knownSlugs.contains(slug) ? slug : 'general';
-    final variant = (jobId.hashCode.abs() % 2) + 1;
-    return 'assets/images/jobs/$effectiveSlug-$variant.webp';
+  static String getCategoryAsset(String slug, String jobId, {String? title, String? description, String? sitePhotoUrl}) {
+    return JobThumbnailService().selectThumbnail(
+      sitePhotoUrl: sitePhotoUrl,
+      categorySlug: slug,
+      jobId: jobId,
+      title: title,
+      description: description,
+    ).uri;
   }
 
   static void precacheJobs(BuildContext context, List<JobRecommendation> jobs, {int count = 5}) {
@@ -112,8 +95,6 @@ class JobRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final assetPath = getCategoryAsset(job.categorySlug, job.id);
-
     return InkWell(
       onTap: onTap ??
           () {
@@ -132,15 +113,14 @@ class JobRow extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.asset(
-                            assetPath,
-                            width: 60,
-                            height: 60,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => _buildFallbackThumbnail(),
-                          ),
+                        JobThumbnailWidget(
+                          sitePhotoUrl: job.sitePhotoUrl,
+                          categorySlug: job.categorySlug,
+                          jobId: job.id,
+                          title: job.title,
+                          description: job.description,
+                          width: 60,
+                          height: 60,
                         ),
                         const SizedBox(width: 14),
                         Expanded(
@@ -218,15 +198,14 @@ class JobRow extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // 1. Square Rounded Thumbnail Photo (56px)
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                assetPath,
-                width: 56,
-                height: 56,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => _buildFallbackThumbnail(),
-              ),
+            JobThumbnailWidget(
+              sitePhotoUrl: job.sitePhotoUrl,
+              categorySlug: job.categorySlug,
+              jobId: job.id,
+              title: job.title,
+              description: job.description,
+              width: 56,
+              height: 56,
             ),
 
             const SizedBox(width: 12),
@@ -312,17 +291,48 @@ class JobRow extends StatelessWidget {
                   ),
 
                   // Extra info line (second small line for tags/reasons)
-                  if (job.reasons.isNotEmpty) ...[
-                    const SizedBox(height: 2),
-                    Text(
-                      job.reasons.first,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.green.shade700,
-                      ),
+                  if (job.studentsOk || job.reasons.isNotEmpty) ...[
+                    const SizedBox(height: 3),
+                    Wrap(
+                      spacing: 4,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        if (job.studentsOk)
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFEF3C7),
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: const Color(0xFFF59E0B), width: 0.8),
+                            ),
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.school, size: 10, color: Color(0xFFD97706)),
+                                SizedBox(width: 3),
+                                Text(
+                                  'Students Welcome',
+                                  style: TextStyle(
+                                    fontSize: 9.5,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF92400E),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        if (job.reasons.isNotEmpty)
+                          Text(
+                            job.reasons.first,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.green.shade700,
+                            ),
+                          ),
+                      ],
                     ),
                   ],
                 ],
@@ -371,26 +381,6 @@ class JobRow extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildFallbackThumbnail() {
-    return Container(
-      width: 56,
-      height: 56,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        gradient: const LinearGradient(
-          colors: [Color(0xFFE8F5E9), Color(0xFFC8E6C9)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
-      child: Icon(
-        getCategoryIcon(job.categoryIcon),
-        color: AppColors.headerGreenDark,
-        size: 26,
       ),
     );
   }

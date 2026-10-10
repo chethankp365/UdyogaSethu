@@ -5,10 +5,10 @@ import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
-import 'package:udyogasethu/core/widgets/job_row.dart';
 import 'package:udyogasethu/features/seeker/domain/job_detail.dart';
 import 'package:udyogasethu/features/seeker/domain/job_recommendation.dart';
 import 'package:udyogasethu/features/seeker/presentation/apply_bottom_sheet.dart';
+import 'package:udyogasethu/core/services/job_thumbnail_service.dart';
 import 'package:udyogasethu/features/seeker/presentation/job_detail_controller.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
@@ -111,8 +111,14 @@ class _JobDetailScreenState extends ConsumerState<JobDetailScreen> {
     AppLocalizations? l10n, {
     bool isLoading = false,
   }) {
-    final assetPath = JobRow.getCategoryAsset(job.categorySlug, job.id);
-    final categoryIcon = JobRow.getCategoryIcon(job.categoryIcon);
+    final thumb = JobThumbnailService().selectThumbnail(
+      sitePhotoUrl: job.sitePhotoUrl,
+      categorySlug: job.categorySlug,
+      jobId: job.id,
+      title: job.title,
+      description: job.description,
+    );
+    final categoryIcon = thumb.categoryIcon;
 
     return Column(
       children: [
@@ -152,14 +158,28 @@ class _JobDetailScreenState extends ConsumerState<JobDetailScreen> {
                   background: Stack(
                     fit: StackFit.expand,
                     children: [
-                      Image.asset(
-                        assetPath,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, _, _) => Container(
-                          color: AppColors.headerGreenDark,
-                          child: const Icon(Icons.handyman_rounded, color: Colors.white, size: 64),
+                      if (thumb.isNetwork)
+                        Image.network(
+                          thumb.uri,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => Image.asset(
+                            JobThumbnailService().selectThumbnail(categorySlug: job.categorySlug, jobId: job.id, title: job.title, description: job.description).uri,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, _, _) => Container(
+                              color: AppColors.headerGreenDark,
+                              child: Icon(categoryIcon, color: Colors.white, size: 64),
+                            ),
+                          ),
+                        )
+                      else
+                        Image.asset(
+                          thumb.uri,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => Container(
+                            color: AppColors.headerGreenDark,
+                            child: Icon(categoryIcon, color: Colors.white, size: 64),
+                          ),
                         ),
-                      ),
                       // Dark gradient overlay
                       Container(
                         decoration: BoxDecoration(
@@ -257,6 +277,33 @@ class _JobDetailScreenState extends ConsumerState<JobDetailScreen> {
                           ],
                         ],
                       ),
+
+                      if (job.studentsOk) ...[
+                        const SizedBox(height: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFEF3C7),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: const Color(0xFFF59E0B)),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.school, size: 14, color: Color(0xFFD97706)),
+                              const SizedBox(width: 6),
+                              Text(
+                                l10n?.studentsWelcomeChip ?? 'Students Welcome',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF92400E),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
 
                       const SizedBox(height: 16),
 
@@ -416,6 +463,17 @@ class _JobDetailScreenState extends ConsumerState<JobDetailScreen> {
                               '${job.slotsOpen} open (${job.slotsTotal} total)',
                               Icons.group_outlined,
                             ),
+                            const Divider(height: 1),
+                            _buildDetailTableRow(
+                              'Target Workers',
+                              job.suitableFor.map((s) {
+                                if (s == 'informal') return l10n?.postJobAudienceInformal ?? 'Informal';
+                                if (s == 'student') return l10n?.postJobAudienceStudent ?? 'Student';
+                                if (s == 'part_time') return l10n?.postJobAudiencePartTime ?? 'Part-Time';
+                                return s;
+                              }).join(', '),
+                              Icons.groups_rounded,
+                            ),
                           ],
                         ),
                       ),
@@ -457,9 +515,14 @@ class _JobDetailScreenState extends ConsumerState<JobDetailScreen> {
                           child: Stack(
                             fit: StackFit.expand,
                             children: [
-                              Image.asset(
-                                assetPath,
-                                fit: BoxFit.cover,
+                              JobThumbnailWidget(
+                                sitePhotoUrl: job.sitePhotoUrl,
+                                categorySlug: job.categorySlug,
+                                jobId: job.id,
+                                title: job.title,
+                                description: job.description,
+                                width: double.infinity,
+                                height: 130,
                               ),
                               Container(
                                 color: Colors.black.withValues(alpha: 0.3),

@@ -11,6 +11,7 @@ import 'package:udyogasethu/core/errors/app_exception.dart';
 import 'package:udyogasethu/features/provider/domain/job_post_draft.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_home_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_jobs_controller.dart';
+import 'package:udyogasethu/core/services/job_thumbnail_service.dart';
 import 'package:udyogasethu/features/seeker/domain/seeker_profile_draft.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
@@ -1186,13 +1187,14 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
           children: [
             Row(
               children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: AppColors.headerGreenDark.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Icon(Icons.work_rounded, color: AppColors.headerGreenDark, size: 28),
+                JobThumbnailWidget(
+                  sitePhotoUrl: draft.sitePhotoUrl,
+                  categorySlug: draft.categoryName?.toLowerCase() ?? 'general',
+                  jobId: draft.jobId ?? 'preview-draft',
+                  title: draft.title,
+                  description: draft.description,
+                  width: 52,
+                  height: 52,
                 ),
                 const SizedBox(width: 14),
                 Expanded(
@@ -1243,10 +1245,10 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
                     label: Text('Licence Required', style: TextStyle(color: Colors.white, fontSize: 11)),
                   ),
                 if (draft.studentsOk)
-                  const Chip(
-                    avatar: Icon(Icons.school, size: 16, color: Colors.white),
+                  Chip(
+                    avatar: const Icon(Icons.school, size: 16, color: Colors.white),
                     backgroundColor: AppColors.amberOrange,
-                    label: Text('Students Welcome', style: TextStyle(color: Colors.white, fontSize: 11)),
+                    label: Text(l10n.studentsWelcomeChip, style: const TextStyle(color: Colors.white, fontSize: 11)),
                   ),
               ],
             ),

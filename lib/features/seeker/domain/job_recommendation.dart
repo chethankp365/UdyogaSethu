@@ -19,6 +19,8 @@ class JobRecommendation {
   final Map<String, dynamic> categoryNames;
   final String categoryIcon;
   final String categorySlug;
+  final String? sitePhotoUrl;
+  final bool studentsOk;
   final bool isStudentFriendly;
   final bool isFlexibleShift;
   final double score;
@@ -45,6 +47,8 @@ class JobRecommendation {
     this.categoryNames = const {},
     this.categoryIcon = 'work',
     this.categorySlug = 'general',
+    this.sitePhotoUrl,
+    this.studentsOk = false,
     this.isStudentFriendly = false,
     this.isFlexibleShift = false,
     this.score = 50.0,
@@ -68,6 +72,9 @@ class JobRecommendation {
       parsedStartAt = DateTime.tryParse(json['start_at'].toString());
     }
 
+    final isStudentsOk = json['students_ok'] == true ||
+        (json['requirements'] is Map && (json['requirements'] as Map)['students_ok'] == true);
+
     return JobRecommendation(
       id: json['id'] as String? ?? '',
       providerId: json['provider_id'] as String? ?? '',
@@ -89,7 +96,9 @@ class JobRecommendation {
       categoryNames: names,
       categoryIcon: json['category_icon'] as String? ?? 'work',
       categorySlug: json['category_slug'] as String? ?? 'general',
-      isStudentFriendly: json['is_student_friendly'] as bool? ?? false,
+      sitePhotoUrl: json['site_photo_url'] as String? ?? json['photo_url'] as String?,
+      studentsOk: isStudentsOk,
+      isStudentFriendly: isStudentsOk || json['is_student_friendly'] == true,
       isFlexibleShift: json['is_flexible_shift'] as bool? ?? false,
       score: (json['score'] as num?)?.toDouble() ?? 50.0,
       reasons: parsedReasons,

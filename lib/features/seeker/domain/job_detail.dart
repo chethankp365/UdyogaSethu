@@ -26,6 +26,8 @@ class JobDetail {
   final double distanceKm;
   final int walkingMinutes;
   final String status;
+  final String? sitePhotoUrl;
+  final List<String> suitableFor;
 
   const JobDetail({
     required this.id,
@@ -55,6 +57,8 @@ class JobDetail {
     this.distanceKm = 0.0,
     this.walkingMinutes = 0,
     this.status = 'open',
+    this.sitePhotoUrl,
+    this.suitableFor = const ['informal'],
   });
 
   int get slotsOpen => (slotsTotal - slotsFilled).clamp(0, slotsTotal);
@@ -107,11 +111,16 @@ class JobDetail {
       paymentMode: json['payment_mode'] as String? ?? 'escrow',
       requirements: json['requirements'] is Map<String, dynamic>
           ? json['requirements'] as Map<String, dynamic>
-          : {},
+          : (json['requirements'] is Map ? Map<String, dynamic>.from(json['requirements'] as Map) : {}),
       addressText: json['address_text'] as String? ?? '',
       distanceKm: (json['distance_km'] as num?)?.toDouble() ?? 0.0,
       walkingMinutes: (json['walking_minutes'] as num?)?.toInt() ?? 0,
       status: json['status'] as String? ?? 'open',
+      sitePhotoUrl: json['site_photo_url'] as String? ?? json['photo_url'] as String?,
+      suitableFor: (json['suitable_for'] as List?)?.map((e) => e.toString()).toList() ??
+          (json['requirements'] is Map && (json['requirements'] as Map)['students_ok'] == true
+              ? const ['informal', 'student']
+              : const ['informal']),
     );
   }
 

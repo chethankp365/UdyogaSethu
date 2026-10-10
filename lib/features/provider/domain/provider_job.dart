@@ -22,6 +22,7 @@ class ProviderJob {
   final int geofenceRadiusM;
   final String status; // 'draft', 'open', 'filled', 'closed', 'cancelled'
   final List<String> suitableFor; // 'informal', 'student', 'part_time'
+  final String? sitePhotoUrl;
   final DateTime createdAt;
   final int applicantCount;
   final int hiredCount;
@@ -46,7 +47,8 @@ class ProviderJob {
     this.addressText,
     this.geofenceRadiusM = 150,
     this.status = 'open',
-    this.suitableFor = const ['informal', 'student', 'part_time'],
+    this.suitableFor = const ['informal'],
+    this.sitePhotoUrl,
     required this.createdAt,
     this.applicantCount = 0,
     this.hiredCount = 0,
@@ -104,7 +106,10 @@ class ProviderJob {
       status: json['status'] as String? ?? 'open',
       suitableFor: json['suitable_for'] is List
           ? (json['suitable_for'] as List).map((e) => e.toString()).toList()
-          : const ['informal', 'student', 'part_time'],
+          : (json['requirements'] is Map && (json['requirements'] as Map)['students_ok'] == true
+              ? const ['informal', 'student']
+              : const ['informal']),
+      sitePhotoUrl: json['site_photo_url'] as String? ?? json['photo_url'] as String?,
       createdAt: json['created_at'] != null
           ? DateTime.tryParse(json['created_at'].toString()) ?? DateTime.now()
           : DateTime.now(),
@@ -135,6 +140,7 @@ class ProviderJob {
       'geofence_radius_m': geofenceRadiusM,
       'status': status,
       'suitable_for': suitableFor,
+      'site_photo_url': sitePhotoUrl,
       'created_at': createdAt.toIso8601String(),
       'applicant_count': applicantCount,
       'hired_count': hiredCount,
