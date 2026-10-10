@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:udyogasethu/core/router/routes.dart';
+import 'package:udyogasethu/core/services/job_thumbnail_service.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
-import 'package:udyogasethu/core/widgets/job_row.dart';
 import 'package:udyogasethu/features/seeker/domain/seeker_job_item.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_jobs_controller.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
@@ -204,9 +204,6 @@ class _SeekerJobsScreenState extends ConsumerState<SeekerJobsScreen> {
   }
 
   Widget _buildJobCard(BuildContext context, SeekerJobItem item, SeekerJobSegment segment) {
-    final assetPath = JobRow.getCategoryAsset(item.categorySlug, item.jobId);
-    final categoryIcon = JobRow.getCategoryIcon(item.categoryIcon);
-
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 0.5,
@@ -229,20 +226,12 @@ class _SeekerJobsScreenState extends ConsumerState<SeekerJobsScreen> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: SizedBox(
-                      width: 48,
-                      height: 48,
-                      child: Image.asset(
-                        assetPath,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, _, _) => Container(
-                          color: AppColors.paleMint,
-                          child: Icon(categoryIcon, color: AppColors.headerGreenDark),
-                        ),
-                      ),
-                    ),
+                  JobThumbnailWidget(
+                    categorySlug: item.categorySlug,
+                    jobId: item.jobId,
+                    title: item.title,
+                    width: 48,
+                    height: 48,
                   ),
                   const SizedBox(width: 12),
                   Expanded(

@@ -66,6 +66,9 @@ class ProviderJob {
   bool get licenceRequired => requirements['licence_required'] == true;
   bool get studentsOk => requirements['students_ok'] == true;
 
+  String get categorySlug => (categoryIcon ?? categoryName).toLowerCase().replaceAll(' ', '-').replaceAll('&', '').replaceAll('--', '-');
+
+
   String get formattedWage {
     final rupees = (wagePaise / 100).toStringAsFixed(0);
     switch (wageType) {

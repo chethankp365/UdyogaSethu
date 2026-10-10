@@ -133,6 +133,40 @@ void main() {
       expect(unknown.categorySlug, 'general');
       expect(unknown.uri, startsWith('assets/images/jobs/general-'));
     });
+
+    test('Wall paint keyword gives painting-interior library image', () {
+      final interior = service.selectThumbnail(
+        categorySlug: 'painting',
+        jobId: 'j-7',
+        title: 'Need 2BHK wall paint and plaster touchup',
+      );
+      expect(interior.isNetwork, isFalse);
+      expect(interior.categorySlug, 'painting');
+      expect(interior.imageName, 'painting-interior');
+      expect(interior.uri, 'assets/images/jobs/painting-interior.webp');
+    });
+
+    test('Priority sequence: provider site photo > library image > category fallback', () {
+      // 1. Site photo takes priority even if title has "wall paint"
+      final siteThumb = service.selectThumbnail(
+        sitePhotoUrl: 'https://example.com/actual_room.jpg',
+        categorySlug: 'painting',
+        jobId: 'j-8',
+        title: 'Urgent wall paint job',
+      );
+      expect(siteThumb.isNetwork, isTrue);
+      expect(siteThumb.uri, 'https://example.com/actual_room.jpg');
+
+      // 2. Without site photo, library image is resolved
+      final libThumb = service.selectThumbnail(
+        categorySlug: 'painting',
+        jobId: 'j-8',
+        title: 'Urgent wall paint job',
+      );
+      expect(libThumb.isNetwork, isFalse);
+      expect(libThumb.imageName, 'painting-interior');
+      expect(libThumb.uri, 'assets/images/jobs/painting-interior.webp');
+    });
   });
 
   group('Part B - JobRow Students Welcome Widget Tests', () {

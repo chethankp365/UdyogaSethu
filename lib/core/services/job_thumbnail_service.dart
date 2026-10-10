@@ -13,15 +13,31 @@ class JobThumbnail {
   final String uri;
   final String categorySlug;
   final IconData categoryIcon;
+  final String? imageName;
 
   const JobThumbnail({
     required this.sourceType,
     required this.uri,
     required this.categorySlug,
     required this.categoryIcon,
+    this.imageName,
   });
 
   bool get isNetwork => sourceType == ThumbnailSourceType.network;
+}
+
+class LibraryImageRule {
+  final String imageName;
+  final String categorySlug;
+  final String assetPath;
+  final List<String> keywords;
+
+  const LibraryImageRule({
+    required this.imageName,
+    required this.categorySlug,
+    required this.assetPath,
+    required this.keywords,
+  });
 }
 
 class JobThumbnailService {
@@ -34,7 +50,107 @@ class JobThumbnailService {
   // In-memory keyword mapping: keyword -> category slug
   final Map<String, String> _keywordToSlug = {};
   final Set<String> _knownSlugs = {};
+  final List<LibraryImageRule> _libraryRules = [];
   bool _isManifestLoaded = false;
+
+  static final List<LibraryImageRule> _builtinLibraryRules = const [
+    LibraryImageRule(
+      imageName: 'painting-interior',
+      categorySlug: 'painting',
+      assetPath: 'assets/images/jobs/painting-interior.webp',
+      keywords: ['wall paint', 'interior paint', 'room paint', 'wall painting', 'whitewash', 'indoor paint'],
+    ),
+    LibraryImageRule(
+      imageName: 'painting-exterior',
+      categorySlug: 'painting',
+      assetPath: 'assets/images/jobs/painting-exterior.webp',
+      keywords: ['exterior paint', 'building paint', 'weather paint', 'facade', 'outdoor paint'],
+    ),
+    LibraryImageRule(
+      imageName: 'electrician-wiring',
+      categorySlug: 'electrician',
+      assetPath: 'assets/images/jobs/electrician-wiring.webp',
+      keywords: ['wiring', 'switchboard', 'circuit', 'fuse', 'short circuit', 'electrical wiring'],
+    ),
+    LibraryImageRule(
+      imageName: 'electrician-appliance',
+      categorySlug: 'electrician',
+      assetPath: 'assets/images/jobs/electrician-appliance.webp',
+      keywords: ['ac repair', 'inverter', 'motor', 'appliance', 'fan', 'geyser', 'refrigerator'],
+    ),
+    LibraryImageRule(
+      imageName: 'plumbing-repair',
+      categorySlug: 'plumbing',
+      assetPath: 'assets/images/jobs/plumbing-repair.webp',
+      keywords: ['pipe', 'leak', 'tap', 'drainage', 'faucet', 'water pipe', 'pipeline', 'leakage'],
+    ),
+    LibraryImageRule(
+      imageName: 'plumbing-bathroom',
+      categorySlug: 'plumbing',
+      assetPath: 'assets/images/jobs/plumbing-bathroom.webp',
+      keywords: ['bathroom', 'sink', 'sanitary', 'water tank', 'toilet', 'commode', 'wash basin'],
+    ),
+    LibraryImageRule(
+      imageName: 'carpenter-furniture',
+      categorySlug: 'carpenter',
+      assetPath: 'assets/images/jobs/carpenter-furniture.webp',
+      keywords: ['furniture', 'table', 'chair', 'cabinet', 'wood', 'wooden', 'plywood', 'dining table', 'bed', 'sofa', 'wardrobe'],
+    ),
+    LibraryImageRule(
+      imageName: 'carpenter-doors',
+      categorySlug: 'carpenter',
+      assetPath: 'assets/images/jobs/carpenter-doors.webp',
+      keywords: ['door', 'window', 'frame', 'hinge', 'lock', 'latch', 'sliding door'],
+    ),
+    LibraryImageRule(
+      imageName: 'cleaner-home',
+      categorySlug: 'cleaner',
+      assetPath: 'assets/images/jobs/cleaner-home.webp',
+      keywords: ['cleaning', 'cleaner', 'housekeeping', 'sweep', 'mop', 'deep cleaning', 'home cleaning'],
+    ),
+    LibraryImageRule(
+      imageName: 'cleaner-office',
+      categorySlug: 'cleaner',
+      assetPath: 'assets/images/jobs/cleaner-office.webp',
+      keywords: ['office cleaning', 'commercial cleaning', 'sanitation', 'dusting', 'janitor', 'hygiene'],
+    ),
+    LibraryImageRule(
+      imageName: 'gardener-lawn',
+      categorySlug: 'gardener',
+      assetPath: 'assets/images/jobs/gardener-lawn.webp',
+      keywords: ['gardener', 'gardening', 'landscaping', 'lawn', 'mowing', 'lawn mowing', 'plants', 'plant care', 'nursery'],
+    ),
+    LibraryImageRule(
+      imageName: 'delivery-food',
+      categorySlug: 'delivery-gig-work',
+      assetPath: 'assets/images/jobs/delivery-food.webp',
+      keywords: ['food delivery', 'swiggy', 'zomato', 'zepto', 'blinkit', 'quick commerce'],
+    ),
+    LibraryImageRule(
+      imageName: 'delivery-courier',
+      categorySlug: 'delivery',
+      assetPath: 'assets/images/jobs/delivery-courier.webp',
+      keywords: ['courier', 'parcel', 'transport', 'dispatch', 'rider', 'cargo', 'package delivery'],
+    ),
+    LibraryImageRule(
+      imageName: 'content-writing',
+      categorySlug: 'content-writing',
+      assetPath: 'assets/images/jobs/content-writing.webp',
+      keywords: ['content', 'writing', 'copywriting', 'blog', 'article', 'translation', 'proofreading'],
+    ),
+    LibraryImageRule(
+      imageName: 'design-creative',
+      categorySlug: 'design-data-work',
+      assetPath: 'assets/images/jobs/design-creative.webp',
+      keywords: ['design', 'graphic', 'photoshop', 'illustrator', 'editing', 'presentation'],
+    ),
+    LibraryImageRule(
+      imageName: 'data-entry',
+      categorySlug: 'design-data-work',
+      assetPath: 'assets/images/jobs/data-entry.webp',
+      keywords: ['data entry', 'excel', 'typing', 'digital work', 'spreadsheet'],
+    ),
+  ];
 
   // Built-in keyword fallback map to ensure immediate synchronous resolution
   static final Map<String, List<String>> _builtinKeywords = {
@@ -73,6 +189,9 @@ class JobThumbnailService {
         _keywordToSlug[kw.toLowerCase()] = entry.key;
       }
     }
+    if (_libraryRules.isEmpty) {
+      _libraryRules.addAll(_builtinLibraryRules);
+    }
   }
 
   Future<void> loadManifest() async {
@@ -90,6 +209,27 @@ class JobThumbnailService {
             final kws = cat['keywords'] as List<dynamic>? ?? [];
             for (final kw in kws) {
               _keywordToSlug[kw.toString().toLowerCase()] = slug;
+            }
+          }
+        }
+      }
+
+      final libraryItems = data['library'] as List<dynamic>? ?? [];
+      for (final item in libraryItems) {
+        if (item is Map<String, dynamic>) {
+          final name = item['name'] as String? ?? '';
+          final cat = item['category'] as String? ?? '';
+          final asset = item['asset'] as String? ?? '';
+          final kws = (item['keywords'] as List<dynamic>? ?? []).map((k) => k.toString()).toList();
+          if (name.isNotEmpty && asset.isNotEmpty) {
+            final exists = _libraryRules.any((r) => r.imageName == name);
+            if (!exists) {
+              _libraryRules.add(LibraryImageRule(
+                imageName: name,
+                categorySlug: cat,
+                assetPath: asset,
+                keywords: kws,
+              ));
             }
           }
         }
@@ -117,25 +257,72 @@ class JobThumbnailService {
         uri: sitePhotoUrl.trim(),
         categorySlug: categorySlug,
         categoryIcon: getCategoryIcon(categorySlug),
+        imageName: null,
       );
     }
 
-    // 2. Keyword-aware slug resolution from title and description
+    // 2. Library image chosen by category AND keywords in title & description
+    final text = '${title ?? ''} ${description ?? ''}'.toLowerCase();
+    final libraryMatch = _matchLibraryRule(text, categorySlug);
+    if (libraryMatch != null) {
+      return JobThumbnail(
+        sourceType: ThumbnailSourceType.asset,
+        uri: libraryMatch.assetPath,
+        categorySlug: libraryMatch.categorySlug,
+        categoryIcon: getCategoryIcon(libraryMatch.categorySlug),
+        imageName: libraryMatch.imageName,
+      );
+    }
+
+    // 3. Fallback to category slug and deterministic variant
     String effectiveSlug = _matchKeywords(title, description) ?? categorySlug;
     if (!_knownSlugs.contains(effectiveSlug)) {
       effectiveSlug = 'general';
     }
 
-    // 3. Variant selection (deterministic based on jobId)
     final variant = (jobId.hashCode.abs() % 2) + 1;
-    final assetPath = 'assets/images/jobs/$effectiveSlug-$variant.webp';
+    final imageName = '$effectiveSlug-$variant';
+    final assetPath = 'assets/images/jobs/$imageName.webp';
 
     return JobThumbnail(
       sourceType: ThumbnailSourceType.asset,
       uri: assetPath,
       categorySlug: effectiveSlug,
       categoryIcon: getCategoryIcon(effectiveSlug),
+      imageName: imageName,
     );
+  }
+
+  LibraryImageRule? _matchLibraryRule(String text, String categorySlug) {
+    if (text.trim().isEmpty) return null;
+
+    // First check rules matching the given categorySlug
+    final catRules = _libraryRules.where((r) => r.categorySlug == categorySlug).toList();
+    for (final rule in catRules) {
+      for (final kw in rule.keywords) {
+        if (text.contains(kw.toLowerCase())) {
+          return rule;
+        }
+      }
+    }
+
+    // Then check all rules, prioritizing longer multi-word phrases first
+    final sortedRules = [..._libraryRules];
+    sortedRules.sort((a, b) {
+      final maxA = a.keywords.map((k) => k.length).fold(0, (prev, len) => len > prev ? len : prev);
+      final maxB = b.keywords.map((k) => k.length).fold(0, (prev, len) => len > prev ? len : prev);
+      return maxB.compareTo(maxA);
+    });
+
+    for (final rule in sortedRules) {
+      for (final kw in rule.keywords) {
+        if (text.contains(kw.toLowerCase())) {
+          return rule;
+        }
+      }
+    }
+
+    return null;
   }
 
   String? _matchKeywords(String? title, String? description) {

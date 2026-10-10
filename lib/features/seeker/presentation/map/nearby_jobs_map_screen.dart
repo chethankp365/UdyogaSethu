@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart' hide Path;
 import 'package:udyogasethu/core/router/app_session.dart';
+import 'package:udyogasethu/core/services/job_thumbnail_service.dart';
 import 'package:udyogasethu/features/seeker/domain/job_pin.dart';
 import 'package:udyogasethu/features/seeker/presentation/map/nearby_jobs_map_controller.dart';
 import 'package:udyogasethu/features/seeker/presentation/map/tile_config.dart';
@@ -858,19 +859,14 @@ class _NearbyJobsMapScreenState extends ConsumerState<NearbyJobsMapScreen> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Category Icon Badge
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: const Color(0xFFE6F4EA),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(
-                _mapCategoryIcon(job.categoryIcon),
-                color: kPinColor,
-                size: 22,
-              ),
+            // Job Thumbnail
+            JobThumbnailWidget(
+              categorySlug: job.categorySlug,
+              jobId: job.id,
+              title: job.title,
+              description: job.description,
+              width: 48,
+              height: 48,
             ),
             const SizedBox(width: 12),
 

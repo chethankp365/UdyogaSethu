@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/config/env.dart';
 import 'package:udyogasethu/core/l10n/locale_controller.dart';
 import 'package:udyogasethu/core/router/routes.dart';
+import 'package:udyogasethu/core/services/job_thumbnail_service.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/widgets/user_avatar.dart';
 import 'package:udyogasethu/features/provider/domain/nearby_worker.dart';
@@ -1213,30 +1214,52 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
               ],
             ),
 
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
 
-            // Job Title
-            Text(
-              job.title,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark),
-            ),
-
-            const SizedBox(height: 6),
-
-            // Wage and Timing
+            // Job Thumbnail + Title & Details Row
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  job.formattedWage,
-                  style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.headerGreenDark, fontSize: 13),
+                JobThumbnailWidget(
+                  sitePhotoUrl: job.sitePhotoUrl,
+                  categorySlug: job.categorySlug,
+                  jobId: job.id,
+                  title: job.title,
+                  description: job.description,
+                  width: 52,
+                  height: 52,
                 ),
                 const SizedBox(width: 12),
-                Text(
-                  DateFormat('dd MMM, hh:mm a').format(job.startAt),
-                  style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        job.title,
+                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Text(
+                            job.formattedWage,
+                            style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.headerGreenDark, fontSize: 13),
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            DateFormat('dd MMM, hh:mm a').format(job.startAt),
+                            style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
+
 
             const SizedBox(height: 12),
 

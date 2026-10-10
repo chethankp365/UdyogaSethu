@@ -410,5 +410,103 @@
         "watering"
       ]
     }
+  ],
+  "library": [
+    {
+      "name": "painting-interior",
+      "category": "painting",
+      "asset": "assets/images/jobs/painting-interior.webp",
+      "keywords": ["wall paint", "interior paint", "room paint", "wall painting", "whitewash", "indoor paint"]
+    },
+    {
+      "name": "painting-exterior",
+      "category": "painting",
+      "asset": "assets/images/jobs/painting-exterior.webp",
+      "keywords": ["exterior paint", "building paint", "weather paint", "facade", "outdoor paint"]
+    },
+    {
+      "name": "electrician-wiring",
+      "category": "electrician",
+      "asset": "assets/images/jobs/electrician-wiring.webp",
+      "keywords": ["wiring", "switchboard", "circuit", "fuse", "short circuit", "electrical wiring"]
+    },
+    {
+      "name": "electrician-appliance",
+      "category": "electrician",
+      "asset": "assets/images/jobs/electrician-appliance.webp",
+      "keywords": ["ac repair", "inverter", "motor", "appliance", "fan", "geyser", "refrigerator"]
+    },
+    {
+      "name": "plumbing-repair",
+      "category": "plumbing",
+      "asset": "assets/images/jobs/plumbing-repair.webp",
+      "keywords": ["pipe", "leak", "tap", "drainage", "faucet", "water pipe", "pipeline", "leakage"]
+    },
+    {
+      "name": "plumbing-bathroom",
+      "category": "plumbing",
+      "asset": "assets/images/jobs/plumbing-bathroom.webp",
+      "keywords": ["bathroom", "sink", "sanitary", "water tank", "toilet", "commode", "wash basin"]
+    },
+    {
+      "name": "carpenter-furniture",
+      "category": "carpenter",
+      "asset": "assets/images/jobs/carpenter-furniture.webp",
+      "keywords": ["furniture", "table", "chair", "cabinet", "wood", "wooden", "plywood", "dining table", "bed", "sofa", "wardrobe"]
+    },
+    {
+      "name": "carpenter-doors",
+      "category": "carpenter",
+      "asset": "assets/images/jobs/carpenter-doors.webp",
+      "keywords": ["door", "window", "frame", "hinge", "lock", "latch", "sliding door"]
+    },
+    {
+      "name": "cleaner-home",
+      "category": "cleaner",
+      "asset": "assets/images/jobs/cleaner-home.webp",
+      "keywords": ["cleaning", "cleaner", "housekeeping", "sweep", "mop", "deep cleaning", "home cleaning"]
+    },
+    {
+      "name": "cleaner-office",
+      "category": "cleaner",
+      "asset": "assets/images/jobs/cleaner-office.webp",
+      "keywords": ["office cleaning", "commercial cleaning", "sanitation", "dusting", "janitor", "hygiene"]
+    },
+    {
+      "name": "gardener-lawn",
+      "category": "gardener",
+      "asset": "assets/images/jobs/gardener-lawn.webp",
+      "keywords": ["gardener", "gardening", "landscaping", "lawn", "mowing", "lawn mowing", "plants", "plant care", "nursery"]
+    },
+    {
+      "name": "delivery-food",
+      "category": "delivery-gig-work",
+      "asset": "assets/images/jobs/delivery-food.webp",
+      "keywords": ["food delivery", "swiggy", "zomato", "zepto", "blinkit", "restaurant delivery", "quick commerce"]
+    },
+    {
+      "name": "delivery-courier",
+      "category": "delivery",
+      "asset": "assets/images/jobs/delivery-courier.webp",
+      "keywords": ["courier", "parcel", "transport", "dispatch", "rider", "cargo", "package delivery"]
+    },
+    {
+      "name": "content-writing",
+      "category": "content-writing",
+      "asset": "assets/images/jobs/content-writing.webp",
+      "keywords": ["content", "writing", "copywriting", "blog", "article", "translation", "proofreading"]
+    },
+    {
+      "name": "design-creative",
+      "category": "design-data-work",
+      "asset": "assets/images/jobs/design-creative.webp",
+      "keywords": ["design", "graphic", "photoshop", "illustrator", "editing", "presentation"]
+    },
+    {
+      "name": "data-entry",
+      "category": "design-data-work",
+      "asset": "assets/images/jobs/data-entry.webp",
+      "keywords": ["data entry", "excel", "typing", "digital work", "spreadsheet"]
+    }
   ]
 }
