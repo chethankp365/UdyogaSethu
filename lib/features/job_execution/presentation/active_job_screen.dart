@@ -272,6 +272,10 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
               ],
 
               // 2. The Big Primary Action (Normal vs Simple Mode)
+              if (!isProvider && (detail.status == 'arrived' || detail.stage == AssignmentStage.workerArrived)) ...[
+                _buildStep2RealtimePrompt(context, detail, l10n),
+                const SizedBox(height: 16),
+              ],
               _buildPrimaryActionSection(context, detail, isProvider, isSimpleMode, l10n),
               const SizedBox(height: 20),
 
@@ -746,6 +750,87 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
           ],
         ),
       ],
+    );
+  }
+
+  Widget _buildStep2RealtimePrompt(
+    BuildContext context,
+    ActiveJobDetail detail,
+    AppLocalizations? l10n,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF0FDF4),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFF10B981), width: 1.5),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x100D6548),
+            blurRadius: 10,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: const BoxDecoration(
+                  color: Color(0xFF0D6548),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.check_circle_rounded, color: Colors.white, size: 20),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Employer Verified Arrival!',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF064E3B),
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Proceed to Step 2: Take live selfie & GPS reading to start work timer.',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.green.shade900,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF0D6548),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+              icon: const Icon(Icons.camera_alt_rounded, size: 18),
+              label: const Text(
+                'Complete Step 2 Verification',
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+              ),
+              onPressed: () => context.push('/jobs/verify-presence/${detail.assignmentId}'),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

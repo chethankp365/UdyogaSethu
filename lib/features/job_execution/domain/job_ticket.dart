@@ -185,6 +185,8 @@ class AttendanceScanResult {
   final String? message;
   final String? errorCode;
   final String? errorMessage;
+  final String? scannedAtTime;
+  final String? expiredAtTime;
 
   const AttendanceScanResult({
     required this.valid,
@@ -201,11 +203,26 @@ class AttendanceScanResult {
     this.message,
     this.errorCode,
     this.errorMessage,
+    this.scannedAtTime,
+    this.expiredAtTime,
   });
+
+  bool get isExpired => errorCode == 'EXPIRED' || errorCode == 'token_expired';
+  bool get isAlreadyUsed => errorCode == 'ALREADY_USED' || errorCode == 'token_already_used';
+  bool get isWrongEmployer => errorCode == 'WRONG_EMPLOYER' || errorCode == 'unauthorized_provider';
+  bool get isWrongJob => errorCode == 'WRONG_JOB';
+  bool get isNotYetValid => errorCode == 'NOT_YET_VALID' || errorCode == 'too_early';
+  bool get isTooLate => errorCode == 'TOO_LATE';
+  bool get isCancelled => errorCode == 'CANCELLED';
+  bool get isWorkerSuspended => errorCode == 'WORKER_SUSPENDED';
+  bool get isTampered => errorCode == 'TAMPERED' || errorCode == 'invalid_signature' || errorCode == 'invalid_token';
+  bool get isDuplicateCheckin => errorCode == 'DUPLICATE_CHECKIN';
 
   factory AttendanceScanResult.error({
     required String code,
     required String message,
+    String? scannedAtTime,
+    String? expiredAtTime,
   }) {
     return AttendanceScanResult(
       valid: false,
@@ -213,6 +230,8 @@ class AttendanceScanResult {
       status: 'error',
       errorCode: code,
       errorMessage: message,
+      scannedAtTime: scannedAtTime,
+      expiredAtTime: expiredAtTime,
     );
   }
 
@@ -221,6 +240,11 @@ class AttendanceScanResult {
     if (json['arrived_at'] != null) {
       arrived = DateTime.tryParse(json['arrived_at'].toString());
     }
+
+    final code = json['error_code'] as String? ??
+        (json['valid'] != true ? json['status_code'] as String? : null);
+    final msg = json['error_message'] as String? ??
+        json['message'] as String?;
 
     return AttendanceScanResult(
       valid: json['valid'] == true,
@@ -234,9 +258,11 @@ class AttendanceScanResult {
       isVerifiedBadge: json['is_verified_badge'] == true || json['is_worker_verified'] == true,
       jobTitle: json['job_title'] as String?,
       arrivedAt: arrived,
-      message: json['message'] as String?,
-      errorCode: json['error_code'] as String? ?? (json['valid'] != true ? json['status_code'] as String? : null),
-      errorMessage: json['error_message'] as String? ?? (json['valid'] != true ? json['message'] as String? : null),
+      message: msg,
+      errorCode: code,
+      errorMessage: msg,
+      scannedAtTime: json['scanned_at'] as String?,
+      expiredAtTime: json['expired_at'] as String?,
     );
   }
 }

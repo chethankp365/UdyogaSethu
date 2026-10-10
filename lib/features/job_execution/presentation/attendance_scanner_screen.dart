@@ -92,8 +92,11 @@ class _AttendanceScannerScreenState extends ConsumerState<AttendanceScannerScree
     } catch (_) {}
   }
 
+  String? _lastScannedCode;
+
   Future<void> _processScannedCode(String rawCode) async {
     if (_isProcessing) return;
+    _lastScannedCode = rawCode;
     setState(() => _isProcessing = true);
 
     double? lat;
@@ -144,7 +147,48 @@ class _AttendanceScannerScreenState extends ConsumerState<AttendanceScannerScree
       backgroundColor: Colors.transparent,
       builder: (ctx) {
         if (!result.valid) {
-          // Failure Sheet (Expired, Already used, Unauthorized)
+          final isNetworkError = result.errorCode == 'network_error' || result.errorCode == 'server_error';
+          String title = l10n?.attendanceScanFailedTitle ?? 'Attendance Scan Failed';
+          String message = result.errorMessage ?? 'Unable to verify QR ticket.';
+          IconData iconData = Icons.cancel_outlined;
+          Color headerColor = Colors.red;
+
+          if (result.isExpired) {
+            title = l10n?.ticketExpiredTitle ?? 'Ticket Expired';
+            message = result.errorMessage ?? 'QR expired at ${result.expiredAtTime ?? "recently"}, ask the worker to refresh';
+          } else if (result.isAlreadyUsed) {
+            title = l10n?.ticketReplayRefusedTitle ?? 'Already Scanned';
+            message = result.errorMessage ?? 'Already scanned at ${result.scannedAtTime ?? "earlier"}';
+          } else if (result.isWrongEmployer) {
+            title = 'Wrong Employer';
+            message = 'You are not the designated employer for this job assignment.';
+          } else if (result.isWrongJob) {
+            title = 'Wrong Job';
+            message = 'This ticket is for a different job assignment.';
+          } else if (result.isNotYetValid) {
+            title = 'Not Yet Valid';
+            message = 'Ticket is not yet valid. Check-in opens 60 minutes before start time.';
+          } else if (result.isTooLate) {
+            title = 'Check-in Window Closed';
+            message = 'Ticket check-in window has closed. Permitted arrival period has elapsed.';
+          } else if (result.isCancelled) {
+            title = 'Assignment Cancelled';
+            message = 'This job assignment was cancelled.';
+          } else if (result.isWorkerSuspended) {
+            title = 'Worker Suspended';
+            message = 'This worker account is currently suspended.';
+          } else if (result.isTampered) {
+            title = 'Invalid / Tampered Code';
+            message = 'Ticket QR code could not be verified or was tampered.';
+          } else if (result.isDuplicateCheckin) {
+            title = 'Already Checked In';
+            message = 'Worker has already checked in on site.';
+          } else if (isNetworkError) {
+            title = 'Connection Error';
+            iconData = Icons.wifi_off_rounded;
+            headerColor = Colors.amber.shade800;
+          }
+
           return Container(
             padding: const EdgeInsets.all(24),
             decoration: const BoxDecoration(
@@ -158,45 +202,79 @@ class _AttendanceScannerScreenState extends ConsumerState<AttendanceScannerScree
                   width: 56,
                   height: 56,
                   decoration: BoxDecoration(
-                    color: Colors.red.shade100,
+                    color: headerColor.withValues(alpha: 0.15),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.cancel_outlined, color: Colors.red, size: 36),
+                  child: Icon(iconData, color: headerColor, size: 36),
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  result.errorCode == 'token_already_used'
-                      ? (l10n?.ticketReplayRefusedTitle ?? 'Replay Refused')
-                      : result.errorCode == 'token_expired'
-                          ? (l10n?.ticketExpiredTitle ?? 'Ticket Expired')
-                          : (l10n?.attendanceScanFailedTitle ?? 'Attendance Scan Failed'),
+                  title,
                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF0F172A)),
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  result.errorMessage ?? 'Unable to verify QR ticket.',
+                  message,
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 14, color: Color(0xFF64748B), height: 1.4),
                 ),
                 const SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF0F172A),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(ctx);
-                      _resetScanner();
-                    },
-                    child: Text(
-                      l10n?.scanAgain ?? 'Scan Again',
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                if (isNetworkError && _lastScannedCode != null) ...[
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(ctx);
+                            _resetScanner();
+                          },
+                          child: Text(l10n?.cancel ?? 'Cancel'),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.emeraldPrimary,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                          icon: const Icon(Icons.refresh, size: 18),
+                          label: Text(l10n?.retry ?? 'Retry'),
+                          onPressed: () {
+                            Navigator.pop(ctx);
+                            _processScannedCode(_lastScannedCode!);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ] else ...[
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF0F172A),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(ctx);
+                        _resetScanner();
+                      },
+                      child: Text(
+                        l10n?.scanAgain ?? 'Scan Again',
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ],
             ),
           );

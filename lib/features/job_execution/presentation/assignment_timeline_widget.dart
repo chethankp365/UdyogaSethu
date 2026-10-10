@@ -339,6 +339,25 @@ class AssignmentTimelineWidget extends ConsumerWidget {
                         ),
                     ],
                   ),
+                  if (isCurrent) ...[
+                    const SizedBox(height: 3),
+                    Row(
+                      children: [
+                        Icon(Icons.arrow_right_alt_rounded, size: 14, color: Colors.orange.shade800),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            _getWhoMustActNext(stage, isProvider),
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange.shade900,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                   if (event != null && event.meta.isNotEmpty && event.meta['note'] != null) ...[
                     const SizedBox(height: 2),
                     Text(
@@ -353,6 +372,36 @@ class AssignmentTimelineWidget extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  String _getWhoMustActNext(AssignmentStage stage, bool isProvider) {
+    switch (stage) {
+      case AssignmentStage.requestCreated:
+        return isProvider ? 'Waiting for worker acceptance' : 'Action needed: Accept job offer';
+      case AssignmentStage.accepted:
+      case AssignmentStage.ticketIssued:
+        return isProvider
+            ? 'Action needed: Scan worker QR ticket on site arrival'
+            : 'Action needed: Present QR ticket upon arrival';
+      case AssignmentStage.workerArrived:
+        return isProvider
+            ? 'Waiting for worker live selfie & GPS verification'
+            : 'Action needed: Complete Step 2 (Live Selfie & GPS)';
+      case AssignmentStage.verificationCompleted:
+        return 'Both: Verification complete, starting work timer';
+      case AssignmentStage.jobInProgress:
+        return isProvider
+            ? 'Work in progress • Awaiting job completion'
+            : 'Action needed: Complete job & submit evidence';
+      case AssignmentStage.completed:
+        return isProvider
+            ? 'Action needed: Confirm & release escrow payment'
+            : 'Waiting for employer payment release';
+      case AssignmentStage.paymentReleased:
+        return 'Job completed and payment settled';
+      case AssignmentStage.disputeRaised:
+        return 'Under mediation review';
+    }
   }
 
   String _getStageTitle(AssignmentStage stage, AppLocalizations? l10n) {
