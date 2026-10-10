@@ -2,66 +2,107 @@ import 'package:flutter/foundation.dart';
 
 @immutable
 class FarmInfrastructureBadges {
-  final String soilClassification;
-  final String primaryCrops;
-  final String apmcRegistration;
-  final String kisanCreditCardStatus;
-  final bool isKccApproved;
+  final String? soilClassification;
+  final String? primaryCrops;
+  final String? farmingMethod;
+  final String? apmcRegistration;
+  final String? kisanCreditCardStatus;
+  final bool isKccVerified;
+  final double deliveryRadiusKm;
+  final bool pickupAvailable;
+  final int leadTimeHours;
+  final String? farmPhotoUrl;
 
   const FarmInfrastructureBadges({
-    this.soilClassification = 'Red Loam Soil (pH 6.8)',
-    this.primaryCrops = 'Tomatoes, Paddy, Banana',
-    this.apmcRegistration = 'Mandya APMC #4812',
-    this.kisanCreditCardStatus = 'KCC Approved ✓',
-    this.isKccApproved = true,
-  });
+    this.soilClassification,
+    this.primaryCrops,
+    this.farmingMethod,
+    this.apmcRegistration,
+    this.kisanCreditCardStatus,
+    bool isKccVerified = false,
+    bool? isKccApproved,
+    this.deliveryRadiusKm = 25.0,
+    this.pickupAvailable = true,
+    this.leadTimeHours = 24,
+    this.farmPhotoUrl,
+  }) : isKccVerified = isKccApproved ?? isKccVerified;
+
+  bool get isKccApproved => isKccVerified;
 
   factory FarmInfrastructureBadges.fromJson(Map<String, dynamic> json) {
     return FarmInfrastructureBadges(
-      soilClassification: json['soil_classification']?.toString() ?? 'Red Loam Soil (pH 6.8)',
-      primaryCrops: json['primary_crops']?.toString() ?? 'Tomatoes, Paddy, Banana',
-      apmcRegistration: json['apmc_registration']?.toString() ?? 'Mandya APMC #4812',
-      kisanCreditCardStatus: json['kcc_status']?.toString() ?? 'KCC Approved ✓',
-      isKccApproved: json['is_kcc_approved'] != false,
+      soilClassification: json['soil_classification']?.toString(),
+      primaryCrops: json['primary_crops'] is List
+          ? (json['primary_crops'] as List).join(', ')
+          : json['primary_crops']?.toString(),
+      farmingMethod: json['farming_method']?.toString(),
+      apmcRegistration: json['apmc_registration']?.toString(),
+      kisanCreditCardStatus: json['kcc_status']?.toString(),
+      isKccVerified: json['is_kcc_verified'] == true,
+      deliveryRadiusKm: (json['delivery_radius_km'] as num?)?.toDouble() ?? 25.0,
+      pickupAvailable: json['pickup_available'] != false,
+      leadTimeHours: (json['lead_time_hours'] as num?)?.toInt() ?? 24,
+      farmPhotoUrl: json['farm_photo_url']?.toString(),
     );
   }
 
   Map<String, dynamic> toJson() => {
         'soil_classification': soilClassification,
         'primary_crops': primaryCrops,
+        'farming_method': farmingMethod,
         'apmc_registration': apmcRegistration,
         'kcc_status': kisanCreditCardStatus,
-        'is_kcc_approved': isKccApproved,
+        'is_kcc_verified': isKccVerified,
+        'delivery_radius_km': deliveryRadiusKm,
+        'pickup_available': pickupAvailable,
+        'lead_time_hours': leadTimeHours,
+        'farm_photo_url': farmPhotoUrl,
       };
 }
 
 @immutable
 class OrganicCertificate {
-  final String title;
-  final String issuer;
-  final String statusLabel; // 'VALIDATED ✓', 'UNDER REVIEW', 'SUBMITTED'
-  final bool isValidated;
+  final String? title;
+  final String? issuer;
+  final String statusLabel; // 'VERIFIED', 'SELF_DECLARED', 'NOT_PROVIDED'
+  final bool isValidatedByAdmin;
   final String? certificateNumber;
+  final String? documentPath;
   final DateTime? validUntil;
 
   const OrganicCertificate({
-    this.title = 'Zero-Pesticide Organic Certificate',
-    this.issuer = 'Verified by Karnataka Organic Farmers Board',
-    this.statusLabel = 'VALIDATED ✓',
-    this.isValidated = true,
-    this.certificateNumber = 'KOFB-ORG-2026-9812',
+    this.title,
+    this.issuer,
+    this.statusLabel = 'Self-declared, not verified yet',
+    bool isValidatedByAdmin = false,
+    bool? isValidated,
+    this.certificateNumber,
+    this.documentPath,
     this.validUntil,
-  });
+  }) : isValidatedByAdmin = isValidated ?? isValidatedByAdmin;
+
+  bool get isValidated => isValidatedByAdmin;
+
+  bool get hasCertificate =>
+      certificateNumber != null && certificateNumber!.trim().isNotEmpty;
 
   factory OrganicCertificate.fromJson(Map<String, dynamic> json) {
-    final status = json['status']?.toString() ?? 'validated';
-    final isValid = status.toLowerCase() == 'validated';
+    final status = json['status']?.toString() ?? 'self_declared';
+    final isAdminValidated = status.toLowerCase() == 'verified' ||
+        status.toLowerCase() == 'validated';
+
     return OrganicCertificate(
-      title: json['title']?.toString() ?? 'Zero-Pesticide Organic Certificate',
-      issuer: json['issuer']?.toString() ?? 'Verified by Karnataka Organic Farmers Board',
-      statusLabel: isValid ? 'VALIDATED ✓' : 'UNDER REVIEW',
-      isValidated: isValid,
+      title: json['title']?.toString() ??
+          (json['certificate_number'] != null ? 'Organic Certificate' : null),
+      issuer: isAdminValidated
+          ? (json['issuer']?.toString() ?? 'Admin Verified')
+          : null,
+      statusLabel: isAdminValidated
+          ? 'VALIDATED ✓'
+          : 'Self-declared, not verified yet',
+      isValidatedByAdmin: isAdminValidated,
       certificateNumber: json['certificate_number']?.toString(),
+      documentPath: json['document_path']?.toString(),
       validUntil: DateTime.tryParse(json['valid_until']?.toString() ?? ''),
     );
   }
@@ -69,8 +110,9 @@ class OrganicCertificate {
   Map<String, dynamic> toJson() => {
         'title': title,
         'issuer': issuer,
-        'status': isValidated ? 'validated' : 'under_review',
+        'status': isValidatedByAdmin ? 'verified' : 'self_declared',
         'certificate_number': certificateNumber,
+        'document_path': documentPath,
         'valid_until': validUntil?.toIso8601String(),
       };
 }
@@ -83,7 +125,7 @@ class FarmerProfileData {
   final String clusterVillage;
   final String phone;
   final String? avatarUrl;
-  final bool isVerified;
+  final bool isKycVerified;
   final double landAcres;
   final double produceSoldKgMonth;
   final int directSalesPaise;
@@ -92,33 +134,35 @@ class FarmerProfileData {
 
   const FarmerProfileData({
     required this.id,
-    this.fullName = 'Chethan Gowda',
-    this.farmName = 'Greenfield Organic Farm',
-    this.clusterVillage = 'Mandya Cluster',
-    this.phone = '+91 98450 77889',
+    this.fullName = 'Farmer',
+    this.farmName = 'My Farm',
+    this.clusterVillage = 'Agri Cluster',
+    this.phone = '',
     this.avatarUrl,
-    this.isVerified = true,
-    this.landAcres = 4.2,
-    this.produceSoldKgMonth = 420.0,
-    this.directSalesPaise = 4850000, // ₹48,500
+    bool isKycVerified = false,
+    bool? isVerified,
+    this.landAcres = 0.0,
+    this.produceSoldKgMonth = 0.0,
+    this.directSalesPaise = 0,
     this.badges = const FarmInfrastructureBadges(),
     this.certificate = const OrganicCertificate(),
-  });
+  }) : isKycVerified = isVerified ?? isKycVerified;
 
+  bool get isVerified => isKycVerified;
   double get directSalesRupees => directSalesPaise / 100.0;
 
   factory FarmerProfileData.fromJson(Map<String, dynamic> json) {
     return FarmerProfileData(
       id: json['id']?.toString() ?? '',
-      fullName: json['full_name']?.toString() ?? 'Chethan Gowda',
-      farmName: json['farm_name']?.toString() ?? 'Greenfield Organic Farm',
-      clusterVillage: json['cluster_village']?.toString() ?? 'Mandya Cluster',
-      phone: json['phone']?.toString() ?? '+91 98450 77889',
+      fullName: json['full_name']?.toString() ?? 'Farmer',
+      farmName: json['farm_name']?.toString() ?? 'My Farm',
+      clusterVillage: json['cluster_village']?.toString() ?? 'Agri Cluster',
+      phone: json['phone']?.toString() ?? '',
       avatarUrl: json['avatar_url']?.toString(),
-      isVerified: json['is_verified'] != false,
-      landAcres: (json['land_acres'] as num?)?.toDouble() ?? 4.2,
-      produceSoldKgMonth: (json['produce_sold_kg_month'] as num?)?.toDouble() ?? 420.0,
-      directSalesPaise: (json['direct_sales_paise'] as num?)?.toInt() ?? 4850000,
+      isKycVerified: json['is_kyc_verified'] == true || json['is_verified'] == true,
+      landAcres: (json['land_acres'] as num?)?.toDouble() ?? 0.0,
+      produceSoldKgMonth: (json['produce_sold_kg_month'] as num?)?.toDouble() ?? 0.0,
+      directSalesPaise: (json['direct_sales_paise'] as num?)?.toInt() ?? 0,
       badges: json['badges'] is Map<String, dynamic>
           ? FarmInfrastructureBadges.fromJson(json['badges'] as Map<String, dynamic>)
           : const FarmInfrastructureBadges(),
@@ -135,7 +179,7 @@ class FarmerProfileData {
         'cluster_village': clusterVillage,
         'phone': phone,
         'avatar_url': avatarUrl,
-        'is_verified': isVerified,
+        'is_kyc_verified': isKycVerified,
         'land_acres': landAcres,
         'produce_sold_kg_month': produceSoldKgMonth,
         'direct_sales_paise': directSalesPaise,

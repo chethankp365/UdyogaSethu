@@ -182,15 +182,15 @@ class FarmerProfileScreen extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3.5),
                       decoration: BoxDecoration(
-                        color: profile.isVerified ? const Color(0xFF2DD4BF) : Colors.amber.shade200,
+                        color: profile.isKycVerified ? const Color(0xFF2DD4BF) : Colors.amber.shade200,
                         borderRadius: BorderRadius.circular(14),
                       ),
                       child: Text(
-                        profile.isVerified
+                        profile.isKycVerified
                             ? (l10n?.verifiedFarmer ?? 'VERIFIED FARMER ✓')
                             : (l10n?.selfDeclaredProfile ?? 'SELF-DECLARED PROFILE'),
                         style: TextStyle(
-                          color: profile.isVerified ? const Color(0xFF064E3B) : Colors.brown.shade900,
+                          color: profile.isKycVerified ? const Color(0xFF064E3B) : Colors.brown.shade900,
                           fontWeight: FontWeight.w800,
                           fontSize: 10.5,
                           letterSpacing: 0.5,
@@ -232,9 +232,9 @@ class FarmerProfileScreen extends ConsumerWidget {
                   color: Colors.white.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
-                  Icons.verified_user_outlined,
-                  color: Color(0xFF6EE7B7),
+                child: Icon(
+                  profile.isKycVerified ? Icons.verified_user_rounded : Icons.shield_outlined,
+                  color: profile.isKycVerified ? const Color(0xFF6EE7B7) : Colors.white70,
                   size: 20,
                 ),
               ),
@@ -437,7 +437,9 @@ class FarmerProfileScreen extends ConsumerWidget {
               Expanded(
                 child: _buildBadgeTile(
                   caption: l10n?.soilClassification ?? 'SOIL CLASSIFICATION',
-                  value: badges.soilClassification,
+                  value: badges.soilClassification?.isNotEmpty == true
+                      ? badges.soilClassification!
+                      : 'Not specified',
                   valueColor: const Color(0xFF0F172A),
                 ),
               ),
@@ -445,7 +447,9 @@ class FarmerProfileScreen extends ConsumerWidget {
               Expanded(
                 child: _buildBadgeTile(
                   caption: l10n?.primaryCrops ?? 'PRIMARY CROPS',
-                  value: badges.primaryCrops,
+                  value: badges.primaryCrops?.isNotEmpty == true
+                      ? badges.primaryCrops!
+                      : 'Not specified',
                   valueColor: const Color(0xFF047857), // Green
                 ),
               ),
@@ -457,7 +461,10 @@ class FarmerProfileScreen extends ConsumerWidget {
               Expanded(
                 child: _buildBadgeTile(
                   caption: l10n?.apmcRegistration ?? 'APMC REGISTRATION',
-                  value: badges.apmcRegistration,
+                  value: badges.apmcRegistration?.isNotEmpty == true
+                      ? badges.apmcRegistration!
+                      : 'Not added',
+                  subLabel: '(Self-declared, not verified yet)',
                   valueColor: const Color(0xFF0F172A),
                 ),
               ),
@@ -465,7 +472,10 @@ class FarmerProfileScreen extends ConsumerWidget {
               Expanded(
                 child: _buildBadgeTile(
                   caption: l10n?.kisanCreditCard ?? 'KISAN CREDIT CARD',
-                  value: badges.kisanCreditCardStatus,
+                  value: badges.kisanCreditCardStatus?.isNotEmpty == true
+                      ? badges.kisanCreditCardStatus!
+                      : 'Not added',
+                  subLabel: badges.isKccVerified ? null : '(Self-declared, not verified yet)',
                   valueColor: const Color(0xFF047857), // Green
                 ),
               ),
@@ -480,6 +490,7 @@ class FarmerProfileScreen extends ConsumerWidget {
     required String caption,
     required String value,
     required Color valueColor,
+    String? subLabel,
   }) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -511,6 +522,19 @@ class FarmerProfileScreen extends ConsumerWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
+          if (subLabel != null) ...[
+            const SizedBox(height: 3),
+            Text(
+              subLabel,
+              style: const TextStyle(
+                fontSize: 9.0,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFFD97706),
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
         ],
       ),
     );
@@ -524,72 +548,80 @@ class FarmerProfileScreen extends ConsumerWidget {
     OrganicCertificate certificate,
     AppLocalizations? l10n,
   ) {
+    final hasCert = certificate.hasCertificate;
+    final isAdminValidated = certificate.isValidatedByAdmin;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFECFDF5), // Light mint green
+        color: isAdminValidated ? const Color(0xFFECFDF5) : const Color(0xFFFFFBEB),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFA7F3D0)),
+        border: Border.all(
+          color: isAdminValidated ? const Color(0xFFA7F3D0) : const Color(0xFFFDE68A),
+        ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Sprout icon in circle
           Container(
             width: 44,
             height: 44,
-            decoration: const BoxDecoration(
-              color: Color(0xFFD1FAE5),
+            decoration: BoxDecoration(
+              color: isAdminValidated ? const Color(0xFFD1FAE5) : const Color(0xFFFEF3C7),
               shape: BoxShape.circle,
             ),
-            child: const Center(
-              child: Text('🌱', style: TextStyle(fontSize: 22)),
+            child: Center(
+              child: Text(isAdminValidated ? '🌱' : '📄', style: const TextStyle(fontSize: 22)),
             ),
           ),
-
           const SizedBox(width: 12),
-
-          // Title & issuer
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  l10n?.zeroPesticideOrganicCertificate ?? certificate.title,
-                  style: const TextStyle(
+                  certificate.title?.isNotEmpty == true
+                      ? certificate.title!
+                      : (hasCert && certificate.certificateNumber != null
+                          ? 'Organic Certificate #${certificate.certificateNumber}'
+                          : 'Organic Certificate'),
+                  style: TextStyle(
                     fontSize: 13.5,
                     fontWeight: FontWeight.w800,
-                    color: Color(0xFF064E3B),
+                    color: isAdminValidated ? const Color(0xFF064E3B) : const Color(0xFF92400E),
                   ),
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  l10n?.verifiedByKarnatakaOrganicBoard ?? certificate.issuer,
-                  style: const TextStyle(
+                  isAdminValidated
+                      ? (certificate.issuer ?? 'Validated by Organic Certification Authority')
+                      : (hasCert
+                          ? 'Self-declared, not verified yet'
+                          : 'Optional certificate not uploaded yet'),
+                  style: TextStyle(
                     fontSize: 11,
-                    color: Color(0xFF047857),
+                    color: isAdminValidated ? const Color(0xFF047857) : const Color(0xFFB45309),
                   ),
                 ),
               ],
             ),
           ),
-
           const SizedBox(width: 10),
-
-          // Status Badge Pill ("VALIDATED ✓")
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
-              color: const Color(0xFF065F46),
+              color: isAdminValidated ? const Color(0xFF065F46) : const Color(0xFFD97706),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              l10n?.validatedStatus ?? certificate.statusLabel,
+              isAdminValidated
+                  ? 'VALIDATED ✓'
+                  : (hasCert ? 'Self-declared, not verified yet' : 'Not Added'),
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 11,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 0.5,
+                fontSize: 10,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0.3,
               ),
             ),
           ),

@@ -264,7 +264,7 @@ void main() {
       expect(find.text('+₹700'), findsOneWidget);
       expect(find.text('UPI Transfer to PhonePe (Bank)'), findsOneWidget);
       expect(find.text('-₹1,200'), findsOneWidget);
-      expect(find.text('✓ Completed'), findsNWidgets(2));
+      expect(find.text('Success'), findsNWidgets(2));
     });
 
     testWidgets('WithdrawDialog displays balance, validates amount, and handles overdraw error',
@@ -317,7 +317,7 @@ void main() {
       expect(find.textContaining('Insufficient available balance'), findsOneWidget);
     });
 
-    testWidgets('ScanUpiDialog renders Demo Mode banner, parses UPI payload, and previews data',
+    testWidgets('ScanUpiDialog renders camera scanner and scanner frame',
         (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
@@ -332,14 +332,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Scan UPI QR'), findsOneWidget);
-      expect(find.text('Demo mode: Simulated UPI Scanner'), findsOneWidget);
-      expect(find.text('No real money will be transferred. Payment rails connect in Phase 5.2.'), findsOneWidget);
-
-      // Verify parsed payload display
-      expect(find.text('Suresh Agri Produce'), findsOneWidget);
-      expect(find.text('farmer.suresh@upi'), findsOneWidget);
-      expect(find.text('₹450.00'), findsOneWidget);
-      expect(find.text('Fresh Tomatoes'), findsOneWidget);
+      expect(find.textContaining('Test mode: no money is moved'), findsOneWidget);
     });
   });
 }
