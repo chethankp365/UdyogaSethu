@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/seeker/domain/job_detail.dart';
@@ -37,21 +38,82 @@ class _ApplyBottomSheetState extends ConsumerState<ApplyBottomSheet> {
     super.dispose();
   }
 
+  JobEligibility _mergeClientRules(JobEligibility serverEligibility) {
+    String? currentUserId;
+    try {
+      currentUserId = Supabase.instance.client.auth.currentUser?.id;
+    } catch (_) {}
+
+    final bool isOwnJob = serverEligibility.isOwnJob ||
+        (currentUserId != null && widget.job.providerId.isNotEmpty && widget.job.providerId == currentUserId);
+    final bool isPastStart = serverEligibility.isPastStart || widget.job.startAt.isBefore(DateTime.now());
+    final bool isSlotsFilled = serverEligibility.isSlotsFilled || (widget.job.slotsFilled >= widget.job.slotsTotal);
+
+    final bool isEligible = serverEligibility.isEligible &&
+        !isOwnJob &&
+        !isPastStart &&
+        !isSlotsFilled &&
+        !serverEligibility.studentGated &&
+        !serverEligibility.alreadyApplied &&
+        !serverEligibility.scheduleOverlap &&
+        (!serverEligibility.licenceNeeded || serverEligibility.hasLicence) &&
+        (!serverEligibility.verifiedNeeded || serverEligibility.isVerified);
+
+    final reasonCode = serverEligibility.reasonCode ??
+        (isOwnJob
+            ? 'OWN_JOB'
+            : isPastStart
+                ? 'EXPIRED'
+                : isSlotsFilled
+                    ? 'SLOTS_FILLED'
+                    : null);
+
+    return JobEligibility(
+      isEligible: isEligible,
+      reasonCode: reasonCode,
+      licenceNeeded: serverEligibility.licenceNeeded,
+      hasLicence: serverEligibility.hasLicence,
+      verifiedNeeded: serverEligibility.verifiedNeeded,
+      isVerified: serverEligibility.isVerified,
+      studentGated: serverEligibility.studentGated,
+      scheduleOverlap: serverEligibility.scheduleOverlap,
+      overlapJobTitle: serverEligibility.overlapJobTitle,
+      alreadyApplied: serverEligibility.alreadyApplied,
+      isOwnJob: isOwnJob,
+      isPastStart: isPastStart,
+      isSlotsFilled: isSlotsFilled,
+      reasons: serverEligibility.reasons,
+    );
+  }
+
   String _getIneligibleReason(JobEligibility eligibility) {
-    if (eligibility.alreadyApplied) return 'Already Applied';
-    if (eligibility.isOwnJob) return 'Cannot Apply to Your Own Job';
-    if (eligibility.isPastStart) return 'Start Time Has Passed';
-    if (eligibility.isSlotsFilled) return 'All Slots Are Filled';
+    if (eligibility.alreadyApplied) return 'You already applied';
+    if (eligibility.isOwnJob) return 'Cannot apply to your own job';
+    if (eligibility.isPastStart) return 'Start time has passed';
+    if (eligibility.isSlotsFilled) return 'All slots are filled';
     if (eligibility.scheduleOverlap) {
-      return eligibility.overlapJobTitle != null
-          ? 'Schedule Clash: "${eligibility.overlapJobTitle}"'
-          : 'Schedule Clash with Job';
+      return eligibility.overlapJobTitle != null && eligibility.overlapJobTitle!.isNotEmpty
+          ? 'Schedule clash with "${eligibility.overlapJobTitle}"'
+          : 'Schedule clash with another job';
     }
-    if (eligibility.studentGated) return 'Audience Mismatch for Category';
-    if (eligibility.licenceNeeded && !eligibility.hasLicence) return 'Driving Licence Required';
-    if (eligibility.verifiedNeeded && !eligibility.isVerified) return 'Verified Badge Required';
+    if (eligibility.studentGated) return 'Audience mismatch for this job';
+    if (eligibility.licenceNeeded && !eligibility.hasLicence) return 'Driving licence required';
+    if (eligibility.verifiedNeeded && !eligibility.isVerified) return 'Verified badge required';
     if (eligibility.reasons.isNotEmpty) return eligibility.reasons.first;
     return 'Ineligible to Apply';
+  }
+
+  String _parseApplyErrorMessage(Object? error) {
+    final str = error?.toString() ?? '';
+    if (str.contains('OWN_JOB')) return 'Cannot apply to your own job';
+    if (str.contains('EXPIRED')) return 'Start time has passed';
+    if (str.contains('SLOTS_FILLED')) return 'All slots are filled';
+    if (str.contains('AUDIENCE_MISMATCH')) return 'Audience mismatch for this job';
+    if (str.contains('LICENCE_REQUIRED')) return 'Driving licence required';
+    if (str.contains('VERIFIED_REQUIRED')) return 'Verified badge required';
+    if (str.contains('SCHEDULE_CLASH')) return 'Schedule clash with another assignment';
+    if (str.contains('ALREADY_APPLIED')) return 'You already applied';
+    return str.isNotEmpty ? str : 'Failed to apply';
   }
 
   @override
@@ -137,7 +199,10 @@ class _ApplyBottomSheetState extends ConsumerState<ApplyBottomSheet> {
                     const SizedBox(height: 10),
 
                     eligibilityAsync.when(
-                      data: (eligibility) => _buildChecklist(eligibility),
+                      data: (rawEligibility) {
+                        final eligibility = _mergeClientRules(rawEligibility);
+                        return _buildChecklist(eligibility);
+                      },
                       loading: () => const Padding(
                         padding: EdgeInsets.symmetric(vertical: 20),
                         child: Center(
@@ -207,25 +272,31 @@ class _ApplyBottomSheetState extends ConsumerState<ApplyBottomSheet> {
 
                     // Apply Button & Ineligibility Reason
                     eligibilityAsync.when(
-                      data: (eligibility) {
-                        if (kDebugMode) {
-                          debugPrint('[ApplyBottomSheet] --- Job Eligibility Evaluation ---');
-                          debugPrint('[ApplyBottomSheet] Job ID: ${widget.job.id} ("${widget.job.title}")');
-                          debugPrint('[ApplyBottomSheet] isEligible: ${eligibility.isEligible}');
-                          debugPrint('[ApplyBottomSheet] reasonCode: ${eligibility.reasonCode}');
-                          debugPrint('[ApplyBottomSheet] alreadyApplied: ${eligibility.alreadyApplied}');
-                          debugPrint('[ApplyBottomSheet] isOwnJob: ${eligibility.isOwnJob}');
-                          debugPrint('[ApplyBottomSheet] isPastStart: ${eligibility.isPastStart}');
-                          debugPrint('[ApplyBottomSheet] isSlotsFilled: ${eligibility.isSlotsFilled}');
-                          debugPrint('[ApplyBottomSheet] licenceNeeded: ${eligibility.licenceNeeded}, hasLicence: ${eligibility.hasLicence}');
-                          debugPrint('[ApplyBottomSheet] verifiedNeeded: ${eligibility.verifiedNeeded}, isVerified: ${eligibility.isVerified}');
-                          debugPrint('[ApplyBottomSheet] studentGated: ${eligibility.studentGated}');
-                          debugPrint('[ApplyBottomSheet] scheduleOverlap: ${eligibility.scheduleOverlap} (title: ${eligibility.overlapJobTitle})');
-                          debugPrint('[ApplyBottomSheet] serverReasons: ${eligibility.reasons}');
-                          debugPrint('[ApplyBottomSheet] Resolved reason: ${_getIneligibleReason(eligibility)}');
-                        }
-
+                      data: (rawEligibility) {
+                        final eligibility = _mergeClientRules(rawEligibility);
+                        final blockReason = _getIneligibleReason(eligibility);
                         final canApply = eligibility.isEligible && !eligibility.alreadyApplied;
+
+                        if (kDebugMode) {
+                          debugPrint('================= [ApplyBottomSheet Debug] =================');
+                          debugPrint('Job ID: ${widget.job.id} | Title: "${widget.job.title}"');
+                          debugPrint('Provider ID: ${widget.job.providerId}');
+                          debugPrint('Start At: ${widget.job.startAt} (Passed: ${widget.job.startAt.isBefore(DateTime.now())})');
+                          debugPrint('Slots: ${widget.job.slotsFilled}/${widget.job.slotsTotal} (Filled: ${widget.job.slotsFilled >= widget.job.slotsTotal})');
+                          debugPrint('Rule Evaluations:');
+                          debugPrint('  - Server isEligible: ${rawEligibility.isEligible} (code: ${rawEligibility.reasonCode})');
+                          debugPrint('  - Licence: needed=${eligibility.licenceNeeded}, has=${eligibility.hasLicence} => ok=${!eligibility.licenceNeeded || eligibility.hasLicence}');
+                          debugPrint('  - Verified: needed=${eligibility.verifiedNeeded}, has=${eligibility.isVerified} => ok=${!eligibility.verifiedNeeded || eligibility.isVerified}');
+                          debugPrint('  - Category/Audience: studentGated=${eligibility.studentGated} => ok=${!eligibility.studentGated}');
+                          debugPrint('  - Schedule clash: overlap=${eligibility.scheduleOverlap} (clash: ${eligibility.overlapJobTitle}) => ok=${!eligibility.scheduleOverlap}');
+                          debugPrint('  - Own job: ${eligibility.isOwnJob} => ok=${!eligibility.isOwnJob}');
+                          debugPrint('  - Past start: ${eligibility.isPastStart} => ok=${!eligibility.isPastStart}');
+                          debugPrint('  - Slots filled: ${eligibility.isSlotsFilled} => ok=${!eligibility.isSlotsFilled}');
+                          debugPrint('  - Already applied: ${eligibility.alreadyApplied} => ok=${!eligibility.alreadyApplied}');
+                          debugPrint('Server reasons list: ${rawEligibility.reasons}');
+                          debugPrint('Final decision: canApply=$canApply | Resolved Reason: "$blockReason"');
+                          debugPrint('===========================================================');
+                        }
 
                         if (eligibility.alreadyApplied) {
                           return SizedBox(
@@ -238,8 +309,6 @@ class _ApplyBottomSheetState extends ConsumerState<ApplyBottomSheet> {
                             ),
                           );
                         }
-
-                        final blockReason = _getIneligibleReason(eligibility);
 
                         return Column(
                           mainAxisSize: MainAxisSize.min,
@@ -294,7 +363,7 @@ class _ApplyBottomSheetState extends ConsumerState<ApplyBottomSheet> {
                                           ref.read(seekerJobsControllerProvider.notifier).loadJobs();
                                           setState(() => _isSubmitted = true);
                                         } else {
-                                          final err = applyState.error?.toString() ?? 'Failed to apply';
+                                          final err = _parseApplyErrorMessage(applyState.error);
                                           if (context.mounted) {
                                             ScaffoldMessenger.of(context).showSnackBar(
                                               SnackBar(

@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
+import 'package:udyogasethu/core/widgets/user_avatar.dart';
+import 'package:udyogasethu/features/provider/data/provider_jobs_repository.dart';
+import 'package:udyogasethu/features/provider/domain/job_applicant.dart';
+import 'package:udyogasethu/features/provider/presentation/provider_jobs_controller.dart';
 import 'package:udyogasethu/features/seeker/domain/job_detail.dart';
 import 'package:udyogasethu/features/seeker/domain/job_recommendation.dart';
 import 'package:udyogasethu/features/seeker/presentation/apply_bottom_sheet.dart';
@@ -307,41 +312,8 @@ class _JobDetailScreenState extends ConsumerState<JobDetailScreen> {
 
                       const SizedBox(height: 16),
 
-                      if (_isCurrentUserProvider(job.providerId)) ...[
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 16),
-                          padding: const EdgeInsets.all(14),
-                          decoration: BoxDecoration(
-                            color: AppColors.paleMint,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: AppColors.cardBorderGreen, width: 1.5),
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.people_alt_rounded, color: AppColors.headerGreenDark, size: 28),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text('Applicants Management', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.textDark)),
-                                    Text('${job.slotsOpen} open slots of ${job.slotsTotal} total', style: const TextStyle(fontSize: 12, color: AppColors.textMuted)),
-                                  ],
-                                ),
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.headerGreenDark,
-                                  foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                ),
-                                onPressed: () => context.push(AppRoutes.providerJobApplicants.replaceAll(':id', job.id)),
-                                child: const Text('View Applicants', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                      if (_isCurrentUserProvider(job.providerId))
+                        _buildProviderApplicantsSection(context, job),
 
                       // SPECS BAR (Rate, Distance, Walking Time)
                       Container(
@@ -687,5 +659,370 @@ class _JobDetailScreenState extends ConsumerState<JobDetailScreen> {
     final period = time.hour >= 12 ? 'PM' : 'AM';
     final min = time.minute.toString().padLeft(2, '0');
     return '$hour:$min $period';
+  }
+
+  Widget _buildProviderApplicantsSection(BuildContext context, JobDetail job) {
+    final applicantsAsync = ref.watch(jobApplicantsFutureProvider(job.id));
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade200),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.people_alt_rounded, color: AppColors.headerGreenDark, size: 22),
+                  const SizedBox(width: 8),
+                  Text(
+                    applicantsAsync.maybeWhen(
+                      data: (list) => 'Applicants (${list.length})',
+                      orElse: () => 'Applicants',
+                    ),
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textDark),
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: job.slotsFilled >= job.slotsTotal ? Colors.blue.shade50 : AppColors.paleMint,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: job.slotsFilled >= job.slotsTotal ? Colors.blue.shade200 : AppColors.cardBorderGreen,
+                  ),
+                ),
+                child: Text(
+                  '${job.slotsFilled}/${job.slotsTotal} Slots Filled',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: job.slotsFilled >= job.slotsTotal ? Colors.blue.shade900 : AppColors.headerGreenDark,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          applicantsAsync.when(
+            loading: () => const Padding(
+              padding: EdgeInsets.symmetric(vertical: 24),
+              child: Center(child: CircularProgressIndicator(color: AppColors.headerGreenDark)),
+            ),
+            error: (err, _) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Text('Error loading applicants: $err', style: const TextStyle(fontSize: 12, color: Colors.red)),
+            ),
+            data: (applicants) {
+              if (applicants.isEmpty) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                  alignment: Alignment.center,
+                  child: Column(
+                    children: [
+                      Icon(Icons.person_search_rounded, size: 40, color: Colors.grey.shade400),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'No applicants yet',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.textDark),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        'Workers in your area will appear here as soon as they apply.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 11, color: AppColors.textMuted),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              return Column(
+                children: applicants.map((applicant) => _buildApplicantCard(context, applicant, job)).toList(),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildApplicantCard(BuildContext context, JobApplicant applicant, JobDetail job) {
+    final isFull = job.slotsFilled >= job.slotsTotal;
+
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              UserAvatar(avatarPath: applicant.workerAvatar, name: applicant.workerName, radius: 22),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            applicant.workerName,
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.textDark),
+                          ),
+                        ),
+                        if (applicant.isVerified) ...[
+                          const SizedBox(width: 4),
+                          const Icon(Icons.verified, color: AppColors.headerGreenDark, size: 16),
+                        ],
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                          decoration: BoxDecoration(
+                            color: applicant.seekerType == 'student'
+                                ? Colors.purple.shade50
+                                : applicant.seekerType == 'part_time'
+                                    ? Colors.blue.shade50
+                                    : Colors.amber.shade50,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            applicant.seekerType.toUpperCase(),
+                            style: TextStyle(
+                              fontSize: 9,
+                              fontWeight: FontWeight.bold,
+                              color: applicant.seekerType == 'student'
+                                  ? Colors.purple.shade900
+                                  : applicant.seekerType == 'part_time'
+                                      ? Colors.blue.shade900
+                                      : Colors.amber.shade900,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Lv.${applicant.levelNumber} • ${applicant.badgeName}',
+                          style: const TextStyle(fontSize: 10, color: AppColors.textMuted, fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        const Icon(Icons.star_rounded, color: AppColors.amberOrange, size: 15),
+                        const SizedBox(width: 2),
+                        Text(applicant.rating.toStringAsFixed(1), style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                        const SizedBox(width: 8),
+                        const Icon(Icons.location_on_outlined, size: 13, color: AppColors.textMuted),
+                        const SizedBox(width: 2),
+                        Text(applicant.formattedDistance, style: const TextStyle(fontSize: 10, color: AppColors.textMuted)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  _buildApplicantStatusChip(applicant.status),
+                  const SizedBox(height: 4),
+                  Text(
+                    DateFormat('dd MMM, h:mm a').format(applicant.createdAt),
+                    style: const TextStyle(fontSize: 9, color: AppColors.textMuted),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          if (applicant.skills.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 4,
+              runSpacing: 4,
+              children: applicant.skills.take(3).map((s) => Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.paleMint.withValues(alpha: 0.7),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(s, style: const TextStyle(fontSize: 10, color: AppColors.headerGreenDark, fontWeight: FontWeight.bold)),
+              )).toList(),
+            ),
+          ],
+          if (applicant.message != null && applicant.message!.trim().isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: Colors.grey.shade200),
+              ),
+              child: Text(
+                '"${applicant.message!.trim()}"',
+                style: const TextStyle(fontSize: 11, fontStyle: FontStyle.italic, color: AppColors.textDark),
+              ),
+            ),
+          ],
+          if (applicant.status == 'applied' || applicant.status == 'shortlisted') ...[
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.red.shade700,
+                    side: BorderSide(color: Colors.red.shade200),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  onPressed: () async {
+                    await ref.read(providerJobsRepositoryProvider).respondToApplicant(
+                          applicationId: applicant.applicationId,
+                          status: 'rejected',
+                        );
+                    ref.invalidate(jobApplicantsFutureProvider(job.id));
+                  },
+                  child: const Text('Decline', style: TextStyle(fontSize: 11)),
+                ),
+                const SizedBox(width: 8),
+                if (applicant.status == 'applied') ...[
+                  OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.amberOrange,
+                      side: BorderSide(color: Colors.amber.shade300),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                    onPressed: () async {
+                      await ref.read(providerJobsRepositoryProvider).respondToApplicant(
+                            applicationId: applicant.applicationId,
+                            status: 'shortlisted',
+                          );
+                      ref.invalidate(jobApplicantsFutureProvider(job.id));
+                    },
+                    child: const Text('Shortlist', style: TextStyle(fontSize: 11)),
+                  ),
+                  const SizedBox(width: 8),
+                ],
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isFull ? Colors.grey.shade400 : AppColors.headerGreenDark,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  onPressed: isFull
+                      ? null
+                      : () async {
+                          final ok = await showDialog<bool>(
+                            context: context,
+                            builder: (ctx) => AlertDialog(
+                              title: const Text('Accept Worker'),
+                              content: Text('Accept ${applicant.workerName} for "${job.title}"? This will confirm the booking.'),
+                              actions: [
+                                TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(backgroundColor: AppColors.headerGreenDark, foregroundColor: Colors.white),
+                                  onPressed: () => Navigator.pop(ctx, true),
+                                  child: const Text('Confirm'),
+                                ),
+                              ],
+                            ),
+                          );
+
+                          if (ok == true && context.mounted) {
+                            try {
+                              await ref.read(providerJobsRepositoryProvider).respondToApplicant(
+                                    applicationId: applicant.applicationId,
+                                    status: 'hired',
+                                  );
+                              ref.invalidate(jobApplicantsFutureProvider(job.id));
+                              ref.invalidate(jobDetailFutureProvider(job.id));
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('${applicant.workerName} accepted! Booking confirmed.'),
+                                    backgroundColor: AppColors.headerGreenDark,
+                                  ),
+                                );
+                              }
+                            } catch (e) {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+                                );
+                              }
+                            }
+                          }
+                        },
+                  child: const Text('Accept', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildApplicantStatusChip(String status) {
+    Color bg = Colors.grey.shade100;
+    Color fg = Colors.grey.shade800;
+    String label = status;
+
+    if (status == 'hired') {
+      bg = Colors.green.shade50;
+      fg = Colors.green.shade800;
+      label = 'Accepted ✓';
+    } else if (status == 'shortlisted') {
+      bg = Colors.amber.shade50;
+      fg = Colors.amber.shade900;
+      label = 'Shortlisted';
+    } else if (status == 'rejected') {
+      bg = Colors.red.shade50;
+      fg = Colors.red.shade800;
+      label = 'Declined';
+    } else {
+      bg = Colors.blue.shade50;
+      fg = Colors.blue.shade800;
+      label = 'Pending';
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(label, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: fg)),
+    );
   }
 }
