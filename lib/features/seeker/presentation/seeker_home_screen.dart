@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/l10n/locale_controller.dart';
@@ -21,13 +22,27 @@ class SeekerHomeScreen extends ConsumerStatefulWidget {
   ConsumerState<SeekerHomeScreen> createState() => _SeekerHomeScreenState();
 }
 
-class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
+class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> with WidgetsBindingObserver {
   final TextEditingController _searchController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _searchController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      ref.read(seekerLocationProvider.notifier).refreshOnResume();
+    }
   }
 
   String _getTimeGreeting(BuildContext context) {
@@ -44,7 +59,6 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
 
   void _showManualLocationPicker() {
     final areas = [
-      {'name': 'Koramangala, Bengaluru', 'lat': 12.9352, 'lng': 77.6101},
       {'name': 'Indiranagar, Bengaluru', 'lat': 12.9784, 'lng': 77.6408},
       {'name': 'HSR Layout, Bengaluru', 'lat': 12.9121, 'lng': 77.6446},
       {'name': 'Whitefield, Bengaluru', 'lat': 12.9698, 'lng': 77.7500},
@@ -55,91 +69,189 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
 
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (ctx) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Choose Location',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark),
-            ),
-            const SizedBox(height: 12),
-            InkWell(
-              key: const Key('use_gps_location_button'),
-              onTap: () async {
-                Navigator.pop(ctx);
-                final success = await ref.read(seekerLocationProvider.notifier).requestGpsWithConsent();
-                if (!mounted) return;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      success
-                          ? 'Location updated using live GPS'
-                          : 'Unable to access GPS location. Please check permissions.',
-                    ),
-                    behavior: SnackBarBehavior.floating,
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(2),
                   ),
-                );
-              },
-              borderRadius: BorderRadius.circular(12),
-              child: Container(
+                ),
+              ),
+              const SizedBox(height: 18),
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: const BoxDecoration(
+                      color: AppColors.paleMint,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.location_on_rounded, color: AppColors.headerGreenDark, size: 28),
+                  ),
+                  const SizedBox(width: 14),
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Choose Location',
+                          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                        ),
+                        SizedBox(height: 2),
+                        Text(
+                          'Matches verified jobs in your immediate vicinity',
+                          style: TextStyle(fontSize: 12, color: AppColors.textMuted),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: AppColors.paleMint,
+                  color: const Color(0xFFF8FAFC),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.headerGreenDark.withValues(alpha: 0.3)),
+                  border: Border.all(color: Colors.grey.shade200),
                 ),
                 child: const Row(
                   children: [
-                    Icon(Icons.my_location_rounded, color: AppColors.headerGreenDark),
-                    SizedBox(width: 12),
+                    Icon(Icons.shield_outlined, color: AppColors.headerGreenDark, size: 20),
+                    SizedBox(width: 10),
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Use Current GPS Location',
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.headerGreenDark),
-                          ),
-                          Text(
-                            'Matches jobs within your exact distance radius',
-                            style: TextStyle(fontSize: 12, color: Colors.black54),
-                          ),
-                        ],
+                      child: Text(
+                        'UdyogaSethu uses GPS only to calculate walking distance and find open shifts near you. Your live location is strictly private.',
+                        style: TextStyle(fontSize: 12, color: AppColors.textDark, height: 1.4),
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'OR SELECT AREA MANUALLY',
-              style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.black45, letterSpacing: 0.8),
-            ),
-            const SizedBox(height: 8),
-            ...areas.map((area) {
-              return ListTile(
-                dense: true,
-                leading: const Icon(Icons.location_on_outlined, color: AppColors.headerGreenDark),
-                title: Text(area['name'] as String, style: const TextStyle(fontSize: 14)),
-                onTap: () {
-                  ref.read(seekerLocationProvider.notifier).setManualArea(
-                        area['name'] as String,
-                        area['lat'] as double,
-                        area['lng'] as double,
-                      );
+              const SizedBox(height: 20),
+              InkWell(
+                key: const Key('use_gps_location_button'),
+                borderRadius: BorderRadius.circular(12),
+                onTap: () async {
                   Navigator.pop(ctx);
+                  final success = await ref.read(seekerLocationProvider.notifier).requestGpsWithConsent();
+                  if (!mounted) return;
+                  if (success) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Location updated using live GPS ✓'),
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: AppColors.headerGreenDark,
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('GPS permission denied. Please choose your area manually.'),
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: Colors.orange,
+                      ),
+                    );
+                    _showManualAreaSearchSheet();
+                  }
                 },
-              );
-            }),
-          ],
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.paleMint,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.headerGreenDark.withValues(alpha: 0.3)),
+                  ),
+                  child: const Row(
+                    children: [
+                      Icon(Icons.my_location_rounded, color: AppColors.headerGreenDark),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Use Current GPS Location',
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.headerGreenDark),
+                            ),
+                            Text(
+                              'Matches jobs within your exact distance radius',
+                              style: TextStyle(fontSize: 12, color: Colors.black54),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'OR SELECT AREA MANUALLY',
+                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.black45, letterSpacing: 0.8),
+                  ),
+                  TextButton.icon(
+                    style: TextButton.styleFrom(visualDensity: VisualDensity.compact),
+                    icon: const Icon(Icons.search_rounded, size: 16),
+                    label: const Text('Search', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                    onPressed: () {
+                      Navigator.pop(ctx);
+                      _showManualAreaSearchSheet();
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              ...areas.map((area) {
+                return ListTile(
+                  dense: true,
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.location_on_outlined, color: AppColors.headerGreenDark),
+                  title: Text(area['name'] as String, style: const TextStyle(fontSize: 14)),
+                  onTap: () {
+                    ref.read(seekerLocationProvider.notifier).setManualArea(
+                          area['name'] as String,
+                          area['lat'] as double,
+                          area['lng'] as double,
+                        );
+                    Navigator.pop(ctx);
+                  },
+                );
+              }),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  void _showManualAreaSearchSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) => _ManualAreaPickerSheet(
+        onSelect: (name, lat, lng) {
+          ref.read(seekerLocationProvider.notifier).setManualArea(name, lat, lng);
+        },
       ),
     );
   }
@@ -713,7 +825,7 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
 
           const SizedBox(height: 8),
 
-          // Location row: pin + area & city + chevron
+          // Location row: pin + area & city + From GPS tag + chevron
           InkWell(
             onTap: _showManualLocationPicker,
             borderRadius: BorderRadius.circular(6),
@@ -724,7 +836,9 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
                 const SizedBox(width: 4),
                 Flexible(
                   child: Text(
-                    locationState.displayName.isNotEmpty ? locationState.displayName : 'Set your area',
+                    locationState.displayName.isNotEmpty
+                        ? locationState.displayName
+                        : 'Set your area',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -734,6 +848,25 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
                     ),
                   ),
                 ),
+                if (locationState.isGps && locationState.lat != 0.0) ...[
+                  const SizedBox(width: 6),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.22),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Text(
+                      'From GPS',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 9,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.2,
+                      ),
+                    ),
+                  ),
+                ],
                 const SizedBox(width: 3),
                 Icon(Icons.expand_more_rounded, color: Colors.white.withValues(alpha: 0.85), size: 16),
               ],
@@ -1330,6 +1463,7 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
             }
 
             return ListView.separated(
+              padding: EdgeInsets.zero,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: filtered.length,
@@ -1464,6 +1598,166 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> {
           ),
         );
       }),
+    );
+  }
+}
+
+class _ManualAreaPickerSheet extends StatefulWidget {
+  final void Function(String name, double lat, double lng) onSelect;
+
+  const _ManualAreaPickerSheet({required this.onSelect});
+
+  @override
+  State<_ManualAreaPickerSheet> createState() => _ManualAreaPickerSheetState();
+}
+
+class _ManualAreaPickerSheetState extends State<_ManualAreaPickerSheet> {
+  final TextEditingController _searchCtrl = TextEditingController();
+  List<({String name, double lat, double lng})> _results = [];
+  bool _isSearching = false;
+
+  final _popularCentres = const [
+    (name: 'Majestic / Central Bus Station, Bengaluru', lat: 12.9767, lng: 77.5713),
+    (name: 'Shivajinagar, Bengaluru', lat: 12.9856, lng: 77.6057),
+    (name: 'Yeshwanthpur, Bengaluru', lat: 13.0281, lng: 77.5408),
+    (name: 'Jayanagar 4th Block, Bengaluru', lat: 12.9299, lng: 77.5824),
+    (name: 'Electronic City Phase 1, Bengaluru', lat: 12.8452, lng: 77.6602),
+    (name: 'Whitefield Main Road, Bengaluru', lat: 12.9698, lng: 77.7500),
+    (name: 'Mysuru City Centre', lat: 12.3051, lng: 76.6551),
+    (name: 'Hubballi Junction', lat: 15.3647, lng: 75.1240),
+  ];
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
+  }
+
+  Future<void> _performSearch(String query) async {
+    final clean = query.trim();
+    if (clean.length < 3) {
+      if (mounted) setState(() => _results = []);
+      return;
+    }
+
+    setState(() => _isSearching = true);
+    try {
+      final locations = await Geocoding().locationFromAddress(clean);
+      if (locations.isNotEmpty && mounted) {
+        final List<({String name, double lat, double lng})> list = [];
+        for (final loc in locations.take(5)) {
+          String placeName = clean;
+          try {
+            final placemarks = await Geocoding().placemarkFromCoordinates(loc.latitude, loc.longitude);
+            if (placemarks.isNotEmpty) {
+              final p = placemarks.first;
+              final sub = p.subLocality ?? p.locality ?? p.name ?? clean;
+              final city = p.locality ?? p.subAdministrativeArea ?? p.administrativeArea ?? '';
+              placeName = city.isNotEmpty && city != sub ? '$sub, $city' : sub;
+            }
+          } catch (_) {}
+          list.add((name: placeName, lat: loc.latitude, lng: loc.longitude));
+        }
+        if (mounted) {
+          setState(() {
+            _results = list;
+            _isSearching = false;
+          });
+        }
+        return;
+      }
+    } catch (_) {}
+
+    if (mounted) {
+      setState(() {
+        _results = [];
+        _isSearching = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(20, 20, 20, 20 + bottomInset),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(2)),
+            ),
+          ),
+          const SizedBox(height: 16),
+          const Text('Set Your Area', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: AppColors.textDark)),
+          const SizedBox(height: 4),
+          const Text('Search city, locality or postal area', style: TextStyle(fontSize: 12, color: AppColors.textMuted)),
+          const SizedBox(height: 14),
+          TextField(
+            controller: _searchCtrl,
+            autofocus: true,
+            decoration: InputDecoration(
+              hintText: 'e.g. Jayanagar, Bengaluru or Hubballi',
+              prefixIcon: const Icon(Icons.search_rounded, color: AppColors.headerGreenDark),
+              suffixIcon: _isSearching
+                  ? const Padding(padding: EdgeInsets.all(12), child: SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)))
+                  : _searchCtrl.text.isNotEmpty
+                      ? IconButton(icon: const Icon(Icons.clear_rounded), onPressed: () { _searchCtrl.clear(); setState(() => _results = []); })
+                      : null,
+              filled: true,
+              fillColor: const Color(0xFFF8FAFC),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey.shade300)),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey.shade300)),
+              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.headerGreenDark, width: 1.5)),
+            ),
+            onChanged: (val) => _performSearch(val),
+          ),
+          const SizedBox(height: 14),
+          if (_results.isNotEmpty) ...[
+            const Text('SEARCH RESULTS', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.textMuted, letterSpacing: 0.5)),
+            const SizedBox(height: 6),
+            ..._results.map((r) => ListTile(
+              dense: true,
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(Icons.place_rounded, color: AppColors.headerGreenDark, size: 20),
+              title: Text(r.name, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+              onTap: () {
+                widget.onSelect(r.name, r.lat, r.lng);
+                Navigator.pop(context);
+              },
+            )),
+          ] else ...[
+            const Text('OR SELECT CITY / REGIONAL CENTRE', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.textMuted, letterSpacing: 0.5)),
+            const SizedBox(height: 6),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 220),
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemCount: _popularCentres.length,
+                separatorBuilder: (_, _) => const Divider(height: 1),
+                itemBuilder: (ctx, i) {
+                  final c = _popularCentres[i];
+                  return ListTile(
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                    leading: const Icon(Icons.location_city_rounded, color: AppColors.headerGreenDark, size: 20),
+                    title: Text(c.name, style: const TextStyle(fontSize: 13)),
+                    onTap: () {
+                      widget.onSelect(c.name, c.lat, c.lng);
+                      Navigator.pop(context);
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ],
+      ),
     );
   }
 }

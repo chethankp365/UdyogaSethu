@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/errors/app_exception.dart';
 import 'package:udyogasethu/features/privacy/data/consent_repository.dart';
@@ -15,12 +16,14 @@ class SeekerLocationState {
   final double lat;
   final double lng;
   final bool isGps;
+  final DateTime? cachedAt;
 
   const SeekerLocationState({
     required this.displayName,
     required this.lat,
     required this.lng,
     required this.isGps,
+    this.cachedAt,
   });
 
   SeekerLocationState copyWith({
@@ -28,27 +31,113 @@ class SeekerLocationState {
     double? lat,
     double? lng,
     bool? isGps,
+    DateTime? cachedAt,
   }) {
     return SeekerLocationState(
       displayName: displayName ?? this.displayName,
       lat: lat ?? this.lat,
       lng: lng ?? this.lng,
       isGps: isGps ?? this.isGps,
+      cachedAt: cachedAt ?? this.cachedAt,
     );
   }
 }
 
 class SeekerLocationNotifier extends Notifier<SeekerLocationState> {
+  static const _prefKeyLat = 'seeker_loc_lat';
+  static const _prefKeyLng = 'seeker_loc_lng';
+  static const _prefKeyName = 'seeker_loc_name';
+  static const _prefKeyIsGps = 'seeker_loc_is_gps';
+  static const _prefKeyTime = 'seeker_loc_time';
+
   @override
   SeekerLocationState build() {
-    // Attempt async GPS initialization
-    Future.microtask(() => initLocation());
+    Future.microtask(() => _loadCachedOrInit());
     return const SeekerLocationState(
       displayName: 'Select Location',
       lat: 0.0,
       lng: 0.0,
       isGps: false,
     );
+  }
+
+  Future<void> _loadCachedOrInit() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final lat = prefs.getDouble(_prefKeyLat);
+      final lng = prefs.getDouble(_prefKeyLng);
+      final name = prefs.getString(_prefKeyName);
+      final isGps = prefs.getBool(_prefKeyIsGps) ?? false;
+      final timeStr = prefs.getString(_prefKeyTime);
+      final time = timeStr != null ? DateTime.tryParse(timeStr) : null;
+
+      if (lat != null && lng != null && name != null && name.isNotEmpty && lat != 0.0) {
+        state = SeekerLocationState(
+          displayName: name,
+          lat: lat,
+          lng: lng,
+          isGps: isGps,
+          cachedAt: time,
+        );
+      }
+    } catch (_) {}
+
+    await initLocation();
+  }
+
+  Future<void> _saveCache(SeekerLocationState loc) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setDouble(_prefKeyLat, loc.lat);
+      await prefs.setDouble(_prefKeyLng, loc.lng);
+      await prefs.setString(_prefKeyName, loc.displayName);
+      await prefs.setBool(_prefKeyIsGps, loc.isGps);
+      if (loc.cachedAt != null) {
+        await prefs.setString(_prefKeyTime, loc.cachedAt!.toIso8601String());
+      }
+    } catch (_) {}
+  }
+
+  Future<String> _reverseGeocode(double lat, double lng) async {
+    try {
+      final placemarks = await Geocoding().placemarkFromCoordinates(lat, lng);
+      if (placemarks.isNotEmpty) {
+        final p = placemarks.first;
+        final subLocality = p.subLocality?.trim();
+        final locality = p.locality?.trim();
+        final subAdmin = p.subAdministrativeArea?.trim();
+        final admin = p.administrativeArea?.trim();
+
+        String? area;
+        if (subLocality != null && subLocality.isNotEmpty) {
+          area = subLocality;
+        } else if (locality != null && locality.isNotEmpty) {
+          area = locality;
+        } else if (p.name != null && p.name!.isNotEmpty) {
+          area = p.name;
+        }
+
+        String? city;
+        if (locality != null && locality.isNotEmpty && locality != area) {
+          city = locality;
+        } else if (subAdmin != null && subAdmin.isNotEmpty) {
+          city = subAdmin;
+        } else if (admin != null && admin.isNotEmpty) {
+          city = admin;
+        }
+
+        if (area != null && city != null) {
+          return '$area, $city';
+        } else if (area != null) {
+          return area;
+        } else if (city != null) {
+          return city;
+        }
+      }
+    } catch (e) {
+      AppLogger.w('Reverse geocoding error: $e');
+    }
+    return 'Current Location';
   }
 
   Future<void> initLocation() async {
@@ -66,70 +155,78 @@ class SeekerLocationNotifier extends Notifier<SeekerLocationState> {
       final serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) return;
 
-      LocationPermission perm = await Geolocator.checkPermission();
-      if (perm == LocationPermission.denied) {
-        perm = await Geolocator.requestPermission();
-      }
-
+      final perm = await Geolocator.checkPermission();
       if (perm == LocationPermission.always || perm == LocationPermission.whileInUse) {
         final position = await Geolocator.getCurrentPosition(
-          locationSettings: const LocationSettings(accuracy: LocationAccuracy.medium),
+          locationSettings: const LocationSettings(
+            accuracy: LocationAccuracy.medium,
+            timeLimit: Duration(seconds: 4),
+          ),
         );
 
-        String displayName = 'Current Location (GPS)';
-        try {
-          final placemarks = await Geocoding().placemarkFromCoordinates(position.latitude, position.longitude);
-          if (placemarks.isNotEmpty) {
-            final p = placemarks.first;
-            final subLocality = p.subLocality?.trim();
-            final locality = p.locality?.trim();
-            final subAdmin = p.subAdministrativeArea?.trim();
-            final admin = p.administrativeArea?.trim();
+        final displayName = await _reverseGeocode(position.latitude, position.longitude);
 
-            String? area;
-            if (subLocality != null && subLocality.isNotEmpty) {
-              area = subLocality;
-            } else if (locality != null && locality.isNotEmpty) {
-              area = locality;
-            } else if (p.name != null && p.name!.isNotEmpty) {
-              area = p.name;
-            }
-
-            String? city;
-            if (locality != null && locality.isNotEmpty && locality != area) {
-              city = locality;
-            } else if (subAdmin != null && subAdmin.isNotEmpty) {
-              city = subAdmin;
-            } else if (admin != null && admin.isNotEmpty) {
-              city = admin;
-            }
-
-            if (area != null && city != null) {
-              displayName = '$area, $city';
-            } else if (area != null) {
-              displayName = area;
-            } else if (city != null) {
-              displayName = city;
-            }
-          }
-        } catch (e) {
-          AppLogger.w('Reverse geocoding error: $e');
-        }
-
-        state = SeekerLocationState(
+        final newState = SeekerLocationState(
           displayName: displayName,
           lat: position.latitude,
           lng: position.longitude,
           isGps: true,
+          cachedAt: DateTime.now(),
         );
+        state = newState;
+        await _saveCache(newState);
       }
     } catch (e) {
-      AppLogger.w('Location initialization fallback to manual area: $e');
+      AppLogger.w('Location initialization error: $e');
     }
   }
 
   Future<void> refreshGpsLocation() async {
     await initLocation();
+  }
+
+  Future<void> refreshOnResume() async {
+    if (!state.isGps || state.lat == 0.0) return;
+    try {
+      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) return;
+      final perm = await Geolocator.checkPermission();
+      if (perm != LocationPermission.always && perm != LocationPermission.whileInUse) return;
+
+      final currentPos = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.medium,
+          timeLimit: Duration(seconds: 4),
+        ),
+      );
+
+      final distance = Geolocator.distanceBetween(
+        state.lat,
+        state.lng,
+        currentPos.latitude,
+        currentPos.longitude,
+      );
+
+      final minutesSinceLast = state.cachedAt != null
+          ? DateTime.now().difference(state.cachedAt!).inMinutes
+          : 999;
+
+      // Refresh if moved more than 1 km (1000m) or cache older than 30 minutes
+      if (distance > 1000 || minutesSinceLast > 30) {
+        final displayName = await _reverseGeocode(currentPos.latitude, currentPos.longitude);
+        final newState = SeekerLocationState(
+          displayName: displayName,
+          lat: currentPos.latitude,
+          lng: currentPos.longitude,
+          isGps: true,
+          cachedAt: DateTime.now(),
+        );
+        state = newState;
+        await _saveCache(newState);
+      }
+    } catch (e) {
+      AppLogger.w('refreshOnResume error: $e');
+    }
   }
 
   Future<bool> requestGpsWithConsent() async {
@@ -151,62 +248,31 @@ class SeekerLocationNotifier extends Notifier<SeekerLocationState> {
       }
 
       if (perm == LocationPermission.denied || perm == LocationPermission.deniedForever) {
+        await consentRepo.recordConsent(
+          purpose: ConsentPurpose.gps,
+          granted: false,
+        );
         return false;
       }
 
       final position = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.medium,
-          timeLimit: Duration(seconds: 4),
+          timeLimit: Duration(seconds: 5),
         ),
       );
 
-      String displayName = 'Current Location (GPS)';
-      try {
-        final placemarks = await Geocoding().placemarkFromCoordinates(position.latitude, position.longitude);
-        if (placemarks.isNotEmpty) {
-          final p = placemarks.first;
-          final subLocality = p.subLocality?.trim();
-          final locality = p.locality?.trim();
-          final subAdmin = p.subAdministrativeArea?.trim();
-          final admin = p.administrativeArea?.trim();
+      final displayName = await _reverseGeocode(position.latitude, position.longitude);
 
-          String? area;
-          if (subLocality != null && subLocality.isNotEmpty) {
-            area = subLocality;
-          } else if (locality != null && locality.isNotEmpty) {
-            area = locality;
-          } else if (p.name != null && p.name!.isNotEmpty) {
-            area = p.name;
-          }
-
-          String? city;
-          if (locality != null && locality.isNotEmpty && locality != area) {
-            city = locality;
-          } else if (subAdmin != null && subAdmin.isNotEmpty) {
-            city = subAdmin;
-          } else if (admin != null && admin.isNotEmpty) {
-            city = admin;
-          }
-
-          if (area != null && city != null) {
-            displayName = '$area, $city';
-          } else if (area != null) {
-            displayName = area;
-          } else if (city != null) {
-            displayName = city;
-          }
-        }
-      } catch (e) {
-        AppLogger.w('Reverse geocoding error: $e');
-      }
-
-      state = SeekerLocationState(
+      final newState = SeekerLocationState(
         displayName: displayName,
         lat: position.latitude,
         lng: position.longitude,
         isGps: true,
+        cachedAt: DateTime.now(),
       );
+      state = newState;
+      await _saveCache(newState);
       return true;
     } catch (e) {
       AppLogger.w('Error in requestGpsWithConsent: $e');
@@ -214,13 +280,16 @@ class SeekerLocationNotifier extends Notifier<SeekerLocationState> {
     }
   }
 
-  void setManualArea(String areaName, double lat, double lng) {
-    state = SeekerLocationState(
+  Future<void> setManualArea(String areaName, double lat, double lng) async {
+    final newState = SeekerLocationState(
       displayName: areaName,
       lat: lat,
       lng: lng,
       isGps: false,
+      cachedAt: DateTime.now(),
     );
+    state = newState;
+    await _saveCache(newState);
   }
 }
 

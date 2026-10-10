@@ -76,7 +76,7 @@ class SupabaseJobDetailRepository implements JobDetailRepository {
             materialsProvided: row['materials_provided'] as bool? ?? false,
             paymentMode: row['payment_mode'] as String? ?? 'escrow',
             requirements: row['requirements'] is Map<String, dynamic> ? row['requirements'] : {},
-            addressText: row['address_text'] as String? ?? 'Koramangala, Bengaluru',
+            addressText: row['address_text'] as String? ?? 'Workplace Location',
             status: row['status'] as String? ?? 'open',
           );
 
