@@ -99,6 +99,10 @@ class SavingsGoal {
   final bool isCompleted;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final double? monthlyPercentage;
+  final String targetType; // 'target_amount' or 'monthly_percentage'
+  final int monthlySavingNeededPaise;
+  final int projectedBalancePaise;
 
   const SavingsGoal({
     required this.id,
@@ -111,12 +115,18 @@ class SavingsGoal {
     this.isCompleted = false,
     required this.createdAt,
     required this.updatedAt,
+    this.monthlyPercentage,
+    this.targetType = 'target_amount',
+    this.monthlySavingNeededPaise = 0,
+    this.projectedBalancePaise = 0,
   });
 
   double get targetRupees => targetPaise / 100.0;
   double get savedRupees => savedPaise / 100.0;
   int get remainingPaise => (targetPaise - savedPaise).clamp(0, targetPaise);
   double get remainingRupees => remainingPaise / 100.0;
+  double get monthlySavingNeededRupees => monthlySavingNeededPaise / 100.0;
+  double get projectedBalanceRupees => projectedBalancePaise / 100.0;
 
   double get progressRatio {
     if (targetPaise <= 0) return 0.0;
@@ -146,6 +156,10 @@ class SavingsGoal {
   String get formattedTarget => '₹${NumberFormat('#,##,##0').format(targetRupees.round())}';
   String get formattedSaved => '₹${NumberFormat('#,##,##0').format(savedRupees.round())}';
   String get formattedRemaining => '₹${NumberFormat('#,##,##0').format(remainingRupees.round())}';
+  String get formattedMonthlySavingNeeded =>
+      '₹${NumberFormat('#,##,##0').format(monthlySavingNeededRupees.round())}';
+  String get formattedProjectedBalance =>
+      '₹${NumberFormat('#,##,##0').format(projectedBalanceRupees.round())}';
 
   String get formattedDeadline {
     if (deadline == null) return 'No deadline';
@@ -198,6 +212,10 @@ class SavingsGoal {
       isCompleted: json['is_completed'] == true,
       createdAt: DateTime.tryParse(json['created_at']?.toString() ?? '') ?? DateTime.now(),
       updatedAt: DateTime.tryParse(json['updated_at']?.toString() ?? '') ?? DateTime.now(),
+      monthlyPercentage: (json['monthly_percentage'] as num?)?.toDouble(),
+      targetType: json['target_type']?.toString() ?? 'target_amount',
+      monthlySavingNeededPaise: (json['monthly_saving_needed_paise'] as num?)?.toInt() ?? 0,
+      projectedBalancePaise: (json['projected_balance_paise'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -212,6 +230,10 @@ class SavingsGoal {
         'is_completed': isCompleted,
         'created_at': createdAt.toIso8601String(),
         'updated_at': updatedAt.toIso8601String(),
+        'monthly_percentage': monthlyPercentage,
+        'target_type': targetType,
+        'monthly_saving_needed_paise': monthlySavingNeededPaise,
+        'projected_balance_paise': projectedBalancePaise,
       };
 }
 
@@ -221,12 +243,20 @@ class SavingsGoalDraft {
   final String title;
   final int targetPaise;
   final DateTime? deadline;
+  final double? monthlyPercentage;
+  final String targetType;
+  final int monthlySavingNeededPaise;
+  final int projectedBalancePaise;
 
   const SavingsGoalDraft({
     required this.category,
     required this.title,
     required this.targetPaise,
     this.deadline,
+    this.monthlyPercentage,
+    this.targetType = 'target_amount',
+    this.monthlySavingNeededPaise = 0,
+    this.projectedBalancePaise = 0,
   });
 
   Map<String, dynamic> toInsertJson(String userId) => {
@@ -237,5 +267,9 @@ class SavingsGoalDraft {
         'saved_paise': 0,
         'deadline': deadline != null ? DateFormat('yyyy-MM-dd').format(deadline!) : null,
         'is_completed': false,
+        'monthly_percentage': monthlyPercentage,
+        'target_type': targetType,
+        'monthly_saving_needed_paise': monthlySavingNeededPaise,
+        'projected_balance_paise': projectedBalancePaise,
       };
 }

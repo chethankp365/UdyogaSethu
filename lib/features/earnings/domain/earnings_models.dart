@@ -88,41 +88,86 @@ class BestDayInsight {
 }
 
 @immutable
+class CategorySplitItem {
+  final String category;
+  final int earningsPaise;
+  final double percentage;
+
+  const CategorySplitItem({
+    required this.category,
+    required this.earningsPaise,
+    required this.percentage,
+  });
+
+  double get earningsRupees => earningsPaise / 100.0;
+  String get formattedAmount => '₹${NumberFormat('#,##,##0').format(earningsRupees.round())}';
+
+  factory CategorySplitItem.fromJson(Map<String, dynamic> json) {
+    return CategorySplitItem(
+      category: json['category']?.toString() ?? 'Other Tasks',
+      earningsPaise: (json['earnings_paise'] as num?)?.toInt() ?? 0,
+      percentage: (json['percentage'] as num?)?.toDouble() ?? 0.0,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'category': category,
+        'earnings_paise': earningsPaise,
+        'percentage': percentage,
+      };
+}
+
+@immutable
 class EarningsDashboardData {
   final int todayEarningsPaise;
   final int thisWeekEarningsPaise;
   final int thisMonthEarningsPaise;
+  final int lastMonthEarningsPaise;
   final int totalEarningsPaise;
   final int completedJobsCount;
   final int completedOrdersCount;
   final double averageRating;
   final int dailyGoalPaise;
   final BestDayInsight? bestDay;
+  final MonthlyTrendItem? bestMonth;
   final List<DailyTrendItem> dailyTrends;
   final List<MonthlyTrendItem> monthlyTrends;
+  final int monthlyAveragePaise;
+  final double trendVsLastMonthPct;
+  final List<CategorySplitItem> categorySplit;
   final int recentAvgDailyEarningsPaise;
 
   const EarningsDashboardData({
     required this.todayEarningsPaise,
     required this.thisWeekEarningsPaise,
     required this.thisMonthEarningsPaise,
+    this.lastMonthEarningsPaise = 0,
     required this.totalEarningsPaise,
     required this.completedJobsCount,
     required this.completedOrdersCount,
     required this.averageRating,
     required this.dailyGoalPaise,
     this.bestDay,
+    this.bestMonth,
     this.dailyTrends = const [],
     this.monthlyTrends = const [],
+    this.monthlyAveragePaise = 0,
+    this.trendVsLastMonthPct = 0.0,
+    this.categorySplit = const [],
     this.recentAvgDailyEarningsPaise = 0,
   });
 
   double get todayRupees => todayEarningsPaise / 100.0;
   double get thisWeekRupees => thisWeekEarningsPaise / 100.0;
   double get thisMonthRupees => thisMonthEarningsPaise / 100.0;
+  double get lastMonthRupees => lastMonthEarningsPaise / 100.0;
   double get totalRupees => totalEarningsPaise / 100.0;
   double get dailyGoalRupees => dailyGoalPaise / 100.0;
   double get recentAvgDailyRupees => recentAvgDailyEarningsPaise / 100.0;
+  double get monthlyAverageRupees => monthlyAveragePaise / 100.0;
+
+  bool get hasHistory =>
+      totalEarningsPaise > 0 || completedJobsCount > 0 || completedOrdersCount > 0;
 
   double get goalProgress {
     if (dailyGoalPaise <= 0) return 0.0;
@@ -139,12 +184,17 @@ class EarningsDashboardData {
   String get formattedThisMonth => '₹${NumberFormat('#,##,##0').format(thisMonthRupees.round())}';
   String get formattedTotal => '₹${NumberFormat('#,##,##0').format(totalRupees.round())}';
   String get formattedDailyGoal => '₹${NumberFormat('#,##,##0').format(dailyGoalRupees.round())}';
+  String get formattedMonthlyAverage =>
+      '₹${NumberFormat('#,##,##0').format(monthlyAverageRupees.round())}';
+  String get formattedTrend =>
+      '${trendVsLastMonthPct >= 0 ? '+' : ''}${trendVsLastMonthPct.toStringAsFixed(1)}%';
 
   factory EarningsDashboardData.fromJson(Map<String, dynamic> json) {
     return EarningsDashboardData(
       todayEarningsPaise: (json['today_earnings_paise'] as num?)?.toInt() ?? 0,
       thisWeekEarningsPaise: (json['this_week_earnings_paise'] as num?)?.toInt() ?? 0,
       thisMonthEarningsPaise: (json['this_month_earnings_paise'] as num?)?.toInt() ?? 0,
+      lastMonthEarningsPaise: (json['last_month_earnings_paise'] as num?)?.toInt() ?? 0,
       totalEarningsPaise: (json['total_earnings_paise'] as num?)?.toInt() ?? 0,
       completedJobsCount: (json['completed_jobs_count'] as num?)?.toInt() ?? 0,
       completedOrdersCount: (json['completed_orders_count'] as num?)?.toInt() ?? 0,
@@ -153,12 +203,21 @@ class EarningsDashboardData {
       bestDay: json['best_day'] != null && json['best_day'] is Map<String, dynamic>
           ? BestDayInsight.fromJson(json['best_day'] as Map<String, dynamic>)
           : null,
+      bestMonth: json['best_month'] != null && json['best_month'] is Map<String, dynamic>
+          ? MonthlyTrendItem.fromJson(json['best_month'] as Map<String, dynamic>)
+          : null,
       dailyTrends: (json['daily_trends'] as List<dynamic>?)
               ?.map((e) => DailyTrendItem.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
       monthlyTrends: (json['monthly_trends'] as List<dynamic>?)
               ?.map((e) => MonthlyTrendItem.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      monthlyAveragePaise: (json['monthly_average_paise'] as num?)?.toInt() ?? 0,
+      trendVsLastMonthPct: (json['trend_vs_last_month_pct'] as num?)?.toDouble() ?? 0.0,
+      categorySplit: (json['category_split'] as List<dynamic>?)
+              ?.map((e) => CategorySplitItem.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
       recentAvgDailyEarningsPaise:
@@ -171,6 +230,7 @@ class EarningsDashboardData {
       todayEarningsPaise: 0,
       thisWeekEarningsPaise: 0,
       thisMonthEarningsPaise: 0,
+      lastMonthEarningsPaise: 0,
       totalEarningsPaise: 0,
       completedJobsCount: 0,
       completedOrdersCount: 0,
@@ -178,7 +238,11 @@ class EarningsDashboardData {
       dailyGoalPaise: 150000,
       dailyTrends: [],
       monthlyTrends: [],
+      monthlyAveragePaise: 0,
+      trendVsLastMonthPct: 0.0,
+      categorySplit: [],
       recentAvgDailyEarningsPaise: 0,
     );
   }
 }
+

@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:udyogasethu/features/earnings/domain/savings_goal_model.dart';
 import 'package:udyogasethu/core/router/routes.dart';
-import 'package:udyogasethu/core/widgets/mic_fab.dart';
 import 'package:udyogasethu/features/earnings/data/earnings_repository.dart';
 import 'package:udyogasethu/features/earnings/domain/earnings_models.dart';
 import 'package:udyogasethu/features/earnings/presentation/widgets/allocate_savings_dialog.dart';
@@ -144,18 +143,119 @@ class _EarningsDashboardScreenState extends ConsumerState<EarningsDashboardScree
           ),
         ],
       ),
-      floatingActionButton: MicFab(onTap: () {}),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: RefreshIndicator(
         onRefresh: _refresh,
         color: const Color(0xFF0D6548),
         child: earningsAsync.when(
-          data: (data) => _buildDashboardContent(data, savingsGoalsAsync),
+          data: (data) => data.hasHistory
+              ? _buildDashboardContent(data, savingsGoalsAsync)
+              : _buildEmptyHistoryView(data, savingsGoalsAsync),
           loading: () => const Center(
             child: CircularProgressIndicator(color: Color(0xFF0D6548)),
           ),
           error: (err, _) => _buildErrorState(err.toString()),
         ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyHistoryView(
+    EarningsDashboardData data,
+    AsyncValue<List<SavingsGoal>> savingsGoalsAsync,
+  ) {
+    return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildHeroEarningsCards(data),
+          const SizedBox(height: 16),
+
+          // Empty History Educational Card (Prompt D5: Empty state when there is no history)
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: const Color(0xFFE2E8F0)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.02),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF1F5F9),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: const Icon(Icons.insights_rounded, color: Color(0xFF64748B), size: 30),
+                ),
+                const SizedBox(height: 14),
+                const Text(
+                  'No Ledger Earnings Yet',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1E293B),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                const Text(
+                  'Your wallet balance and escrow are backed directly by the immutable ledger (currently ₹0 for this account). Once you complete verified shifts or produce sales, 6-month analytics, trends, and category splits will appear automatically.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Color(0xFF64748B),
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 18),
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 8,
+                  alignment: WrapAlignment.center,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () => context.push(AppRoutes.seekerHome),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF0D6548),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      ),
+                      icon: const Icon(Icons.search_rounded, size: 18),
+                      label: const Text('Browse Shifts', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: () => _openCreateGoalDialog(data.recentAvgDailyEarningsPaise),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: const Color(0xFF0D6548),
+                        side: const BorderSide(color: Color(0xFF0D6548)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      ),
+                      icon: const Icon(Icons.flag_rounded, size: 18),
+                      label: const Text('Set Savings Goal', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          // Savings Goal Section (allows planning ahead)
+          _buildSavingsGoalsSection(data, savingsGoalsAsync),
+        ],
       ),
     );
   }
@@ -174,28 +274,38 @@ class _EarningsDashboardScreenState extends ConsumerState<EarningsDashboardScree
           _buildHeroEarningsCards(data),
           const SizedBox(height: 16),
 
-          // 2. PERFORMANCE STATS (Completed Jobs, Orders, Rating)
+          // 2. 6-MONTH ANALYTICS & TREND CARD (Prompt D5: Average, Best Month, Trend vs Last Month)
+          _buildMonthlyAnalyticsCard(data),
+          const SizedBox(height: 16),
+
+          // 3. PERFORMANCE STATS (Completed Jobs, Orders, Rating)
           _buildPerformanceStatsRow(data),
           const SizedBox(height: 16),
 
-          // 3. TODAY'S DAILY GOAL RING CARD
+          // 4. TODAY'S DAILY GOAL RING CARD
           _buildDailyGoalCard(data),
           const SizedBox(height: 20),
 
-          // 4. PAYOUT TREND CHART (fl_chart with 14d / 6m toggle and text summary)
+          // 5. PAYOUT TREND CHART (6-Month Bar Chart & 14-Day Line Chart)
           EarningsTrendChart(
             dailyTrends: data.dailyTrends,
             monthlyTrends: data.monthlyTrends,
           ),
           const SizedBox(height: 20),
 
-          // 5. BEST DAY INSIGHT CARD
+          // 6. CATEGORY BREAKDOWN (Prompt D5: Split by category)
+          if (data.categorySplit.isNotEmpty) ...[
+            _buildCategorySplitCard(data.categorySplit),
+            const SizedBox(height: 20),
+          ],
+
+          // 7. BEST DAY INSIGHT CARD
           if (data.bestDay != null && data.bestDay!.earningsPaise > 0) ...[
             _buildBestDayCard(data.bestDay!),
             const SizedBox(height: 20),
           ],
 
-          // 6. SAVINGS GOAL PLANNER PREVIEW
+          // 8. SAVINGS GOAL PLANNER PREVIEW
           _buildSavingsGoalsSection(data, savingsGoalsAsync),
         ],
       ),
@@ -330,6 +440,192 @@ class _EarningsDashboardScreenState extends ConsumerState<EarningsDashboardScree
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMonthlyAnalyticsCard(EarningsDashboardData data) {
+    final isPositiveTrend = data.trendVsLastMonthPct >= 0;
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                '6-MONTH ANALYTICS & TREND',
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.9,
+                  color: Color(0xFF64748B),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: isPositiveTrend ? const Color(0xFFDCFCE7) : const Color(0xFFFEE2E2),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      isPositiveTrend ? Icons.trending_up_rounded : Icons.trending_down_rounded,
+                      size: 14,
+                      color: isPositiveTrend ? const Color(0xFF16A34A) : const Color(0xFFDC2626),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      '${data.formattedTrend} vs last mo',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: isPositiveTrend ? const Color(0xFF15803D) : const Color(0xFFB91C1C),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Monthly Average',
+                      style: TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      data.formattedMonthlyAverage,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF0D6548),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(width: 1, height: 32, color: const Color(0xFFE2E8F0)),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Best Month',
+                      style: TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      data.bestMonth != null
+                          ? '₹${(data.bestMonth!.earningsRupees).round()} (${data.bestMonth!.monthLabel})'
+                          : '₹0',
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1E293B),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCategorySplitCard(List<CategorySplitItem> split) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            children: [
+              Icon(Icons.pie_chart_outline_rounded, color: Color(0xFF0D6548), size: 18),
+              SizedBox(width: 8),
+              Text(
+                'Earnings by Category',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF1E293B),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          ...split.map((item) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        item.category,
+                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF334155)),
+                      ),
+                      Text(
+                        '${item.formattedAmount} (${item.percentage.toStringAsFixed(1)}%)',
+                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF0D6548)),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: LinearProgressIndicator(
+                      value: (item.percentage / 100.0).clamp(0.02, 1.0),
+                      minHeight: 6,
+                      backgroundColor: const Color(0xFFF1F5F9),
+                      valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF0D6548)),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
         ],
       ),
     );

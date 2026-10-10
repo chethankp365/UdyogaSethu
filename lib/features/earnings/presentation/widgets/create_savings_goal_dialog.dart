@@ -21,6 +21,8 @@ class _CreateSavingsGoalDialogState extends State<CreateSavingsGoalDialog> {
   late final TextEditingController _titleController;
   late final TextEditingController _amountController;
   DateTime? _selectedDeadline;
+  String _targetMode = 'target_amount'; // 'target_amount' or 'monthly_percentage'
+  double _monthlyPercentage = 15.0; // 15% default
 
   @override
   void initState() {
@@ -92,34 +94,44 @@ class _CreateSavingsGoalDialogState extends State<CreateSavingsGoalDialog> {
     }
   }
 
-  ({int perWeekRupees, int perJobRupees}) _computeLiveSuggestedSavings() {
-    final targetRupees = int.tryParse(_amountController.text.replaceAll(',', '')) ?? 0;
-    if (targetRupees <= 0) return (perWeekRupees: 0, perJobRupees: 0);
+  ({
+    int monthlySavingNeededRupees,
+    int projectedBalanceRupees,
+    int targetRupees,
+    double progressRingValue,
+  }) _computePlannerCalculations() {
+    final avgMonthlyRupees = ((widget.recentAvgDailyEarningsPaise * 30) / 100).round();
+    final baselineMonthly = avgMonthlyRupees > 0 ? avgMonthlyRupees : 25000;
 
-    final targetPaise = targetRupees * 100;
-    final tempGoal = SavingsGoal(
-      id: '',
-      userId: '',
-      category: _selectedCategory,
-      title: '',
-      targetPaise: targetPaise,
-      savedPaise: 0,
-      deadline: _selectedDeadline,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    );
-
-    final suggested = tempGoal.computeSuggestedSavings(widget.recentAvgDailyEarningsPaise);
-    return (
-      perWeekRupees: (suggested.perWeekPaise / 100).round(),
-      perJobRupees: (suggested.perJobPaise / 100).round(),
-    );
+    if (_targetMode == 'monthly_percentage') {
+      final monthlyNeeded = (baselineMonthly * (_monthlyPercentage / 100.0)).round();
+      // Projected balance in 6 months
+      final projected6m = monthlyNeeded * 6;
+      return (
+        monthlySavingNeededRupees: monthlyNeeded,
+        projectedBalanceRupees: projected6m,
+        targetRupees: projected6m,
+        progressRingValue: (_monthlyPercentage / 100.0).clamp(0.05, 1.0),
+      );
+    } else {
+      final target = int.tryParse(_amountController.text.replaceAll(',', '')) ?? 0;
+      final days = _selectedDeadline != null
+          ? _selectedDeadline!.difference(DateTime.now()).inDays.clamp(1, 1825)
+          : 90;
+      final months = (days / 30.0).clamp(0.5, 60.0);
+      final monthlyNeeded = target > 0 ? (target / months).round() : 0;
+      final projected = monthlyNeeded * (months.ceil());
+      return (
+        monthlySavingNeededRupees: monthlyNeeded,
+        projectedBalanceRupees: projected,
+        targetRupees: target,
+        progressRingValue: target > 0 ? (monthlyNeeded / target).clamp(0.05, 1.0) : 0.2,
+      );
+    }
   }
 
   void _submit() {
     final title = _titleController.text.trim();
-    final rupees = int.tryParse(_amountController.text.replaceAll(',', '')) ?? 0;
-
     if (title.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter a goal title')),
@@ -127,7 +139,8 @@ class _CreateSavingsGoalDialogState extends State<CreateSavingsGoalDialog> {
       return;
     }
 
-    if (rupees <= 0) {
+    final calcs = _computePlannerCalculations();
+    if (calcs.targetRupees <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter a valid target amount')),
       );
@@ -137,8 +150,12 @@ class _CreateSavingsGoalDialogState extends State<CreateSavingsGoalDialog> {
     final draft = SavingsGoalDraft(
       category: _selectedCategory,
       title: title,
-      targetPaise: rupees * 100,
+      targetPaise: calcs.targetRupees * 100,
       deadline: _selectedDeadline,
+      monthlyPercentage: _targetMode == 'monthly_percentage' ? _monthlyPercentage : null,
+      targetType: _targetMode,
+      monthlySavingNeededPaise: calcs.monthlySavingNeededRupees * 100,
+      projectedBalancePaise: calcs.projectedBalanceRupees * 100,
     );
 
     widget.onCreateGoal(draft);
@@ -147,9 +164,6 @@ class _CreateSavingsGoalDialogState extends State<CreateSavingsGoalDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final suggested = _computeLiveSuggestedSavings();
-    final avgDailyRupees = (widget.recentAvgDailyEarningsPaise / 100).round();
-
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       backgroundColor: Colors.white,
@@ -241,149 +255,245 @@ class _CreateSavingsGoalDialogState extends State<CreateSavingsGoalDialog> {
               ),
               const SizedBox(height: 16),
 
-              // Target Amount
+              // Target Mode Selector (Prompt D5: Target amount & date OR monthly percentage of average earnings)
               const Text(
-                'Target Amount (₹)',
+                'Planner Mode',
                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF334155)),
               ),
-              const SizedBox(height: 6),
-              TextField(
-                controller: _amountController,
-                keyboardType: TextInputType.number,
-                onChanged: (_) => setState(() {}),
-                decoration: InputDecoration(
-                  prefixText: '₹ ',
-                  prefixStyle: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF0D6548),
-                  ),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              const SizedBox(height: 8),
+              Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF1F5F9),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-              ),
-              const SizedBox(height: 16),
-
-              // Target Deadline
-              const Text(
-                'Target Deadline (Optional)',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF334155)),
-              ),
-              const SizedBox(height: 6),
-              InkWell(
-                onTap: _pickDeadline,
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xFFCBD5E1)),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        _selectedDeadline != null
-                            ? DateFormat('d MMMM yyyy').format(_selectedDeadline!)
-                            : 'Select deadline date',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: _selectedDeadline != null
-                              ? const Color(0xFF1E293B)
-                              : const Color(0xFF94A3B8),
+                padding: const EdgeInsets.all(4),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => setState(() => _targetMode = 'target_amount'),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          decoration: BoxDecoration(
+                            color: _targetMode == 'target_amount' ? Colors.white : Colors.transparent,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: _targetMode == 'target_amount'
+                                ? [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4)]
+                                : null,
+                          ),
+                          child: Text(
+                            'Target Amount & Date',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: _targetMode == 'target_amount' ? FontWeight.bold : FontWeight.w500,
+                              color: _targetMode == 'target_amount' ? const Color(0xFF0D6548) : const Color(0xFF64748B),
+                            ),
+                          ),
                         ),
                       ),
-                      const Icon(Icons.calendar_month_rounded, color: Color(0xFF0D6548), size: 20),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 18),
-
-              // Live Suggested Saving Calculator Card
-              Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF0FDF4),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: const Color(0xFFBBF7D0)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Row(
-                      children: [
-                        Icon(Icons.auto_awesome_rounded, color: Color(0xFF0D6548), size: 18),
-                        SizedBox(width: 6),
-                        Text(
-                          'Suggested Savings Plan',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF065F46),
-                          ),
-                        ),
-                      ],
                     ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Per Week',
-                                style: TextStyle(fontSize: 11, color: Color(0xFF047857)),
-                              ),
-                              Text(
-                                '₹${NumberFormat('#,##,##0').format(suggested.perWeekRupees)}',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF065F46),
-                                ),
-                              ),
-                            ],
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => setState(() => _targetMode = 'monthly_percentage'),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          decoration: BoxDecoration(
+                            color: _targetMode == 'monthly_percentage' ? Colors.white : Colors.transparent,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: _targetMode == 'monthly_percentage'
+                                ? [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4)]
+                                : null,
+                          ),
+                          child: Text(
+                            'Monthly % of Earnings',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: _targetMode == 'monthly_percentage' ? FontWeight.bold : FontWeight.w500,
+                              color: _targetMode == 'monthly_percentage' ? const Color(0xFF0D6548) : const Color(0xFF64748B),
+                            ),
                           ),
                         ),
-                        Container(width: 1, height: 28, color: const Color(0xFFA7F3D0)),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Per Completed Job',
-                                style: TextStyle(fontSize: 11, color: Color(0xFF047857)),
-                              ),
-                              Text(
-                                '₹${NumberFormat('#,##,##0').format(suggested.perJobRupees)}',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF065F46),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      avgDailyRupees > 0
-                          ? 'Computed from your recent daily average earnings of ₹$avgDailyRupees/day.'
-                          : 'Based on standard savings benchmark to help you reach your target comfortably.',
-                      style: const TextStyle(
-                        fontSize: 11,
-                        color: Color(0xFF047857),
-                        height: 1.3,
                       ),
                     ),
                   ],
                 ),
               ),
+              const SizedBox(height: 16),
+
+              if (_targetMode == 'target_amount') ...[
+                // Target Amount
+                const Text(
+                  'Target Amount (₹)',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF334155)),
+                ),
+                const SizedBox(height: 6),
+                TextField(
+                  controller: _amountController,
+                  keyboardType: TextInputType.number,
+                  onChanged: (_) => setState(() {}),
+                  decoration: InputDecoration(
+                    prefixText: '₹ ',
+                    prefixStyle: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF0D6548),
+                    ),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Target Deadline
+                const Text(
+                  'Target Deadline (Optional)',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF334155)),
+                ),
+                const SizedBox(height: 6),
+                InkWell(
+                  onTap: _pickDeadline,
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: const Color(0xFFCBD5E1)),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          _selectedDeadline != null
+                              ? DateFormat('d MMMM yyyy').format(_selectedDeadline!)
+                              : 'Select deadline date',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: _selectedDeadline != null
+                                ? const Color(0xFF1E293B)
+                                : const Color(0xFF94A3B8),
+                          ),
+                        ),
+                        const Icon(Icons.calendar_month_rounded, color: Color(0xFF0D6548), size: 20),
+                      ],
+                    ),
+                  ),
+                ),
+              ] else ...[
+                // Monthly Percentage Slider
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Monthly Savings Rate',
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF334155)),
+                    ),
+                    Text(
+                      '${_monthlyPercentage.round()}% of income',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF0D6548),
+                      ),
+                    ),
+                  ],
+                ),
+                Slider(
+                  value: _monthlyPercentage,
+                  min: 5,
+                  max: 50,
+                  divisions: 9,
+                  activeColor: const Color(0xFF0D6548),
+                  label: '${_monthlyPercentage.round()}%',
+                  onChanged: (val) => setState(() => _monthlyPercentage = val),
+                ),
+              ],
+              const SizedBox(height: 18),
+
+              // Live Planner Card with Progress Ring & Projections (Prompt D5)
+              Builder(builder: (ctx) {
+                final calcs = _computePlannerCalculations();
+                return Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF0FDF4),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: const Color(0xFFBBF7D0)),
+                  ),
+                  child: Row(
+                    children: [
+                      // Progress Ring
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          SizedBox(
+                            width: 52,
+                            height: 52,
+                            child: CircularProgressIndicator(
+                              value: calcs.progressRingValue,
+                              strokeWidth: 5,
+                              backgroundColor: const Color(0xFFD1FAE5),
+                              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF0D6548)),
+                            ),
+                          ),
+                          Text(
+                            '${(calcs.progressRingValue * 100).round()}%',
+                            style: const TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF0D6548),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Monthly Saving Needed:',
+                                  style: TextStyle(fontSize: 11, color: Color(0xFF047857)),
+                                ),
+                                Text(
+                                  '₹${NumberFormat('#,##,##0').format(calcs.monthlySavingNeededRupees)}/mo',
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF065F46),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Projected Balance:',
+                                  style: TextStyle(fontSize: 11, color: Color(0xFF047857)),
+                                ),
+                                Text(
+                                  '₹${NumberFormat('#,##,##0').format(calcs.projectedBalanceRupees)}',
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF065F46),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
               const SizedBox(height: 20),
 
               // Submit Button
