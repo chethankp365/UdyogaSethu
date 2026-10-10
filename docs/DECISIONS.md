@@ -28,6 +28,8 @@ This document records key design, architectural, role model, and implementation 
 | D53 | SQL-Backed Earnings Dashboard & Savings Goal Planner | Adopted | Earnings & Virtual Savings Planner |
 | D54 | Farmer Home Workspace, APMC Karnataka Mandi Feed, Open-Meteo Advisory & Essential Suite | Adopted | Farmer Home & Agri Advisory |
 | D55 | Farmer Profile Page, Produce Inventory Management, Auto-Status & Buyer Gating | Adopted | Farmer Profile & Produce Listings |
+| D61 | Real Jobs, Job Posting, Seeker Home, 4a Bug Resolution & Thumbnail Resolver (Prompt 1 of 3) | Adopted | Marketplace Real Data & Polish |
+| D62 | Job Execution Lifecycle, QR Ticket Windows, Rejection Codes, Step 2 Presence & Digital ID Card (Prompt 2 of 3) | Adopted | Execution, Attendance & Digital ID |
 
 ## Known Issues & Planned Fixes (Pre-P5.1)
 
@@ -383,10 +385,55 @@ This document records key design, architectural, role model, and implementation 
     * If denied, shows "Set your area" with manual address search and transit hubs (completely removed "Koramangala" default and fallbacks).
     * Auto-refresh on resume when moved > 1 km or cache older than 30 minutes, cached in `SharedPreferences`.
     * Spacing under "STUDENT & FLEXIBLE GIGS" heading fixed to exactly 12 px.
-  * **Job Thumbnail Keyword Resolver (Sub-Step 6)**:
-    * `assets/images/jobs/manifest.json` updated with library keyword rules (e.g., "wall paint" -> `painting-interior`).
-    * Strict priority: 1. Provider site photo (network) -> 2. Library image (asset) -> 3. Category icon + gradient fallback.
-    * Safe gradient fallback container renders whenever asset files do not exist yet on disk.
-    * Adopted across Home, map list, search, detail, provider's job list, and seeker's jobs list.
+* **D62 — Job Execution Lifecycle, QR Ticket Windows, Attendance Scanner, Step 2 Presence & Digital ID Card (Prompt 2 of 3)**:
+  * **Server-Side Lifecycle State Machine & Timeline (E1, E3)**:
+    * Replaced all mock/demo fallback constants across `ActiveJobDetail`, `JobTicketData`, and `ProviderActiveBooking` with real database values.
+    * 9 canonical lifecycle stages: `request_created`, `accepted`, `ticket_issued`, `arrived` (provider scan), `verification_completed` / `in_progress_verified` (selfie & GPS verified), `job_started` / `in_progress`, `completed`, `payment_released`, plus terminal/exceptional states `cancelled`, `no_show`, `dispute_raised`.
+    * Client devices never write status strings directly; transitions are executed via server-authoritative RPCs (`verify_ticket_scan`, `record_step2_verification`, `advance_assignment_stage`).
+    * Every state transition appends an immutable audit event in `assignment_events` (`actor_id`, `actor_role`, `event_type`, `meta`, `created_at`).
+    * Realtime timeline on both worker and provider devices updates instantaneously, highlighting the active stage in emerald green, completed stages in dark slate, pending stages in muted grey, with an explicit "Next action: [actor]" indicator.
+  * **Real Navigation & OSRM Routing (E2)**:
+    * Map and ETA calculations use the worker's real live GPS coordinates (`_currentWorkerLocation`) and destination site coordinates.
+    * "Open in Maps" triggers external navigation via `geo:` and `google.navigation:q=` intents, falling back gracefully to Google Maps web URLs with destination coordinates and address labels.
+  * **Rotating Cryptographic Ticket Tokens & Timing Windows (E4, E10)**:
+    * Configured in `admin_settings`:
+      * `ticket_valid_minutes_before` (default 60 min)
+      * `ticket_valid_minutes_after` (default 120 min)
+      * `ticket_token_ttl_seconds` (default 120 s)
+      * `ticket_debug_short_ttl_seconds` (default NULL; overrideable for fast automated expiry tests)
+    * QR token contains zero PII (encodes only token ID hash / signature and expiry epoch). Changes automatically every 2 minutes.
+    * Added `set_ticket_timing_debug` RPC to allow shortening rotation intervals and check-in windows for rapid automated and QA testing.
+  * **Atomic Scanner Verification & Stable Rejection Codes (E5)**:
+    * Provider attendance scanner calls atomic `verify_ticket_scan` RPC enforcing a `FOR UPDATE` lock on `job_assignments` and `qr_tokens` to completely eliminate race conditions and double-scan replays.
+    * 10 structured rejection codes with localized end-user guidance:
+      1. `EXPIRED`: "QR expired at hh:mm, ask the worker to refresh"
+      2. `ALREADY_USED`: "Already scanned at 10:42 AM"
+      3. `WRONG_EMPLOYER`: "This ticket was issued for a different employer site."
+      4. `WRONG_JOB`: "This QR code does not match the selected job."
+      5. `NOT_YET_VALID`: "Check-in not yet open (allowed from 60 mins before shift start)."
+      6. `TOO_LATE`: "Check-in window closed (allowed up to 120 mins after shift start)."
+      7. `CANCELLED`: "Job assignment has been cancelled."
+      8. `WORKER_SUSPENDED`: "Worker account is currently suspended."
+      9. `TAMPERED`: "Invalid signature or forged ticket token."
+      10. `DUPLICATE_CHECKIN`: "Worker already checked in for this assignment."
+    * Transient network and timeout errors are separated from domain rejections and offer an explicit retry action.
+  * **Step 2 Presence Verification — Live Selfie, Geofence & Work Timer (E6)**:
+    * Worker takes a live selfie with the workplace in the background plus a high-accuracy GPS fix.
+    * Evaluates geofence against `jobs.geofence_radius_m` (default 150 m); surfaces exact distance exceeded on failure (e.g. "Outside site by 95m").
+    * Validates photo brightness to prevent blacked-out or unlit captures (`image_too_dark`).
+    * Extracts 128-float32 embedding via `FaceEmbeddingService` and verifies identity against enrolled template via `face-verify` Edge Function.
+    * Live selfie is stored in private `job-evidence` storage bucket under `{assignmentId}/start_selfie.jpg`.
+    * Implements 3-fails manual review rule: on 3 consecutive failures, flags the verification attempt and escalates to administrator review.
+    * Successful verification transitions the job to `in_progress_verified` / `job_started`, writes start timestamp, and activates the live ticking timer card on both worker and provider screens.
+  * **Digital ID Card Next Assignment Selection (E8)**:
+    * `DigitalIdScreen` queries `get_next_accepted_ticket` to fetch the earliest upcoming accepted assignment not yet checked in.
+    * Displays the live rotating ticket QR (auto-refreshing every 2 minutes) with the job title, shift time, and employer name directly under the QR.
+    * Tapping the card opens the full interactive ticket.
+    * Automatically advances to the next assignment upon check-in, or presents a clean "No upcoming job assignment ticket" placeholder when none remain.
+  * **Accurate Offline Notice Banner (E9)**:
+    * Offline banner appears strictly when true network connectivity is lost (verified via socket connection / DNS probe) and never while online.
+  * **Edge Functions & Secrets (E7)**:
+    * Edge functions (`qr-issue`, `qr-verify`, `face-verify`) strictly return structured JSON with typed codes and support `{ "health": true }` probes. Bare 500 responses eliminated.
+    * Required secret names: `QR_SIGNING_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`, `FACE_MATCHER` (optional).
 
 

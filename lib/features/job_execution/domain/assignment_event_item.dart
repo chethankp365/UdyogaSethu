@@ -39,7 +39,9 @@ enum AssignmentStage {
       case 'verified_start':
       case 'face_verified':
       case 'qr_scanned':
+      case 'selfie_gps_verified':
         return AssignmentStage.verificationCompleted;
+      case 'job_started':
       case 'in_progress':
       case 'in_progress_verified':
       case 'job_in_progress':

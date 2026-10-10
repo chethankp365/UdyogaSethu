@@ -738,6 +738,40 @@
     - `flutter test`: 484/484 tests passing across the repository.
     - Local commits made after each sub-step.
 
+- [x] **Prompt 2 of 3: Job Execution, QR Ticket, Timeline, Selfie Step and Digital ID Card**:
+  - **Status**: Completed (2026-10-10)
+  - **Sub-Step 1 (Real Data & Demo Scrub)**:
+    - Scrubbed all demo fallback constants (`Koramangala, Bengaluru`, `12.9352`, `77.6245`, `BOOK-DEMO`, `BOOK-000000`, `Commercial Electrical Repair`, `Chethan Kumar`, `BOOK-7842`) across `ActiveJobDetail`, `JobTicketData`, and `ProviderActiveBooking`.
+    - Fixed offline notice banner on `JobTicketScreen` using dual check (network medium and socket/DNS lookup) so it appears strictly when offline.
+  - **Sub-Step 2 (Map, Real Route & Maps Launcher)**:
+    - Map and OSRM routing powered by the worker's real live GPS coordinates (`_currentWorkerLocation`) and destination site coordinates.
+    - `RoutingService.openExternalMaps()` chains `geo:lat,lng?q=lat,lng(label)` -> `google.navigation:q=lat,lng` -> web browser fallback with destination coordinates and address labels.
+  - **Sub-Step 3 (Migration 0610, Atomic Verification, Stable Codes, Timeline Actors & Worker Step 2 Prompt)**:
+    - Authored migration `supabase/migrations/0610_job_execution_ticket_qr_polish.sql` with dependency declarations.
+    - Seeded `ticket_valid_minutes_before` (60), `ticket_valid_minutes_after` (120), `ticket_token_ttl_seconds` (120), and `ticket_debug_short_ttl_seconds` (null) in `admin_settings`.
+    - Added debug timing helper RPC `set_ticket_timing_debug` for fast expiry testing.
+    - Created atomic `verify_ticket_scan` RPC using PostgreSQL `FOR UPDATE` row lock, handling both JWT and raw tokens, with all 10 stable codes: `EXPIRED`, `ALREADY_USED`, `WRONG_EMPLOYER`, `WRONG_JOB`, `NOT_YET_VALID`, `TOO_LATE`, `CANCELLED`, `WORKER_SUSPENDED`, `TAMPERED`, `DUPLICATE_CHECKIN`.
+    - Realtime prompt on worker's phone for Step 2 upon arrival scan.
+    - Displayed "Next action: [actor]" under the active stage in `AssignmentTimelineWidget`.
+  - **Sub-Step 4 (Step 2 Presence — Live Selfie, Geofence, Face Check & 3-Fails Rule)**:
+    - Real geofence calculation against job radius (default 150m), displaying exact meters exceeded on failure.
+    - Photo brightness validation (`_isImageTooDark`) rejecting underexposed photos (`image_too_dark`).
+    - Face embedding extraction via `FaceEmbeddingService` and verification against enrolled template via `face-verify` Edge Function.
+    - Live selfie uploaded to private `job-evidence` bucket under `{assignmentId}/start_selfie.jpg`.
+    - 3-fails manual review rule flags attempt and submits to admin team.
+    - Successful check-in transitions to `in_progress_verified` / `job_started`, sets `started_at`, and activates live work timer on both worker and provider devices.
+  - **Sub-Step 5 (Digital ID Card Next Assignment Selection & Auto-Rotating QR)**:
+    - Queries earliest un-checked-in accepted assignment via `get_next_accepted_ticket`.
+    - Displays rotating ticket QR with 2-minute countdown and auto-refresh.
+    - Displays job title, shift start time, and employer directly under the QR.
+    - Tapping opens full interactive ticket. Advances to next assignment after check-in, or shows clean placeholder if none.
+  - **Sub-Step 6 (Edge Functions Audit, Automated Tests & Documentation)**:
+    - Validated stable JSON codes (no bare 500) and `{ "health": true }` probes on `qr-issue`, `qr-verify`, `face-verify`.
+    - Expanded `test/part_e_job_execution_ticket_test.dart` to 12 tests covering state transitions, all 10 rejection codes, double scan race, debug shortener, next ticket selection, and presence verification.
+    - Full test suite passing (484/484 tests).
+    - `flutter analyze`: 0 issues found.
+    - Documented Decision D62 in `docs/DECISIONS.md`.
+
 ---
 
 ## Manual steps pending
