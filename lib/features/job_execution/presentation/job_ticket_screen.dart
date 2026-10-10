@@ -476,13 +476,12 @@ class _JobTicketScreenState extends ConsumerState<JobTicketScreen> {
                         icon: const Icon(Icons.map, size: 20, color: AppColors.emeraldPrimary),
                         tooltip: 'Open in Maps',
                         onPressed: () {
-                          RoutingService.openExternalMaps(
-                            destination: LatLng(
-                              ticket.lat ?? 12.9716,
-                              ticket.lng ?? 77.5946,
-                            ),
-                            label: ticket.addressText,
-                          );
+                          if (ticket.lat != null && ticket.lng != null) {
+                            RoutingService.openExternalMaps(
+                              destination: LatLng(ticket.lat!, ticket.lng!),
+                              label: ticket.addressText ?? ticket.jobTitle,
+                            );
+                          }
                         },
                       ),
                     ],

@@ -42,6 +42,7 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
   final MapController _mapController = MapController();
 
   RoutingResult? _routingResult;
+  LatLng? _currentWorkerLocation;
   bool _isLoadingRoute = true;
   bool _isActionInProgress = false;
   bool? _overrideSimpleMode;
@@ -112,6 +113,7 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
       final res = await routing.getRoute(start: start, destination: dest);
       if (mounted) {
         setState(() {
+          _currentWorkerLocation = currentWorkerLoc;
           _routingResult = res;
           _isLoadingRoute = false;
         });
@@ -119,6 +121,7 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
     } catch (e) {
       if (mounted) {
         setState(() {
+          _currentWorkerLocation = currentWorkerLoc;
           _isLoadingRoute = false;
         });
       }
@@ -752,8 +755,8 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
     AppLocalizations? l10n,
   ) {
     final route = _routingResult;
-    final workerLoc = detail.workerLocation ?? const LatLng(12.9279, 77.6271);
     final jobLoc = detail.jobLocation;
+    final workerLoc = _currentWorkerLocation ?? detail.workerLocation ?? jobLoc;
 
     return Container(
       decoration: BoxDecoration(
@@ -938,7 +941,7 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
                   onPressed: () {
                     RoutingService.openExternalMaps(
                       destination: jobLoc,
-                      label: detail.jobTitle,
+                      label: detail.addressText.isNotEmpty ? detail.addressText : detail.jobTitle,
                     );
                   },
                 ),

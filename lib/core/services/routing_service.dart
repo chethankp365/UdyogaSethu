@@ -168,7 +168,8 @@ class RoutingService {
 
   double _degToRad(double deg) => deg * (math.pi / 180.0);
 
-  /// Launches external navigation apps (Google Maps, Apple Maps, or generic geo: intent).
+  /// Launches external navigation apps (Google Maps, Apple Maps, or generic geo: intent)
+  /// with a browser maps fallback.
   static Future<bool> openExternalMaps({
     required LatLng destination,
     String? label,
@@ -178,22 +179,30 @@ class RoutingService {
     final query = label != null ? Uri.encodeComponent(label) : '$lat,$lng';
 
     // 1. Try generic geo URI (works across Android and iOS map handlers)
-    final geoUrl = Uri.parse('geo:$lat,$lng?q=$lat,$lng($query)');
-    if (await canLaunchUrl(geoUrl)) {
-      return await launchUrl(geoUrl, mode: LaunchMode.externalApplication);
-    }
+    try {
+      final geoUrl = Uri.parse('geo:$lat,$lng?q=$lat,$lng($query)');
+      if (await canLaunchUrl(geoUrl)) {
+        final launched = await launchUrl(geoUrl, mode: LaunchMode.externalApplication);
+        if (launched) return true;
+      }
+    } catch (_) {}
 
     // 2. Try Google Maps navigation intent (Android Turn-by-Turn navigation)
-    final navUrl = Uri.parse('google.navigation:q=$lat,$lng');
-    if (await canLaunchUrl(navUrl)) {
-      return await launchUrl(navUrl, mode: LaunchMode.externalApplication);
-    }
+    try {
+      final navUrl = Uri.parse('google.navigation:q=$lat,$lng');
+      if (await canLaunchUrl(navUrl)) {
+        final launched = await launchUrl(navUrl, mode: LaunchMode.externalApplication);
+        if (launched) return true;
+      }
+    } catch (_) {}
 
-    // 3. Fallback to Google Maps Web / universal directions intent
-    final googleMapsUrl = Uri.parse('https://www.google.com/maps/dir/?api=1&destination=$lat,$lng');
-    if (await canLaunchUrl(googleMapsUrl)) {
-      return await launchUrl(googleMapsUrl, mode: LaunchMode.externalApplication);
-    }
+    // 3. Fallback to Google Maps Web / browser maps directions intent
+    try {
+      final googleMapsUrl = Uri.parse('https://www.google.com/maps/dir/?api=1&destination=$lat,$lng');
+      if (await canLaunchUrl(googleMapsUrl)) {
+        return await launchUrl(googleMapsUrl, mode: LaunchMode.externalApplication);
+      }
+    } catch (_) {}
 
     return false;
   }
