@@ -138,9 +138,9 @@ void main() {
       expect(sampleTxWage.status, equals('completed'));
     });
 
-    test('UpiPaymentData parses valid UPI intent URI', () {
+    test('UpiPaymentData parses valid UPI intent URI with all query parameters (Prompt D6)', () {
       const uri =
-          'upi://pay?pa=farmer.suresh@upi&pn=Suresh%20Agri%20Produce&am=450.00&cu=INR&tn=Fresh%20Tomatoes';
+          'upi://pay?pa=farmer.suresh@upi&pn=Suresh%20Agri%20Produce&am=450.00&cu=INR&tn=Fresh%20Tomatoes&mc=5411&tr=TXN948123';
       final parsed = UpiPaymentData.parse(uri);
 
       expect(parsed.isValid, isTrue);
@@ -148,7 +148,20 @@ void main() {
       expect(parsed.payeeName, equals('Suresh Agri Produce'));
       expect(parsed.amount, equals(450.00));
       expect(parsed.amountPaise, equals(45000));
+      expect(parsed.currency, equals('INR'));
       expect(parsed.transactionNote, equals('Fresh Tomatoes'));
+      expect(parsed.merchantCode, equals('5411'));
+      expect(parsed.transactionRef, equals('TXN948123'));
+    });
+
+    test('UpiPaymentData rejects non-UPI and malformed QR strings with clear errors (Prompt D6)', () {
+      final invalidHttp = UpiPaymentData.parse('https://example.com/payment');
+      expect(invalidHttp.isValid, isFalse);
+      expect(invalidHttp.errorMessage, contains('Not a valid UPI code'));
+
+      final invalidVpa = UpiPaymentData.parse('upi://pay?pa=invalid_without_at&pn=Test');
+      expect(invalidVpa.isValid, isFalse);
+      expect(invalidVpa.errorMessage, contains('Payee UPI ID (pa) is missing or invalid'));
     });
 
     test('Fresh user balance is zero with no mock defaults', () {
@@ -207,7 +220,7 @@ void main() {
       expect(find.text('₹32,500'), findsOneWidget);
     });
 
-    testWidgets('ScanUpiDialog supports mode switching and sample test selection', (tester) async {
+    testWidgets('ScanUpiDialog renders real scanner, parses payload and shows Prompt D6 fields', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -217,23 +230,38 @@ void main() {
       );
 
       expect(find.text('Scan UPI QR'), findsOneWidget);
-      expect(find.text('Demo mode: Simulated UPI Scanner'), findsOneWidget);
+      expect(find.textContaining('Test mode: no money is moved'), findsOneWidget);
       expect(find.text('Live Camera'), findsOneWidget);
-      expect(find.text('Manual / Sample'), findsOneWidget);
+      expect(find.text('Manual Input'), findsOneWidget);
 
-      // Switch to Manual / Sample mode
-      await tester.tap(find.text('Manual / Sample'));
+      // Switch to Manual Input mode (available in test/debug)
+      await tester.tap(find.text('Manual Input'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Quick test presets:'), findsOneWidget);
-      expect(find.text('Worker Wage (₹750)'), findsOneWidget);
-
-      // Tap preset
-      await tester.tap(find.text('Worker Wage (₹750)'));
+      // Enter valid UPI QR code
+      await tester.enterText(
+        find.byType(TextField),
+        'upi://pay?pa=farmer.suresh@upi&pn=Suresh%20Agri%20Produce&am=450.00&cu=INR&tn=Fresh%20Tomatoes',
+      );
       await tester.pumpAndSettle();
 
-      expect(find.text('Parsed UPI Target'), findsOneWidget);
-      expect(find.text('electrician.ramesh@okaxis'), findsOneWidget);
+      // Check fields per Prompt D6: Name from QR, UPI ID, Amount, Note
+      expect(find.text('Payment Target'), findsOneWidget);
+      expect(find.text('Name from QR'), findsOneWidget);
+      expect(find.text('Suresh Agri Produce'), findsOneWidget);
+      expect(find.text('UPI ID'), findsOneWidget);
+      expect(find.text('farmer.suresh@upi'), findsOneWidget);
+      expect(find.text('Amount'), findsOneWidget);
+      expect(find.text('₹450.00'), findsOneWidget);
+      expect(find.text('Note'), findsOneWidget);
+      expect(find.text('Fresh Tomatoes'), findsOneWidget);
+
+      // Verify "Not verified by bank" is shown when Edge Function is not connected in widget test
+      expect(find.text('Not verified by bank'), findsOneWidget);
+
+      // Verify Pay button displays exact Prompt D6 text: "Test mode: no money is moved"
+      expect(find.text('Test mode: no money is moved'), findsOneWidget);
+      expect(find.textContaining('Test mode: no money is moved'), findsNWidgets(2));
     });
 
     testWidgets('WalletScreen renders hero balance, savings planner, and grouped transactions', (tester) async {

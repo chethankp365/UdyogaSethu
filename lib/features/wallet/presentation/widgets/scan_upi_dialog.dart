@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/wallet/domain/upi_payment_data.dart';
 
@@ -18,8 +20,10 @@ class _ScanUpiDialogState extends State<ScanUpiDialog> with WidgetsBindingObserv
   bool _isTorchOn = false;
   UpiPaymentData? _parsedData;
   String? _parseError;
-  bool _isValidating = false;
-  String? _validationStatus;
+  bool _isValidatingVpa = false;
+  String? _bankVerifiedName;
+  bool _isBankVerified = false;
+  String? _bankVerificationError;
 
   @override
   void initState() {
@@ -28,10 +32,6 @@ class _ScanUpiDialogState extends State<ScanUpiDialog> with WidgetsBindingObserv
     _scannerController = MobileScannerController(
       detectionSpeed: DetectionSpeed.noDuplicates,
       facing: CameraFacing.back,
-    );
-    // Pre-populate with a sample URI for immediate verification and interactive preview
-    _loadSampleUri(
-      'upi://pay?pa=farmer.suresh@upi&pn=Suresh%20Agri%20Produce&am=450.00&cu=INR&tn=Fresh%20Tomatoes',
     );
   }
 
@@ -43,47 +43,99 @@ class _ScanUpiDialogState extends State<ScanUpiDialog> with WidgetsBindingObserv
     super.dispose();
   }
 
-  void _loadSampleUri(String uri) {
-    _qrInputController.text = uri;
-    _parseQr(uri);
-  }
-
   void _parseQr(String rawText) {
     setState(() {
       _parseError = null;
-      _validationStatus = null;
+      _bankVerifiedName = null;
+      _isBankVerified = false;
+      _bankVerificationError = null;
     });
 
-    final data = UpiPaymentData.parse(rawText);
+    final trimmed = rawText.trim();
+    if (!trimmed.toLowerCase().startsWith('upi://pay') && !RegExp(r'^[\w.\-]+@[\w.\-]+$').hasMatch(trimmed)) {
+      setState(() {
+        _parsedData = null;
+        _parseError = 'Invalid code: Not a valid UPI QR code. Must be a valid upi://pay URI.';
+      });
+      return;
+    }
+
+    final data = UpiPaymentData.parse(trimmed);
     if (!data.isValid) {
       setState(() {
         _parsedData = null;
-        _parseError = 'Invalid UPI QR code. Must be a valid upi://pay URI or valid VPA (name@bank).';
+        _parseError = data.errorMessage ?? 'Invalid UPI QR code structure.';
       });
-    } else {
-      setState(() {
-        _parsedData = data;
-        _parseError = null;
-        _validationStatus = 'VPA Syntax Verified (${data.payeeVpa})';
-      });
+      return;
+    }
+
+    setState(() {
+      _parsedData = data;
+      _parseError = null;
+    });
+
+    // Automatically trigger server-side bank verification via Edge Function
+    _validateVpaWithServer(data.payeeVpa);
+  }
+
+  /// Server-side VPA check calling Edge Function validate-vpa (Prompt D6)
+  Future<void> _validateVpaWithServer(String vpa) async {
+    setState(() {
+      _isValidatingVpa = true;
+      _bankVerifiedName = null;
+      _isBankVerified = false;
+      _bankVerificationError = null;
+    });
+
+    try {
+      final client = Supabase.instance.client;
+      final response = await client.functions.invoke(
+        'validate-vpa',
+        body: {'vpa': vpa},
+      );
+
+      final data = response.data;
+      if (data is Map<String, dynamic>) {
+        final bankVerified = data['bank_verified'] == true;
+        final customerName = data['customer_name'] as String?;
+        final error = data['error'] as String?;
+
+        if (mounted) {
+          setState(() {
+            _isValidatingVpa = false;
+            _isBankVerified = bankVerified;
+            _bankVerifiedName = customerName;
+            _bankVerificationError = bankVerified ? null : (error ?? 'Bank verification unavailable');
+          });
+        }
+      } else {
+        if (mounted) {
+          setState(() {
+            _isValidatingVpa = false;
+            _isBankVerified = false;
+            _bankVerificationError = 'Unexpected server response format';
+          });
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isValidatingVpa = false;
+          _isBankVerified = false;
+          _bankVerificationError = 'Connection error: ${e.toString().replaceAll(RegExp(r'Exception:?'), '').trim()}';
+        });
+      }
     }
   }
 
-  Future<void> _simulateValidateVpa() async {
-    if (_parsedData == null) return;
-    setState(() {
-      _isValidating = true;
-      _validationStatus = null;
-    });
-
-    // Simulated NPCI UPI verification roundtrip
-    await Future.delayed(const Duration(milliseconds: 600));
-
-    if (!mounted) return;
-    setState(() {
-      _isValidating = false;
-      _validationStatus = 'NPCI Routing Verified • Account Active (${_parsedData!.payeeVpa})';
-    });
+  void _onPayPressed() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Test mode: no money is moved. Payment simulation verified.'),
+        backgroundColor: Color(0xFF0D6548),
+      ),
+    );
+    Navigator.of(context).pop();
   }
 
   @override
@@ -124,7 +176,7 @@ class _ScanUpiDialogState extends State<ScanUpiDialog> with WidgetsBindingObserv
               ),
               const SizedBox(height: 6),
 
-              // Mandatory Demo Mode Banner per AGENTS.md
+              // Test Mode Banner (Prompt D6)
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(10),
@@ -133,77 +185,64 @@ class _ScanUpiDialogState extends State<ScanUpiDialog> with WidgetsBindingObserv
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: const Color(0xFFF59E0B)),
                 ),
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: const Row(
                   children: [
-                    Row(
-                      children: [
-                        Icon(Icons.warning_amber_rounded, size: 16, color: Color(0xFFB45309)),
-                        SizedBox(width: 6),
-                        Text(
-                          'Demo mode: Simulated UPI Scanner',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF92400E),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      'No real money will be transferred. Payment rails connect in Phase 5.2.',
-                      style: TextStyle(fontSize: 11, color: Color(0xFFB45309)),
+                    Icon(Icons.info_outline_rounded, size: 16, color: Color(0xFFB45309)),
+                    SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        'Test mode: no money is moved. Scans and parses real UPI QR codes safely.',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF92400E)),
+                      ),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 14),
 
-              // Mode Switcher: Camera Scanner vs Manual/Sample Input
-              Row(
-                children: [
-                  Expanded(
-                    child: ChoiceChip(
-                      avatar: const Icon(Icons.camera_alt_rounded, size: 16),
-                      label: const Center(child: Text('Live Camera')),
-                      selected: _isCameraMode,
-                      selectedColor: const Color(0xFF0D6548),
-                      labelStyle: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: _isCameraMode ? Colors.white : AppColors.textDark,
+              // Debug Manual Switcher (Allowed only in Debug/Test mode; hidden in normal builds)
+              if (kDebugMode) ...[
+                Row(
+                  children: [
+                    Expanded(
+                      child: ChoiceChip(
+                        avatar: const Icon(Icons.camera_alt_rounded, size: 16),
+                        label: const Center(child: Text('Live Camera')),
+                        selected: _isCameraMode,
+                        selectedColor: const Color(0xFF0D6548),
+                        labelStyle: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: _isCameraMode ? Colors.white : AppColors.textDark,
+                        ),
+                        onSelected: (val) {
+                          if (val) setState(() => _isCameraMode = true);
+                        },
                       ),
-                      onSelected: (val) {
-                        if (val) setState(() => _isCameraMode = true);
-                      },
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: ChoiceChip(
-                      avatar: const Icon(Icons.edit_note_rounded, size: 16),
-                      label: const Center(child: Text('Manual / Sample')),
-                      selected: !_isCameraMode,
-                      selectedColor: const Color(0xFF0D6548),
-                      labelStyle: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: !_isCameraMode ? Colors.white : AppColors.textDark,
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ChoiceChip(
+                        avatar: const Icon(Icons.edit_note_rounded, size: 16),
+                        label: const Center(child: Text('Manual Input')),
+                        selected: !_isCameraMode,
+                        selectedColor: const Color(0xFF0D6548),
+                        labelStyle: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: !_isCameraMode ? Colors.white : AppColors.textDark,
+                        ),
+                        onSelected: (val) {
+                          if (val) setState(() => _isCameraMode = false);
+                        },
                       ),
-                      onSelected: (val) {
-                        if (val) {
-                          setState(() => _isCameraMode = false);
-                          _parseQr(_qrInputController.text);
-                        }
-                      },
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 14),
+                  ],
+                ),
+                const SizedBox(height: 14),
+              ],
 
-              // Scanner or Input Body
+              // Camera Scanner View (Default on real screen)
               if (_isCameraMode) ...[
                 ClipRRect(
                   borderRadius: BorderRadius.circular(16),
@@ -271,8 +310,8 @@ class _ScanUpiDialogState extends State<ScanUpiDialog> with WidgetsBindingObserv
                   ),
                 ),
                 const SizedBox(height: 14),
-              ] else ...[
-                // Manual text field and sample buttons
+              ] else if (kDebugMode) ...[
+                // Manual input field in debug mode
                 TextField(
                   controller: _qrInputController,
                   onChanged: _parseQr,
@@ -285,59 +324,35 @@ class _ScanUpiDialogState extends State<ScanUpiDialog> with WidgetsBindingObserv
                   ),
                   style: const TextStyle(fontSize: 12, fontFamily: 'monospace'),
                 ),
-                const SizedBox(height: 10),
-                const Text(
-                  'Quick test presets:',
-                  style: TextStyle(fontSize: 11, color: AppColors.textMuted),
-                ),
-                const SizedBox(height: 6),
-                Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
-                  children: [
-                    ActionChip(
-                      avatar: const Icon(Icons.agriculture_outlined, size: 14),
-                      label: const Text('Farm Produce (₹450)'),
-                      onPressed: () => _loadSampleUri(
-                        'upi://pay?pa=farmer.suresh@upi&pn=Suresh%20Agri%20Produce&am=450.00&cu=INR&tn=Fresh%20Tomatoes',
-                      ),
-                    ),
-                    ActionChip(
-                      avatar: const Icon(Icons.handyman_outlined, size: 14),
-                      label: const Text('Worker Wage (₹750)'),
-                      onPressed: () => _loadSampleUri(
-                        'upi://pay?pa=electrician.ramesh@okaxis&pn=Ramesh%20Kumar&am=750.00&cu=INR&tn=Electrical%20Repair%20Wage',
-                      ),
-                    ),
-                    ActionChip(
-                      avatar: const Icon(Icons.shield_outlined, size: 14),
-                      label: const Text('Job Escrow (₹1,200)'),
-                      onPressed: () => _loadSampleUri(
-                        'upi://pay?pa=udyoga.escrow@icici&pn=UdyogaSethu%20Escrow&am=1200.00&cu=INR&tn=Job%20Booking%20Escrow',
-                      ),
-                    ),
-                  ],
-                ),
                 const SizedBox(height: 14),
               ],
 
-              // Parse Error or Parsed Card
+              // Parse Error banner
               if (_parseError != null) ...[
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFEE2E2),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: const Color(0xFFDC2626)),
                   ),
-                  child: Text(
-                    _parseError!,
-                    style: const TextStyle(fontSize: 12, color: Color(0xFFB91C1C)),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.error_outline_rounded, color: Color(0xFFDC2626), size: 20),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          _parseError!,
+                          style: const TextStyle(fontSize: 12, color: Color(0xFFB91C1C), fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 14),
               ] else if (_parsedData != null) ...[
+                // Parsed Details Card (Prompt D6)
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(14),
@@ -353,7 +368,7 @@ class _ScanUpiDialogState extends State<ScanUpiDialog> with WidgetsBindingObserv
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
-                            'Parsed UPI Target',
+                            'Payment Target',
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.bold,
@@ -367,87 +382,152 @@ class _ScanUpiDialogState extends State<ScanUpiDialog> with WidgetsBindingObserv
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: const Text(
-                              'Verified Format',
+                              'Valid UPI QR',
                               style: TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ],
                       ),
                       const Divider(height: 16),
-                      _detailRow('Recipient Name', _parsedData!.payeeName ?? 'Not specified'),
-                      const SizedBox(height: 5),
-                      _detailRow('UPI ID (VPA)', _parsedData!.payeeVpa),
-                      const SizedBox(height: 5),
+
+                      // Payee name from QR (labelled "name from QR")
+                      _detailRow('Name from QR', _parsedData!.payeeName ?? 'Not specified in QR'),
+                      const SizedBox(height: 6),
+
+                      // UPI ID
+                      _detailRow('UPI ID', _parsedData!.payeeVpa),
+                      const SizedBox(height: 6),
+
+                      // Amount
                       _detailRow('Amount', _parsedData!.formattedAmount),
+
+                      // Note (if present)
                       if (_parsedData!.transactionNote != null) ...[
-                        const SizedBox(height: 5),
+                        const SizedBox(height: 6),
                         _detailRow('Note', _parsedData!.transactionNote!),
                       ],
-                      const SizedBox(height: 10),
-                      if (_validationStatus != null)
+                      const SizedBox(height: 12),
+
+                      // Server Bank Validation Status Card (Prompt D6)
+                      if (_isValidatingVpa) ...[
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF1F5F9),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Row(
+                            children: [
+                              SizedBox(
+                                width: 14,
+                                height: 14,
+                                child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF0D6548)),
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                'Verifying VPA with Bank...',
+                                style: TextStyle(fontSize: 11, color: Color(0xFF475569), fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ] else if (_isBankVerified) ...[
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                           decoration: BoxDecoration(
                             color: const Color(0xFFDCFCE7),
-                            borderRadius: BorderRadius.circular(6),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: const Color(0xFF86EFAC)),
                           ),
                           child: Row(
                             children: [
-                              const Icon(Icons.check_circle_rounded, size: 14, color: Color(0xFF00875A)),
-                              const SizedBox(width: 6),
+                              const Icon(Icons.verified_rounded, size: 16, color: Color(0xFF059669)),
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  _validationStatus!,
+                                  'Bank Verified: ${_bankVerifiedName ?? _parsedData!.payeeVpa}',
                                   style: const TextStyle(
                                     fontSize: 11,
-                                    color: Color(0xFF00875A),
+                                    color: Color(0xFF065F46),
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
                             ],
                           ),
-                        )
-                      else
-                        OutlinedButton.icon(
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                            side: const BorderSide(color: Color(0xFF0D6548)),
-                          ),
-                          icon: _isValidating
-                              ? const SizedBox(
-                                  width: 14,
-                                  height: 14,
-                                  child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF0D6548)),
-                                )
-                              : const Icon(Icons.verified_user_rounded, size: 16, color: Color(0xFF0D6548)),
-                          label: Text(
-                            _isValidating ? 'Validating VPA...' : 'Validate VPA with NPCI Gateway',
-                            style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF0D6548)),
-                          ),
-                          onPressed: _isValidating ? null : _simulateValidateVpa,
                         ),
+                      ] else ...[
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFEF3C7),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: const Color(0xFFFDE68A)),
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Icon(Icons.warning_amber_rounded, size: 16, color: Color(0xFFD97706)),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Not verified by bank',
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xFF92400E),
+                                      ),
+                                    ),
+                                    if (_bankVerificationError != null) ...[
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        _bankVerificationError!,
+                                        style: const TextStyle(fontSize: 10, color: Color(0xFFB45309)),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
                 const SizedBox(height: 14),
+
+                // Pay Button (Prompt D6: "Test mode: no money is moved")
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF0D6548),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    onPressed: _onPayPressed,
+                    child: const Text(
+                      'Test mode: no money is moved',
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
               ],
 
-              // Close Button
+              // Close / Done Button
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF0D6548),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
+                child: TextButton(
                   onPressed: () => Navigator.pop(context),
                   child: const Text(
-                    'Done',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    'Cancel',
+                    style: TextStyle(fontSize: 14, color: AppColors.textMuted),
                   ),
                 ),
               ),
