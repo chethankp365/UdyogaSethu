@@ -6,7 +6,7 @@ import 'package:udyogasethu/features/wallet/domain/wallet_transaction.dart';
 import 'package:udyogasethu/features/wallet/domain/withdrawal_result.dart';
 
 class TransactionFilterCriteria {
-  final String type; // 'all', 'wages', 'transfers', 'farm_sales', 'rewards', 'refunds'
+  final String type; // 'all', 'wages', 'transfers', 'escrow', 'farm_sales', 'rewards', 'refunds'
   final DateTime? startDate;
   final DateTime? endDate;
   final int limit;

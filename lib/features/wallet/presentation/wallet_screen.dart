@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/widgets/mic_fab.dart';
 import 'package:udyogasethu/features/wallet/data/wallet_repository.dart';
 import 'package:udyogasethu/features/wallet/domain/wallet_balance.dart';
+import 'package:udyogasethu/features/wallet/domain/wallet_transaction.dart';
+import 'package:udyogasethu/features/wallet/presentation/widgets/savings_planner_card.dart';
 import 'package:udyogasethu/features/wallet/presentation/widgets/scan_upi_dialog.dart';
 import 'package:udyogasethu/features/wallet/presentation/widgets/transaction_tile.dart';
 import 'package:udyogasethu/features/wallet/presentation/widgets/wallet_skeleton.dart';
@@ -84,9 +87,15 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 1. TOP HERO CARD (Screen 8 Prototype Match)
+              // 1. TOP HERO CARD & SAVINGS PLANNER (Screen 8 Prototype Match)
               balanceAsync.when(
-                data: (balance) => _buildHeroCard(balance),
+                data: (balance) => Column(
+                  children: [
+                    _buildHeroCard(balance),
+                    const SizedBox(height: 18),
+                    SavingsPlannerCard(walletBalance: balance),
+                  ],
+                ),
                 loading: () => const WalletSkeleton(),
                 error: (err, _) => _buildHeroCard(WalletBalance.zero()),
               ),
@@ -136,6 +145,8 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                     const SizedBox(width: 8),
                     _filterChip('transfers', 'UPI Transfers'),
                     const SizedBox(width: 8),
+                    _filterChip('escrow', 'Escrow Deposits'),
+                    const SizedBox(width: 8),
                     _filterChip('farm_sales', 'Farm Produce'),
                     const SizedBox(width: 8),
                     _filterChip('rewards', 'Rewards'),
@@ -146,20 +157,13 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
               ),
               const SizedBox(height: 16),
 
-              // 3. TRANSACTIONS LIST
+              // 3. TRANSACTIONS LIST (Grouped by Day & Month)
               transactionsAsync.when(
                 data: (transactions) {
                   if (transactions.isEmpty) {
                     return _buildEmptyState();
                   }
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: transactions.length,
-                    itemBuilder: (context, index) {
-                      return TransactionTile(transaction: transactions[index]);
-                    },
-                  );
+                  return _buildGroupedTransactions(transactions);
                 },
                 loading: () => const Center(
                   child: Padding(
@@ -440,6 +444,74 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
           });
         }
       },
+    );
+  }
+
+  // ==========================================================================
+  // GROUPED TRANSACTIONS BUILDER
+  // ==========================================================================
+  Map<String, List<WalletTransaction>> _groupTransactions(List<WalletTransaction> transactions) {
+    final Map<String, List<WalletTransaction>> grouped = {};
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+
+    for (final tx in transactions) {
+      final txDate = DateTime(tx.createdAt.year, tx.createdAt.month, tx.createdAt.day);
+      String header;
+      if (txDate == today) {
+        header = 'TODAY';
+      } else if (txDate == yesterday) {
+        header = 'YESTERDAY';
+      } else {
+        header = DateFormat('MMMM yyyy').format(tx.createdAt).toUpperCase();
+      }
+      grouped.putIfAbsent(header, () => []).add(tx);
+    }
+    return grouped;
+  }
+
+  Widget _buildGroupedTransactions(List<WalletTransaction> transactions) {
+    final groups = _groupTransactions(transactions);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: groups.entries.map((entry) {
+        final header = entry.key;
+        final items = entry.value;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    header,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.8,
+                      color: AppColors.textMuted,
+                    ),
+                  ),
+                  Text(
+                    '${items.length} ${items.length == 1 ? 'transaction' : 'transactions'}',
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: AppColors.textMuted,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ...items.map((tx) => TransactionTile(transaction: tx)),
+            const SizedBox(height: 6),
+          ],
+        );
+      }).toList(),
     );
   }
 

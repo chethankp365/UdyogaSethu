@@ -125,11 +125,35 @@ class WalletTransaction {
 
   double get amountRupees => amountPaise / 100.0;
   double get feeRupees => feePaise / 100.0;
+  int get taxPaise => (feePaise * 0.18).round();
+  int get grossAmountPaise => isCredit ? amountPaise : (amountPaise + feePaise);
 
-  /// Returns formatted amount with signed prefix (+₹700 or -₹1,200)
   String get formattedSignedAmount {
     final String prefix = isCredit ? '+' : '-';
     return '$prefix${WalletBalance.formatIndianCurrency(amountPaise)}';
+  }
+
+  String get formattedGrossAmount => WalletBalance.formatIndianCurrency(grossAmountPaise);
+  String get formattedFee => WalletBalance.formatIndianCurrency(feePaise);
+  String get formattedTax => WalletBalance.formatIndianCurrency(taxPaise);
+  String get formattedNetAmount => WalletBalance.formatIndianCurrency(amountPaise);
+
+  String get utrNumber {
+    if (refId != null && refId!.trim().isNotEmpty) {
+      final clean = refId!.replaceAll('-', '').toUpperCase();
+      if (clean.length >= 8) {
+        return 'UTR-${clean.substring(0, clean.length >= 12 ? 12 : clean.length)}';
+      }
+      return 'UTR-$clean';
+    }
+    final cleanId = id.replaceAll('-', '').toUpperCase();
+    final sub = cleanId.length >= 10 ? cleanId.substring(0, 10) : cleanId;
+    return 'UTR-${createdAt.millisecondsSinceEpoch.toString().substring(5)}-$sub';
+  }
+
+  String get status {
+    if (type == WalletTransactionType.refund) return 'refunded';
+    return 'completed';
   }
 
   /// Default icon matching Screen 8

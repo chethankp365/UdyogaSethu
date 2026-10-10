@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/wallet/domain/wallet_balance.dart';
 import 'package:udyogasethu/features/wallet/domain/wallet_transaction.dart';
+import 'package:udyogasethu/features/wallet/presentation/widgets/payment_receipt_modal.dart';
 
 class TransactionTile extends StatelessWidget {
   final WalletTransaction transaction;
@@ -41,19 +42,18 @@ class TransactionTile extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
+      child: Material(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(14),
+          onTap: () => PaymentReceiptModal.show(context, transaction),
+          child: Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: const Color(0xFFE2E8F0)),
+            ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -163,6 +163,9 @@ class TransactionTile extends StatelessWidget {
           ],
         ],
       ),
-    );
+    ),
+  ),
+),
+);
   }
 }
