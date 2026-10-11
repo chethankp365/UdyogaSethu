@@ -51,7 +51,7 @@ class MockJobExecutionRepository implements JobExecutionRepository {
       };
 
   @override
-  Future<AttendanceScanResult> verifyAttendanceScan({required String qrToken, double? lat, double? lng}) async {
+  Future<AttendanceScanResult> verifyAttendanceScan({required String qrToken, double? lat, double? lng, String? jobId}) async {
     if (qrToken.contains('EXPIRED')) {
       return AttendanceScanResult.error(
         code: 'token_expired',

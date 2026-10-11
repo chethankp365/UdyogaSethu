@@ -248,125 +248,38 @@ Deno.serve(async (req: Request) => {
 
     // Handle Attendance Ticket Verification
     if (purpose === 'ticket' || tokenRecord.purpose === 'ticket') {
-      // Replay check: Cannot scan the same QR token twice
-      if (tokenRecord.used) {
-        return errorResponse(
-          'token_already_used',
-          'This QR ticket has already been used and cannot be scanned again.',
-          400
-        );
-      }
-
-      const { data: existingLog } = await serviceClient
-        .from('attendance_logs')
-        .select('id')
-        .eq('token_id', tokenId)
-        .maybeSingle();
-
-      if (existingLog) {
-        return errorResponse(
-          'token_already_used',
-          'This QR ticket has already been scanned for attendance.',
-          400
-        );
-      }
-
-      const assignmentId = (payload.aid ?? payload.assignment_id) as string | undefined;
-      if (!assignmentId) {
-        return errorResponse('invalid_token', 'Missing assignment identifier in ticket QR token.', 400);
-      }
-
-      // Query assignment and parent job
-      const { data: assignment, error: aErr } = await serviceClient
-        .from('job_assignments')
-        .select('id, worker_id, status, booking_code, job_id')
-        .eq('id', assignmentId)
-        .maybeSingle();
-
-      if (aErr || !assignment) {
-        return errorResponse('assignment_not_found', 'Job assignment not found.', 404);
-      }
-
-      const { data: job, error: jErr } = await serviceClient
-        .from('jobs')
-        .select('id, provider_id, title, start_at, est_duration_minutes')
-        .eq('id', assignment.job_id)
-        .maybeSingle();
-
-      if (jErr || !job) {
-        return errorResponse('job_not_found', 'Job posting not found.', 404);
-      }
-
-      // Check assignment ownership: belongs to scanning provider (or admin)
-      const isAdminUser = userRoles?.some((r) => r.role === 'admin');
-      if (job.provider_id !== scannerUserId && !isAdminUser) {
-        return errorResponse(
-          'unauthorized_provider',
-          'This assignment ticket belongs to another job provider.',
-          403
-        );
-      }
-
-      // Status check: must be ticket_issued (or accepted)
-      if (assignment.status !== 'ticket_issued' && assignment.status !== 'accepted') {
-        return errorResponse(
-          'invalid_status',
-          `Attendance cannot be recorded. Assignment status is "${assignment.status}" (expected ticket_issued).`,
-          400
-        );
-      }
-
-      // Allowed check-in window: up to 2 hours (120 min) before scheduled start time
-      if (job.start_at) {
-        const startMs = new Date(job.start_at).getTime();
-        const earliestAllowedMs = startMs - (120 * 60 * 1000);
-        if (Date.now() < earliestAllowedMs) {
-          return errorResponse(
-            'too_early',
-            'Check-in is only allowed within 2 hours of the scheduled start time.',
-            400
-          );
-        }
-      }
-
-      // Record attendance, advance status to arrived, and notify worker
-      const { data: attRes, error: attErr } = await serviceClient.rpc('record_ticket_attendance', {
-        p_assignment_id: assignmentId,
-        p_token_id: tokenId,
-        p_lat: typeof body.lat === 'number' ? body.lat : null,
-        p_lng: typeof body.lng === 'number' ? body.lng : null,
-        p_scanned_by: scannerUserId,
+      const { data: scanRes, error: scanErr } = await serviceClient.rpc('verify_ticket_scan', {
+        p_token: qrToken,
+        p_provider_lat: typeof body.lat === 'number' ? body.lat : null,
+        p_provider_lng: typeof body.lng === 'number' ? body.lng : null,
+        p_job_id: body.job_id ?? null,
       });
 
-      if (attErr || !attRes) {
-        console.error('[qr-verify] record_ticket_attendance failed:', attErr?.message);
+      if (scanErr) {
+        console.error('[qr-verify] verify_ticket_scan RPC error:', scanErr.message);
+        return errorResponse('server_error', scanErr.message, 500);
+      }
+
+      if (scanRes && scanRes.valid === false) {
         return errorResponse(
-          'attendance_record_failed',
-          attErr?.message ?? 'Failed to record attendance.',
-          400
+          scanRes.error_code ?? 'scan_failed',
+          scanRes.error_message ?? 'Verification failed.',
+          400,
+          {
+            error_code: scanRes.error_code,
+            scanned_at: scanRes.scanned_at,
+            expired_at: scanRes.expired_at,
+          }
         );
       }
 
       logInfo('ticket_attendance_recorded', {
         scannerUserId,
-        assignmentId,
-        workerId: assignment.worker_id,
+        assignmentId: scanRes?.assignment_id,
+        workerId: scanRes?.worker_id,
       });
 
-      return jsonResponse({
-        valid: true,
-        purpose: 'ticket',
-        status: 'arrived',
-        assignment_id: assignmentId,
-        booking_code: attRes.booking_code,
-        worker_id: attRes.worker_id,
-        worker_name: attRes.worker_name,
-        worker_avatar: attRes.worker_avatar,
-        is_verified_badge: attRes.is_verified_badge === true,
-        job_title: attRes.job_title,
-        arrived_at: attRes.arrived_at,
-        message: 'Worker attendance recorded successfully.',
-      });
+      return jsonResponse(scanRes);
     }
 
     // Default: Digital ID Profile Verification

@@ -23,7 +23,7 @@ abstract class JobExecutionRepository {
   Future<List<WorkerScheduleItem>> fetchWorkerSchedule(String workerId, {DateTime? startDate, DateTime? endDate});
   Future<JobTicketData> fetchJobTicket(String assignmentId);
   Future<Map<String, dynamic>> refreshTicketQr(String assignmentId);
-  Future<AttendanceScanResult> verifyAttendanceScan({required String qrToken, double? lat, double? lng});
+  Future<AttendanceScanResult> verifyAttendanceScan({required String qrToken, double? lat, double? lng, String? jobId});
   Future<JobGeofenceStatus> checkJobGeofence({required String jobId, required double lat, required double lng});
   Future<JobVerificationResult> verifyJobStart({
     required String assignmentId,
@@ -437,12 +437,18 @@ class SupabaseJobExecutionRepository implements JobExecutionRepository {
   }
 
   @override
-  Future<AttendanceScanResult> verifyAttendanceScan({required String qrToken, double? lat, double? lng}) async {
+  Future<AttendanceScanResult> verifyAttendanceScan({
+    required String qrToken,
+    double? lat,
+    double? lng,
+    String? jobId,
+  }) async {
     try {
       final res = await _client.rpc('verify_ticket_scan', params: {
         'p_token': qrToken,
         'p_provider_lat': lat,
         'p_provider_lng': lng,
+        'p_job_id': jobId,
       });
       if (res != null && res is Map) {
         return AttendanceScanResult.fromJson(Map<String, dynamic>.from(res));
@@ -454,15 +460,17 @@ class SupabaseJobExecutionRepository implements JobExecutionRepository {
     }
 
     try {
-      final res = await _edgeApi.qrVerify(qrToken: qrToken, lat: lat, lng: lng);
+      final res = await _edgeApi.qrVerify(qrToken: qrToken, lat: lat, lng: lng, jobId: jobId);
       if (res['success'] == true && res['data'] != null) {
         final d = Map<String, dynamic>.from(res['data'] as Map);
         return AttendanceScanResult.fromJson(d);
       }
       final err = res['error'] as Map<String, dynamic>?;
       return AttendanceScanResult.error(
-        code: err?['code']?.toString() ?? 'scan_failed',
+        code: err?['code']?.toString() ?? err?['error_code']?.toString() ?? 'scan_failed',
         message: err?['message']?.toString() ?? 'Verification failed.',
+        scannedAtTime: err?['scanned_at']?.toString(),
+        expiredAtTime: err?['expired_at']?.toString(),
       );
     } on EdgeFunctionException catch (e) {
       return AttendanceScanResult.error(

@@ -212,10 +212,12 @@ class EdgeApiClient {
     required String qrToken,
     double? lat,
     double? lng,
+    String? jobId,
   }) async {
     final body = <String, dynamic>{'qr_token': qrToken};
     if (lat != null) body['lat'] = lat;
     if (lng != null) body['lng'] = lng;
+    if (jobId != null) body['job_id'] = jobId;
     return _invoke('qr-verify', body: body);
   }
 

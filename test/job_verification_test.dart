@@ -154,7 +154,7 @@ class MockJobExecutionRepository implements JobExecutionRepository {
   Future<Map<String, dynamic>> refreshTicketQr(String assignmentId) async => throw UnimplementedError();
 
   @override
-  Future<AttendanceScanResult> verifyAttendanceScan({required String qrToken, double? lat, double? lng}) async => throw UnimplementedError();
+  Future<AttendanceScanResult> verifyAttendanceScan({required String qrToken, double? lat, double? lng, String? jobId}) async => throw UnimplementedError();
 
   @override
   Future<int> checkNoShowAssignments() async => 0;

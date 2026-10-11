@@ -73,7 +73,7 @@ class TestFakeJobExecutionRepository implements JobExecutionRepository {
   }
 
   @override
-  Future<AttendanceScanResult> verifyAttendanceScan({required String qrToken, double? lat, double? lng}) async {
+  Future<AttendanceScanResult> verifyAttendanceScan({required String qrToken, double? lat, double? lng, String? jobId}) async {
     return const AttendanceScanResult(
       valid: true,
       purpose: 'ticket',
