@@ -70,9 +70,13 @@ class AssignmentTimelineWidget extends ConsumerWidget {
     List<AssignmentEventItem> events,
     AppLocalizations? l10n,
   ) {
+    // Sort events in true chronological order from event rows
+    final sortedEvents = List<AssignmentEventItem>.from(events)
+      ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+
     // Collect event occurrences by stage
     final Map<AssignmentStage, AssignmentEventItem> stageEvents = {};
-    for (final e in events) {
+    for (final e in sortedEvents) {
       stageEvents[e.stage] = e;
     }
 

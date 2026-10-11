@@ -3,7 +3,7 @@
 -- Purpose: SELECT-only inspection script that lists test-looking jobs,
 --          applications, invitations, and assignments in the database.
 -- Filters: titles with '[TEST]', 'Escrow E2E Job', provider 'Local Employer',
---          or flagged with is_demo = true.
+--          flagged with is_demo = true, or booking code 'REQ-B8213C'.
 -- DO NOT MODIFY DATA. READ-ONLY.
 -- ============================================================================
 
@@ -51,7 +51,7 @@ WHERE j.is_demo = true
    OR ja.message ILIKE '%[TEST]%'
 ORDER BY ja.created_at DESC;
 
--- 3. Demo & Test Job Assignments (Invitations & Bookings)
+-- 3. Demo & Test Job Assignments (Invitations & Bookings, including REQ-B8213C)
 SELECT 
   ass.id AS assignment_id,
   ass.booking_code,
@@ -59,7 +59,7 @@ SELECT
   j.title AS job_title,
   ass.worker_id,
   pw.full_name AS worker_name,
-  ass.provider_id,
+  j.provider_id,
   pp.full_name AS provider_name,
   ass.status AS assignment_status,
   ass.agreed_wage_paise,
@@ -67,13 +67,15 @@ SELECT
 FROM public.job_assignments ass
 JOIN public.jobs j ON ass.job_id = j.id
 LEFT JOIN public.profiles pw ON ass.worker_id = pw.id
-LEFT JOIN public.profiles pp ON ass.provider_id = pp.id
+LEFT JOIN public.profiles pp ON j.provider_id = pp.id
 WHERE j.is_demo = true
    OR j.title ILIKE '%[TEST]%'
    OR j.title ILIKE '%Escrow E2E Job%'
    OR j.title ILIKE '%Sharma Site%'
    OR ass.booking_code ILIKE '%TEST%'
    OR ass.booking_code ILIKE '%BOOK-7842%'
+   OR ass.booking_code ILIKE '%REQ-B8213C%'
+   OR ass.booking_code ILIKE '%REQ-%'
    OR ass.booking_code ILIKE '%DEMO%'
 ORDER BY ass.created_at DESC;
 
@@ -81,9 +83,9 @@ ORDER BY ass.created_at DESC;
 SELECT 
   ae.id AS event_id,
   ae.assignment_id,
-  ae.stage,
+  ae.event_type,
   ae.actor_id,
-  ae.note,
+  ae.meta,
   ae.created_at
 FROM public.assignment_events ae
 JOIN public.job_assignments ass ON ae.assignment_id = ass.id
@@ -92,4 +94,6 @@ WHERE j.is_demo = true
    OR j.title ILIKE '%[TEST]%'
    OR j.title ILIKE '%Escrow E2E Job%'
    OR j.title ILIKE '%Sharma Site%'
+   OR ass.booking_code ILIKE '%REQ-B8213C%'
+   OR ass.booking_code ILIKE '%REQ-%'
 ORDER BY ae.created_at DESC;

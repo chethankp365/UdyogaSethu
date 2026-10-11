@@ -102,12 +102,33 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
       final pos = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(timeLimit: Duration(seconds: 3)),
       );
-      currentWorkerLoc = LatLng(pos.latitude, pos.longitude);
+      if (pos.latitude != 0.0 || pos.longitude != 0.0) {
+        currentWorkerLoc = LatLng(pos.latitude, pos.longitude);
+      }
     } catch (_) {}
 
     try {
       final detail = await ref.read(jobExecutionRepositoryProvider).fetchActiveJob(widget.assignmentId);
-      final dest = detail.jobLocation;
+
+      if (kDebugMode) {
+        debugPrint('[ActiveJobMap] assignmentId: ${widget.assignmentId}');
+        debugPrint('[ActiveJobMap] jobLat: ${detail.jobLat}, jobLng: ${detail.jobLng}, hasValidJobCoordinates: ${detail.hasValidJobCoordinates}');
+        debugPrint('[ActiveJobMap] workerLat: ${currentWorkerLoc?.latitude}, workerLng: ${currentWorkerLoc?.longitude}');
+        debugPrint('[ActiveJobMap] mapCenter: ${currentWorkerLoc ?? detail.validJobLocation}, tileUrl: https://tile.openstreetmap.org/{z}/{x}/{y}.png');
+      }
+
+      if (!detail.hasValidJobCoordinates) {
+        if (mounted) {
+          setState(() {
+            _currentWorkerLocation = currentWorkerLoc;
+            _routingResult = null;
+            _isLoadingRoute = false;
+          });
+        }
+        return;
+      }
+
+      final dest = detail.validJobLocation!;
       final start = currentWorkerLoc ?? detail.workerLocation ?? dest;
 
       final res = await routing.getRoute(start: start, destination: dest);
@@ -839,9 +860,56 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
     ActiveJobDetail detail,
     AppLocalizations? l10n,
   ) {
+    if (!detail.hasValidJobCoordinates) {
+      return Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.cardBorderGreen.withValues(alpha: 0.5)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            const Icon(Icons.location_off_rounded, size: 36, color: AppColors.warningOrange),
+            const SizedBox(height: 8),
+            const Text(
+              'Job location is not available',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: AppColors.textDark),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              detail.addressText.isNotEmpty ? detail.addressText : 'No site coordinates recorded for this job',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+            ),
+            const SizedBox(height: 14),
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.headerGreenDark,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              ),
+              icon: const Icon(Icons.work_outline_rounded, size: 16),
+              label: const Text('Open Job Details', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+              onPressed: () => context.push('/jobs/${detail.jobId}'),
+            ),
+          ],
+        ),
+      );
+    }
+
     final route = _routingResult;
-    final jobLoc = detail.jobLocation;
+    final jobLoc = detail.validJobLocation!;
     final workerLoc = _currentWorkerLocation ?? detail.workerLocation ?? jobLoc;
+    final hasWorkerPoint = workerLoc != jobLoc;
 
     return Container(
       decoration: BoxDecoration(
@@ -909,16 +977,25 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
                 FlutterMap(
                   mapController: _mapController,
                   options: MapOptions(
-                    initialCenter: LatLng(
-                      (workerLoc.latitude + jobLoc.latitude) / 2,
-                      (workerLoc.longitude + jobLoc.longitude) / 2,
-                    ),
-                    initialZoom: 13.0,
+                    initialCenter: hasWorkerPoint
+                        ? LatLng(
+                            (workerLoc.latitude + jobLoc.latitude) / 2,
+                            (workerLoc.longitude + jobLoc.longitude) / 2,
+                          )
+                        : jobLoc,
+                    initialZoom: hasWorkerPoint ? 13.0 : 15.0,
+                    initialCameraFit: hasWorkerPoint
+                        ? CameraFit.bounds(
+                            bounds: LatLngBounds.fromPoints([workerLoc, jobLoc]),
+                            padding: const EdgeInsets.all(36),
+                          )
+                        : null,
                   ),
                   children: [
                     TileLayer(
                       urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                       userAgentPackageName: 'in.udyogasethu',
+                      maxZoom: 19,
                     ),
                     if (route != null && route.points.isNotEmpty)
                       PolylineLayer(

@@ -98,7 +98,7 @@ class AssignmentEventItem {
       actorRole: metaData['actor_role'] as String?,
       meta: metaData,
       createdAt: json['created_at'] != null
-          ? DateTime.tryParse(json['created_at'].toString()) ?? DateTime.now()
+          ? (DateTime.tryParse(json['created_at'].toString())?.toLocal() ?? DateTime.now())
           : DateTime.now(),
     );
   }

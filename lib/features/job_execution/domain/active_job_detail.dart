@@ -92,10 +92,20 @@ class ActiveJobDetail {
 
   int get agreedWageRupees => agreedWagePaise ~/ 100;
 
+  bool get hasValidJobCoordinates =>
+      jobLat != 0.0 &&
+      jobLng != 0.0 &&
+      jobLat.abs() <= 90.0 &&
+      jobLng.abs() <= 180.0;
+
   LatLng get jobLocation => LatLng(jobLat, jobLng);
 
+  LatLng? get validJobLocation => hasValidJobCoordinates ? LatLng(jobLat, jobLng) : null;
+
   LatLng? get workerLocation =>
-      (workerLat != null && workerLng != null) ? LatLng(workerLat!, workerLng!) : null;
+      (workerLat != null && workerLng != null && workerLat != 0.0 && workerLng != 0.0)
+          ? LatLng(workerLat!, workerLng!)
+          : null;
 
   String get durationDisplay {
     final hours = estDurationMinutes ~/ 60;
