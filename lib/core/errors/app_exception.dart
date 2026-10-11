@@ -89,6 +89,44 @@ abstract class AppException implements Exception {
     );
   }
 
+  static String userFriendlyMessage(dynamic error) {
+    if (error == null) return 'An unexpected error occurred.';
+    final str = error.toString();
+    final isPgrst202 = str.contains('PGRST202');
+    final isPgrst204 = str.contains('PGRST204');
+
+    if (isPgrst202 || isPgrst204) {
+      if (kDebugMode) {
+        return 'The app and server are out of sync, please update ($error)';
+      }
+      return 'The app and server are out of sync, please update';
+    }
+
+    if (error is SocketException ||
+        str.contains('SocketException') ||
+        str.contains('Failed host lookup') ||
+        str.contains('ClientException')) {
+      return 'No internet connection. Check Wi-Fi or mobile data.';
+    }
+
+    if (error is PostgrestException) {
+      if (kDebugMode) {
+        return 'Database error: ${error.message} (Code: ${error.code})';
+      }
+      return 'Service temporarily unavailable. Please try again.';
+    }
+
+    if (kDebugMode) {
+      return error.toString();
+    }
+
+    if (error is AppException) {
+      return error.message;
+    }
+
+    return 'Something went wrong. Please try again.';
+  }
+
   static String _mapAuthErrorKey(String message) {
     final msg = message.toLowerCase();
     if (msg.contains('invalid login credentials') || msg.contains('invalid_credentials')) {

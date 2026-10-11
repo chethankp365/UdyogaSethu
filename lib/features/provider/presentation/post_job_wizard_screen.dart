@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -110,6 +110,42 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
     return houseOnlyRegex.hasMatch(trimmed);
   }
 
+  String _composeAddress(Placemark p) {
+    final components = <String>[];
+    
+    // 1. House or building
+    final house = (p.name ?? '').trim();
+    // 2. Street
+    final street = (p.street ?? p.thoroughfare ?? '').trim();
+    
+    if (house.isNotEmpty && !street.toLowerCase().contains(house.toLowerCase())) {
+      components.add(house);
+    }
+    if (street.isNotEmpty) {
+      components.add(street);
+    }
+    
+    // 3. Area / SubLocality
+    final subLoc = (p.subLocality ?? '').trim();
+    if (subLoc.isNotEmpty && !components.any((c) => c.toLowerCase().contains(subLoc.toLowerCase()))) {
+      components.add(subLoc);
+    }
+    
+    // 4. City / Locality
+    final locality = (p.locality ?? '').trim();
+    if (locality.isNotEmpty && !components.any((c) => c.toLowerCase().contains(locality.toLowerCase()))) {
+      components.add(locality);
+    }
+    
+    // 5. Pincode
+    final pincode = (p.postalCode ?? '').trim();
+    if (pincode.isNotEmpty && !components.any((c) => c.contains(pincode))) {
+      components.add(pincode);
+    }
+    
+    return components.join(', ');
+  }
+
   Future<void> _useCurrentLocation() async {
     setState(() => _isLocating = true);
     try {
@@ -146,18 +182,10 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
         locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
       );
       String address = '';
-      String landmark = '';
       try {
         final placemarks = await Geocoding().placemarkFromCoordinates(pos.latitude, pos.longitude);
         if (placemarks.isNotEmpty) {
-          final p = placemarks.first;
-          landmark = p.name ?? '';
-          final parts = <String>[];
-          if (p.street != null && p.street!.isNotEmpty && p.street != p.name) parts.add(p.street!);
-          if (p.subLocality != null && p.subLocality!.isNotEmpty) parts.add(p.subLocality!);
-          if (p.locality != null && p.locality!.isNotEmpty) parts.add(p.locality!);
-          if (p.postalCode != null && p.postalCode!.isNotEmpty) parts.add(p.postalCode!);
-          address = [if (landmark.isNotEmpty) landmark, ...parts].join(', ');
+          address = _composeAddress(placemarks.first);
         }
       } catch (_) {}
 
@@ -168,11 +196,10 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
       if (mounted) {
         setState(() {
           _addressController.text = address;
-          if (landmark.isNotEmpty) _landmarkController.text = landmark;
         });
         ref.read(postJobWizardProvider.notifier).setLocation(
           address: address,
-          landmark: landmark.isNotEmpty ? landmark : _landmarkController.text,
+          landmark: _landmarkController.text,
           lat: pos.latitude,
           lng: pos.longitude,
         );
@@ -201,29 +228,20 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
       if (locations.isNotEmpty) {
         final loc = locations.first;
         String resolvedAddr = clean;
-        String landmark = '';
         try {
           final placemarks = await Geocoding().placemarkFromCoordinates(loc.latitude, loc.longitude);
           if (placemarks.isNotEmpty) {
-            final p = placemarks.first;
-            landmark = p.name ?? '';
-            final parts = <String>[];
-            if (p.street != null && p.street!.isNotEmpty && p.street != p.name) parts.add(p.street!);
-            if (p.subLocality != null && p.subLocality!.isNotEmpty) parts.add(p.subLocality!);
-            if (p.locality != null && p.locality!.isNotEmpty) parts.add(p.locality!);
-            if (p.postalCode != null && p.postalCode!.isNotEmpty) parts.add(p.postalCode!);
-            resolvedAddr = [if (landmark.isNotEmpty) landmark, ...parts].join(', ');
+            resolvedAddr = _composeAddress(placemarks.first);
           }
         } catch (_) {}
 
         if (mounted) {
           setState(() {
             _addressController.text = resolvedAddr;
-            if (landmark.isNotEmpty) _landmarkController.text = landmark;
           });
           ref.read(postJobWizardProvider.notifier).setLocation(
             address: resolvedAddr,
-            landmark: landmark.isNotEmpty ? landmark : _landmarkController.text,
+            landmark: _landmarkController.text,
             lat: loc.latitude,
             lng: loc.longitude,
           );
@@ -1325,24 +1343,14 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
                   try {
                     final placemarks = await Geocoding().placemarkFromCoordinates(point.latitude, point.longitude);
                     if (placemarks.isNotEmpty && mounted) {
-                      final p = placemarks.first;
-                      final landmark = p.name ?? '';
-                      final parts = <String>[];
-                      if (p.street != null && p.street!.isNotEmpty && p.street != p.name) parts.add(p.street!);
-                      if (p.subLocality != null && p.subLocality!.isNotEmpty) parts.add(p.subLocality!);
-                      if (p.locality != null && p.locality!.isNotEmpty) parts.add(p.locality!);
-                      if (p.postalCode != null && p.postalCode!.isNotEmpty) parts.add(p.postalCode!);
-                      final addr = [if (landmark.isNotEmpty) landmark, ...parts].join(', ');
+                      final addr = _composeAddress(placemarks.first);
                       if (addr.isNotEmpty) {
                         setState(() {
                           _addressController.text = addr;
-                          if (_landmarkController.text.isEmpty && landmark.isNotEmpty) {
-                            _landmarkController.text = landmark;
-                          }
                         });
                         notifier.setLocation(
                           address: addr,
-                          landmark: _landmarkController.text.isNotEmpty ? _landmarkController.text : landmark,
+                          landmark: _landmarkController.text,
                           lat: point.latitude,
                           lng: point.longitude,
                         );
@@ -1707,10 +1715,33 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
                         } catch (e, stack) {
                           AppLogger.e('Failed to publish job', e, stack);
                           if (mounted) {
+                            final friendly = AppException.userFriendlyMessage(e);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('Error: $e'),
-                                backgroundColor: Colors.red,
+                                content: Text(friendly),
+                                backgroundColor: Colors.red.shade800,
+                                duration: const Duration(seconds: 5),
+                                action: kDebugMode
+                                    ? SnackBarAction(
+                                        label: 'Details',
+                                        textColor: Colors.white,
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (ctx) => AlertDialog(
+                                              title: const Text('Error Details'),
+                                              content: SingleChildScrollView(child: Text(e.toString())),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () => Navigator.pop(ctx),
+                                                  child: const Text('Close'),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      )
+                                    : null,
                               ),
                             );
                           }
