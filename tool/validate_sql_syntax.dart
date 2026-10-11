@@ -8,6 +8,7 @@ void main() {
     'supabase/migrations/0652_money_security.sql',
     'supabase/migrations/0653_privacy_and_debug_lockdown.sql',
     'supabase/migrations/0654_earnings_and_farmer.sql',
+    'supabase/migrations/0660_real_qr_ticket_flow.sql',
     'supabase/dev/seed_cleanup.sql',
   ];
 
