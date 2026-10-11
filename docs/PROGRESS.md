@@ -853,6 +853,49 @@
 
 ---
 
+## Prompt B: App Bug Fixes & Resiliency (Sub-steps B1 to B7)
+- [x] **Sub-step B1 (Post Job Wizard & App-Server Sync Mapping)**:
+  - Fixed duplicate address composition in `post_job_wizard_screen.dart`: single, non-redundant string combining house/building, street/area, and city/pin once, keeping landmark cleanly separate.
+  - Added global PostgREST error mapping in `app_exception.dart` for error codes `PGRST202` and `PGRST204` to `"The app and server are out of sync, please update"`. Hides raw database stack traces in release builds while preserving diagnostic logs in debug mode.
+  - Added global release crash guard in `main.dart` with `ErrorWidget.builder` presenting a friendly recovery card instead of full-screen red errors.
+- [x] **Sub-step B2 (Active Job & GPS Route Calculation)**:
+  - Diagnosed map (0,0) ocean coordinate rectangle and "0 m / 0 min" route bug.
+  - Added coordinate validation guards (`hasValidJobCoordinates`) in `active_job_detail.dart`.
+  - Added fallback card `"Job location is not available"` with `"Open Job Details"` button in `active_job_screen.dart` when job coordinates are missing.
+  - Configured `CameraFit.bounds` with 48dp padding in `active_job_screen.dart` to fit both worker and job pins automatically.
+  - Replaced demo distance fallbacks with real Haversine distance and travel-time ETA calculations in `worker_schedule_item.dart`.
+  - Fixed timeline sorting in `assignment_timeline_widget.dart` to sort strictly chronologically using `.toLocal()`.
+  - Added demo assignment `REQ-B8213C` and `REQ-%` to `supabase/dev/list_demo_data.sql`.
+- [x] **Sub-step B3 (Job Ticket Timeout & Requested State UX)**:
+  - Replaced infinite loading spinner in `job_execution_repository.dart` and `job_ticket_screen.dart` with a 10s timeout throwing `AppTimeoutException`.
+  - Handled pending provider acceptance (`status == 'requested'`) gracefully with clear informative badge: `"Your ticket is issued once the provider accepts you"`.
+  - Implemented rich error card with localized message, retry button, offline state detection, and technical details gated under debug mode.
+- [x] **Sub-step B4 (Farmer Profile Farm Details Persistence)**:
+  - Updated `updateFarmDetails` in `farmer_profile_page_repository.dart` to return the updated record (`Future<Map<String, dynamic>>`).
+  - Persisted decimal acres, soil type, primary crops array, delivery radius km, pickup availability, and lead time hours to both typed columns and `delivery_options` JSONB.
+  - Updated `farmer_profile_repository.dart` to read typed columns with fallback to `delivery_options`.
+  - In `edit_farm_details_dialog.dart`, captured saved row, refreshed `farmerProfileDataProvider` and `farmerHomeProfileProvider`, displayed success SnackBar with saved details, and added debug error dialog.
+  - Added automated test in `test/part_f_farmer_polish_test.dart` (7/7 passed).
+- [x] **Sub-step B5 (Provider Applicants Screen Resiliency & Seeker Hired Segment)**:
+  - Diagnosed root causes for "No Applications Yet" with 0 / 6 slots: (1) RPC error swallowed into `[]` in repository catch block, (2) PostgREST relationship join failure on `profiles!worker_id`, (3) Seeker repository placing all applications in `applied` segment even after status became `'hired'`, (4) duplicate job IDs for jobs with matching titles.
+  - In `provider_jobs_repository.dart`: added detailed debug logging for status values (including `'applied'`), RLS check logging, direct query fallback fetching profiles without foreign-key syntax dependency, sibling duplicate job check for matching titles, and rethrowing `AppException` (never returning empty list on query failure).
+  - In `seeker_jobs_repository.dart`: mapped applications with status `'hired'` or `'accepted'` to `SeekerJobSegment.accepted` and deduplicated with assignments.
+  - In `provider_jobs_controller.dart`: added Realtime Postgres change listener on `job_applications` table for `job_id = jobId`, refreshing applicants and updating slot counter in real time.
+  - In `job_applicants_screen.dart`: replaced raw error with `_buildErrorCard` with friendly message and retry; wired Accept, Decline, Shortlist actions.
+  - Added widget tests in `test/provider_jobs_test.dart` (8/8 passed).
+- [x] **Sub-step B6 (Startup With No Internet)**:
+  - Diagnosed unhandled `AuthRetryableFetchException` / `SocketException: Failed host lookup` during startup in airplane mode or disconnected state.
+  - In `bootstrap_service.dart`: added `isOffline` and `canOpenOffline` flags to `BootstrapState`. In Step 2, checks connectivity via `Connectivity().checkConnectivity()`, checks cached session & role in `SharedPreferences`, automatically opens cached session (`canOpenOffline`) if previously logged in (`AuthSessionStatus.ready`), and handles network drop gracefully in catch block.
+  - Added `openOffline()` to `BootstrapNotifier` allowing user to manually enter offline mode.
+  - In `splash_screen.dart`: added `Connectivity().onConnectivityChanged` listener to auto-retry bootstrapping when connection returns. Replaced raw error container with friendly offline card (`Icons.wifi_off_rounded`, `"No Internet Connection"`, `"No internet connection. Check Wi-Fi or mobile data"`, `"Retry"`, and `"Open Offline"` button). Made banner illustration flexible with `Expanded` + `ConstrainedBox` to eliminate `RenderFlex` overflow on small viewports.
+  - Added widget and unit tests in `test/onboarding_test.dart` (8/8 passed).
+- [x] **Sub-step B7 (Comprehensive Tests, Verification & Progress Update)**:
+  - Verified 0 issues with `flutter analyze`.
+  - Executed targeted unit and widget test suites covering B1-B6 (all passed).
+  - Documented complete progress, files touched, manual steps, and known issues.
+
+---
+
 ## Manual steps pending
 1. **Apply Modular Migrations in Supabase SQL Editor (in sequence)**:
    - Run `supabase/migrations/0650_jobs_core.sql`
@@ -877,6 +920,7 @@
 - **Profile & Auth Foreign Key Cascade vs D11 Retention**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`. The financial retention refactor will decouple `auth.users` deletion from audit records in an upcoming migration.
 - **Phase 6.3 - 6.5, 6.7 - 6.8**: Farm equipment rental/labour hiring, buyer produce marketplace, carts & checkout, and subscriptions are upcoming phases.
 - **Phase 9 (Admin Console)**: Admin console is built in a separate web/desktop project and is out of scope for this Flutter app.
+
 
 
 
