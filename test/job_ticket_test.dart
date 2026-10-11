@@ -34,6 +34,10 @@ class MockJobExecutionRepository implements JobExecutionRepository {
       Stream.value([]);
 
   @override
+  Stream<String> watchAssignmentStatus(String assignmentId) =>
+      const Stream.empty();
+
+  @override
   Future<void> advanceStage(String assignmentId, String nextStatus, {Map<String, dynamic>? meta}) async {}
 
   @override
@@ -338,6 +342,9 @@ void main() {
       expect(find.byIcon(Icons.verified), findsWidgets);
       // Verify security explanation icon
       expect(find.byIcon(Icons.security_outlined), findsWidgets);
+
+      // Unmount widget so periodic timers are cancelled
+      await tester.pumpWidget(const SizedBox());
     });
   });
 

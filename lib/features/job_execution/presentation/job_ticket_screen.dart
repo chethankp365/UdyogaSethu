@@ -29,8 +29,10 @@ class JobTicketScreen extends ConsumerStatefulWidget {
 class _JobTicketScreenState extends ConsumerState<JobTicketScreen> {
   Timer? _countdownTimer;
   Timer? _autoRefreshTimer;
+  StreamSubscription<String>? _statusSubscription;
   int _secondsRemaining = 120;
   bool _isRefreshing = false;
+  bool _hasOpenedStep2 = false;
   String? _currentToken;
   DateTime? _expiresAt;
   bool _isOfflineNotice = false;
@@ -39,13 +41,51 @@ class _JobTicketScreenState extends ConsumerState<JobTicketScreen> {
   void initState() {
     super.initState();
     _startTimers();
+    _subscribeToAssignmentUpdates();
   }
 
   @override
   void dispose() {
     _countdownTimer?.cancel();
     _autoRefreshTimer?.cancel();
+    _statusSubscription?.cancel();
     super.dispose();
+  }
+
+  void _subscribeToAssignmentUpdates() {
+    try {
+      final repo = ref.read(jobExecutionRepositoryProvider);
+      _statusSubscription = repo.watchAssignmentStatus(widget.assignmentId).listen((newStatus) {
+        if (newStatus == 'arrived') {
+          _onEmployerScannedArrival();
+        }
+      });
+    } catch (_) {}
+  }
+
+  void _onEmployerScannedArrival() {
+    if (!mounted || _hasOpenedStep2) return;
+    _hasOpenedStep2 = true;
+
+    ref.invalidate(jobTicketProvider(widget.assignmentId));
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.check_circle, color: Colors.white),
+            SizedBox(width: 8),
+            Expanded(
+              child: Text('Verified by employer! Opening workplace selfie...'),
+            ),
+          ],
+        ),
+        backgroundColor: AppColors.emeraldPrimary,
+        duration: Duration(seconds: 3),
+      ),
+    );
+
+    context.push('/jobs/verify-presence/${widget.assignmentId}');
   }
 
   void _startTimers() {
@@ -275,6 +315,80 @@ class _JobTicketScreenState extends ConsumerState<JobTicketScreen> {
               children: [
                 if (_isOfflineNotice)
                   _buildOfflineNoticeBanner(context, ticket),
+                if (ticket.status == 'arrived') ...[
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: AppColors.emeraldPrimary.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppColors.emeraldPrimary),
+                    ),
+                    child: Column(
+                      children: [
+                        const Row(
+                          children: [
+                            Icon(Icons.check_circle_rounded, color: AppColors.emeraldPrimary, size: 22),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'Verified by employer! Ready for workplace selfie & GPS.',
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.emeraldPrimary,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                            ),
+                            icon: const Icon(Icons.camera_alt_outlined, size: 18),
+                            label: const Text('Proceed to Step 2 (Live Selfie)', style: TextStyle(fontWeight: FontWeight.bold)),
+                            onPressed: () {
+                              context.push('/jobs/verify-presence/${widget.assignmentId}');
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+                if (ticket.status == 'in_progress_verified' || ticket.status == 'active') ...[
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF0284C7).withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: const Color(0xFF0284C7)),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.play_circle_fill_rounded, color: Color(0xFF0284C7), size: 24),
+                        const SizedBox(width: 10),
+                        const Expanded(
+                          child: Text(
+                            'Job has started! Timer is running.',
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                          ),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF0284C7),
+                            foregroundColor: Colors.white,
+                          ),
+                          onPressed: () => context.push('/jobs/active/${widget.assignmentId}'),
+                          child: const Text('View Active Job'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 12),
                 _buildTicketCard(context, ticket, qrData),
                 const SizedBox(height: 20),

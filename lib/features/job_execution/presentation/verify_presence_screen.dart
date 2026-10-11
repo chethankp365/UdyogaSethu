@@ -368,7 +368,10 @@ class _VerifyPresenceScreenState extends ConsumerState<VerifyPresenceScreen> {
           ),
         );
 
-        context.pop();
+        if (context.canPop()) {
+          context.pop();
+        }
+        context.push('/jobs/active/${widget.assignmentId}');
       } else {
         setState(() => _isSubmitting = false);
         _showRefusalBottomSheet(result);

@@ -19,6 +19,7 @@ abstract class JobExecutionRepository {
   Future<ActiveJobDetail> fetchActiveJob(String assignmentId);
   Future<List<AssignmentEventItem>> fetchAssignmentEvents(String assignmentId);
   Stream<List<AssignmentEventItem>> watchAssignmentEvents(String assignmentId);
+  Stream<String> watchAssignmentStatus(String assignmentId);
   Future<void> advanceStage(String assignmentId, String nextStatus, {Map<String, dynamic>? meta});
   Future<List<WorkerScheduleItem>> fetchWorkerSchedule(String workerId, {DateTime? startDate, DateTime? endDate});
   Future<JobTicketData> fetchJobTicket(String assignmentId);
@@ -217,6 +218,41 @@ class SupabaseJobExecutionRepository implements JobExecutionRepository {
                 final updated = await fetchAssignmentEvents(assignmentId);
                 if (!controller.isClosed) {
                   controller.add(updated);
+                }
+              },
+            )
+            .subscribe();
+      },
+      onCancel: () {
+        channel?.unsubscribe();
+      },
+    );
+
+    return controller.stream;
+  }
+
+  @override
+  Stream<String> watchAssignmentStatus(String assignmentId) {
+    late StreamController<String> controller;
+    RealtimeChannel? channel;
+
+    controller = StreamController<String>.broadcast(
+      onListen: () {
+        channel = _client.channel('public:job_assignment_status:$assignmentId');
+        channel!
+            .onPostgresChanges(
+              event: PostgresChangeEvent.all,
+              schema: 'public',
+              table: 'job_assignments',
+              filter: PostgresChangeFilter(
+                type: PostgresChangeFilterType.eq,
+                column: 'id',
+                value: assignmentId,
+              ),
+              callback: (payload) {
+                final status = payload.newRecord['status']?.toString();
+                if (status != null && !controller.isClosed) {
+                  controller.add(status);
                 }
               },
             )

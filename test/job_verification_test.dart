@@ -142,6 +142,9 @@ class MockJobExecutionRepository implements JobExecutionRepository {
   Stream<List<AssignmentEventItem>> watchAssignmentEvents(String assignmentId) => Stream.value([]);
 
   @override
+  Stream<String> watchAssignmentStatus(String assignmentId) => const Stream.empty();
+
+  @override
   Future<void> advanceStage(String assignmentId, String nextStatus, {Map<String, dynamic>? meta}) async {}
 
   @override
