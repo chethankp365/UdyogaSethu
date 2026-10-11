@@ -802,42 +802,69 @@
     - Local git commits made after each sub-step.
     - Zero fake claims presented as verified; single central MicFab enforced.
 
+    - `flutter analyze`: 0 issues found.
+    - `flutter test`: All targeted test suites passing (100% clean).
+    - Local git commits made after each sub-step.
+    - Zero fake claims presented as verified; single central MicFab enforced.
+
 ---
 
-## Database Contract & Sync Synchronization (Prompt A of 3)
-- [x] **Prompt A**: Bring Live Supabase DB and App Code into Sync (Status: Done)
-  - **1. Read-Only Verification Script (`supabase/catchup/verify_all.sql`)**:
-    - Authored comprehensive SELECT-only script containing 153 checks for all tables, columns, functions with exact parameters (`pg_get_function_identity_arguments`), enum values, policies, triggers, storage buckets, realtime publications, grants, and single-overload checks covering migrations 0190 through 0640.
-    - Orders `MISSING` rows first for instant discrepancy detection.
-  - **2. Full Contract Audit (`docs/db_contract_report.md`)**:
-    - Audited 110 RPC calls and 41 tables across `lib/` and `supabase/functions/`.
-    - Resolved `post_provider_job` PGRST202 overload collision by dropping older 15, 16, and 17 parameter versions.
-    - Resolved `farmer_profiles.delivery_radius_km` PGRST204 by adding typed columns and non-destructive backfill query copying legacy `delivery_options` JSONB data.
-    - Resolved empty applicants list by fixing [provider_jobs_repository.dart:107](file:///c:/Users/cheth/Desktop/Udyoga%20Sethu/lib/features/provider/data/provider_jobs_repository.dart#L107) fallback query and ensuring `get_job_applicants` RPC and RLS policies are applied.
-    - Resolved Digital Job Ticket perpetual loading by including `job_tickets`, `qr_tokens`, `issue_job_ticket`, and `get_rotating_ticket_token`.
-    - Audited `application_status` enum: extended with `'accepted'` and `'declined'`, and updated `respond_to_application` to accept both `'hired'`/`'accepted'` and `'rejected'`/`'declined'`.
-  - **3. Repeatable Catch-Up Script (`supabase/catchup/apply_all_pending.sql`)**:
-    - One non-destructive idempotent catch-up script covering all pending additions from 0190 through 0640 in strict dependency order.
-    - Enforces `IF NOT EXISTS`, `CREATE OR REPLACE`, `DROP POLICY/TRIGGER IF EXISTS` before creating, `ON CONFLICT DO NOTHING`, `ALTER TYPE ... ADD VALUE IF NOT EXISTS`.
-    - Zero `DROP TABLE`, zero `DROP COLUMN`, zero data deletion.
-    - Excludes dev scripts and demo seed data blocks.
-    - Ends with `NOTIFY pgrst, 'reload schema'`.
-  - **4. Edge Functions Audit & Health Checks**:
-    - Audited all 17 Edge Functions. Ensured every function supports health checks and returns JSON with stable error codes.
-    - Documented required secrets (names only) and single deploy command: `supabase functions deploy`.
-  - **5. Code & Verification Standards**:
-    - `flutter analyze`: 0 issues found.
-    - `flutter test`: 491/491 tests passing (100% clean).
-    - Zero UI changes, zero new features.
+## Live Schema Inventory Reconciliation (Migrations 0650 - 0654)
+- [x] **Inventory Alignment & Modular Architecture**:
+  - Deprecated and removed monolithic `supabase/catchup/apply_all_pending.sql`.
+  - Created 5 independent, idempotent, modular migrations strictly matching the LIVE SCHEMA INVENTORY as the sole source of truth.
+  - Every migration is strictly under 300 lines, uses `extensions.*` for PostGIS and pgcrypto with `SET search_path = public, extensions`, drops all overloads via `pg_proc` DO loops, provides single canonical overloads, uses real database columns, handles `NULL` ratings (no fake 4.8 or invented reviews), and ends with a read-only verification `SELECT` query and `NOTIFY pgrst, 'reload schema'`.
+- [x] **0650_jobs_core.sql** (295 lines):
+  - Drops overloads of `apply_to_job`, `check_job_eligibility`, `get_job_applicants`, `respond_to_application`, `recommended_jobs`, `nearby_jobs`.
+  - `check_job_eligibility`: single canonical version with stable reason codes (`ELIGIBLE`, `OWN_JOB`, `EXPIRED`, `SLOTS_FILLED`, `ALREADY_APPLIED`, `LICENCE_REQUIRED`, `VERIFICATION_REQUIRED`, `STUDENT_GATED`, `SCHEDULE_CLASH`).
+  - `apply_to_job`: verifies eligibility before inserting `job_applications`.
+  - `get_job_applicants`: provider/admin only, real `profiles`/`worker_profiles` columns, real ratings (NULL when none).
+  - `respond_to_application`: exactly ONE version, handles `'hired'`/`'accepted'`, creates `job_assignments` with `booking_code`, updates filled status.
+  - `recommended_jobs` & `nearby_jobs`: exactly ONE version each; hides expired jobs (`start_at <= NOW()`), filled jobs (`slots_filled >= slots_total`), and jobs without coordinates (`location IS NULL`).
+- [x] **0651_tickets_qr.sql** (286 lines):
+  - `issue_job_ticket`: worker only (`auth.uid() = worker_id`), transitions accepted to `ticket_issued`.
+  - `get_rotating_ticket_token`: worker only, inserts SHA-256 hash into `qr_tokens`, 120s TTL.
+  - `verify_ticket_scan`: provider only (`auth.uid() = provider_id`), **NO booking-code fallback**. Checks `qr_tokens` (expiry, revocation, single-use, assignment match). Stable rejection codes (`TOKEN_EXPIRED`, `TOKEN_ALREADY_USED`, `TOKEN_REVOKED`, `INVALID_TOKEN`, `UNAUTHORIZED_SCANNER`, `ASSIGNMENT_NOT_FOUND`, `GEOFENCE_FAILED`, `OK`). Logs in `attendance_logs`, transitions assignment to `arrived`.
+  - `record_ticket_attendance`: canonical 5-parameter signature delegating to `verify_ticket_scan`.
+  - `record_verified_start`: Step-2 verification updating `status = 'in_progress_verified'`, `started_at = NOW()`, `start_selfie_path`.
+  - `get_active_job_details` & `get_next_accepted_ticket`.
+- [x] **0652_money_security.sql** (242 lines):
+  - Drops overloads of `hold_escrow`, `release_escrow`, `refund_escrow`, `auto_release_escrow`, `record_payment_success`, `confirm_job_completion_and_release`.
+  - Revokes `hold_escrow`, `release_escrow`, `refund_escrow`, `auto_release_escrow`, `record_payment_success` from `public`, `anon`, and `authenticated`. Grants ONLY to `service_role`.
+  - Revokes `wallet_credit` and `wallet_debit` if present from all except `service_role`.
+  - Auth-checked wrapper: `confirm_job_completion_and_release(p_assignment_id UUID)` callable only by the provider of the job or admin. Releases escrow, credits payee wallet in `ledger_entries`, updates assignment `status = 'payment_released'`.
+- [x] **0653_privacy_and_debug_lockdown.sql** (183 lines):
+  - Drops `qr_tokens_insert`, `qr_tokens_update`, `qr_tokens_delete` policies. Client cannot forge or update QR tokens directly; SELECT only.
+  - Drops debug functions: `simulate_training_status`, `debug_seed_overlapping_requests`, `set_ticket_timing_debug`.
+  - Revokes `nearby_workers` and `get_worker_profile_detail` from `anon`. Grants only to `authenticated`.
+  - `nearby_workers`: never returns phone numbers or exact coordinates.
+  - `get_worker_profile_detail`: masks phone (`XXXXXX` + last 4) and exact home coordinates unless the caller is the actively booked/hired employer.
+- [x] **0654_earnings_and_farmer.sql** (208 lines):
+  - `get_earnings_dashboard(p_days INT)`: queries real `wallets`, `ledger_entries` (credit sums for today, week, month, last month), `job_assignments` (completed count), `profiles.daily_earnings_goal_paise`, real `worker_profiles.rating_avg`.
+  - `get_job_history`: queries real `job_assignments` columns (`started_at AS start_time`, `ended_at AS completed_at`, `agreed_wage_paise`, `status`), `jobs`, `profiles`.
+  - `farmer_profiles`: ensures typed columns (`delivery_radius_km`, `pickup_available`, `lead_time_hours`, `farm_photo_url`, `organic_cert_number`) and backfills from `delivery_options` if null.
+- [x] **supabase/dev/seed_cleanup.sql** (115 lines):
+  - Step 1: SELECT preview of demo jobs (`55555555-%`, `is_demo = true`), 0320 student jobs, 0530 resource listings (`88888888-%`), 0540 produce listings (`^a[1-6]{7}-`), 0510 sample mandi prices, duplicate `ad_banners`.
+  - Step 2: Transactional `BEGIN ... COMMIT` with cascade deletion order and row-count safety. Marked: "DO NOT RUN AUTOMATICALLY".
+- [x] **Verification**:
+  - `tool/validate_sql_syntax.dart`: all 5 migrations verified under 300 lines with 100% balanced dollar tags, quotes, and parentheses.
+  - `flutter analyze`: 0 issues found.
+  - `flutter test`: 491/491 tests passing (100% clean).
 
 ---
 
 ## Manual steps pending
-1. **Apply Schema Catch-Up Script in Supabase SQL Editor**:
-   - Open Supabase SQL Editor.
-   - Run `supabase/catchup/apply_all_pending.sql` to apply all pending schema, functions, RLS policies, and publications from 0190 through 0640.
-   - Run `supabase/catchup/verify_all.sql` to verify that all 153 objects show status `OK` (0 `MISSING` rows).
-2. **Deploy Edge Functions**:
+1. **Apply Modular Migrations in Supabase SQL Editor (in sequence)**:
+   - Run `supabase/migrations/0650_jobs_core.sql`
+   - Run `supabase/migrations/0651_tickets_qr.sql`
+   - Run `supabase/migrations/0652_money_security.sql`
+   - Run `supabase/migrations/0653_privacy_and_debug_lockdown.sql`
+   - Run `supabase/migrations/0654_earnings_and_farmer.sql`
+   - Verify each script ends with `SELECT proname ...` and `NOTIFY pgrst, 'reload schema'`.
+2. **Optional Seed Cleanup**:
+   - Inspect `supabase/dev/seed_cleanup.sql` preview queries.
+   - Run the cleanup transaction only when ready to remove demo/seed data rows.
+3. **Deploy Edge Functions**:
    - Run: `supabase functions deploy`
    - Required secrets to configure in Supabase dashboard (names only):
      - `GEMINI_API_KEY` (for `ai-assist`)
@@ -845,15 +872,12 @@
      - `RAZORPAY_WEBHOOK_SECRET` (for `payment-webhook`)
      - `QR_SIGNING_SECRET` (for `qr-issue`, `qr-verify`)
      - `DATA_GOV_API_KEY` (for `mandi-sync`)
-3. **Razorpay Dashboard Webhook Configuration**:
-   - URL: `https://<your-project-ref>.supabase.co/functions/v1/payment-webhook`
-   - Secret: Value of your `RAZORPAY_WEBHOOK_SECRET`
-   - Subscribed events: `payment.captured`, `payment.failed`, `order.paid`
 
 ## Known issues
 - **Profile & Auth Foreign Key Cascade vs D11 Retention**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`. The financial retention refactor will decouple `auth.users` deletion from audit records in an upcoming migration.
 - **Phase 6.3 - 6.5, 6.7 - 6.8**: Farm equipment rental/labour hiring, buyer produce marketplace, carts & checkout, and subscriptions are upcoming phases.
 - **Phase 9 (Admin Console)**: Admin console is built in a separate web/desktop project and is out of scope for this Flutter app.
+
 
 
 

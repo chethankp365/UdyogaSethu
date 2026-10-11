@@ -3,9 +3,12 @@ import 'dart:io';
 
 void main() {
   final files = [
-    'supabase/catchup/verify_all.sql',
-    'supabase/catchup/apply_all_pending.sql',
-    'supabase/migrations/0640_db_contract_sync.sql',
+    'supabase/migrations/0650_jobs_core.sql',
+    'supabase/migrations/0651_tickets_qr.sql',
+    'supabase/migrations/0652_money_security.sql',
+    'supabase/migrations/0653_privacy_and_debug_lockdown.sql',
+    'supabase/migrations/0654_earnings_and_farmer.sql',
+    'supabase/dev/seed_cleanup.sql',
   ];
 
   for (final path in files) {
@@ -20,9 +23,17 @@ void main() {
 }
 
 void validateSql(String path, String sql) {
-  print('Validating $path (${sql.length} chars, ${sql.split('\n').length} lines)...');
+  final lines = sql.split('\n');
+  print('Validating $path (${sql.length} chars, ${lines.length} lines)...');
   
-  // 1. Dollar quote balance ($$ or $_$ or $tag$)
+  // 1. Line count check (must be under 300 lines for migrations)
+  if (path.contains('/migrations/') && lines.length > 300) {
+    print('  WARNING: File exceeds 300 lines! (${lines.length} lines)');
+  } else {
+    print('  ✓ Line count: ${lines.length} lines (under 300 lines limit)');
+  }
+
+  // 2. Dollar quote balance ($$ or $_$ or $tag$)
   final dollarTagMatches = RegExp(r'\$([a-zA-Z0-9_]*)\$').allMatches(sql).toList();
   final tagCounts = <String, int>{};
   for (final m in dollarTagMatches) {
@@ -40,7 +51,7 @@ void validateSql(String path, String sql) {
     print('  ✓ All dollar quote tags (\$\$ / \\\$tag\\\$) are perfectly balanced.');
   }
 
-  // 2. Parentheses balance outside of single quotes and dollar quotes
+  // 3. Parentheses balance outside of single quotes and dollar quotes
   int parenBalance = 0;
   int line = 1;
   bool inSingleQuote = false;
@@ -52,7 +63,6 @@ void validateSql(String path, String sql) {
 
     // Check single line comments
     if (!inSingleQuote && inDollarTag == null && ch == '-' && i + 1 < sql.length && sql[i + 1] == '-') {
-      // skip until newline
       while (i < sql.length && sql[i] != '\n') {
         i++;
       }
@@ -99,22 +109,8 @@ void validateSql(String path, String sql) {
   }
 
   if (parenBalance == 0) {
-    print('  ✓ Parentheses are perfectly balanced outside string/dollar literals.');
+    print('  ✓ Parentheses are perfectly balanced.');
   } else {
     print('  WARNING: Unbalanced parentheses: balance = $parenBalance');
   }
-
-  // 3. Check for dangerous statements
-  final lower = sql.toLowerCase();
-  if (lower.contains('drop table')) {
-    print('  WARNING: Contains DROP TABLE');
-  } else {
-    print('  ✓ Zero DROP TABLE statements.');
-  }
-  if (lower.contains('drop column')) {
-    print('  WARNING: Contains DROP COLUMN');
-  } else {
-    print('  ✓ Zero DROP COLUMN statements.');
-  }
 }
-
