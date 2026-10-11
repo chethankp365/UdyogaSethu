@@ -903,18 +903,47 @@
    - Run `supabase/migrations/0652_money_security.sql`
    - Run `supabase/migrations/0653_privacy_and_debug_lockdown.sql`
    - Run `supabase/migrations/0654_earnings_and_farmer.sql`
+   - Run `supabase/migrations/0660_real_qr_ticket_flow.sql` (Prompt C: Real QR Ticket Flow)
    - Verify each script ends with `SELECT proname ...` and `NOTIFY pgrst, 'reload schema'`.
 2. **Optional Seed Cleanup**:
    - Inspect `supabase/dev/seed_cleanup.sql` preview queries.
    - Run the cleanup transaction only when ready to remove demo/seed data rows.
 3. **Deploy Edge Functions**:
-   - Run: `supabase functions deploy`
+   - Run: `supabase functions deploy qr-verify`
    - Required secrets to configure in Supabase dashboard (names only):
      - `GEMINI_API_KEY` (for `ai-assist`)
      - `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET` (for `payment-create-order`, `validate-vpa`)
      - `RAZORPAY_WEBHOOK_SECRET` (for `payment-webhook`)
      - `QR_SIGNING_SECRET` (for `qr-issue`, `qr-verify`)
      - `DATA_GOV_API_KEY` (for `mandi-sync`)
+
+### Real QR Ticket Flow End-to-End (Prompt C)
+- **Status**: Completed (2026-10-11)
+- **Files created / updated**:
+  - `supabase/migrations/0660_real_qr_ticket_flow.sql` (Authored, not applied)
+  - `supabase/functions/qr-verify/index.ts`
+  - `lib/core/supabase/edge_api.dart`
+  - `lib/features/job_execution/data/job_execution_repository.dart`
+  - `lib/features/job_execution/presentation/attendance_scanner_screen.dart`
+  - `lib/features/job_execution/presentation/job_ticket_screen.dart`
+  - `lib/features/job_execution/presentation/verify_presence_screen.dart`
+  - `lib/features/trust/presentation/digital_id_screen.dart`
+  - `lib/features/dev/presentation/lifecycle_test_panel_screen.dart`
+  - `lib/core/router/routes.dart`
+  - `lib/core/router/app_router.dart`
+  - `lib/core/router/role_switcher_debug_screen.dart`
+  - `docs/TEST_TWO_PHONES.md`
+  - `test/qr_ticket_flow_test.dart`
+  - `test/lifecycle_test_panel_test.dart`
+  - `test/job_ticket_test.dart`
+- **What was built**:
+  - Atomic race-safe `verify_ticket_scan` RPC with `FOR UPDATE` lock and 10 stable rejection codes.
+  - Provider scanner with camera, worker preview card, and distinct handling for rejections vs network errors.
+  - Seeker phone Realtime status listener with auto-navigation to Step 2 live selfie.
+  - Step 2 live workplace selfie with 150m geofence, brightness check, face match, and private upload.
+  - Realtime timeline synchronized across both devices.
+  - Digital ID card dynamically showing rotating QR of next accepted assignment.
+  - Dev Menu `/dev/lifecycle` with token state, short TTL toggle, and function health checks.
 
 ## Known issues
 - **Profile & Auth Foreign Key Cascade vs D11 Retention**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`. The financial retention refactor will decouple `auth.users` deletion from audit records in an upcoming migration.

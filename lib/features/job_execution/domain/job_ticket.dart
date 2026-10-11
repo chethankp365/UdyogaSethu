@@ -260,9 +260,8 @@ class AttendanceScanResult {
       arrivedAt: arrived,
       message: msg,
       errorCode: code,
-      errorMessage: msg,
-      scannedAtTime: json['scanned_at'] as String?,
-      expiredAtTime: json['expired_at'] as String?,
+      scannedAtTime: json['scanned_at'] as String? ?? json['scanned_at_time'] as String?,
+      expiredAtTime: json['expired_at'] as String? ?? json['expired_at_time'] as String?,
     );
   }
 }
