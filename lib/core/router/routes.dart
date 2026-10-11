@@ -95,4 +95,5 @@ class AppRoutes {
   static const String devRole = '/dev/role';
   static const String devAssets = '/dev/assets';
   static const String devEdgeHealth = '/dev/edge-health';
+  static const String devLifecycle = '/dev/lifecycle';
 }

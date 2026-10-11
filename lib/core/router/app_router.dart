@@ -13,6 +13,7 @@ import 'package:udyogasethu/core/widgets/connection_debug_screen.dart';
 import 'package:udyogasethu/core/widgets/dev_assets_screen.dart';
 import 'package:udyogasethu/core/widgets/not_found_screen.dart';
 import 'package:udyogasethu/features/dev/presentation/edge_health_screen.dart';
+import 'package:udyogasethu/features/dev/presentation/lifecycle_test_panel_screen.dart';
 import 'package:udyogasethu/features/account/presentation/linked_accounts_screen.dart';
 import 'package:udyogasethu/features/account/presentation/settings_screen.dart';
 import 'package:udyogasethu/features/auth/presentation/login_screen.dart';
@@ -809,6 +810,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         GoRoute(
           path: AppRoutes.devEdgeHealth,
           builder: (context, state) => const EdgeFunctionHealthScreen(),
+        ),
+        GoRoute(
+          path: AppRoutes.devLifecycle,
+          builder: (context, state) => LifecycleTestPanelScreen(
+            initialAssignmentId: state.uri.queryParameters['id'],
+          ),
         ),
       ],
     ],

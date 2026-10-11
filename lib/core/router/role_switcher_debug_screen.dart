@@ -168,6 +168,12 @@ class RoleSwitcherDebugScreen extends ConsumerWidget {
                 onPressed: () => context.push(AppRoutes.devEdgeHealth),
                 variant: AppButtonVariant.secondary,
               ),
+              const SizedBox(height: AppSpacing.sm),
+              AppButton(
+                label: '⏱ Lifecycle Test Panel (/dev/lifecycle)',
+                onPressed: () => context.push(AppRoutes.devLifecycle),
+                variant: AppButtonVariant.secondary,
+              ),
               const SizedBox(height: AppSpacing.xl),
 
               // Farmer Home Testing Controls
