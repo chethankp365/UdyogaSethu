@@ -292,7 +292,39 @@ class SupabaseJobExecutionRepository implements JobExecutionRepository {
 
   @override
   Future<JobTicketData> fetchJobTicket(String assignmentId) async {
+    return _fetchJobTicketInternal(assignmentId).timeout(
+      const Duration(seconds: 10),
+      onTimeout: () {
+        throw const AppTimeoutException(
+          messageKey: 'TIMEOUT',
+          originalMessage: 'Loading job ticket timed out after 10 seconds. Please check your connection and retry.',
+        );
+      },
+    );
+  }
+
+  Future<JobTicketData> _fetchJobTicketInternal(String assignmentId) async {
     Map<String, dynamic>? data;
+
+    // Check if the assignment is still in requested status (not yet accepted by provider)
+    try {
+      final assignRow = await _client
+          .from('job_assignments')
+          .select('id, status, worker_id, booking_code')
+          .eq('id', assignmentId)
+          .maybeSingle();
+
+      if (assignRow != null) {
+        final st = assignRow['status']?.toString();
+        if (st == 'requested') {
+          throw const ValidationException(
+            'Your ticket is issued once the provider accepts you',
+          );
+        }
+      }
+    } catch (e) {
+      if (e is ValidationException) rethrow;
+    }
 
     try {
       final res = await _client.rpc('issue_job_ticket', params: {
@@ -301,17 +333,26 @@ class SupabaseJobExecutionRepository implements JobExecutionRepository {
       if (res != null && res is Map) {
         data = Map<String, dynamic>.from(res);
       }
-    } catch (_) {
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[JobExecutionRepository] issue_job_ticket RPC error: $e');
+      }
+      final errStr = e.toString().toLowerCase();
+      if (errStr.contains('requested') || errStr.contains('accept')) {
+        throw const ValidationException(
+          'Your ticket is issued once the provider accepts you',
+        );
+      }
       try {
-        final res = await _client.rpc('get_job_ticket_details', params: {
+        final res = await _client.rpc('get_active_job_details', params: {
           'p_assignment_id': assignmentId,
         });
         if (res != null && res is Map) {
           data = Map<String, dynamic>.from(res);
         }
-      } catch (e) {
+      } catch (e2) {
         if (kDebugMode) {
-          debugPrint('[JobExecutionRepository] ticket details RPC failed: $e. Checking offline cache.');
+          debugPrint('[JobExecutionRepository] ticket details fallback failed: $e2');
         }
       }
     }
@@ -334,14 +375,19 @@ class SupabaseJobExecutionRepository implements JobExecutionRepository {
     }
 
     if (data == null) {
-      throw AppException.validation('Job ticket not found for assignment $assignmentId');
+      throw const DatabaseException(
+        messageKey: 'TICKET_NOT_FOUND',
+        originalMessage: 'Job ticket not found for this assignment.',
+      );
     }
 
     var ticket = JobTicketData.fromJson(data);
 
-    // Obtain fresh rotating QR token
+    // Obtain fresh rotating QR token with short timeout
     try {
-      final tokenRes = await getRotatingTicketToken(assignmentId);
+      final tokenRes = await getRotatingTicketToken(assignmentId).timeout(
+        const Duration(seconds: 5),
+      );
       final token = tokenRes['qr_token'] as String?;
       final exp = tokenRes['expires_at'] != null ? DateTime.tryParse(tokenRes['expires_at'].toString()) : null;
       final ttl = (tokenRes['expires_in_seconds'] as num?)?.toInt() ?? 120;

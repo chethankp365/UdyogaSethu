@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:udyogasethu/core/errors/app_exception.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -148,30 +150,123 @@ class _JobTicketScreenState extends ConsumerState<JobTicketScreen> {
       ),
       body: ticketAsync.when(
         loading: () => const Center(
-          child: CircularProgressIndicator(color: AppColors.emeraldPrimary),
-        ),
-        error: (err, _) => Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.warning_amber_rounded, size: 48, color: Colors.amber),
-                const SizedBox(height: 12),
-                Text(
-                  err.toString(),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white70),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () => ref.invalidate(jobTicketProvider(widget.assignmentId)),
-                  child: Text(l10n?.retry ?? 'Retry'),
-                ),
-              ],
-            ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(color: AppColors.emeraldPrimary),
+              SizedBox(height: 16),
+              Text(
+                'Loading secure digital ticket...',
+                style: TextStyle(color: Colors.white70, fontSize: 13),
+              ),
+            ],
           ),
         ),
+        error: (err, stack) {
+          final errStr = err.toString();
+          final isPendingAcceptance = errStr.contains('Your ticket is issued once the provider accepts you') ||
+              errStr.contains('requested');
+          final isOffline = err is SocketException ||
+              errStr.contains('SocketException') ||
+              errStr.contains('Failed host lookup') ||
+              errStr.contains('No internet');
+          final isTimeout = err is TimeoutException || errStr.contains('timeout') || errStr.contains('TIMEOUT');
+
+          String errorTitle;
+          String errorDesc;
+          IconData errorIcon;
+          Color iconColor;
+
+          if (isPendingAcceptance) {
+            errorTitle = 'Ticket Not Issued Yet';
+            errorDesc = 'Your ticket is issued once the provider accepts you.';
+            errorIcon = Icons.hourglass_top_rounded;
+            iconColor = Colors.amber;
+          } else if (isOffline) {
+            errorTitle = 'You are Offline';
+            errorDesc = 'No internet connection. Check Wi-Fi or mobile data to load your ticket.';
+            errorIcon = Icons.wifi_off_rounded;
+            iconColor = Colors.orange;
+          } else if (isTimeout) {
+            errorTitle = 'Connection Timed Out';
+            errorDesc = 'Ticket server took too long to respond. Please check connection and retry.';
+            errorIcon = Icons.timer_off_outlined;
+            iconColor = Colors.orange;
+          } else {
+            errorTitle = 'Ticket Error';
+            errorDesc = AppException.userFriendlyMessage(err);
+            errorIcon = Icons.error_outline_rounded;
+            iconColor = Colors.red.shade400;
+          }
+
+          return Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24.0),
+              child: Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1E293B), // Slate-800
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.white12),
+                  boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 10)],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(errorIcon, size: 52, color: iconColor),
+                    const SizedBox(height: 16),
+                    Text(
+                      errorTitle,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      errorDesc,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.white70, fontSize: 13, height: 1.4),
+                    ),
+                    if (kDebugMode) ...[
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.black38,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          'Debug: $err',
+                          style: const TextStyle(color: Colors.amberAccent, fontSize: 11, fontFamily: 'monospace'),
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.emeraldPrimary,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        ),
+                        icon: const Icon(Icons.refresh_rounded, size: 18),
+                        label: Text(l10n?.retry ?? 'Retry', style: const TextStyle(fontWeight: FontWeight.bold)),
+                        onPressed: () {
+                          ref.invalidate(jobTicketProvider(widget.assignmentId));
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
         data: (ticket) {
           final qrData = _currentToken ?? ticket.qrToken ?? 'TICKET-${ticket.bookingCode}';
           return SingleChildScrollView(
