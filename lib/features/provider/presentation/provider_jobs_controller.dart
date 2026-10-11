@@ -108,10 +108,38 @@ final completedProviderJobsProvider = Provider<List<ProviderJob>>((ref) {
   return jobs.where((j) => j.isCompleted || j.isCancelled).toList();
 });
 
-// Job Applicants Future Provider
+// Job Applicants Future Provider with Realtime
 final jobApplicantsFutureProvider =
-    FutureProvider.family<List<JobApplicant>, String>((ref, jobId) async {
+    FutureProvider.autoDispose.family<List<JobApplicant>, String>((ref, jobId) async {
   final repo = ref.watch(providerJobsRepositoryProvider);
+
+  try {
+    final client = Supabase.instance.client;
+    final channel = client
+        .channel('public:job_applicants_$jobId')
+        .onPostgresChanges(
+          event: PostgresChangeEvent.all,
+          schema: 'public',
+          table: 'job_applications',
+          filter: PostgresChangeFilter(
+            type: PostgresChangeFilterType.eq,
+            column: 'job_id',
+            value: jobId,
+          ),
+          callback: (_) {
+            ref.invalidateSelf();
+            ref.invalidate(providerJobsNotifierProvider);
+          },
+        )
+        .subscribe();
+
+    ref.onDispose(() {
+      client.removeChannel(channel);
+    });
+  } catch (e) {
+    AppLogger.w('Failed to subscribe to job applicants realtime: $e');
+  }
+
   return repo.fetchJobApplicants(jobId);
 });
 

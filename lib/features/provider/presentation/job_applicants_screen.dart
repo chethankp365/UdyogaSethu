@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -55,21 +56,7 @@ class JobApplicantsScreen extends ConsumerWidget {
               onRefresh: () async => ref.refresh(jobApplicantsFutureProvider(jobId)),
               child: applicantsAsync.when(
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (err, _) => Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.error_outline_rounded, size: 48, color: Colors.red),
-                      const SizedBox(height: 12),
-                      Text('Error loading applicants: $err'),
-                      const SizedBox(height: 12),
-                      ElevatedButton(
-                        onPressed: () => ref.invalidate(jobApplicantsFutureProvider(jobId)),
-                        child: const Text('Retry'),
-                      ),
-                    ],
-                  ),
-                ),
+                error: (err, _) => _buildErrorCard(context, ref, err, jobId),
                 data: (applicants) {
                   if (applicants.isEmpty) {
                     return _buildEmptyApplicants(l10n);
@@ -84,8 +71,8 @@ class JobApplicantsScreen extends ConsumerWidget {
                         applicant: applicant,
                         job: currentJob,
                         onHire: () => _handleHire(context, ref, applicant, currentJob, l10n),
-                        onShortlist: () => _handleShortlist(ref, applicant, l10n),
-                        onReject: () => _handleReject(ref, applicant, l10n),
+                        onShortlist: () => _handleShortlist(context, ref, applicant, l10n),
+                        onReject: () => _handleReject(context, ref, applicant, l10n),
                         onViewProfile: () => _showWorkerProfileDialog(context, applicant),
                         onChat: () => _handleChat(context, applicant),
                       );
@@ -140,6 +127,59 @@ class JobApplicantsScreen extends ConsumerWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildErrorCard(BuildContext context, WidgetRef ref, Object err, String jobId) {
+    final friendly = AppException.userFriendlyMessage(err);
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.red.shade50,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.error_outline_rounded, size: 48, color: Colors.red),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Unable to Load Applicants',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              friendly,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 13, color: AppColors.textMuted),
+            ),
+            if (kDebugMode) ...[
+              const SizedBox(height: 8),
+              Text(
+                err.toString(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 11, color: Colors.red, fontFamily: 'monospace'),
+              ),
+            ],
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.headerGreenDark,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              onPressed: () => ref.invalidate(jobApplicantsFutureProvider(jobId)),
+              icon: const Icon(Icons.refresh_rounded, size: 18),
+              label: const Text('Retry'),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -226,24 +266,63 @@ class JobApplicantsScreen extends ConsumerWidget {
       } catch (e, stack) {
         AppLogger.e('Error hiring applicant', e, stack);
         if (context.mounted) {
+          final msg = AppException.userFriendlyMessage(e);
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+            SnackBar(content: Text('Error: $msg'), backgroundColor: Colors.red),
           );
         }
       }
     }
   }
 
-  Future<void> _handleShortlist(WidgetRef ref, JobApplicant applicant, AppLocalizations l10n) async {
-    final repo = ref.read(providerJobsRepositoryProvider);
-    await repo.respondToApplicant(applicationId: applicant.applicationId, status: 'shortlisted');
-    ref.invalidate(jobApplicantsFutureProvider(jobId));
+  Future<void> _handleShortlist(BuildContext context, WidgetRef ref, JobApplicant applicant, AppLocalizations l10n) async {
+    try {
+      final repo = ref.read(providerJobsRepositoryProvider);
+      await repo.respondToApplicant(applicationId: applicant.applicationId, status: 'shortlisted');
+      ref.invalidate(jobApplicantsFutureProvider(jobId));
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${applicant.workerName} shortlisted'),
+            backgroundColor: AppColors.headerGreenDark,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to shortlist: ${AppException.userFriendlyMessage(e)}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
-  Future<void> _handleReject(WidgetRef ref, JobApplicant applicant, AppLocalizations l10n) async {
-    final repo = ref.read(providerJobsRepositoryProvider);
-    await repo.respondToApplicant(applicationId: applicant.applicationId, status: 'rejected');
-    ref.invalidate(jobApplicantsFutureProvider(jobId));
+  Future<void> _handleReject(BuildContext context, WidgetRef ref, JobApplicant applicant, AppLocalizations l10n) async {
+    try {
+      final repo = ref.read(providerJobsRepositoryProvider);
+      await repo.respondToApplicant(applicationId: applicant.applicationId, status: 'rejected');
+      ref.invalidate(jobApplicantsFutureProvider(jobId));
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${applicant.workerName} application declined'),
+            backgroundColor: Colors.grey.shade800,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to decline: ${AppException.userFriendlyMessage(e)}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   void _handleChat(BuildContext context, JobApplicant applicant) {

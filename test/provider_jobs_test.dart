@@ -136,8 +136,13 @@ class FakeProviderJobsRepository implements ProviderJobsRepository {
   @override
   Future<List<ProviderJob>> fetchProviderJobs({String? providerId}) async => jobs;
 
+  bool throwOnFetchApplicants = false;
+
   @override
   Future<List<JobApplicant>> fetchJobApplicants(String jobId) async {
+    if (throwOnFetchApplicants) {
+      throw Exception('Database connection lost while fetching applicants');
+    }
     return applicants.where((a) => a.jobId == jobId).toList();
   }
 
@@ -427,6 +432,47 @@ void main() {
       expect(fakeRepo.applicants.first.status, 'hired');
       // Job slots filled incremented from 1 to 2
       expect(fakeRepo.jobs.first.slotsFilled, 2);
+    });
+
+    testWidgets('B5: Shows error card with Retry when query fails, never empty state', (tester) async {
+      final fakeRepo = FakeProviderJobsRepository();
+      fakeRepo.throwOnFetchApplicants = true;
+
+      await tester.pumpWidget(createTestApp(const JobApplicantsScreen(jobId: 'job-1'), fakeRepo));
+      await tester.pumpAndSettle();
+
+      // NEVER show empty state "No Applications Yet"
+      expect(find.text('No Applications Yet'), findsNothing);
+      // SHOW error card
+      expect(find.text('Unable to Load Applicants'), findsOneWidget);
+      expect(find.widgetWithText(ElevatedButton, 'Retry'), findsOneWidget);
+    });
+
+    testWidgets('B5: Shortlist and Reject update applicant status and refresh', (tester) async {
+      tester.view.physicalSize = const Size(800, 1600);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      final fakeRepo = FakeProviderJobsRepository();
+      await tester.pumpWidget(createTestApp(const JobApplicantsScreen(jobId: 'job-1'), fakeRepo));
+      await tester.pumpAndSettle();
+
+      // Tap Shortlist on first applicant
+      final shortlistBtn = find.widgetWithText(OutlinedButton, 'Shortlist').first;
+      await tester.tap(shortlistBtn);
+      await tester.pumpAndSettle();
+
+      expect(fakeRepo.applicants.first.status, 'shortlisted');
+
+      // Tap Reject on second applicant
+      final rejectBtn = find.widgetWithText(OutlinedButton, 'Reject').at(1);
+      await tester.tap(rejectBtn);
+      await tester.pumpAndSettle();
+
+      expect(fakeRepo.applicants[1].status, 'rejected');
     });
   });
 

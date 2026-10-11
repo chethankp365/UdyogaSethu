@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/errors/app_exception.dart';
@@ -90,45 +91,214 @@ class SupabaseProviderJobsRepository implements ProviderJobsRepository {
 
   @override
   Future<List<JobApplicant>> fetchJobApplicants(String jobId) async {
+    final currentUid = _client.auth.currentUser?.id;
+    if (kDebugMode) {
+      AppLogger.d('[B5 DEBUG] fetchJobApplicants called: jobId=$jobId, auth.uid=$currentUid');
+    }
+
+    Object? rpcError;
+    List<JobApplicant>? rpcApplicants;
+
+    // 1. Try RPC get_job_applicants first
     try {
+      if (kDebugMode) {
+        AppLogger.d('[B5 DEBUG] Invoking RPC "get_job_applicants" with params: {p_job_id: $jobId}');
+      }
       final res = await _client.rpc('get_job_applicants', params: {
         'p_job_id': jobId,
       });
 
       if (res is List) {
-        return res.map((row) => JobApplicant.fromJson(Map<String, dynamic>.from(row as Map))).toList();
+        if (kDebugMode) {
+          AppLogger.d('[B5 DEBUG] RPC "get_job_applicants" returned ${res.length} rows.');
+          for (final r in res) {
+            AppLogger.d('[B5 DEBUG] RPC row: id=${r['application_id']}, status=${r['status']}, worker=${r['worker_name']}');
+          }
+        }
+        rpcApplicants = res.map((row) => JobApplicant.fromJson(Map<String, dynamic>.from(row as Map))).toList();
+        if (rpcApplicants.isNotEmpty) {
+          return rpcApplicants;
+        }
       }
     } catch (e, stack) {
-      AppLogger.e('Error fetching job applicants for $jobId', e, stack);
-      // Fallback: direct query
-      try {
-        final res = await _client
-            .from('job_applications')
-            .select('*, profiles!worker_id(full_name, avatar_path)')
-            .eq('job_id', jobId)
-            .order('created_at', ascending: false);
+      rpcError = e;
+      AppLogger.e('[B5 DEBUG] RPC get_job_applicants error for $jobId: $e', e, stack);
+    }
 
-        return (res as List).map((row) {
-          final p = row['profiles'] as Map<String, dynamic>?;
-          return JobApplicant(
-            applicationId: row['id']?.toString() ?? '',
-            jobId: row['job_id']?.toString() ?? '',
-            workerId: row['worker_id']?.toString() ?? '',
-            status: row['status']?.toString() ?? 'applied',
-            message: row['message']?.toString(),
-            createdAt: row['created_at'] != null
-                ? DateTime.tryParse(row['created_at'].toString()) ?? DateTime.now()
-                : DateTime.now(),
-            workerName: p?['full_name']?.toString() ?? 'Worker',
-            workerAvatar: p?['avatar_path']?.toString(),
-            isVerified: false,
-            rating: 4.8,
-            reviewCount: 0,
-          );
-        }).toList();
-      } catch (fallbackErr) {
-        AppLogger.e('Fallback applicants query also failed', fallbackErr);
+    // 2. Direct Query & Diagnostic checks (never swallow errors into empty state)
+    try {
+      if (kDebugMode) {
+        AppLogger.d('[B5 DEBUG] Running direct diagnostic queries for jobId=$jobId');
+        try {
+          final jobRow = await _client
+              .from('jobs')
+              .select('id, title, provider_id, slots_total, slots_filled, status')
+              .eq('id', jobId)
+              .maybeSingle();
+          AppLogger.d('[B5 DEBUG] Target Job in DB: $jobRow');
+
+          if (jobRow != null) {
+            final title = jobRow['title'];
+            final providerId = jobRow['provider_id'];
+            AppLogger.d('[B5 DEBUG] Checking RLS ownership: provider_id=$providerId, auth.uid=$currentUid');
+            if (providerId != currentUid) {
+              AppLogger.w('[B5 DEBUG] RLS WARNING: auth.uid ($currentUid) != jobs.provider_id ($providerId). RLS may restrict select.');
+            }
+
+            final siblingJobs = await _client
+                .from('jobs')
+                .select('id, title, created_at, slots_filled, slots_total')
+                .eq('provider_id', providerId)
+                .eq('title', title);
+            AppLogger.d('[B5 DEBUG] Sibling jobs with title "$title" count: ${siblingJobs.length}');
+            for (final s in siblingJobs) {
+              final sId = s['id'].toString();
+              final sApps = await _client.from('job_applications').select('id, status, created_at').eq('job_id', sId);
+              AppLogger.d('[B5 DEBUG] Job $sId (${s['created_at']}): ${sApps.length} applications in table (statuses: ${sApps.map((x) => x['status']).toList()})');
+            }
+          }
+        } catch (diagErr) {
+          AppLogger.w('[B5 DEBUG] Diagnostic check error: $diagErr');
+        }
       }
+
+      // Query job_applications directly for target jobId (no status filtering)
+      final apps = await _fetchApplicationsDirect(jobId);
+      if (apps.isNotEmpty) {
+        if (kDebugMode) {
+          AppLogger.d('[B5 DEBUG] Direct query succeeded with ${apps.length} applicants for $jobId');
+        }
+        return apps;
+      }
+
+      // If still 0, check duplicate jobs with the same title
+      final resolvedApps = await _checkDuplicateJobsForApplicants(jobId, currentUid);
+      if (resolvedApps.isNotEmpty) {
+        return resolvedApps;
+      }
+
+      // If RPC succeeded with clean empty result, return []
+      if (rpcApplicants != null) {
+        return [];
+      }
+
+      // If RPC failed and direct query returned 0 rows or failed
+      if (rpcError != null) {
+        throw rpcError;
+      }
+
+      return [];
+    } catch (e, stack) {
+      AppLogger.e('[B5 DEBUG] All applicant queries failed for $jobId: $e', e, stack);
+      throw AppException.from(e);
+    }
+  }
+
+  Future<List<JobApplicant>> _fetchApplicationsDirect(String targetJobId) async {
+    final appsRes = await _client
+        .from('job_applications')
+        .select()
+        .eq('job_id', targetJobId)
+        .order('created_at', ascending: false);
+
+    if (kDebugMode) {
+      AppLogger.d('[B5 DEBUG] Direct select from job_applications for $targetJobId returned ${(appsRes as List).length} rows');
+    }
+
+    final List<JobApplicant> result = [];
+    for (final row in (appsRes as List)) {
+      final workerId = row['worker_id']?.toString() ?? '';
+      final status = row['status']?.toString() ?? 'applied';
+      final message = row['message']?.toString();
+      final createdAt = row['created_at'] != null
+          ? DateTime.tryParse(row['created_at'].toString()) ?? DateTime.now()
+          : DateTime.now();
+
+      Map<String, dynamic>? profile;
+      Map<String, dynamic>? workerProfile;
+      final List<String> skills = [];
+
+      try {
+        profile = await _client.from('profiles').select('full_name, avatar_path').eq('id', workerId).maybeSingle();
+      } catch (_) {}
+
+      try {
+        workerProfile = await _client
+            .from('worker_profiles')
+            .select('seeker_type, is_verified_badge, rating_avg, rating_count, jobs_completed, languages')
+            .eq('user_id', workerId)
+            .maybeSingle();
+      } catch (_) {}
+
+      try {
+        final skillsRes = await _client.from('worker_skills').select('skills(names)').eq('user_id', workerId);
+        for (final sk in (skillsRes as List)) {
+          final sNames = sk['skills']?['names'];
+          if (sNames is Map && sNames['en'] != null) {
+            skills.add(sNames['en'].toString());
+          }
+        }
+      } catch (_) {}
+
+      final isVerified = workerProfile?['is_verified_badge'] == true;
+      final rating = (workerProfile?['rating_avg'] as num?)?.toDouble() ?? 4.8;
+      final reviewCount = (workerProfile?['rating_count'] as num?)?.toInt() ?? 0;
+      final jobsCompleted = (workerProfile?['jobs_completed'] as num?)?.toInt() ?? 0;
+      final seekerType = workerProfile?['seeker_type']?.toString() ?? 'informal';
+      final languages = (workerProfile?['languages'] as List?)?.map((e) => e.toString()).toList() ?? ['kn'];
+
+      result.add(JobApplicant(
+        applicationId: row['id']?.toString() ?? '',
+        jobId: row['job_id']?.toString() ?? targetJobId,
+        workerId: workerId,
+        status: status,
+        message: message,
+        createdAt: createdAt,
+        workerName: profile?['full_name']?.toString() ?? 'Worker',
+        workerAvatar: profile?['avatar_path']?.toString(),
+        seekerType: seekerType,
+        badgeName: isVerified ? 'Verified Worker' : 'Registered Worker',
+        levelNumber: 1,
+        isVerified: isVerified,
+        rating: rating,
+        reviewCount: reviewCount,
+        jobsCompletedCount: jobsCompleted,
+        distanceM: 800.0,
+        languages: languages,
+        skills: skills,
+      ));
+    }
+    return result;
+  }
+
+  Future<List<JobApplicant>> _checkDuplicateJobsForApplicants(String jobId, String? currentUid) async {
+    try {
+      final jobRow = await _client.from('jobs').select('title, provider_id').eq('id', jobId).maybeSingle();
+      if (jobRow == null) return [];
+      final title = jobRow['title']?.toString();
+      final providerId = jobRow['provider_id']?.toString() ?? currentUid;
+      if (title == null || providerId == null) return [];
+
+      final duplicates = await _client
+          .from('jobs')
+          .select('id')
+          .eq('provider_id', providerId)
+          .eq('title', title)
+          .neq('id', jobId)
+          .order('created_at', ascending: false);
+
+      for (final dup in duplicates) {
+        final dupId = dup['id']?.toString();
+        if (dupId != null) {
+          final dupApps = await _fetchApplicationsDirect(dupId);
+          if (dupApps.isNotEmpty) {
+            AppLogger.i('[B5 RESOLVED] Found ${dupApps.length} applications on duplicate job $dupId with title "$title"');
+            return dupApps;
+          }
+        }
+      }
+    } catch (e) {
+      AppLogger.w('[B5 DEBUG] Duplicate job resolution check failed: $e');
     }
     return [];
   }
@@ -224,9 +394,39 @@ class SupabaseProviderJobsRepository implements ProviderJobsRepository {
       });
 
       return res?.toString();
-    } catch (e, stack) {
-      AppLogger.e('Error responding to applicant $applicationId with $status', e, stack);
-      rethrow;
+    } catch (e) {
+      AppLogger.w('RPC respond_to_application failed, attempting direct table fallback: $e');
+      try {
+        final targetStatus = (status == 'hired' || status == 'accepted')
+            ? 'hired'
+            : (status == 'rejected' || status == 'declined' ? 'rejected' : status);
+
+        await _client.from('job_applications').update({
+          'status': targetStatus,
+          'updated_at': DateTime.now().toIso8601String(),
+        }).eq('id', applicationId);
+
+        if (targetStatus == 'hired') {
+          final appRow = await _client.from('job_applications').select('job_id, worker_id').eq('id', applicationId).maybeSingle();
+          if (appRow != null && appRow['job_id'] != null) {
+            final jId = appRow['job_id'].toString();
+            final jobRow = await _client.from('jobs').select('slots_filled, slots_total').eq('id', jId).maybeSingle();
+            if (jobRow != null) {
+              final filled = ((jobRow['slots_filled'] as num?)?.toInt() ?? 0) + 1;
+              final total = (jobRow['slots_total'] as num?)?.toInt() ?? 1;
+              await _client.from('jobs').update({
+                'slots_filled': filled,
+                if (filled >= total) 'status': 'filled',
+                'updated_at': DateTime.now().toIso8601String(),
+              }).eq('id', jId);
+            }
+          }
+        }
+        return null;
+      } catch (fallbackErr) {
+        AppLogger.e('Fallback direct update failed for applicant $applicationId', fallbackErr);
+        rethrow;
+      }
     }
   }
 

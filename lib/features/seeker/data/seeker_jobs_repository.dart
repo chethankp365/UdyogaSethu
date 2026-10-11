@@ -54,8 +54,11 @@ class SupabaseSeekerJobsRepository implements SeekerJobsRepository {
         final job = a['jobs'] as Map<String, dynamic>? ?? {};
         final provider = job['profiles'] as Map<String, dynamic>?;
         final cat = job['service_categories'] as Map<String, dynamic>?;
+        final appStatus = (a['status'] as String? ?? 'applied').toLowerCase();
+        final isAccepted = appStatus == 'hired' || appStatus == 'accepted';
+        final segment = isAccepted ? SeekerJobSegment.accepted : SeekerJobSegment.applied;
 
-        result[SeekerJobSegment.applied]!.add(SeekerJobItem(
+        result[segment]!.add(SeekerJobItem(
           id: a['id'] as String,
           jobId: a['job_id'] as String,
           title: job['title'] as String? ?? 'Work',
@@ -65,7 +68,7 @@ class SupabaseSeekerJobsRepository implements SeekerJobsRepository {
           startAt: job['start_at'] != null ? DateTime.parse(job['start_at']) : DateTime.now(),
           estDurationMinutes: (job['est_duration_minutes'] as num?)?.toInt() ?? 480,
           status: a['status'] as String? ?? 'applied',
-          segment: SeekerJobSegment.applied,
+          segment: segment,
           categorySlug: cat?['slug'] as String? ?? 'general',
           categoryIcon: cat?['icon'] as String? ?? 'handyman',
           addressText: job['address_text'] as String? ?? '',
@@ -98,6 +101,10 @@ class SupabaseSeekerJobsRepository implements SeekerJobsRepository {
         } else {
           // cancelled, disputed, no_show -> don't show or place in completed
           segment = SeekerJobSegment.completed;
+        }
+
+        if (segment == SeekerJobSegment.accepted) {
+          result[segment]!.removeWhere((item) => item.jobId == asg['job_id']);
         }
 
         result[segment]!.add(SeekerJobItem(
