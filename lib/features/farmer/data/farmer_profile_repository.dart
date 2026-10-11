@@ -86,10 +86,10 @@ class SupabaseFarmerProfileRepository implements FarmerProfileRepository {
         kccStatus: farmerRes?['kcc_status'] as String? ?? 'none',
         organicCertStatus: farmerRes?['organic_cert_status'] as String? ?? 'not_started',
         organicCertPath: farmerRes?['organic_cert_path'] as String?,
-        deliveryAvailable: deliveryOpts['delivery_available'] as bool? ?? true,
-        pickupAvailable: deliveryOpts['pickup_available'] as bool? ?? true,
-        deliveryRadiusKm: (deliveryOpts['delivery_radius_km'] as num?)?.toDouble() ?? 15.0,
-        leadTime: deliveryOpts['lead_time'] as String? ?? '1 day',
+        deliveryAvailable: (farmerRes?['delivery_radius_km'] as num?) != null ? true : (deliveryOpts['delivery_available'] as bool? ?? true),
+        pickupAvailable: (farmerRes?['pickup_available'] as bool?) ?? (deliveryOpts['pickup_available'] as bool? ?? true),
+        deliveryRadiusKm: (farmerRes?['delivery_radius_km'] as num?)?.toDouble() ?? ((deliveryOpts['delivery_radius_km'] as num?)?.toDouble() ?? 15.0),
+        leadTime: farmerRes?['lead_time_hours'] != null ? '${farmerRes!['lead_time_hours']} hrs' : (deliveryOpts['lead_time'] as String? ?? '1 day'),
         onboardingComplete: profileRes?['onboarding_complete'] as bool? ?? false,
       );
     } catch (e, stack) {

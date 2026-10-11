@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:udyogasethu/core/errors/app_exception.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/farmer/data/farmer_home_repository.dart';
 import 'package:udyogasethu/features/farmer/data/farmer_profile_page_repository.dart';
@@ -14,8 +16,8 @@ class EditFarmDetailsDialog extends ConsumerStatefulWidget {
     required this.profile,
   });
 
-  static Future<bool?> show(BuildContext context, FarmerProfileData profile) {
-    return showDialog<bool>(
+  static Future<dynamic> show(BuildContext context, FarmerProfileData profile) {
+    return showDialog<dynamic>(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => EditFarmDetailsDialog(profile: profile),
@@ -92,13 +94,12 @@ class _EditFarmDetailsDialogState extends ConsumerState<EditFarmDetailsDialog> {
 
     setState(() => _isLoading = true);
 
-    final l10n = AppLocalizations.of(context);
     final acresVal = double.tryParse(_acresCtrl.text.trim()) ?? 0.0;
     final deliveryRadiusVal = double.tryParse(_deliveryRadiusCtrl.text.trim()) ?? 25.0;
     final leadTimeVal = int.tryParse(_leadTimeCtrl.text.trim()) ?? 24;
 
     try {
-      await ref.read(farmerProfilePageRepositoryProvider).updateFarmDetails(
+      final savedRow = await ref.read(farmerProfilePageRepositoryProvider).updateFarmDetails(
             farmName: _farmNameCtrl.text.trim(),
             clusterVillage: _clusterCtrl.text.trim(),
             acres: acresVal,
@@ -120,23 +121,55 @@ class _EditFarmDetailsDialogState extends ConsumerState<EditFarmDetailsDialog> {
       ref.invalidate(farmerHomeProfileProvider);
 
       if (mounted) {
-        Navigator.of(context).pop(true);
+        Navigator.of(context).pop(savedRow);
+        final farmName = savedRow['farm_name']?.toString() ?? 'Farm';
+        final acres = savedRow['acres']?.toString() ?? '';
+        final radius = savedRow['delivery_radius_km']?.toString() ?? '';
+        final detailInfo = [
+          if (acres.isNotEmpty) '$acres acres',
+          if (radius.isNotEmpty) '$radius km radius',
+        ].join(', ');
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              l10n?.farmDetailsUpdatedSuccess ?? 'Farm details updated successfully',
+              '$farmName saved successfully${detailInfo.isNotEmpty ? ' ($detailInfo)' : ''}',
             ),
             backgroundColor: AppColors.headerGreenDark,
+            duration: const Duration(seconds: 4),
           ),
         );
       }
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
+        final friendlyMsg = AppException.userFriendlyMessage(e);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to update farm details: $e'),
+            content: Text('Failed to update farm details: $friendlyMsg'),
             backgroundColor: AppColors.errorRed,
+            duration: const Duration(seconds: 4),
+            action: kDebugMode
+                ? SnackBarAction(
+                    label: 'Details',
+                    textColor: Colors.white,
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                          title: const Text('Error Details'),
+                          content: SingleChildScrollView(child: Text(e.toString())),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(ctx).pop(),
+                              child: const Text('Close'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  )
+                : null,
           ),
         );
       }

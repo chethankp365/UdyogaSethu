@@ -29,6 +29,46 @@ Widget _buildTestApp(Widget child, [List<dynamic> overrides = const []]) {
   );
 }
 
+class _FakeFarmerProfilePageRepository extends FarmerProfilePageRepository {
+  Map<String, dynamic>? lastUpdatedPayload;
+
+  @override
+  Future<Map<String, dynamic>> updateFarmDetails({
+    required String farmName,
+    required String clusterVillage,
+    required double acres,
+    required String soilType,
+    required String farmingMethod,
+    required String primaryCrops,
+    required double deliveryRadiusKm,
+    required bool pickupAvailable,
+    required int leadTimeHours,
+    String? farmPhotoUrl,
+    String? apmcRegistration,
+    String? kccStatus,
+    String? organicCertNumber,
+    String? organicCertPath,
+  }) async {
+    lastUpdatedPayload = {
+      'farm_name': farmName,
+      'cluster_village': clusterVillage,
+      'acres': acres,
+      'soil_type': soilType,
+      'farming_method': farmingMethod,
+      'primary_crops': primaryCrops,
+      'delivery_radius_km': deliveryRadiusKm,
+      'pickup_available': pickupAvailable,
+      'lead_time_hours': leadTimeHours,
+      'farm_photo_url': farmPhotoUrl,
+      'apmc_registration': apmcRegistration,
+      'kcc_status': kccStatus,
+      'organic_cert_number': organicCertNumber,
+      'organic_cert_path': organicCertPath,
+    };
+    return lastUpdatedPayload!;
+  }
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -175,6 +215,76 @@ void main() {
       expect(find.text('Cauvery Bio Farm'), findsOneWidget);
       expect(find.text('Mandya Rural'), findsOneWidget);
       expect(find.text('3.5'), findsOneWidget);
+    });
+
+    testWidgets(
+        'EditFarmDetailsDialog saves all fields with decimal acres, crops, radius and shows success snackbar',
+        (tester) async {
+      final fakeRepo = _FakeFarmerProfilePageRepository();
+      const testProfile = FarmerProfileData(
+        id: 'test-farmer-id',
+        fullName: 'Chethan Gowda',
+        farmName: 'Cauvery Bio Farm',
+        clusterVillage: 'Mandya Rural',
+        landAcres: 3.5,
+        badges: FarmInfrastructureBadges(
+          soilClassification: 'Red Soil',
+          primaryCrops: 'Tomatoes, Sugarcane',
+          deliveryRadiusKm: 25.0,
+          pickupAvailable: true,
+          leadTimeHours: 24,
+        ),
+      );
+
+      await tester.pumpWidget(
+        _buildTestApp(
+          const Scaffold(
+            body: EditFarmDetailsDialog(profile: testProfile),
+          ),
+          [
+            farmerProfilePageRepositoryProvider.overrideWithValue(fakeRepo),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Enter decimal acres
+      final acresFinder = find.byKey(const Key('farm_acres_input'));
+      await tester.enterText(acresFinder, '12.75');
+
+      // Enter soil
+      final soilFinder = find.byKey(const Key('farm_soil_input'));
+      await tester.enterText(soilFinder, 'Alluvial Black Soil');
+
+      // Enter crops
+      final cropsFinder = find.byKey(const Key('farm_crops_input'));
+      await tester.enterText(cropsFinder, 'Organic Rice, Millets, Sugarcane');
+
+      // Enter delivery radius
+      final radiusFinder = find.byKey(const Key('delivery_radius_input'));
+      await tester.enterText(radiusFinder, '45.5');
+
+      // Enter lead time
+      final leadTimeFinder = find.byKey(const Key('lead_time_input'));
+      await tester.enterText(leadTimeFinder, '36');
+
+      // Tap save
+      final saveBtn = find.byKey(const Key('save_farm_details_button'));
+      await tester.tap(saveBtn);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      // Verify repo received all fields
+      expect(fakeRepo.lastUpdatedPayload, isNotNull);
+      expect(fakeRepo.lastUpdatedPayload!['acres'], equals(12.75));
+      expect(fakeRepo.lastUpdatedPayload!['soil_type'], equals('Alluvial Black Soil'));
+      expect(fakeRepo.lastUpdatedPayload!['primary_crops'], equals('Organic Rice, Millets, Sugarcane'));
+      expect(fakeRepo.lastUpdatedPayload!['delivery_radius_km'], equals(45.5));
+      expect(fakeRepo.lastUpdatedPayload!['lead_time_hours'], equals(36));
+      expect(fakeRepo.lastUpdatedPayload!['pickup_available'], isTrue);
+
+      // Verify success snackbar appears
+      expect(find.textContaining('saved successfully'), findsOneWidget);
     });
   });
 

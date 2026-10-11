@@ -158,7 +158,7 @@ class FarmerProfilePageRepository {
     );
   }
 
-  Future<void> updateFarmDetails({
+  Future<Map<String, dynamic>> updateFarmDetails({
     required String farmName,
     required String clusterVillage,
     required double acres,
@@ -175,45 +175,57 @@ class FarmerProfilePageRepository {
     String? organicCertPath,
   }) async {
     final uid = _supabase?.auth.currentUser?.id;
-    if (_supabase != null && uid != null) {
-      final cropsList = primaryCrops
-          .split(',')
-          .map((e) => e.trim())
-          .where((e) => e.isNotEmpty)
-          .toList();
+    final cropsList = primaryCrops
+        .split(',')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
 
-      final payload = <String, dynamic>{
-        'user_id': uid,
-        'farm_name': farmName,
-        'cluster_village': clusterVillage,
-        'acres': acres,
-        'soil_type': soilType,
-        'farming_method': farmingMethod,
-        'primary_crops': cropsList,
-        'delivery_radius_km': deliveryRadiusKm,
+    final payload = <String, dynamic>{
+      'farm_name': farmName,
+      'cluster_village': clusterVillage,
+      'acres': acres,
+      'soil_type': soilType,
+      'farming_method': farmingMethod,
+      'primary_crops': cropsList,
+      'delivery_radius_km': deliveryRadiusKm,
+      'pickup_available': pickupAvailable,
+      'lead_time_hours': leadTimeHours,
+      'delivery_options': {
+        'delivery_available': true,
         'pickup_available': pickupAvailable,
-        'lead_time_hours': leadTimeHours,
-        'updated_at': DateTime.now().toIso8601String(),
-      };
+        'delivery_radius_km': deliveryRadiusKm,
+        'lead_time': '$leadTimeHours hrs',
+      },
+      'updated_at': DateTime.now().toIso8601String(),
+    };
 
-      if (farmPhotoUrl != null && farmPhotoUrl.isNotEmpty) {
-        payload['farm_photo_url'] = farmPhotoUrl;
-      }
-      if (apmcRegistration != null && apmcRegistration.isNotEmpty) {
-        payload['apmc_registration'] = apmcRegistration;
-      }
-      if (kccStatus != null && kccStatus.isNotEmpty) {
-        payload['kcc_status'] = kccStatus;
-      }
-      if (organicCertNumber != null && organicCertNumber.isNotEmpty) {
-        payload['organic_cert_number'] = organicCertNumber;
-      }
-      if (organicCertPath != null && organicCertPath.isNotEmpty) {
-        payload['organic_cert_path'] = organicCertPath;
-      }
-
-      await _supabase.from('farmer_profiles').upsert(payload);
+    if (farmPhotoUrl != null && farmPhotoUrl.isNotEmpty) {
+      payload['farm_photo_url'] = farmPhotoUrl;
     }
+    if (apmcRegistration != null && apmcRegistration.isNotEmpty) {
+      payload['apmc_registration'] = apmcRegistration;
+    }
+    if (kccStatus != null && kccStatus.isNotEmpty) {
+      payload['kcc_status'] = kccStatus;
+    }
+    if (organicCertNumber != null && organicCertNumber.isNotEmpty) {
+      payload['organic_cert_number'] = organicCertNumber;
+    }
+    if (organicCertPath != null && organicCertPath.isNotEmpty) {
+      payload['organic_cert_path'] = organicCertPath;
+    }
+
+    if (uid != null) {
+      payload['user_id'] = uid;
+    }
+
+    if (_supabase != null && uid != null) {
+      final res = await _supabase.from('farmer_profiles').upsert(payload).select().single();
+      return Map<String, dynamic>.from(res);
+    }
+
+    return payload;
   }
 }
 
