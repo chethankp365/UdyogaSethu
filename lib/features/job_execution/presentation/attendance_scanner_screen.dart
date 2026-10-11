@@ -117,6 +117,7 @@ class _AttendanceScannerScreenState extends ConsumerState<AttendanceScannerScree
         qrToken: rawCode,
         lat: lat,
         lng: lng,
+        jobId: widget.initialAssignmentId,
       );
 
       if (mounted) {
