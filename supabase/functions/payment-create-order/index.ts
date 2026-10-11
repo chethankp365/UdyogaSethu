@@ -17,6 +17,18 @@ Deno.serve(async (req: Request) => {
   if (corsRes) return corsRes;
 
   try {
+    const url = new URL(req.url);
+    if (req.method === 'GET' || url.searchParams.get('health') === 'true') {
+      const missingSecrets: string[] = [];
+      if (!Deno.env.get('RAZORPAY_KEY_ID')) missingSecrets.push('RAZORPAY_KEY_ID');
+      if (!Deno.env.get('RAZORPAY_KEY_SECRET')) missingSecrets.push('RAZORPAY_KEY_SECRET');
+      return jsonResponse({
+        ok: true,
+        status: 'healthy',
+        missing_secrets: missingSecrets,
+      });
+    }
+
     const auth = await getUserClient(req);
     if (auth.errorResponse) return auth.errorResponse;
     const user = auth.context!.user;

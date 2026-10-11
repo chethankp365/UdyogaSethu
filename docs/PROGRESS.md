@@ -804,31 +804,57 @@
 
 ---
 
+## Database Contract & Sync Synchronization (Prompt A of 3)
+- [x] **Prompt A**: Bring Live Supabase DB and App Code into Sync (Status: Done)
+  - **1. Read-Only Verification Script (`supabase/catchup/verify_all.sql`)**:
+    - Authored comprehensive SELECT-only script containing 153 checks for all tables, columns, functions with exact parameters (`pg_get_function_identity_arguments`), enum values, policies, triggers, storage buckets, realtime publications, grants, and single-overload checks covering migrations 0190 through 0640.
+    - Orders `MISSING` rows first for instant discrepancy detection.
+  - **2. Full Contract Audit (`docs/db_contract_report.md`)**:
+    - Audited 110 RPC calls and 41 tables across `lib/` and `supabase/functions/`.
+    - Resolved `post_provider_job` PGRST202 overload collision by dropping older 15, 16, and 17 parameter versions.
+    - Resolved `farmer_profiles.delivery_radius_km` PGRST204 by adding typed columns and non-destructive backfill query copying legacy `delivery_options` JSONB data.
+    - Resolved empty applicants list by fixing [provider_jobs_repository.dart:107](file:///c:/Users/cheth/Desktop/Udyoga%20Sethu/lib/features/provider/data/provider_jobs_repository.dart#L107) fallback query and ensuring `get_job_applicants` RPC and RLS policies are applied.
+    - Resolved Digital Job Ticket perpetual loading by including `job_tickets`, `qr_tokens`, `issue_job_ticket`, and `get_rotating_ticket_token`.
+    - Audited `application_status` enum: extended with `'accepted'` and `'declined'`, and updated `respond_to_application` to accept both `'hired'`/`'accepted'` and `'rejected'`/`'declined'`.
+  - **3. Repeatable Catch-Up Script (`supabase/catchup/apply_all_pending.sql`)**:
+    - One non-destructive idempotent catch-up script covering all pending additions from 0190 through 0640 in strict dependency order.
+    - Enforces `IF NOT EXISTS`, `CREATE OR REPLACE`, `DROP POLICY/TRIGGER IF EXISTS` before creating, `ON CONFLICT DO NOTHING`, `ALTER TYPE ... ADD VALUE IF NOT EXISTS`.
+    - Zero `DROP TABLE`, zero `DROP COLUMN`, zero data deletion.
+    - Excludes dev scripts and demo seed data blocks.
+    - Ends with `NOTIFY pgrst, 'reload schema'`.
+  - **4. Edge Functions Audit & Health Checks**:
+    - Audited all 17 Edge Functions. Ensured every function supports health checks and returns JSON with stable error codes.
+    - Documented required secrets (names only) and single deploy command: `supabase functions deploy`.
+  - **5. Code & Verification Standards**:
+    - `flutter analyze`: 0 issues found.
+    - `flutter test`: 491/491 tests passing (100% clean).
+    - Zero UI changes, zero new features.
+
+---
+
 ## Manual steps pending
-1. **Edge Function Deployments & Secrets**:
-   - `validate-vpa`: Deploy Edge Function `supabase functions deploy validate-vpa`
-     - Required secrets to set (names only): `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`
-   - `qr-issue`, `qr-verify`, `face-verify`: Deploy functions and configure secrets: `QR_SIGNING_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`.
-   - `mandi-sync`: Deploy function `supabase functions deploy mandi-sync` and set secret `DATA_GOV_API_KEY`.
-2. **Database Migrations to Apply on Remote Supabase DB (in order)**:
-   - `supabase/migrations/0610_job_execution_ticket_qr_polish.sql`
-   - `supabase/migrations/0620_ledger_is_demo_and_savings_planner.sql`
-   - `supabase/migrations/0630_farmer_profile_fields.sql`
-3. **Developer Seed Scripts (Test Account Only - Optional)**:
-   - `supabase/dev/seed_wallet_history.sql`: Run in Supabase SQL Editor replacing `TEST_USER_ID` to seed 5 months of balanced demo ledger entries (sums to ₹0 net, pending escrow ₹0).
-   - `supabase/dev/remove_wallet_history.sql`: Run to safely remove demo entries for `TEST_USER_ID`.
-4. **Razorpay Dashboard Webhook Configuration**:
-   - URL: `https://mmzbpeqkfomnywuzoqii.supabase.co/functions/v1/payment-webhook`
+1. **Apply Schema Catch-Up Script in Supabase SQL Editor**:
+   - Open Supabase SQL Editor.
+   - Run `supabase/catchup/apply_all_pending.sql` to apply all pending schema, functions, RLS policies, and publications from 0190 through 0640.
+   - Run `supabase/catchup/verify_all.sql` to verify that all 153 objects show status `OK` (0 `MISSING` rows).
+2. **Deploy Edge Functions**:
+   - Run: `supabase functions deploy`
+   - Required secrets to configure in Supabase dashboard (names only):
+     - `GEMINI_API_KEY` (for `ai-assist`)
+     - `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET` (for `payment-create-order`, `validate-vpa`)
+     - `RAZORPAY_WEBHOOK_SECRET` (for `payment-webhook`)
+     - `QR_SIGNING_SECRET` (for `qr-issue`, `qr-verify`)
+     - `DATA_GOV_API_KEY` (for `mandi-sync`)
+3. **Razorpay Dashboard Webhook Configuration**:
+   - URL: `https://<your-project-ref>.supabase.co/functions/v1/payment-webhook`
    - Secret: Value of your `RAZORPAY_WEBHOOK_SECRET`
    - Subscribed events: `payment.captured`, `payment.failed`, `order.paid`
-5. **Phone Installation (Xiaomi / MIUI USB Security Permission)**:
-   - On Xiaomi / MIUI / HyperOS devices, enable **Install via USB** in Developer Options.
-   - Run: `adb -s <device_id> install -r "build\app\outputs\flutter-apk\app-debug.apk"`.
 
 ## Known issues
 - **Profile & Auth Foreign Key Cascade vs D11 Retention**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`. The financial retention refactor will decouple `auth.users` deletion from audit records in an upcoming migration.
 - **Phase 6.3 - 6.5, 6.7 - 6.8**: Farm equipment rental/labour hiring, buyer produce marketplace, carts & checkout, and subscriptions are upcoming phases.
 - **Phase 9 (Admin Console)**: Admin console is built in a separate web/desktop project and is out of scope for this Flutter app.
+
 
 
 

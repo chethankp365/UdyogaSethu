@@ -8,6 +8,15 @@ Deno.serve(async (req: Request) => {
   if (corsRes) return corsRes;
 
   try {
+    const url = new URL(req.url);
+    if (url.searchParams.get('health') === 'true') {
+      return jsonResponse({
+        ok: true,
+        status: 'healthy',
+        missing_secrets: [],
+      });
+    }
+
     const supabase = getServiceClient();
 
     logInfo('no_show_check_triggered', { time: new Date().toISOString() });

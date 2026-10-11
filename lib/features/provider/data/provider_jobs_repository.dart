@@ -104,7 +104,7 @@ class SupabaseProviderJobsRepository implements ProviderJobsRepository {
       try {
         final res = await _client
             .from('job_applications')
-            .select('*, profiles(full_name, avatar_url, is_verified, rating, review_count)')
+            .select('*, profiles!worker_id(full_name, avatar_path)')
             .eq('job_id', jobId)
             .order('created_at', ascending: false);
 
@@ -120,10 +120,10 @@ class SupabaseProviderJobsRepository implements ProviderJobsRepository {
                 ? DateTime.tryParse(row['created_at'].toString()) ?? DateTime.now()
                 : DateTime.now(),
             workerName: p?['full_name']?.toString() ?? 'Worker',
-            workerAvatar: p?['avatar_url']?.toString(),
-            isVerified: p?['is_verified'] as bool? ?? false,
-            rating: (p?['rating'] as num?)?.toDouble() ?? 4.8,
-            reviewCount: (p?['review_count'] as num?)?.toInt() ?? 0,
+            workerAvatar: p?['avatar_path']?.toString(),
+            isVerified: false,
+            rating: 4.8,
+            reviewCount: 0,
           );
         }).toList();
       } catch (fallbackErr) {

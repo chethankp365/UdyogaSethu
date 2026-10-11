@@ -52,6 +52,17 @@ Deno.serve(async (req: Request) => {
   if (corsRes) return corsRes;
 
   try {
+    const url = new URL(req.url);
+    if (req.method === 'GET' || url.searchParams.get('health') === 'true') {
+      const missingSecrets: string[] = [];
+      if (!Deno.env.get('RAZORPAY_WEBHOOK_SECRET')) missingSecrets.push('RAZORPAY_WEBHOOK_SECRET');
+      return jsonResponse({
+        ok: true,
+        status: 'healthy',
+        missing_secrets: missingSecrets,
+      });
+    }
+
     // 1. Signature Header Check
     const signature = req.headers.get('x-razorpay-signature');
     if (!signature) {

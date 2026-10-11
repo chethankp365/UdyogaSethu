@@ -1,6 +1,6 @@
 import { handleCors } from '../_shared/cors.ts';
 import { logInfo, logError } from '../_shared/logger.ts';
-import { errorResponse } from '../_shared/response.ts';
+import { errorResponse, jsonResponse } from '../_shared/response.ts';
 import { getUserClient } from '../_shared/supabase.ts';
 import { validateBody } from '../_shared/validation.ts';
 import { checkRateLimit } from '../_shared/rate_limiter.ts';
@@ -9,6 +9,7 @@ export interface AiAssistRequest {
   prompt: string;
   context?: Record<string, unknown>;
   language?: string;
+  health?: boolean;
 }
 
 Deno.serve(async (req: Request) => {
@@ -16,6 +17,17 @@ Deno.serve(async (req: Request) => {
   if (corsRes) return corsRes;
 
   try {
+    const url = new URL(req.url);
+    if (req.method === 'GET' || url.searchParams.get('health') === 'true') {
+      const missingSecrets: string[] = [];
+      if (!Deno.env.get('GEMINI_API_KEY')) missingSecrets.push('GEMINI_API_KEY');
+      return jsonResponse({
+        ok: true,
+        status: 'healthy',
+        missing_secrets: missingSecrets,
+      });
+    }
+
     const auth = await getUserClient(req);
     if (auth.errorResponse) return auth.errorResponse;
 
@@ -24,6 +36,10 @@ Deno.serve(async (req: Request) => {
 
     const validation = await validateBody<AiAssistRequest>(req, ['prompt']);
     if (validation.errorResponse) return validation.errorResponse;
+
+    if (validation.data?.health === true) {
+      return jsonResponse({ ok: true, status: 'healthy' });
+    }
 
     logInfo('ai_assist_requested', { userId: auth.context!.user.id, promptLength: validation.data!.prompt.length });
 
