@@ -109,4 +109,72 @@ void main() {
       expect(AppSessionNotifier.getHomeForRole(container.read(appSessionProvider).activeRole), equals('/seeker/home'));
     });
   });
+
+  group('Offline Startup & Recovery Tests (B6)', () {
+    test('BootstrapNotifier.openOffline restores cached session and sets isDone to true', () async {
+      SharedPreferences.setMockInitialValues({
+        'cached_auth_status': 'ready',
+        'cached_active_role': 'farmer',
+      });
+      final container = ProviderContainer();
+      final notifier = container.read(bootstrapProvider.notifier);
+      await notifier.openOffline();
+
+      final state = container.read(bootstrapProvider);
+      expect(state.isDone, isTrue);
+      expect(state.isOffline, isTrue);
+      expect(container.read(appSessionProvider).activeRole, equals(UserRole.farmer));
+      expect(container.read(appSessionProvider).status, equals(AuthSessionStatus.ready));
+    });
+
+    testWidgets('SplashScreen renders friendly offline error card and actions when offline', (tester) async {
+      SharedPreferences.setMockInitialValues({});
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            bootstrapProvider.overrideWith(() => _OfflineTestBootstrapNotifier(
+              const BootstrapState(
+                progress: 1.0,
+                statusText: 'No Internet Connection',
+                isDone: false,
+                isOffline: true,
+                canOpenOffline: true,
+                error: 'No internet connection. Check Wi-Fi or mobile data',
+              ),
+            )),
+          ],
+          child: const MaterialApp(
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: SplashScreen(),
+          ),
+        ),
+      );
+
+      await tester.pump();
+
+      // Verify offline title and friendly message
+      expect(find.text('No Internet Connection'), findsOneWidget);
+      expect(find.text('No internet connection. Check Wi-Fi or mobile data'), findsOneWidget);
+      expect(find.text('Retry'), findsOneWidget);
+      expect(find.text('Open Offline'), findsOneWidget);
+    });
+  });
+}
+
+class _OfflineTestBootstrapNotifier extends BootstrapNotifier {
+  final BootstrapState _initial;
+  _OfflineTestBootstrapNotifier(this._initial);
+
+  @override
+  BootstrapState build() => _initial;
+
+  @override
+  Future<void> runBootstrap() async {}
 }

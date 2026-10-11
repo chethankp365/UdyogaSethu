@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,6 +27,7 @@ class SplashScreen extends ConsumerStatefulWidget {
 class _SplashScreenState extends ConsumerState<SplashScreen> {
   late final DateTime _mountTime;
   Timer? _minDisplayTimer;
+  StreamSubscription<dynamic>? _connectivitySubscription;
   bool _hasNavigated = false;
 
   @override
@@ -33,6 +35,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     super.initState();
     _mountTime = DateTime.now();
     SplashScreen.isSplashReadyToNavigate = false;
+
+    // Listen to network changes to auto-retry bootstrapping when connection returns
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((results) {
+      final hasConnection = results.any((r) => r != ConnectivityResult.none);
+      if (hasConnection && ref.read(bootstrapProvider).error != null) {
+        ref.read(bootstrapProvider.notifier).runBootstrap();
+      }
+    });
 
     // Trigger bootstrapping post frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -94,6 +104,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   void dispose() {
+    _connectivitySubscription?.cancel();
     _minDisplayTimer?.cancel();
     super.dispose();
   }
@@ -155,56 +166,127 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               const Spacer(),
 
               // 3. Central Banner Illustration (City skyline & village bridge)
-              SizedBox(
-                height: 220,
-                child: SvgPicture.asset(
-                  'assets/images/splash_city_bridge.svg',
-                  fit: BoxFit.contain,
+              Expanded(
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxHeight: 220),
+                    child: SvgPicture.asset(
+                      'assets/images/splash_city_bridge.svg',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ),
               ),
 
-              const Spacer(),
-
               // 4. Progress Bar / Error View
               if (bootstrapState.error != null) ...[
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: AppColors.sosRed.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppColors.sosRed),
-                  ),
-                  child: Column(
-                    children: [
-                      const Icon(Icons.error_outline_rounded, color: AppColors.sosRed, size: 36),
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Failed to initialize app',
-                        style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.sosRed, fontSize: 16),
-                      ),
-                      if (kDebugMode) ...[
+                if (bootstrapState.isOffline) ...[
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AppColors.warningOrange.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppColors.warningOrange),
+                    ),
+                    child: Column(
+                      children: [
+                        const Icon(Icons.wifi_off_rounded, color: AppColors.warningOrange, size: 36),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'No Internet Connection',
+                          style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.textDark, fontSize: 16),
+                        ),
                         const SizedBox(height: 4),
-                        Text(
-                          bootstrapState.error!,
+                        const Text(
+                          'No internet connection. Check Wi-Fi or mobile data',
                           textAlign: TextAlign.center,
-                          style: const TextStyle(color: Colors.black87, fontSize: 12, fontFamily: 'monospace'),
+                          style: TextStyle(color: AppColors.textMuted, fontSize: 13),
+                        ),
+                        if (kDebugMode && bootstrapState.error != 'No internet connection. Check Wi-Fi or mobile data') ...[
+                          const SizedBox(height: 6),
+                          Text(
+                            bootstrapState.error!,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(color: Colors.black54, fontSize: 11, fontFamily: 'monospace'),
+                          ),
+                        ],
+                        const SizedBox(height: 14),
+                        Wrap(
+                          spacing: 12,
+                          runSpacing: 8,
+                          alignment: WrapAlignment.center,
+                          children: [
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.headerGreenDark,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                              ),
+                              onPressed: () {
+                                ref.read(bootstrapProvider.notifier).runBootstrap();
+                              },
+                              icon: const Icon(Icons.refresh, size: 18),
+                              label: const Text('Retry'),
+                            ),
+                            if (bootstrapState.canOpenOffline) ...[
+                              OutlinedButton.icon(
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: AppColors.headerGreenDark,
+                                  side: const BorderSide(color: AppColors.headerGreenDark),
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                                ),
+                                onPressed: () {
+                                  ref.read(bootstrapProvider.notifier).openOffline();
+                                },
+                                icon: const Icon(Icons.offline_pin_outlined, size: 18),
+                                label: const Text('Open Offline'),
+                              ),
+                            ],
+                          ],
                         ),
                       ],
-                      const SizedBox(height: 12),
-                      ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.headerGreenDark,
-                          foregroundColor: Colors.white,
-                        ),
-                        onPressed: () {
-                          ref.read(bootstrapProvider.notifier).runBootstrap();
-                        },
-                        icon: const Icon(Icons.refresh),
-                        label: const Text('Retry Bootstrapping'),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                ] else ...[
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AppColors.sosRed.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppColors.sosRed),
+                    ),
+                    child: Column(
+                      children: [
+                        const Icon(Icons.error_outline_rounded, color: AppColors.sosRed, size: 36),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'Failed to initialize app',
+                          style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.sosRed, fontSize: 16),
+                        ),
+                        if (kDebugMode) ...[
+                          const SizedBox(height: 4),
+                          Text(
+                            bootstrapState.error!,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(color: Colors.black87, fontSize: 12, fontFamily: 'monospace'),
+                          ),
+                        ],
+                        const SizedBox(height: 12),
+                        ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.headerGreenDark,
+                            foregroundColor: Colors.white,
+                          ),
+                          onPressed: () {
+                            ref.read(bootstrapProvider.notifier).runBootstrap();
+                          },
+                          icon: const Icon(Icons.refresh),
+                          label: const Text('Retry Bootstrapping'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ] else ...[
                 Container(
                   height: 10,

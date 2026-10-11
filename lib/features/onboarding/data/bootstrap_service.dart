@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,6 +17,8 @@ class BootstrapState {
   final String versionString;
   final bool isDone;
   final String? error;
+  final bool isOffline;
+  final bool canOpenOffline;
 
   const BootstrapState({
     this.progress = 0.0,
@@ -22,6 +26,8 @@ class BootstrapState {
     this.versionString = '1.0.0',
     this.isDone = false,
     this.error,
+    this.isOffline = false,
+    this.canOpenOffline = false,
   });
 
   BootstrapState copyWith({
@@ -30,6 +36,8 @@ class BootstrapState {
     String? versionString,
     bool? isDone,
     String? error,
+    bool? isOffline,
+    bool? canOpenOffline,
   }) {
     return BootstrapState(
       progress: progress ?? this.progress,
@@ -37,6 +45,8 @@ class BootstrapState {
       versionString: versionString ?? this.versionString,
       isDone: isDone ?? this.isDone,
       error: error ?? this.error,
+      isOffline: isOffline ?? this.isOffline,
+      canOpenOffline: canOpenOffline ?? this.canOpenOffline,
     );
   }
 }
@@ -73,16 +83,78 @@ class BootstrapNotifier extends Notifier<BootstrapState> {
       }
       state = state.copyWith(versionString: version);
 
-      // Step 2: Load Local Preferences (40%)
+      // Step 2: Load Local Preferences & Offline Check (40%)
       state = state.copyWith(progress: 0.40, statusText: 'Initializing UdyogaSethu...');
       final prefs = await SharedPreferences.getInstance();
       final hasSeenIntro = prefs.getBool(SharedPrefKeys.hasSeenIntro) ?? false;
       final savedRoleStr = prefs.getString(SharedPrefKeys.activeRole);
+      final cachedAuthStatusStr = prefs.getString('cached_auth_status');
+      final cachedRoleStr = prefs.getString('cached_active_role');
+      final cachedSeekerType = prefs.getString('cached_seeker_type');
+      final canOpenOffline = (cachedAuthStatusStr == AuthSessionStatus.ready.name || cachedAuthStatusStr == 'ready') && (cachedRoleStr != null || savedRoleStr != null);
 
       UserRole activeRole = UserRole.seeker;
       if (savedRoleStr != null) {
         if (savedRoleStr == 'provider') activeRole = UserRole.provider;
         if (savedRoleStr == 'farmer') activeRole = UserRole.farmer;
+      }
+
+      // Detect connectivity first
+      bool isOffline = false;
+      try {
+        final connList = await Connectivity().checkConnectivity();
+        isOffline = connList.every((r) => r == ConnectivityResult.none);
+      } catch (_) {
+        // Fallback if connectivity plugin is unavailable
+      }
+
+      if (isOffline) {
+        if (canOpenOffline) {
+          final effectiveRole = cachedRoleStr ?? savedRoleStr;
+          UserRole recoveredRole = UserRole.seeker;
+          if (effectiveRole == 'provider') recoveredRole = UserRole.provider;
+          if (effectiveRole == 'farmer') recoveredRole = UserRole.farmer;
+
+          AppLogger.i('Offline startup: opening last cached screen ($recoveredRole)');
+          ref.read(appSessionProvider.notifier).updateSession(
+            status: AuthSessionStatus.ready,
+            role: recoveredRole,
+            assignedRoles: [recoveredRole],
+            seekerType: cachedSeekerType,
+          );
+
+          const minDisplayMs = 1200;
+          final elapsedMs = stopwatch.elapsedMilliseconds;
+          if (elapsedMs < minDisplayMs) {
+            await Future.delayed(Duration(milliseconds: minDisplayMs - elapsedMs));
+          }
+
+          state = state.copyWith(
+            progress: 1.0,
+            statusText: 'Offline Mode',
+            isDone: true,
+            isOffline: true,
+            canOpenOffline: true,
+            error: null,
+          );
+          return;
+        } else {
+          const minDisplayMs = 600;
+          final elapsedMs = stopwatch.elapsedMilliseconds;
+          if (elapsedMs < minDisplayMs) {
+            await Future.delayed(Duration(milliseconds: minDisplayMs - elapsedMs));
+          }
+
+          state = state.copyWith(
+            progress: 1.0,
+            statusText: 'No Internet Connection',
+            isDone: false,
+            isOffline: true,
+            canOpenOffline: false,
+            error: 'No internet connection. Check Wi-Fi or mobile data',
+          );
+          return;
+        }
       }
 
       // Step 3: Initialize Supabase Session & Profile (80%)
@@ -233,6 +305,15 @@ class BootstrapNotifier extends Notifier<BootstrapState> {
                 faceRequiredAtLogin: faceRequired,
                 hasEnrolledFace: hasEnrolledFace,
               );
+          if (finalStatus == AuthSessionStatus.ready) {
+            await prefs.setString('cached_auth_status', AuthSessionStatus.ready.name);
+            await prefs.setString('cached_active_role', activeRole.name);
+            if (seekerTypeStr != null) {
+              await prefs.setString('cached_seeker_type', seekerTypeStr);
+            } else {
+              await prefs.remove('cached_seeker_type');
+            }
+          }
         } catch (e, st) {
           AppLogger.e('Failed to fetch get_bootstrap_state RPC', e, st);
           rethrow;
@@ -240,6 +321,9 @@ class BootstrapNotifier extends Notifier<BootstrapState> {
       } else {
         // User signed out
         finalStatus = hasSeenIntro ? AuthSessionStatus.signedOut : AuthSessionStatus.needsOnboarding;
+        await prefs.remove('cached_auth_status');
+        await prefs.remove('cached_active_role');
+        await prefs.remove('cached_seeker_type');
       }
 
       // Step 4: Ensure minimum 1.2s display time (100%)
@@ -265,14 +349,62 @@ class BootstrapNotifier extends Notifier<BootstrapState> {
           );
     } catch (err, stack) {
       AppLogger.e('Bootstrapping error', err, stack);
+      final errStr = err.toString();
+      final isNetwork = err is SocketException ||
+          err is TimeoutException ||
+          errStr.contains('Failed host lookup') ||
+          errStr.contains('SocketException') ||
+          errStr.contains('AuthRetryableFetchException') ||
+          errStr.contains('ClientException') ||
+          errStr.contains('Network') ||
+          errStr.contains('Connection') ||
+          errStr.contains('timed out');
+
+      final prefs = await SharedPreferences.getInstance();
+      final cachedAuthStatusStr = prefs.getString('cached_auth_status');
+      final cachedRoleStr = prefs.getString('cached_active_role') ?? prefs.getString(SharedPrefKeys.activeRole);
+      final canOpenOffline = (cachedAuthStatusStr == AuthSessionStatus.ready.name || cachedAuthStatusStr == 'ready') && cachedRoleStr != null;
+
       state = state.copyWith(
         progress: 1.0,
         isDone: false,
-        error: err.toString(),
+        isOffline: isNetwork,
+        canOpenOffline: canOpenOffline,
+        error: isNetwork
+            ? 'No internet connection. Check Wi-Fi or mobile data'
+            : errStr,
       );
     } finally {
       stopwatch.stop();
     }
+  }
+
+  /// Manually transitions the app into offline mode if a cached session exists.
+  Future<void> openOffline() async {
+    final prefs = await SharedPreferences.getInstance();
+    final cachedRoleStr = prefs.getString('cached_active_role') ?? prefs.getString(SharedPrefKeys.activeRole);
+    final cachedSeekerType = prefs.getString('cached_seeker_type');
+
+    UserRole recoveredRole = UserRole.seeker;
+    if (cachedRoleStr == 'provider') recoveredRole = UserRole.provider;
+    if (cachedRoleStr == 'farmer') recoveredRole = UserRole.farmer;
+
+    AppLogger.i('User chose to open offline session ($recoveredRole)');
+    ref.read(appSessionProvider.notifier).updateSession(
+      status: AuthSessionStatus.ready,
+      role: recoveredRole,
+      assignedRoles: [recoveredRole],
+      seekerType: cachedSeekerType,
+    );
+
+    state = state.copyWith(
+      progress: 1.0,
+      statusText: 'Offline Mode',
+      isDone: true,
+      isOffline: true,
+      canOpenOffline: true,
+      error: null,
+    );
   }
 }
 
