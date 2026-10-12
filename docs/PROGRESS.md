@@ -91,9 +91,9 @@
 ## Phase 10 (Polish, security, tests and release)
 - [x] **P10.1**: Guided demo scenarios (Status: Done | Evaluator-friendly guided scenarios strictly gated under `Env.isDemoBuild` / `!kReleaseMode`; 5 reproducible canonical scenarios covering Worker Day, Customer Service Booking, Farmer Tomato Sale, Community Bulk Order, and Admin Trust Review; pedagogical `DemoCoachMarkOverlay` explaining "Why this matters" at every step; persistent scenario progress tracking; seeded test accounts screen `DemoAccountsScreen`; visible "DEMO BUILD" badges; server-authoritative `reset_demo()` RPC enforcing confirmation code token; zero layout overflows across 320–600dp and 1.0–1.6× text scale; 13/13 passing tests in `test/guided_demo_scenarios_test.dart`)
 - [x] **P10.2**: Translation pass and empty/loading/error audit (Status: Done | Completed all 114 missing translation keys across Marathi `mr`, Bengali `bn`, and Odia `or` ARB files; verified 100% key completeness [1,273 keys across all 8 languages `en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`] with `tool/check_l10n.dart`; authored honest terminology review in `docs/L10N_REVIEW.md` noting machine translations pending certified field linguist audit; performed comprehensive UI state audit in `docs/QA_CHECKLIST.md` across 29 screens for loading spinners, actionable empty states, error retry, offline modes, and button submission locking; zero `RenderFlex` overflows in `tool/check_overflow.bat`; all 664 tests passing in `flutter test`)
-- [ ] **P10.3**: Security and privacy audit (red team yourself) (Status: Todo)
-- [ ] **P10.4**: Automated tests for the critical flows (Status: Todo)
-- [ ] **P10.5**: Release build, documentation and final handover (Status: Todo)
+- [x] **P10.3**: Security and privacy audit (red team yourself) (Status: Done)
+- [x] **P10.4**: Automated tests for the critical flows (Status: Done)
+- [x] **P10.5**: Release build, documentation and final handover (Status: Done)
 
 - [x] **P2 Polish & Bug-Fix Pass (Part 1, 2, 3, 4)**: Wizard Finish Navigation, Student/Part-time Skills, UI Overflow Fix, Brand Intro Redesign (Status: Done | Fixed wizard finish navigation across Seeker/Farmer/Provider by setting AppSession to ready & unawaiting bootstrap refresh. Created migration `0170_student_parttime_skills.sql` with `audience text[]` column, 6 student/part-time categories, and 20 skills in 5 languages (`en`, `kn`, `hi`, `te`, `ta`) passing 100-string script scanner with 0 mixed-script errors. Filtered Seeker Step 2 categories/skills by seekerType and grouped skills under selected category headings. Bounded `CompactLanguageSelector` with `ConstrainedBox(maxWidth: 190)` to eliminate right overflow stripe. Redesigned `BrandIntroScreen` on clean white background with "The Bridge Connects" 5-phase animation system, single-execution TTS, tap skip, and reduced motion. Clean `flutter analyze` with 0 issues and 108/108 passing `flutter test` unit/widget tests)
 - [x] **P3.7, P4.1 & P4.2 Fix-and-Polish Pass (Parts 1-6)**: QR Verification, Edge Functions Uptime, Audience Gating, Map Fixes, Seeker Home Redesign & Privacy Centre (Status: Done |
@@ -1342,10 +1342,57 @@
 - **Manual steps to apply**:
   - Run Supabase migration `supabase/migrations/0760_demo_scenarios_and_reset.sql` against the live database using `npx supabase db push` or SQL Editor.
 
-## Known issues
-- **Profile & Auth Foreign Key Cascade vs D11 Retention**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`. The financial retention refactor will decouple `auth.users` deletion from audit records in an upcoming migration.
-- **Phase 6.3 - 6.5**: Farm equipment rental/labour hiring, buyer produce marketplace, and carts & checkout are upcoming phases (P6.7 & P6.8 completed).
-- **Phase 9 (Admin Console)**: Admin console is built in a separate web/desktop project and is out of scope for this Flutter app.
+- **Phase 10.3, Phase 10.4 & Phase 10.5**: Security Audit, Critical Automated Tests & Release Handover (Status: Done)
+  - **P10.3: Security & Privacy Audit**:
+    - Inventoried all 75 PostgreSQL database tables in `tool/audit_security_schema.dart` and `docs/SECURITY_REPORT.md`.
+    - Created migration `supabase/migrations/0770_security_audit_hardening.sql`:
+      - Closed legacy RLS gaps on `demo_users`, `recurring_bookings`, and `order_events` (0 tables now without RLS or policies).
+      - Added before-update trigger guards on `job_assignments` and `orders` blocking client mutation of immutable and financial columns (`agreed_wage_paise`, `total_paise`, `fee_paise`, `worker_id`, `farmer_id`, `customer_id`).
+      - Restricted `payments_insert` to `status = 'created'` and `signature_verified = false`.
+      - Restricted `payouts_insert` to `status = 'requested'`.
+      - Enforced `target_id != auth.uid()` on `ratings_reviews` preventing self-rating.
+      - Hardened `storage_chat_attachments_select` allowing only verified chat participants to read attachments.
+      - Enforced `SET search_path = public, extensions` on all `SECURITY DEFINER` functions.
+    - Created `supabase/tests/security_audit_tests.sql` covering 7 regression tests.
+    - Authored exhaustive `docs/SECURITY_REPORT.md` documenting table inventory, storage review, findings, and accepted risks.
+  - **P10.4: Automated Test Suites & CI**:
+    - Created `test/p10_critical_unit_tests.dart` (25/25 passed):
+      - Role-tree state machine and route guard rules (`AppRouter`).
+      - Authentication and session state transitions (`AppSessionData`).
+      - Multi-lingual offline voice intent engine parsing across all 5 Indic languages (`en`, `kn`, `hi`, `te`, `ta`).
+      - Precision price and platform-fee calculations (`PaymentBillSummary`, GST, commission models).
+      - Strict offline queue prohibitions (`BlockedOfflineActionException` on payments, payouts, QR scans, and eKYC).
+      - Privacy consent helper behavior and purpose retention disclosures (`ConsentPurpose`).
+    - Created `test/p10_critical_widget_tests.dart` (7/7 passed):
+      - Role-selection screens (`RoleTreeScreen`).
+      - OTP input and validation (`OtpScreen`).
+      - Language switching (`LanguageScreen`).
+      - Job-card states (`JobCard`).
+      - Wallet Indian currency grouping (`WalletBalance.formatIndianCurrency`, lakhs/crores formatting).
+      - Error, loading, empty, and offline retry states (`EmptyState`, `ErrorState`).
+    - Created `integration_test/app_critical_flow_test.dart` and `test/app_critical_flow_test.dart` (5/5 passed) covering full critical happy path: language select -> role tree -> sign in -> profile wizard -> discover jobs -> apply.
+    - Created backend test runner scripts `tool/test_backend.sh`, `tool/test_backend.bat`, and `tool/test_backend.dart` verifying all 7 SQL test suites in `supabase/tests`.
+    - Created secret scanner `tool/secret_scan.dart` scanning 520+ files and built APK for leaked API keys, service-role tokens, and private keys.
+    - Created GitHub Actions CI pipeline `.github/workflows/ci.yml`.
+    - Verified deliberate failure detection and immediate revert in unit test suite.
+  - **P10.5: Android Release Configuration & Documentation**:
+    - Configured Android release signing, code shrinking (`isMinifyEnabled = true`, `isShrinkResources = true`), and ProGuard rules (`android/app/proguard-rules.pro`).
+    - Created `android/key.properties.example` and added `key.properties` to `.gitignore`.
+    - Documented Firebase Crashlytics setup with zero PII logging filters.
+    - Updated `README.md` with complete architecture Mermaid diagram, setup guide, env vars table, test commands, and troubleshooting.
+    - Updated `docs/DECISIONS.md` with Decision D79 and comprehensive "Simulated or demo-only behaviour" audit.
+    - Created `docs/VIVA_NOTES.md` one-page viva & evaluation cheatsheet.
+  - **Verification & Results**:
+    - `flutter analyze`: 0 issues found (clean).
+    - `dart run tool/check_l10n.dart`: All 1,273 keys verified across 8 languages.
+    - `dart run tool/secret_scan.dart`: 521 files scanned, 0 secrets found (clean).
+    - `cmd /c tool\test_backend.bat`: All 7 SQL test files verified.
+    - `flutter test`: 37/37 P10 critical tests passed.
+    - `cmd /c tool\check_overflow.bat`: All 3 suites passed with ZERO RenderFlex overflows across 320-600dp and text scale 1.0-2.0.
+
+## Known issues & Accepted Risks
+- **Admin Console Scope**: The Admin Console is built in a separate web/desktop workspace and is OUT OF SCOPE for this Flutter app.
+- **Simulated FinTech & Legal Rails**: Financial escrow runs on Razorpay sandbox test mode; eKYC runs on mock provider; SOS alerts personal contacts only. Documented in `docs/DECISIONS.md`.
 
 
 

@@ -618,4 +618,58 @@ This document records key design, architectural, role model, and implementation 
   * **Comprehensive Screen UI State Audit (`docs/QA_CHECKLIST.md`)**: Audited all 29 primary screens across 10 core functional modules (Auth, Worker/Seeker, Customer/Provider, Farmer/Produce, Community/Group, Payments/Escrow, Safety/SOS, Learning/Rewards, Settings/A11y, and Demo Evaluator) to ensure robust Loading spinners, empty states with clear primary actions, error states with retry buttons, offline mode warnings, and disabled/loading submission buttons preventing double-tap mutations.
   * **Zero-Overflow Accessibility & Text Scaling**: Validated layouts across 320–600dp widths, text scaling up to 1.6×, and all 8 regional languages using `test/guided_demo_scenarios_test.dart` and `tool/check_overflow.bat`. Replaced rigid flex rows with `Wrap` and `LayoutBuilder` to guarantee zero `RenderFlex` overflows on small devices.
 
+* **D79 — Final Security Hardening, Audit & Table Access Controls (P10.3)**:
+  * **Complete RLS & Policy Audit**: Audited all 75 PostgreSQL database tables in migration `0770_security_audit_hardening.sql`. Closed legacy RLS gaps on `demo_users`, `recurring_bookings`, and `order_events`. 100% of public database tables now have RLS enabled with explicit restrictive policies.
+  * **Immutable Trigger Guardrails**: Added PostgreSQL before-update triggers on `job_assignments` and `orders` blocking authenticated clients from altering immutable and financial fields (`agreed_wage_paise`, `total_paise`, `fee_paise`, `worker_id`, `farmer_id`, `customer_id`).
+  * **Financial State Transition Hardening**: Added RLS insert constraints preventing clients from inserting pre-verified payments (`status = 'created'`, `signature_verified = false`) or pre-approved payouts (`status = 'requested'`).
+  * **Search Path Security**: Fixed `SET search_path = public, extensions` on all `SECURITY DEFINER` functions to prevent search path injection attacks.
+  * **Self-Rating Prevention**: Enforced `target_id != auth.uid()` on reviews to block self-rating attacks.
+  * **Private Storage Access Control**: Fixed `storage_chat_attachments_select` allowing only verified chat participants to read attachments.
+
+---
+
+# Comprehensive Audit: Simulated or Demo-Only Behaviour
+
+In strict accordance with the project honesty charter, this section audits and documents every simulated, mocked, sandbox, or demo-only feature across the UdyogaSethu application. Anything simulated is explicitly labelled **Demo mode** in the user interface and must never be represented as real-world production legal or financial infrastructure.
+
+### 1. Job-Protection Insurance & Claims
+* **Current Implementation**: The Job Protection Claim screen (`lib/features/safety/presentation/job_protection_claim_screen.dart`) simulates policy enrollment and claim filing.
+* **Honesty Status**: **Simulated Demo Mode**.
+* **Limitation**: No licensed insurance underwriter (e.g., IRDAI-regulated general insurer) is integrated. Claims filed in the app create records in `job_protection_claims` for demonstration purposes only; no actual monetary claim payouts or medical reimbursements occur.
+
+### 2. Emergency SOS Police Dispatch
+* **Current Implementation**: The SOS Safety Hub (`lib/features/safety/presentation/safety_hub_screen.dart`) dispatches in-app notifications and SMS intents to pre-configured personal emergency contacts.
+* **Honesty Status**: **Simulated / In-App Notification Only**.
+* **Limitation**: The SOS feature does **NOT** dial 112/100 police emergency dispatch automatically, nor does it connect to government emergency response support systems (ERSS). Users are clearly instructed that in an actual emergency, they must dial 112 directly.
+
+### 3. KYC / DigiLocker / Aadhaar Verification
+* **Current Implementation**: When `KYC_PROVIDER=mock` (the default setting), the eKYC verification workflow uses `MockProvider` in Deno Edge Functions and `SupabaseKycRepository` in Flutter.
+* **Honesty Status**: **Simulated Demo Mode**.
+* **Limitation**: No production DigiLocker or UIDAI Aadhaar OTP gateway is connected. The Amber banner *"Demo mode — Simulated eKYC Provider"* is prominently displayed on `KycScreen`. All Aadhaar numbers in test data are fictional, and raw numbers are never stored in the database.
+
+### 4. Masked Voice Call Proxy
+* **Current Implementation**: Secured Call screen (`lib/features/chat/presentation/secured_call_screen.dart`) uses a simulated proxy interface when no real Twilio or Exotel telephony provider is configured.
+* **Honesty Status**: **Simulated Demo Mode**.
+* **Limitation**: When `CALL_PROVIDER=mock`, telephone bridging uses an in-app simulated call audio timer rather than an actual PSTN/VoIP telecom bridge. Real masked phone calling requires live Exotel / Twilio API keys and webhook endpoints.
+
+### 5. Escrow-Style Ledger & Payment Behaviour
+* **Current Implementation**: Payment checkout uses Razorpay Sandbox Test Mode (`rzp_test_...`) and PostgreSQL double-entry transaction ledgers with hold/release states.
+* **Honesty Status**: **Test Mode / Simulated Escrow Rails**.
+* **Limitation**: The platform is **NOT** a licensed escrow bank, NBFC, or trusteeship company under Reserve Bank of India (RBI) regulations. The holding and release of funds is demonstrated via software ledger states and Razorpay test mode; it does not constitute a legally regulated financial escrow service.
+
+### 6. UPI QR Code Checkouts
+* **Current Implementation**: Dynamic and static UPI QR codes are rendered using `qr_flutter` with standard `upi://pay` intent URI parameters.
+* **Honesty Status**: **Demo / Test Sandbox**.
+* **Limitation**: In demo mode, scanning or verifying a QR code simulates settlement via test endpoints. No real bank accounts are debited or credited during demo evaluations.
+
+### 7. Seeded Evaluator Accounts & Test Data
+* **Current Implementation**: Pre-seeded demo personas (`seeker_informal`, `seeker_student`, `seeker_part_time`, `provider_household`, `farmer_karnataka`) are provided for evaluators to test multi-role workflows.
+* **Honesty Status**: **Synthetic Demo Personas**.
+* **Limitation**: All seed accounts, profile pictures, Aadhaar hashes, and wallet balances are synthetic fixtures generated for evaluation purposes only.
+
+### 8. On-Device Face Recognition & Anti-Spoofing
+* **Current Implementation**: On-device MobileFaceNet TFLite model (`assets/models/mobilefacenet.tflite`) with Google ML Kit Face Detection for local liveness challenges (blink, head turn, smile).
+* **Honesty Status**: **Local Client-Side Inference**.
+* **Limitation**: On-device face embedding extraction is suitable for convenience verification but is **NOT** an iBeta Level 2 certified anti-spoofing biometric enclave. Highly sophisticated photo/video attacks could bypass client-side checks; enterprise deployment requires certified cloud biometric hardware or specialized depth sensors.
+
 

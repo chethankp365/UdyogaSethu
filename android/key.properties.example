@@ -1,0 +1,11 @@
+# UdyogaSethu Android Release Keystore Configuration Example
+# Copy this file to `android/key.properties` and replace with your actual keystore details.
+# DO NOT commit `key.properties` or keystore files (*.keystore, *.jks) to version control.
+#
+# Generate a new release keystore via:
+#   keytool -genkey -v -keystore android/app/upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+#
+storePassword=YOUR_KEYSTORE_PASSWORD
+keyPassword=YOUR_KEY_PASSWORD
+keyAlias=upload
+storeFile=../app/upload-keystore.jks

@@ -2,6 +2,7 @@
 
 # Credentials, keys & environment files
 env.json
+key.properties
 *.keystore
 *.jks
 .env*
