@@ -2260,16 +2260,16 @@ class AppLocalizationsTa extends AppLocalizations {
   String get activeJobTitle => 'செயலில் உள்ள வேலை முன்னேற்றம்';
 
   @override
-  String get actionAcceptJob => 'வேலையை ஏற்றுக்கொள்';
+  String get actionAcceptJob => 'வேலையை ஏற்கவும்';
 
   @override
   String get actionWorkerArrived => 'நான் வந்துவிட்டேன்';
 
   @override
-  String get actionStartWork => 'வேலையைத் தொடங்கு';
+  String get actionStartWork => 'வேலையைத் தொடங்கவும்';
 
   @override
-  String get actionCompleteJob => 'வேலையை முடி';
+  String get actionCompleteJob => 'வேலையை முடிக்கவும்';
 
   @override
   String get actionAwaitingPayment => 'பணம் விடுவிப்பிற்காக காத்திருக்கிறது';
@@ -2296,7 +2296,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get actionPaymentDone => 'பணம் செலுத்தப்பட்டது';
 
   @override
-  String get actionAskForHelp => 'உதவி கேளுங்கள்';
+  String get actionAskForHelp => 'உதவி கேட்கவும்';
 
   @override
   String get actionDispute => 'சர்ச்சையை எழுப்பு';
@@ -4214,4 +4214,20 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get learningVerifiedCredential => 'நிர்வாகி சரிபார்க்கப்பட்டது';
+
+  @override
+  String get creditReadinessTitle => 'கடன் தயார்நிலை வழிகாட்டுதல்';
+
+  @override
+  String get wellnessTitle => 'நல்வாழ்வு மற்றும் நன்மைகள்';
+
+  @override
+  String get actionBook => 'பதிவு செய்யவும்';
+
+  @override
+  String get actionPay => 'பணம் செலுத்தவும்';
+
+  @override
+  String get disclaimerCreditGuidance =>
+      'இது வழிகாட்டுதல் மட்டுமே. இது எந்தவொரு கடனுக்கும் உத்தரவாதம் அளிக்காது. ஒழுங்குபடுத்தப்பட்ட நிதி கூட்டாளர்களுடன் எதிர்கால இணைப்புகளுக்கு உங்கள் ஒப்புதல் தேவைப்படும்.';
 }

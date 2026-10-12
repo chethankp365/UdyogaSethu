@@ -6,6 +6,7 @@ import 'package:udyogasethu/features/trust/domain/dispute.dart';
 import 'package:udyogasethu/features/trust/domain/favourite_item.dart';
 import 'package:udyogasethu/features/trust/domain/job_history_item.dart';
 import 'package:udyogasethu/features/trust/domain/job_review.dart';
+import 'package:udyogasethu/features/trust/domain/repeat_client.dart';
 import 'package:udyogasethu/features/trust/presentation/favourites_screen.dart';
 import 'package:udyogasethu/features/trust/presentation/job_history_screen.dart';
 import 'package:udyogasethu/features/trust/presentation/widgets/raise_dispute_dialog.dart';
@@ -29,10 +30,12 @@ class MockTrustRepository implements TrustRepository {
 
   final List<JobHistoryItem> historyItems;
   final List<FavouriteItem> favouriteItems;
+  final List<RepeatClientItem> repeatClientItems;
 
   MockTrustRepository({
     this.historyItems = const [],
     this.favouriteItems = const [],
+    this.repeatClientItems = const [],
   });
 
   @override
@@ -81,6 +84,11 @@ class MockTrustRepository implements TrustRepository {
   @override
   Future<List<FavouriteItem>> fetchFavourites({int limit = 50, int offset = 0}) async {
     return favouriteItems;
+  }
+
+  @override
+  Future<List<RepeatClientItem>> fetchRepeatClients([String? workerId]) async {
+    return repeatClientItems;
   }
 
   @override

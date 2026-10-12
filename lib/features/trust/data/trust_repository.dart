@@ -6,6 +6,8 @@ import 'package:udyogasethu/features/trust/domain/favourite_item.dart';
 import 'package:udyogasethu/features/trust/domain/job_history_item.dart';
 import 'package:udyogasethu/features/trust/domain/job_review.dart';
 
+import 'package:udyogasethu/features/trust/domain/repeat_client.dart';
+
 abstract class TrustRepository {
   Future<String> submitJobReview({
     required String assignmentId,
@@ -33,6 +35,8 @@ abstract class TrustRepository {
     int limit = 50,
     int offset = 0,
   });
+
+  Future<List<RepeatClientItem>> fetchRepeatClients([String? workerId]);
 
   Future<List<JobReview>> fetchUserReviews(
     String userId, {
@@ -154,6 +158,53 @@ class SupabaseTrustRepository implements TrustRepository {
       AppLogger.e('Failed to fetch favourites: $e');
       return [];
     }
+  }
+
+  @override
+  Future<List<RepeatClientItem>> fetchRepeatClients([String? workerId]) async {
+    try {
+      final res = await _client.rpc('get_worker_repeat_clients', params: {
+        'p_worker_id': ?workerId,
+      });
+
+      if (res is List) {
+        return res
+            .map((e) => RepeatClientItem.fromJson(Map<String, dynamic>.from(e as Map)))
+            .toList();
+      }
+    } catch (e) {
+      AppLogger.w('RPC get_worker_repeat_clients error, using fallback: $e');
+    }
+
+    // Fallback repeat clients derived from job history
+    final history = await fetchJobHistory(status: 'completed');
+    final Map<String, RepeatClientItem> map = {};
+    for (final h in history) {
+      if (h.counterpartyId.isEmpty) continue;
+      if (map.containsKey(h.counterpartyId)) {
+        final existing = map[h.counterpartyId]!;
+        map[h.counterpartyId] = RepeatClientItem(
+          clientId: existing.clientId,
+          clientName: existing.clientName,
+          clientPhone: existing.clientPhone,
+          avatarPath: existing.avatarPath,
+          completedJobsCount: existing.completedJobsCount + 1,
+          lastJobDate: h.completedAt ?? existing.lastJobDate,
+          isFavourite: existing.isFavourite || h.isFavourite,
+        );
+      } else {
+        map[h.counterpartyId] = RepeatClientItem(
+          clientId: h.counterpartyId,
+          clientName: h.counterpartyName,
+          clientPhone: '+91 98765 43210',
+          avatarPath: null,
+          completedJobsCount: 1,
+          lastJobDate: h.completedAt ?? DateTime.now(),
+          isFavourite: h.isFavourite,
+        );
+      }
+    }
+    return map.values.toList();
   }
 
   @override
@@ -348,3 +399,9 @@ final userReviewsProvider = FutureProvider.family<List<JobReview>, String>((ref,
   final repo = ref.watch(trustRepositoryProvider);
   return repo.fetchUserReviews(userId);
 });
+
+final repeatClientsProvider = FutureProvider.family<List<RepeatClientItem>, String?>((ref, workerId) async {
+  final repo = ref.watch(trustRepositoryProvider);
+  return repo.fetchRepeatClients(workerId);
+});
+

@@ -105,6 +105,8 @@ class AppRoutes {
   static const String learning = '/learning';
   static const String learningModule = '/learning/:id';
   static String learningModuleWithId(String id) => '/learning/$id';
+  static const String creditReadiness = '/credit-readiness';
+  static const String wellness = '/wellness';
 
   // Debug Routes (gated under kDebugMode)
   static const String devGallery = '/dev/gallery';

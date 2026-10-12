@@ -4169,4 +4169,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get learningVerifiedCredential => 'Admin Verified';
+
+  @override
+  String get creditReadinessTitle => 'Credit Readiness Guidance';
+
+  @override
+  String get wellnessTitle => 'Wellness & Benefits';
+
+  @override
+  String get actionBook => 'Book Worker';
+
+  @override
+  String get actionPay => 'Pay / Wallet';
+
+  @override
+  String get disclaimerCreditGuidance =>
+      'This is guidance only. It does not guarantee any loan. Future links to regulated financial partners would need your consent.';
 }

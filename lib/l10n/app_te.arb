@@ -1446,5 +1446,14 @@
   "learningUploadPendingNotice": "ధృవీకరణకు ముందు అప్‌లోడ్ చేసిన సర్టిఫికెట్లను అడ్మిన్ సమీక్షిస్తారు.",
   "learningUploadSuccess": "సర్టిఫికేట్ అడ్మిన్ సమీక్ష కోసం సమర్పించబడింది!",
   "learningPendingReview": "అడ్మిన్ సమీక్ష పెండింగ్‌లో ఉంది",
-  "learningVerifiedCredential": "అడ్మిన్ ధృవీకరించబడింది"
+  "learningVerifiedCredential": "అడ్మిన్ ధృవీకరించబడింది",
+  "creditReadinessTitle": "క్రెడిట్ సంసిద్ధత మార్గదర్శకత్వం",
+  "wellnessTitle": "క్షేమం మరియు ప్రయోజనాలు",
+  "actionAcceptJob": "పనిని అంగీకరించండి",
+  "actionStartWork": "పని ప్రారంభించండి",
+  "actionCompleteJob": "పని పూర్తి చేయండి",
+  "actionBook": "బుక్ చేయండి",
+  "actionPay": "చెల్లించండి",
+  "actionAskForHelp": "సహాయం అడగండి",
+  "disclaimerCreditGuidance": "ఇది మార్గదర్శకత్వం మాత్రమే. ఇది ఏ రుణాన్ని హామీ ఇవ్వదు. నియంత్రిత ఆర్థిక భాగస్వాములతో భవిష్యత్ అనుసంధానాలకు మీ సమ్మతి అవసరం."
 }

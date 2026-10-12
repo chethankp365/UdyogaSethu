@@ -1640,5 +1640,14 @@
   "learningUploadPendingNotice": "Uploaded certificates will be reviewed by admin before verification.",
   "learningUploadSuccess": "Certificate submitted for admin review!",
   "learningPendingReview": "Pending Admin Review",
-  "learningVerifiedCredential": "Admin Verified"
+  "learningVerifiedCredential": "Admin Verified",
+  "creditReadinessTitle": "Credit Readiness Guidance",
+  "wellnessTitle": "Wellness & Benefits",
+  "actionAcceptJob": "Accept Job",
+  "actionStartWork": "Start Work",
+  "actionCompleteJob": "Complete Job",
+  "actionBook": "Book Worker",
+  "actionPay": "Pay / Wallet",
+  "actionAskForHelp": "Ask for Help",
+  "disclaimerCreditGuidance": "This is guidance only. It does not guarantee any loan. Future links to regulated financial partners would need your consent."
 }

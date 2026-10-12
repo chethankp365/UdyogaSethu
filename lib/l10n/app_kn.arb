@@ -1446,5 +1446,14 @@
   "learningUploadPendingNotice": "ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ ಪ್ರಮಾಣಪತ್ರಗಳನ್ನು ಪರಿಶೀಲನೆಗೆ ಮುನ್ನ ಅಡ್ಮಿನ್ ಪರಿಶೀಲಿಸುತ್ತಾರೆ.",
   "learningUploadSuccess": "ಪ್ರಮಾಣಪತ್ರವನ್ನು ಅಡ್ಮಿನ್ ಪರಿಶೀಲನೆಗೆ ಸಲ್ಲಿಸಲಾಗಿದೆ!",
   "learningPendingReview": "ಅಡ್ಮಿನ್ ಪರಿಶೀಲನೆ ಬಾಕಿ",
-  "learningVerifiedCredential": "ಅಡ್ಮಿನ್ ಪರಿಶೀಲಿಸಲಾಗಿದೆ"
+  "learningVerifiedCredential": "ಅಡ್ಮಿನ್ ಪರಿಶೀಲಿಸಲಾಗಿದೆ",
+  "creditReadinessTitle": "ಸಾಲ ಸಿದ್ಧತೆ ಮಾರ್ಗದರ್ಶನ",
+  "wellnessTitle": "ಆರೋಗ್ಯ ಮತ್ತು ಕಲ್ಯಾಣ ಸೌಲಭ್ಯಗಳು",
+  "actionAcceptJob": "ಕೆಲಸ ಒಪ್ಪಿಕೊಳ್ಳಿ",
+  "actionStartWork": "ಕೆಲಸ ಪ್ರಾರಂಭಿಸಿ",
+  "actionCompleteJob": "ಕೆಲಸ ಪೂರ್ಣಗೊಳಿಸಿ",
+  "actionBook": "ಬುಕ್ ಮಾಡಿ",
+  "actionPay": "ಪಾವತಿಸಿ",
+  "actionAskForHelp": "ಸಹಾಯ ಕೇಳಿ",
+  "disclaimerCreditGuidance": "ಇದು ಕೇವಲ ಮಾರ್ಗದರ್ಶನ ಮಾತ್ರ. ಇದು ಯಾವುದೇ ಸಾಲದ ಖಾತರಿ ನೀಡುವುದಿಲ್ಲ. ನಿಯಂತ್ರಿತ ಹಣಕಾಸು ಪಾಲುದಾರರೊಂದಿಗೆ ಭವಿಷ್ಯದ ಸಂಪರ್ಕಗಳಿಗೆ ನಿಮ್ಮ ಸಮ್ಮತಿ ಅಗತ್ಯವಿರುತ್ತದೆ."
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/errors/app_exception.dart';
 import 'package:udyogasethu/core/router/app_session.dart';
@@ -157,3 +158,8 @@ class SupabaseAccountRepository implements AccountRepository {
     }
   }
 }
+
+final accountRepositoryProvider = Provider<AccountRepository>((ref) {
+  return SupabaseAccountRepository();
+});
+

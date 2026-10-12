@@ -103,6 +103,8 @@ void main() {
       AppRoutes.farmerGovtSchemes,
       AppRoutes.chatDetail,
       AppRoutes.maskedCall,
+      AppRoutes.creditReadiness,
+      AppRoutes.wellness,
 
       // Debug Routes
       AppRoutes.devGallery,
@@ -283,6 +285,10 @@ void main() {
       AppRoutes.farmerChat,
       AppRoutes.chatDetail,
       AppRoutes.maskedCall,
+
+      // Financial Inclusion & Wellness (Batch 3: P8.5 & P8.6)
+      AppRoutes.creditReadiness,
+      AppRoutes.wellness,
 
       // Shell Tabs
       'shell_seeker_tab_0_home',

@@ -2236,7 +2236,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get activeJobTitle => 'सक्रिय कार्य प्रगति';
 
   @override
-  String get actionAcceptJob => 'कार्य स्वीकार करें';
+  String get actionAcceptJob => 'काम स्वीकारें';
 
   @override
   String get actionWorkerArrived => 'मैं पहुंच गया हूं';
@@ -4164,4 +4164,20 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get learningVerifiedCredential => 'व्यवस्थापक सत्यापित';
+
+  @override
+  String get creditReadinessTitle => 'क्रेडिट तत्परता मार्गदर्शन';
+
+  @override
+  String get wellnessTitle => 'कल्याण और लाभ';
+
+  @override
+  String get actionBook => 'बुक करें';
+
+  @override
+  String get actionPay => 'भुगतान करें';
+
+  @override
+  String get disclaimerCreditGuidance =>
+      'यह केवल मार्गदर्शन है। यह किसी भी ऋण की गारंटी नहीं देता है। विनियमित वित्तीय भागीदारों के साथ भविष्य के लिंक के लिए आपकी सहमति की आवश्यकता होगी।';
 }

@@ -21,6 +21,8 @@ import 'package:udyogasethu/features/farmer/presentation/widgets/weather_advisor
 import 'package:udyogasethu/features/provider/data/provider_jobs_repository.dart';
 import 'package:udyogasethu/features/provider/domain/job_post_draft.dart';
 import 'package:udyogasethu/features/safety/presentation/widgets/sos_confirmation_dialog.dart';
+import 'package:udyogasethu/core/widgets/simple_mode_action_dock.dart';
+import 'package:udyogasethu/features/account/presentation/settings_controller.dart';
 import 'package:udyogasethu/features/notifications/presentation/widgets/notification_bell_badge.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
@@ -620,6 +622,12 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
                 ),
               ),
               const SizedBox(height: 18),
+
+              // Simple Mode Action Dock (6 essential large buttons)
+              if (ref.watch(userSettingsNotifierProvider).simpleMode) ...[
+                const SimpleModeActionDock(),
+                const SizedBox(height: 14),
+              ],
 
               // 2. WEATHER ADVISORY RADAR CARD (Screen 26 layout)
               weatherAsync.when(

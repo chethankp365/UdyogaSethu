@@ -6,10 +6,7 @@ import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/account/data/account_repository.dart';
-
-final accountRepositoryProvider = Provider<AccountRepository>((ref) {
-  return SupabaseAccountRepository();
-});
+export 'package:udyogasethu/features/account/data/account_repository.dart' show accountRepositoryProvider;
 
 class RoleSwitcherBottomSheet extends ConsumerWidget {
   const RoleSwitcherBottomSheet({super.key});

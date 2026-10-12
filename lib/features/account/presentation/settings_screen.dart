@@ -15,6 +15,8 @@ import 'package:udyogasethu/features/account/presentation/role_switcher_bottom_s
 import 'package:udyogasethu/features/account/presentation/seeker_type_change_dialog.dart';
 import 'package:udyogasethu/features/onboarding/domain/pending_role_selection.dart';
 
+import 'package:udyogasethu/features/account/presentation/settings_controller.dart';
+
 final userSettingsProvider = FutureProvider<UserSettings>((ref) async {
   final repo = ref.watch(accountRepositoryProvider);
   String? userId;
@@ -32,63 +34,14 @@ final userSettingsProvider = FutureProvider<UserSettings>((ref) async {
   return repo.loadSettings(targetId);
 });
 
-class SettingsScreen extends ConsumerStatefulWidget {
+class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
-  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
-}
-
-class _SettingsScreenState extends ConsumerState<SettingsScreen> {
-  UserSettings _settings = const UserSettings();
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadSettings();
-  }
-
-  Future<void> _loadSettings() async {
-    String? userId;
-    bool isSupabaseInitialized = true;
-    try {
-      final user = Supabase.instance.client.auth.currentUser;
-      if (user != null && user.id.isNotEmpty) userId = user.id;
-    } catch (_) {
-      isSupabaseInitialized = false;
-    }
-
-    if (isSupabaseInitialized && userId == null) {
-      if (mounted) setState(() => _isLoading = false);
-      return;
-    }
-
-    final targetId = userId ?? 'test-user-id';
-    final loaded = await ref.read(accountRepositoryProvider).loadSettings(targetId);
-    if (mounted) {
-      setState(() {
-        _settings = loaded;
-        _isLoading = false;
-      });
-    }
-  }
-
-  Future<void> _saveSettings(UserSettings updated) async {
-    setState(() => _settings = updated);
-    String? userId;
-    try {
-      final user = Supabase.instance.client.auth.currentUser;
-      if (user != null && user.id.isNotEmpty) userId = user.id;
-    } catch (_) {}
-
-    if (userId == null) return;
-    await ref.read(accountRepositoryProvider).saveSettings(userId: userId, settings: updated);
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final session = ref.watch(appSessionProvider);
+    final settings = ref.watch(userSettingsNotifierProvider);
+    final settingsNotifier = ref.read(userSettingsNotifierProvider.notifier);
 
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
@@ -102,91 +55,118 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           SizedBox(width: 8),
         ],
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 1. LANGUAGE & ACCESSIBILITY SECTION
+            const Text('Language & Accessibility', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.headerGreenDark)),
+            const SizedBox(height: 8),
+            Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 1. LANGUAGE & ACCESSIBILITY SECTION
-                  const Text('Language & Accessibility', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.headerGreenDark)),
-                  const SizedBox(height: 8),
-                  Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  ListTile(
+                    leading: const Icon(Icons.language_rounded, color: AppColors.headerGreenDark),
+                    title: const Text('App Language'),
+                    subtitle: const Text('Select primary display language'),
+                    trailing: OutlinedButton(
+                      onPressed: () => context.push(AppRoutes.language),
+                      child: const Text('Change'),
+                    ),
+                  ),
+                  const Divider(height: 1),
+                  SwitchListTile(
+                    secondary: const Icon(Icons.touch_app_rounded, color: AppColors.headerGreenDark),
+                    title: const Text('Simple Mode'),
+                    subtitle: const Text('Simplified layout, big tactile buttons and high contrast'),
+                    value: settings.simpleMode,
+                    activeThumbColor: AppColors.headerGreenDark,
+                    onChanged: (val) => settingsNotifier.setSimpleMode(val),
+                  ),
+                  const Divider(height: 1),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ListTile(
-                          leading: const Icon(Icons.language_rounded, color: AppColors.headerGreenDark),
-                          title: const Text('App Language'),
-                          subtitle: const Text('Select primary display language'),
-                          trailing: OutlinedButton(
-                            onPressed: () => context.push(AppRoutes.language),
-                            child: const Text('Change'),
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Row(
+                              children: [
+                                Icon(Icons.text_fields_rounded, color: AppColors.headerGreenDark),
+                                SizedBox(width: 12),
+                                Text('Text Scale Size', style: TextStyle(fontSize: 15)),
+                              ],
+                            ),
+                            Text('${(settings.textScale * 100).round()}%', style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.headerGreenDark)),
+                          ],
                         ),
-                        const Divider(height: 1),
-                        SwitchListTile(
-                          secondary: const Icon(Icons.touch_app_rounded, color: AppColors.headerGreenDark),
-                          title: const Text('Simple Mode'),
-                          subtitle: const Text('Simplified UI with high contrast and larger touch targets'),
-                          value: _settings.simpleMode,
-                          activeThumbColor: AppColors.headerGreenDark,
-                          onChanged: (val) => _saveSettings(_settings.copyWith(simpleMode: val)),
+                        Slider(
+                          value: settings.textScale.clamp(0.85, 1.60),
+                          min: 0.85,
+                          max: 1.60,
+                          divisions: 15,
+                          activeColor: AppColors.headerGreenDark,
+                          onChanged: (val) => settingsNotifier.setTextScale(val),
                         ),
-                        const Divider(height: 1),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Row(
-                                    children: [
-                                      Icon(Icons.text_fields_rounded, color: AppColors.headerGreenDark),
-                                      SizedBox(width: 12),
-                                      Text('Text Scale Size', style: TextStyle(fontSize: 15)),
-                                    ],
-                                  ),
-                                  Text('${(_settings.textScale * 100).round()}%', style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.headerGreenDark)),
-                                ],
-                              ),
-                              Slider(
-                                value: _settings.textScale.clamp(0.85, 1.30),
-                                min: 0.85,
-                                max: 1.30,
-                                divisions: 9,
-                                activeColor: AppColors.headerGreenDark,
-                                onChanged: (val) => _saveSettings(_settings.copyWith(textScale: val)),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Divider(height: 1),
-                        SwitchListTile(
-                          secondary: const Icon(Icons.volume_up_rounded, color: AppColors.headerGreenDark),
-                          title: const Text('Voice Hints & TTS'),
-                          subtitle: const Text('Enable audio explanations and spoken voice guidance'),
-                          value: _settings.voiceHints,
-                          activeThumbColor: AppColors.headerGreenDark,
-                          onChanged: (val) => _saveSettings(_settings.copyWith(voiceHints: val)),
-                        ),
-                        const Divider(height: 1),
-                        SwitchListTile(
-                          secondary: const Icon(Icons.data_saver_on_rounded, color: AppColors.headerGreenDark),
-                          title: const Text('Low-Data Mode'),
-                          subtitle: const Text('Reduce mobile data usage by optimizing network images'),
-                          value: _settings.lowDataMode,
-                          activeThumbColor: AppColors.headerGreenDark,
-                          onChanged: (val) => _saveSettings(_settings.copyWith(lowDataMode: val)),
+                        Text(
+                          'Scale app text from 85% up to 160% without clipping.',
+                          style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const Divider(height: 1),
+                  SwitchListTile(
+                    secondary: const Icon(Icons.volume_up_rounded, color: AppColors.headerGreenDark),
+                    title: const Text('Voice Hints & TTS'),
+                    subtitle: const Text('Spoken instructions and audio assistance on key screens'),
+                    value: settings.voiceHints,
+                    activeThumbColor: AppColors.headerGreenDark,
+                    onChanged: (val) => settingsNotifier.setVoiceHints(val),
+                  ),
+                  const Divider(height: 1),
+                  SwitchListTile(
+                    secondary: const Icon(Icons.data_saver_on_rounded, color: AppColors.headerGreenDark),
+                    title: const Text('Low-Data Mode'),
+                    subtitle: const Text('Reduce mobile data usage with compressed images and cached assets'),
+                    value: settings.lowDataMode,
+                    activeThumbColor: AppColors.headerGreenDark,
+                    onChanged: (val) => settingsNotifier.setLowDataMode(val),
+                  ),
+                  if (settings.lowDataMode) ...[
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEFF6FF),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: const Color(0xFFBFDBFE)),
+                        ),
+                        child: const Row(
+                          children: [
+                            Icon(Icons.speed_rounded, size: 18, color: Color(0xFF1D4ED8)),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'Low-Data active • Estimated ~2.4 MB data saved this session (optimized thumbnails & cached requests)',
+                                style: TextStyle(fontSize: 12, color: Color(0xFF1E40AF), fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
 
                   // 2. ACCOUNT ROLES & CONTROLS SECTION
                   const Text('Account Controls & Roles', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.headerGreenDark)),

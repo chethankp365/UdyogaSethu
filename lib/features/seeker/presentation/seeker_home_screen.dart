@@ -17,6 +17,8 @@ import 'package:udyogasethu/features/earnings/data/earnings_repository.dart';
 import 'package:udyogasethu/core/services/live_location_service.dart';
 import 'package:udyogasethu/features/safety/presentation/widgets/sos_confirmation_dialog.dart';
 import 'package:udyogasethu/features/notifications/presentation/widgets/notification_bell_badge.dart';
+import 'package:udyogasethu/core/widgets/simple_mode_action_dock.dart';
+import 'package:udyogasethu/features/account/presentation/settings_controller.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class SeekerHomeScreen extends ConsumerStatefulWidget {
@@ -593,6 +595,8 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> with Widget
       });
     });
 
+    final settings = ref.watch(userSettingsNotifierProvider);
+
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       body: RefreshIndicator(
@@ -617,6 +621,11 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> with Widget
                 summaryAsync,
                 hasGpsConsentAsync.value ?? false,
               ),
+
+              // Simple Mode Action Dock (6 essential large buttons)
+              if (settings.simpleMode) ...[
+                const SimpleModeActionDock(),
+              ],
 
               const SizedBox(height: 18),
 

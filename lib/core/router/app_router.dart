@@ -25,6 +25,8 @@ import 'package:udyogasethu/features/safety/presentation/safety_hub_screen.dart'
 import 'package:udyogasethu/features/safety/presentation/emergency_contacts_screen.dart';
 import 'package:udyogasethu/features/safety/presentation/job_protection_claim_screen.dart';
 import 'package:udyogasethu/features/notifications/presentation/notification_centre_screen.dart';
+import 'package:udyogasethu/features/wallet/presentation/credit_readiness_screen.dart';
+import 'package:udyogasethu/features/wellness/presentation/wellness_benefits_screen.dart';
 import 'package:udyogasethu/features/farmer/domain/farm_resource_model.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_home_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_listings_screen.dart';
@@ -875,6 +877,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           final id = state.pathParameters['id'];
           return LearningHubScreen(initialModuleId: id);
         },
+      ),
+      GoRoute(
+        path: AppRoutes.creditReadiness,
+        builder: (context, state) => const CreditReadinessScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.wellness,
+        builder: (context, state) => const WellnessBenefitsScreen(),
       ),
 
       // Debug Routes

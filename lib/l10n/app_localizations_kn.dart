@@ -2263,7 +2263,7 @@ class AppLocalizationsKn extends AppLocalizations {
   String get activeJobTitle => 'ಸಕ್ರಿಯ ಉದ್ಯೋಗ ಪ್ರಗತಿ';
 
   @override
-  String get actionAcceptJob => 'ಕೆಲಸ ಸ್ವೀಕರಿಸಿ';
+  String get actionAcceptJob => 'ಕೆಲಸ ಒಪ್ಪಿಕೊಳ್ಳಿ';
 
   @override
   String get actionWorkerArrived => 'ನಾನು ತಲುಪಿದ್ದೇನೆ';
@@ -4206,4 +4206,20 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get learningVerifiedCredential => 'ಅಡ್ಮಿನ್ ಪರಿಶೀಲಿಸಲಾಗಿದೆ';
+
+  @override
+  String get creditReadinessTitle => 'ಸಾಲ ಸಿದ್ಧತೆ ಮಾರ್ಗದರ್ಶನ';
+
+  @override
+  String get wellnessTitle => 'ಆರೋಗ್ಯ ಮತ್ತು ಕಲ್ಯಾಣ ಸೌಲಭ್ಯಗಳು';
+
+  @override
+  String get actionBook => 'ಬುಕ್ ಮಾಡಿ';
+
+  @override
+  String get actionPay => 'ಪಾವತಿಸಿ';
+
+  @override
+  String get disclaimerCreditGuidance =>
+      'ಇದು ಕೇವಲ ಮಾರ್ಗದರ್ಶನ ಮಾತ್ರ. ಇದು ಯಾವುದೇ ಸಾಲದ ಖಾತರಿ ನೀಡುವುದಿಲ್ಲ. ನಿಯಂತ್ರಿತ ಹಣಕಾಸು ಪಾಲುದಾರರೊಂದಿಗೆ ಭವಿಷ್ಯದ ಸಂಪರ್ಕಗಳಿಗೆ ನಿಮ್ಮ ಸಮ್ಮತಿ ಅಗತ್ಯವಿರುತ್ತದೆ.';
 }

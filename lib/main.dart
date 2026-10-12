@@ -11,6 +11,8 @@ import 'package:udyogasethu/core/theme/app_theme.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 import 'package:udyogasethu/core/notifications/notification_service.dart';
+import 'package:udyogasethu/core/widgets/offline_banner_wrapper.dart';
+import 'package:udyogasethu/features/account/presentation/settings_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -88,6 +90,7 @@ class _UdyogaSethuAppState extends ConsumerState<UdyogaSethuApp> {
 
     final router = ref.watch(appRouterProvider);
     final currentLocale = ref.watch(localeProvider);
+    final settings = ref.watch(userSettingsNotifierProvider);
 
     return MaterialApp.router(
       title: 'UdyogaSethu',
@@ -102,6 +105,16 @@ class _UdyogaSethuAppState extends ConsumerState<UdyogaSethuApp> {
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       routerConfig: router,
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            textScaler: TextScaler.linear(settings.textScale.clamp(0.85, 1.60)),
+          ),
+          child: OfflineBannerWrapper(
+            child: child ?? const SizedBox.shrink(),
+          ),
+        );
+      },
     );
   }
 }

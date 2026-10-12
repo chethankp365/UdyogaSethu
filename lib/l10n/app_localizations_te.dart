@@ -2289,7 +2289,7 @@ class AppLocalizationsTe extends AppLocalizations {
   String get actionPaymentDone => 'చెల్లింపు పూర్తయింది';
 
   @override
-  String get actionAskForHelp => 'సహాయం కోరండి';
+  String get actionAskForHelp => 'సహాయం అడగండి';
 
   @override
   String get actionDispute => 'వివాదాన్ని లేవనెత్తండి';
@@ -4196,4 +4196,20 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get learningVerifiedCredential => 'అడ్మిన్ ధృవీకరించబడింది';
+
+  @override
+  String get creditReadinessTitle => 'క్రెడిట్ సంసిద్ధత మార్గదర్శకత్వం';
+
+  @override
+  String get wellnessTitle => 'క్షేమం మరియు ప్రయోజనాలు';
+
+  @override
+  String get actionBook => 'బుక్ చేయండి';
+
+  @override
+  String get actionPay => 'చెల్లించండి';
+
+  @override
+  String get disclaimerCreditGuidance =>
+      'ఇది మార్గదర్శకత్వం మాత్రమే. ఇది ఏ రుణాన్ని హామీ ఇవ్వదు. నియంత్రిత ఆర్థిక భాగస్వాములతో భవిష్యత్ అనుసంధానాలకు మీ సమ్మతి అవసరం.';
 }

@@ -1273,6 +1273,48 @@
 - **Manual steps to apply**:
   - Run Supabase migration `supabase/migrations/0740_gamification_rewards_community_learning.sql` against the live database using `npx supabase db push` or SQL Editor.
 
+### Phase 8.5 & 8.6: Financial Inclusion, Wellness Benefits, Trust Circles, Simple Mode & Offline Support
+- **Status**: Completed (2026-10-12)
+- **Files created / updated**:
+  - `supabase/migrations/0750_wellness_benefits_trust_readiness.sql`:
+    - Tables: `welfare_schemes`, `worker_repeat_stats`.
+    - Server-authoritative RPCs: `get_worker_repeat_clients(p_worker_id UUID)`, `get_credit_readiness_metrics(p_user_id UUID)`.
+    - Seeded national welfare schemes: PMSBY, PMJJBY, Ayushman Bharat PM-JAY, e-Shram portal with eligibility criteria, premiums, and helpline contacts.
+  - Domain & Data Layers:
+    - `lib/features/wallet/domain/credit_readiness_profile.dart`: `CreditReadinessProfile`, `ReadinessPillar`, `CreditReadinessBand`, and offline fallback profile constructor.
+    - `lib/features/wallet/data/credit_readiness_repository.dart`: `CreditReadinessRepository` & `creditReadinessProfileProvider`.
+    - `lib/features/wellness/domain/wellness_models.dart`: Models for `WelfareSchemeItem`, `EmergencyHelplineItem`, and `SafetyGuidelineItem`.
+    - `lib/features/wellness/data/wellness_repository.dart`: `WellnessRepository` & Riverpod providers (`wellnessRepositoryProvider`, `welfareSchemesProvider`, `emergencyHelplinesProvider`, `safetyGuidelinesProvider`).
+    - `lib/features/trust/domain/repeat_client.dart`: `RepeatClientItem` with repeat job counts and hiring share.
+    - `lib/features/trust/data/trust_repository.dart`: Added `fetchRepeatClients` and `repeatClientsProvider`.
+    - `lib/core/services/offline_cache_service.dart`: `OfflineCacheService` caching sanitized summaries (`CachedJobSummary`, `CachedOrderSummary`, `CachedContactSummary`), `isOnlineProvider`, local queuing with deduplication, and strict fraud prevention throwing `BlockedOfflineActionException`.
+    - `lib/core/services/voice_hints_helper.dart`: TTS helper reading concise screen instructions in active Indic locale.
+    - `lib/features/account/presentation/settings_controller.dart`: `SettingsNotifier` managing `UserSettings` (reactive `textScale`, `simpleMode`, `voiceHints`, `lowDataMode`).
+  - Presentation & UI Screens:
+    - `lib/features/wallet/presentation/credit_readiness_screen.dart`: Exact mandatory disclaimer (*"This is guidance only. It does not guarantee any loan. Future links to regulated financial partners would need your consent."*), overall readiness gauge, 4 pillar breakdown (earnings stability, completion rate, escrow disputes history, KYC verification), stat pills with `Expanded` + `FittedBox`, and educational financial guidance footer.
+    - `lib/features/wellness/presentation/wellness_benefits_screen.dart`: Tabbed view for Welfare Schemes, Worksite Safety Guidelines, Helplines (112, 108, 181, 1078, 14434), and direct link to Platform Safety Hub.
+    - `lib/features/trust/presentation/favourites_screen.dart`: Saved favourites, repeat clients list with repeat job counts, and marketplace fairness banner (*"Trust Circles prioritize familiar connections for convenience without hiding other eligible workers in search."*). Layouts hardened with `Wrap` for zero overflow at 320dp width.
+    - `lib/core/widgets/simple_mode_action_dock.dart`: High-contrast, tactile 6-action dock (Accept Job, Start Work, Complete Job, Book Worker, Pay / Wallet, Ask for Help) with TTS screen voice hints and overflow-safe header.
+    - `lib/core/widgets/offline_banner_wrapper.dart`: Top banner when offline with last sync timestamp and a 4-second reconnecting indicator badge.
+    - `lib/main.dart`: `MaterialApp.router` builder applies `TextScaler.linear(settings.textScale)` and `OfflineBannerWrapper`.
+    - `lib/features/seeker/presentation/seeker_home_screen.dart`, `lib/features/provider/presentation/provider_home_screen.dart`, `lib/features/farmer/presentation/farmer_home_screen.dart`: Embedded conditional `SimpleModeActionDock` when Simple Mode is active.
+    - `lib/features/account/presentation/settings_screen.dart`: Text scale slider supporting up to 1.6× scaling, simple mode toggle, TTS voice hints toggle, low-data mode toggle, and honest estimated data savings banner (~65% reduction).
+    - `lib/features/wallet/presentation/wallet_screen.dart` & `lib/features/safety/presentation/safety_hub_screen.dart`: Added direct entry points to Credit Readiness and Wellness & Benefits.
+  - Routing & Navigation:
+    - `lib/core/router/routes.dart` & `lib/core/router/app_router.dart`: Added `/credit-readiness` and `/wellness`.
+  - Localization:
+    - `lib/l10n/app_en.arb`, `app_kn.arb`, `app_hi.arb`, `app_te.arb`, `app_ta.arb`: Added full localization keys across all 5 languages and regenerated localizations.
+  - Tests:
+    - `test/financial_wellness_accessibility_test.dart`: 18 comprehensive unit and widget tests covering Credit Readiness guidance disclaimer, pillars calculation, wellness schemes, repeat clients, fairness banner, simple mode 6 actions dock, text scaling up to 1.6×, low-data banner, offline cache service, blocked offline actions (`BlockedOfflineActionException`), and zero overflow matrix across 320–600dp and 5 locales.
+    - `test/screen_coverage_audit_test.dart`: Added route coverage for `creditReadiness` and `wellness` (4/4 tests passed).
+    - `test/trust_reviews_favourites_disputes_test.dart`: Updated and verified with repeat clients (9/9 tests passed).
+- **Verification**:
+  - `flutter analyze`: 0 issues found (clean).
+  - `tool/check_overflow.bat`: All 3 suites passed with 0 overflows across 320-600dp and text scale 1.0-2.0.
+  - Test suites: 31/31 Phase 8.5 & 8.6 related tests passed cleanly; 650+ total tests passing in full test suite.
+- **Manual steps to apply**:
+  - Run Supabase migration `supabase/migrations/0750_wellness_benefits_trust_readiness.sql` against the live database using `npx supabase db push` or SQL Editor.
+
 ## Known issues
 - **Profile & Auth Foreign Key Cascade vs D11 Retention**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`. The financial retention refactor will decouple `auth.users` deletion from audit records in an upcoming migration.
 - **Phase 6.3 - 6.5**: Farm equipment rental/labour hiring, buyer produce marketplace, and carts & checkout are upcoming phases (P6.7 & P6.8 completed).

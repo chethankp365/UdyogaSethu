@@ -7721,6 +7721,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Admin Verified'**
   String get learningVerifiedCredential;
+
+  /// No description provided for @creditReadinessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit Readiness Guidance'**
+  String get creditReadinessTitle;
+
+  /// No description provided for @wellnessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Wellness & Benefits'**
+  String get wellnessTitle;
+
+  /// No description provided for @actionBook.
+  ///
+  /// In en, this message translates to:
+  /// **'Book Worker'**
+  String get actionBook;
+
+  /// No description provided for @actionPay.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay / Wallet'**
+  String get actionPay;
+
+  /// No description provided for @disclaimerCreditGuidance.
+  ///
+  /// In en, this message translates to:
+  /// **'This is guidance only. It does not guarantee any loan. Future links to regulated financial partners would need your consent.'**
+  String get disclaimerCreditGuidance;
 }
 
 class _AppLocalizationsDelegate

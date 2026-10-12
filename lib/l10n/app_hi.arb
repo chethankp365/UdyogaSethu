@@ -1446,5 +1446,14 @@
   "learningUploadPendingNotice": "अपलोड किए गए प्रमाणपत्र सत्यापन से पहले व्यवस्थापक द्वारा जांचे जाएंगे।",
   "learningUploadSuccess": "प्रमाणपत्र व्यवस्थापक समीक्षा के लिए सबमिट किया गया!",
   "learningPendingReview": "व्यवस्थापक समीक्षा लंबित",
-  "learningVerifiedCredential": "व्यवस्थापक सत्यापित"
+  "learningVerifiedCredential": "व्यवस्थापक सत्यापित",
+  "creditReadinessTitle": "क्रेडिट तत्परता मार्गदर्शन",
+  "wellnessTitle": "कल्याण और लाभ",
+  "actionAcceptJob": "काम स्वीकारें",
+  "actionStartWork": "काम शुरू करें",
+  "actionCompleteJob": "काम पूरा करें",
+  "actionBook": "बुक करें",
+  "actionPay": "भुगतान करें",
+  "actionAskForHelp": "मदद मांगें",
+  "disclaimerCreditGuidance": "यह केवल मार्गदर्शन है। यह किसी भी ऋण की गारंटी नहीं देता है। विनियमित वित्तीय भागीदारों के साथ भविष्य के लिंक के लिए आपकी सहमति की आवश्यकता होगी।"
 }

@@ -167,27 +167,60 @@ class SafetyHubScreen extends ConsumerWidget {
   }
 
   Widget _buildQuickActions(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          child: _buildActionTile(
-            context,
-            icon: Icons.contact_emergency_outlined,
-            title: 'Emergency Contacts',
-            subtitle: 'Add up to 5',
-            color: const Color(0xFF2563EB),
-            onTap: () => context.push(AppRoutes.emergencyContacts),
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: _buildActionTile(
+                context,
+                icon: Icons.contact_emergency_outlined,
+                title: 'Emergency Contacts',
+                subtitle: 'Add up to 5',
+                color: const Color(0xFF2563EB),
+                onTap: () => context.push(AppRoutes.emergencyContacts),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: _buildActionTile(
+                context,
+                icon: Icons.assignment_turned_in_outlined,
+                title: 'Protection Claim',
+                subtitle: 'Apply for cover',
+                color: const Color(0xFF059669),
+                onTap: () => context.push(AppRoutes.jobProtectionClaim),
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: AppSpacing.sm),
-        Expanded(
-          child: _buildActionTile(
-            context,
-            icon: Icons.assignment_turned_in_outlined,
-            title: 'Protection Claim',
-            subtitle: 'Apply for cover',
-            color: const Color(0xFF059669),
-            onTap: () => context.push(AppRoutes.jobProtectionClaim),
+        const SizedBox(height: AppSpacing.sm),
+        InkWell(
+          onTap: () => context.push(AppRoutes.wellness),
+          borderRadius: BorderRadius.circular(14),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF0FDF4),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: const Color(0xFFBBF7D0)),
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.health_and_safety_rounded, color: AppColors.headerGreenDark, size: 20),
+                SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Wellness & Benefits Hub', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.headerGreenDark)),
+                      Text('Explore social welfare schemes, PMSBY, PM-JAY & safety protocols', style: TextStyle(fontSize: 11, color: AppColors.textMuted)),
+                    ],
+                  ),
+                ),
+                Icon(Icons.chevron_right_rounded, color: AppColors.headerGreenDark),
+              ],
+            ),
           ),
         ),
       ],

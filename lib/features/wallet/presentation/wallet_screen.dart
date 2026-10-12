@@ -97,6 +97,26 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                     _buildHeroCard(balance),
                     const SizedBox(height: 18),
                     SavingsPlannerCard(walletBalance: balance),
+                    const SizedBox(height: 14),
+                    Card(
+                      elevation: 1,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                      color: const Color(0xFFF0FDF4),
+                      child: ListTile(
+                        leading: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFDCFCE7),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(Icons.analytics_outlined, color: AppColors.headerGreenDark),
+                        ),
+                        title: const Text('Credit Readiness Guidance', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                        subtitle: const Text('View your footprint readiness & steps to build records', style: TextStyle(fontSize: 12, color: AppColors.textMuted)),
+                        trailing: const Icon(Icons.chevron_right_rounded, color: AppColors.headerGreenDark),
+                        onTap: () => context.push(AppRoutes.creditReadiness),
+                      ),
+                    ),
                   ],
                 ),
                 loading: () => const WalletSkeleton(),

@@ -22,6 +22,8 @@ import 'package:udyogasethu/features/provider/presentation/widgets/buyer_produce
 import 'package:udyogasethu/features/chat/data/chat_repository.dart';
 import 'package:udyogasethu/features/safety/presentation/widgets/sos_confirmation_dialog.dart';
 import 'package:udyogasethu/features/notifications/presentation/widgets/notification_bell_badge.dart';
+import 'package:udyogasethu/core/widgets/simple_mode_action_dock.dart';
+import 'package:udyogasethu/features/account/presentation/settings_controller.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 final providerHomeProfileProvider = FutureProvider<ProviderProfileDraft>((ref) async {
@@ -195,6 +197,11 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
             children: [
               // 1. CUSTOMER HUB TOP CARD (Green Header)
               _buildCustomerHubHeader(profileAsync.asData?.value, l10n),
+
+              // Simple Mode Action Dock (6 essential large buttons)
+              if (ref.watch(userSettingsNotifierProvider).simpleMode) ...[
+                const SimpleModeActionDock(),
+              ],
 
               // 2. MAIN CATEGORY TABS: Workers & Services, Farm Produce, Subscriptions
               _buildCategoryTabBar(l10n),
