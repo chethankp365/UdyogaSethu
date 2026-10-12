@@ -7241,6 +7241,486 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'🎙 Tap to Speak'**
   String get voiceTapToSpeak;
+
+  /// No description provided for @rewardsHubTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Rewards & Progression Hub'**
+  String get rewardsHubTitle;
+
+  /// No description provided for @rewardsLevelStarter.
+  ///
+  /// In en, this message translates to:
+  /// **'Starter'**
+  String get rewardsLevelStarter;
+
+  /// No description provided for @rewardsLevelReliable.
+  ///
+  /// In en, this message translates to:
+  /// **'Reliable'**
+  String get rewardsLevelReliable;
+
+  /// No description provided for @rewardsLevelTrustedPro.
+  ///
+  /// In en, this message translates to:
+  /// **'Trusted Pro'**
+  String get rewardsLevelTrustedPro;
+
+  /// No description provided for @rewardsLevelCommunityHero.
+  ///
+  /// In en, this message translates to:
+  /// **'Community Hero'**
+  String get rewardsLevelCommunityHero;
+
+  /// No description provided for @rewardsTotalXp.
+  ///
+  /// In en, this message translates to:
+  /// **'{xp} Total XP'**
+  String rewardsTotalXp(int xp);
+
+  /// No description provided for @rewardsAvailablePoints.
+  ///
+  /// In en, this message translates to:
+  /// **'{points} Available Points'**
+  String rewardsAvailablePoints(int points);
+
+  /// No description provided for @rewardsNextLevelIn.
+  ///
+  /// In en, this message translates to:
+  /// **'{points} XP to {level}'**
+  String rewardsNextLevelIn(int points, String level);
+
+  /// No description provided for @rewardsMaxLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum Level Reached!'**
+  String get rewardsMaxLevel;
+
+  /// No description provided for @rewardsLevelPerksTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Level Perks'**
+  String get rewardsLevelPerksTitle;
+
+  /// No description provided for @rewardsPerkCommission.
+  ///
+  /// In en, this message translates to:
+  /// **'Commission: {rate}% (Reduced)'**
+  String rewardsPerkCommission(String rate);
+
+  /// No description provided for @rewardsPerkSearchBoost.
+  ///
+  /// In en, this message translates to:
+  /// **'Search Boost: {boost}x Visibility'**
+  String rewardsPerkSearchBoost(String boost);
+
+  /// No description provided for @rewardsPerkPrioritySupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority Customer Support 24/7'**
+  String get rewardsPerkPrioritySupport;
+
+  /// No description provided for @rewardsPerkPremiumJobs.
+  ///
+  /// In en, this message translates to:
+  /// **'Access to High-Value Premium Bookings'**
+  String get rewardsPerkPremiumJobs;
+
+  /// No description provided for @rewardsStreaksTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Streaks'**
+  String get rewardsStreaksTitle;
+
+  /// No description provided for @rewardsStreakDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Days Active'**
+  String rewardsStreakDays(int count);
+
+  /// No description provided for @rewardsStreakJobs.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} On-Time Jobs'**
+  String rewardsStreakJobs(int count);
+
+  /// No description provided for @rewardsStreakRisk.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak at risk! Complete an action today.'**
+  String get rewardsStreakRisk;
+
+  /// No description provided for @rewardsBadgesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievement Badges'**
+  String get rewardsBadgesTitle;
+
+  /// No description provided for @rewardsBadgesEarned.
+  ///
+  /// In en, this message translates to:
+  /// **'{earned} of {total} Unlocked'**
+  String rewardsBadgesEarned(int earned, int total);
+
+  /// No description provided for @rewardsLockedBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Locked: {criteria}'**
+  String rewardsLockedBadge(String criteria);
+
+  /// No description provided for @rewardsReferralsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite & Earn'**
+  String get rewardsReferralsTitle;
+
+  /// No description provided for @rewardsReferralDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your referral code. Earn 100 XP when your friend completes their first verified job or order!'**
+  String get rewardsReferralDesc;
+
+  /// No description provided for @rewardsReferralCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Code: {code}'**
+  String rewardsReferralCode(String code);
+
+  /// No description provided for @rewardsReferralCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy Code'**
+  String get rewardsReferralCopy;
+
+  /// No description provided for @rewardsReferralCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Referral code copied to clipboard!'**
+  String get rewardsReferralCopied;
+
+  /// No description provided for @rewardsReferralSuccessful.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Successful Referrals'**
+  String rewardsReferralSuccessful(int count);
+
+  /// No description provided for @rewardsApplyReferral.
+  ///
+  /// In en, this message translates to:
+  /// **'Have a referral code?'**
+  String get rewardsApplyReferral;
+
+  /// No description provided for @rewardsApplyReferralPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Referrer\'s Code'**
+  String get rewardsApplyReferralPrompt;
+
+  /// No description provided for @rewardsApplyReferralSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Referral code applied successfully!'**
+  String get rewardsApplyReferralSuccess;
+
+  /// No description provided for @rewardsStoreTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'UdyogaSethu Rewards Store'**
+  String get rewardsStoreTitle;
+
+  /// No description provided for @rewardsStoreSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Redeem your hard-earned points for official merchandise and safety gear'**
+  String get rewardsStoreSubtitle;
+
+  /// No description provided for @rewardsStoreCost.
+  ///
+  /// In en, this message translates to:
+  /// **'{points} Points'**
+  String rewardsStoreCost(int points);
+
+  /// No description provided for @rewardsStoreStock.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} left in stock'**
+  String rewardsStoreStock(int count);
+
+  /// No description provided for @rewardsStoreOutOfStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of Stock'**
+  String get rewardsStoreOutOfStock;
+
+  /// No description provided for @rewardsStoreLockedLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Requires Level {level}'**
+  String rewardsStoreLockedLevel(int level);
+
+  /// No description provided for @rewardsStoreLockedBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Requires Badge'**
+  String get rewardsStoreLockedBadge;
+
+  /// No description provided for @rewardsStoreRedeemAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Redeem Now'**
+  String get rewardsStoreRedeemAction;
+
+  /// No description provided for @rewardsRedemptionDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Redemption'**
+  String get rewardsRedemptionDialogTitle;
+
+  /// No description provided for @rewardsShippingStreet.
+  ///
+  /// In en, this message translates to:
+  /// **'Street Address / Landmark'**
+  String get rewardsShippingStreet;
+
+  /// No description provided for @rewardsShippingPincode.
+  ///
+  /// In en, this message translates to:
+  /// **'Postal Pincode'**
+  String get rewardsShippingPincode;
+
+  /// No description provided for @rewardsShippingPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Phone'**
+  String get rewardsShippingPhone;
+
+  /// No description provided for @rewardsRedeemSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Redemption requested successfully!'**
+  String get rewardsRedeemSuccess;
+
+  /// No description provided for @rewardsRedemptionsHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Redemptions'**
+  String get rewardsRedemptionsHistoryTitle;
+
+  /// No description provided for @rewardsStatusRequested.
+  ///
+  /// In en, this message translates to:
+  /// **'Requested'**
+  String get rewardsStatusRequested;
+
+  /// No description provided for @rewardsStatusApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get rewardsStatusApproved;
+
+  /// No description provided for @rewardsStatusShipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipped'**
+  String get rewardsStatusShipped;
+
+  /// No description provided for @rewardsStatusDelivered.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered'**
+  String get rewardsStatusDelivered;
+
+  /// No description provided for @communityHubTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Community & Trust Wall'**
+  String get communityHubTitle;
+
+  /// No description provided for @communityLocalityTrustTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Locality Trust Index'**
+  String get communityLocalityTrustTitle;
+
+  /// No description provided for @communityTrustHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High Trust Locality'**
+  String get communityTrustHigh;
+
+  /// No description provided for @communityTrustMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium Trust Locality'**
+  String get communityTrustMedium;
+
+  /// No description provided for @communityTrustNeedsImprovement.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs Improvement'**
+  String get communityTrustNeedsImprovement;
+
+  /// No description provided for @communityTrustStats.
+  ///
+  /// In en, this message translates to:
+  /// **'{disputeFree}% dispute-free · {completed} jobs verified'**
+  String communityTrustStats(String disputeFree, int completed);
+
+  /// No description provided for @communityHeroSpotlights.
+  ///
+  /// In en, this message translates to:
+  /// **'Local Heroes & Success Stories'**
+  String get communityHeroSpotlights;
+
+  /// No description provided for @communityUpcomingEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming Training Camps & Events'**
+  String get communityUpcomingEvents;
+
+  /// No description provided for @communityRegisterEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Register Interest'**
+  String get communityRegisterEvent;
+
+  /// No description provided for @communityEventRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'Registered ✓'**
+  String get communityEventRegistered;
+
+  /// No description provided for @learningHubTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Skill & Learning Hub'**
+  String get learningHubTitle;
+
+  /// No description provided for @learningHubSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete 5-minute modules, earn micro-credentials, and level up your career'**
+  String get learningHubSubtitle;
+
+  /// No description provided for @learningEarnedCredentialsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Earned Micro-Credentials'**
+  String get learningEarnedCredentialsTitle;
+
+  /// No description provided for @learningModuleStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Module'**
+  String get learningModuleStart;
+
+  /// No description provided for @learningModuleReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Review Module'**
+  String get learningModuleReview;
+
+  /// No description provided for @learningModuleCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed ✓'**
+  String get learningModuleCompleted;
+
+  /// No description provided for @learningDurationMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} mins read'**
+  String learningDurationMinutes(int minutes);
+
+  /// No description provided for @learningTakeQuiz.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Assessment Quiz'**
+  String get learningTakeQuiz;
+
+  /// No description provided for @learningQuizTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Module Assessment'**
+  String get learningQuizTitle;
+
+  /// No description provided for @learningQuizPassMark.
+  ///
+  /// In en, this message translates to:
+  /// **'Score 80% or higher to earn credential and +40 XP'**
+  String get learningQuizPassMark;
+
+  /// No description provided for @learningQuizSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Answers'**
+  String get learningQuizSubmit;
+
+  /// No description provided for @learningQuizPassed.
+  ///
+  /// In en, this message translates to:
+  /// **'Congratulations! You passed with {score}%'**
+  String learningQuizPassed(int score);
+
+  /// No description provided for @learningQuizFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'You scored {score}%. 80% is needed to pass. Please review and try again.'**
+  String learningQuizFailed(int score);
+
+  /// No description provided for @learningUploadCertificateAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload External Certificate'**
+  String get learningUploadCertificateAction;
+
+  /// No description provided for @learningUploadTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit External Certificate'**
+  String get learningUploadTitle;
+
+  /// No description provided for @learningUploadDocTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Certificate Title (e.g. ITI Diploma, FSSAI)'**
+  String get learningUploadDocTitle;
+
+  /// No description provided for @learningUploadIssuingOrg.
+  ///
+  /// In en, this message translates to:
+  /// **'Issuing Organization / Institute'**
+  String get learningUploadIssuingOrg;
+
+  /// No description provided for @learningUploadFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Certificate File / Image Path'**
+  String get learningUploadFile;
+
+  /// No description provided for @learningUploadPendingNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploaded certificates will be reviewed by admin before verification.'**
+  String get learningUploadPendingNotice;
+
+  /// No description provided for @learningUploadSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Certificate submitted for admin review!'**
+  String get learningUploadSuccess;
+
+  /// No description provided for @learningPendingReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Admin Review'**
+  String get learningPendingReview;
+
+  /// No description provided for @learningVerifiedCredential.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Verified'**
+  String get learningVerifiedCredential;
 }
 
 class _AppLocalizationsDelegate

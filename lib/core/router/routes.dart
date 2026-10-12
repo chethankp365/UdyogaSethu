@@ -99,6 +99,12 @@ class AppRoutes {
   static const String farmerDeliverySlots = '/farmer/delivery-slots';
   static const String chatDetail = '/chat';
   static const String maskedCall = '/call/masked';
+  static const String rewards = '/rewards';
+  static const String rewardsStore = '/rewards/store';
+  static const String community = '/community';
+  static const String learning = '/learning';
+  static const String learningModule = '/learning/:id';
+  static String learningModuleWithId(String id) => '/learning/$id';
 
   // Debug Routes (gated under kDebugMode)
   static const String devGallery = '/dev/gallery';

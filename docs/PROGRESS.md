@@ -1241,10 +1241,43 @@
   - `tool/check_overflow.bat`: All 3 suites passed with 0 overflows across 320-600dp and text scale 1.0-2.0.
   - Tests: 53/53 Phase 8 tests passed cleanly.
 
+### Phase 8.3 & 8.4: XP, Levels, Streaks, Badges, Referrals, Rewards Store, Community Hub & Learning Hub
+- **Status**: Completed (2026-10-12)
+- **Files created / updated**:
+  - `supabase/migrations/0740_gamification_rewards_community_learning.sql`:
+    - Tables: `user_gamification`, `user_badges`, `user_streaks`, `referral_codes`, `reward_store_items`, `reward_redemptions`, `locality_trust_indices`, `community_posts`, `training_events`, `event_registrations`, `learning_modules`, `user_credentials`.
+    - Server-authoritative RPCs: `award_xp`, `get_user_gamification_profile`, `get_or_create_referral_code`, `apply_referral_code`, `redeem_reward_item` (with `SELECT ... FOR UPDATE` row locks), `register_for_training_event`, `submit_learning_quiz`, `upload_external_certificate`.
+    - SQL Triggers: `trg_award_xp_on_job_completion` on `job_assignments`.
+  - Domain & Data Layers:
+    - `lib/features/rewards/domain/gamification_models.dart`: Models for `UserGamificationProfile`, `UserLevel`, `BadgeItem`, `StreakItem`, `RewardStoreItem`, `RewardRedemption`.
+    - `lib/features/rewards/data/rewards_repository.dart`: `RewardsRepository` & `SupabaseRewardsRepository`, Riverpod providers (`rewardsRepositoryProvider`, `gamificationProfileProvider`, `rewardItemsProvider`, `rewardRedemptionsProvider`).
+    - `lib/features/community/domain/community_models.dart`: Models for `LocalityTrustIndex`, `CommunityPost`, `TrainingEvent`, `QuizQuestion`, `LearningModule`, `MicroCredential`.
+    - `lib/features/community/data/community_repository.dart`: `CommunityRepository` & `SupabaseCommunityRepository`, Riverpod providers (`communityRepositoryProvider`, `localityTrustProvider`, `communityPostsProvider`, `trainingEventsProvider`, `learningModulesProvider`, `userCredentialsProvider`).
+  - Presentation & UI Screens:
+    - `lib/features/rewards/presentation/rewards_hub_screen.dart`: Level progress card with XP bar, perk summary row (commission discount, search boost), active streaks with at-risk warning highlights, achievement badge matrix with criteria modal, and anti-fraud referral invite card with copy code button.
+    - `lib/features/rewards/presentation/rewards_store_screen.dart`: Merchandise catalog with points balance chip, state tags (Available, Level Locked, Badge Required, Out of Stock), stock counters, redemption confirmation dialog with shipping address capture, and redemptions history tab.
+    - `lib/features/community/presentation/community_hub_screen.dart`: Locality trust index badge (dispute-free % and completed jobs count), learning shortcut banner, upcoming training camps/workshops with instant RSVP registration, and community hero wall with category filter chips.
+    - `lib/features/community/presentation/learning_hub_screen.dart`: Micro-credentials horizontal ribbon (verified badges & pending review badges), 5-minute micro-course cards, interactive quiz modal with 80% passing grade, instant digital certificate issuance, and external certificate upload bottom sheet with explicit "Pending Admin Review" notice.
+  - Navigation & Integration:
+    - `lib/core/router/routes.dart` & `lib/core/router/app_router.dart`: Added `/rewards`, `/rewards/store`, `/community`, `/learning`, `/learning/:id`.
+    - `lib/features/profile/presentation/profile_screen.dart`: Embedded entry points for Rewards & Achievements and Community & Learning Hub.
+  - Localization:
+    - `lib/l10n/app_en.arb`, `app_kn.arb`, `app_hi.arb`, `app_te.arb`, `app_ta.arb`: Added full localization keys and regenerated via `flutter gen-l10n`.
+  - Tests:
+    - `test/gamification_rewards_test.dart`: 8 unit and widget tests covering level perks, badges, streak risks, rewards store state resolution, referral validation, atomic redemptions, and responsive layout.
+    - `test/community_learning_test.dart`: 6 unit and widget tests covering trust level mapping, quiz score calculation, micro-credential verification states, RSVP registration, and screen rendering.
+- **Verification**:
+  - `flutter analyze`: 0 issues found (clean).
+  - `tool/check_overflow.bat`: All 3 suites passed with 0 overflows across 320-600dp and text scale 1.0-2.0.
+  - Test suites: 14/14 P8.3 & P8.4 tests passed cleanly; 633 total tests passing in full test suite.
+- **Manual steps to apply**:
+  - Run Supabase migration `supabase/migrations/0740_gamification_rewards_community_learning.sql` against the live database using `npx supabase db push` or SQL Editor.
+
 ## Known issues
 - **Profile & Auth Foreign Key Cascade vs D11 Retention**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`. The financial retention refactor will decouple `auth.users` deletion from audit records in an upcoming migration.
 - **Phase 6.3 - 6.5**: Farm equipment rental/labour hiring, buyer produce marketplace, and carts & checkout are upcoming phases (P6.7 & P6.8 completed).
 - **Phase 9 (Admin Console)**: Admin console is built in a separate web/desktop project and is out of scope for this Flutter app.
+
 
 
 

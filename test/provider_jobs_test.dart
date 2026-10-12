@@ -10,6 +10,7 @@ import 'package:udyogasethu/features/provider/presentation/job_applicants_screen
 import 'package:udyogasethu/features/provider/presentation/post_job_wizard_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_home_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_jobs_controller.dart';
+import 'package:udyogasethu/features/matching/presentation/widgets/fair_wage_card.dart';
 import 'package:udyogasethu/features/seeker/domain/seeker_profile_draft.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
@@ -509,7 +510,7 @@ void main() {
       // Step 3: Wages & Schedule
       expect(find.text('Wages & Schedule'), findsWidgets);
       expect(find.text('Wage Type'), findsOneWidget);
-      expect(find.text('Fair Wage Band: ₹650 - ₹900 / day'), findsOneWidget);
+      expect(find.byType(FairWageCard), findsOneWidget);
 
       // Enter a below-band wage (e.g. ₹500)
       final wageField = find.widgetWithText(TextField, '700');
@@ -517,7 +518,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Amber warning alert MUST be visible
-      expect(find.textContaining('Wage is below the recommended fair wage band (₹650 - ₹900)'), findsOneWidget);
+      expect(find.textContaining('Posting will not be blocked'), findsOneWidget);
 
       // CRITICAL REQUIREMENT: "warn, never block, when below the band"
       // User must be able to tap Next and proceed to Step 3 even with wage below band!

@@ -3886,4 +3886,287 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get voiceTapToSpeak => '🎙 Tap to Speak';
+
+  @override
+  String get rewardsHubTitle => 'Rewards & Progression Hub';
+
+  @override
+  String get rewardsLevelStarter => 'Starter';
+
+  @override
+  String get rewardsLevelReliable => 'Reliable';
+
+  @override
+  String get rewardsLevelTrustedPro => 'Trusted Pro';
+
+  @override
+  String get rewardsLevelCommunityHero => 'Community Hero';
+
+  @override
+  String rewardsTotalXp(int xp) {
+    return '$xp Total XP';
+  }
+
+  @override
+  String rewardsAvailablePoints(int points) {
+    return '$points Available Points';
+  }
+
+  @override
+  String rewardsNextLevelIn(int points, String level) {
+    return '$points XP to $level';
+  }
+
+  @override
+  String get rewardsMaxLevel => 'Maximum Level Reached!';
+
+  @override
+  String get rewardsLevelPerksTitle => 'Active Level Perks';
+
+  @override
+  String rewardsPerkCommission(String rate) {
+    return 'Commission: $rate% (Reduced)';
+  }
+
+  @override
+  String rewardsPerkSearchBoost(String boost) {
+    return 'Search Boost: ${boost}x Visibility';
+  }
+
+  @override
+  String get rewardsPerkPrioritySupport => 'Priority Customer Support 24/7';
+
+  @override
+  String get rewardsPerkPremiumJobs => 'Access to High-Value Premium Bookings';
+
+  @override
+  String get rewardsStreaksTitle => 'Active Streaks';
+
+  @override
+  String rewardsStreakDays(int count) {
+    return '$count Days Active';
+  }
+
+  @override
+  String rewardsStreakJobs(int count) {
+    return '$count On-Time Jobs';
+  }
+
+  @override
+  String get rewardsStreakRisk => 'Streak at risk! Complete an action today.';
+
+  @override
+  String get rewardsBadgesTitle => 'Achievement Badges';
+
+  @override
+  String rewardsBadgesEarned(int earned, int total) {
+    return '$earned of $total Unlocked';
+  }
+
+  @override
+  String rewardsLockedBadge(String criteria) {
+    return 'Locked: $criteria';
+  }
+
+  @override
+  String get rewardsReferralsTitle => 'Invite & Earn';
+
+  @override
+  String get rewardsReferralDesc =>
+      'Share your referral code. Earn 100 XP when your friend completes their first verified job or order!';
+
+  @override
+  String rewardsReferralCode(String code) {
+    return 'Your Code: $code';
+  }
+
+  @override
+  String get rewardsReferralCopy => 'Copy Code';
+
+  @override
+  String get rewardsReferralCopied => 'Referral code copied to clipboard!';
+
+  @override
+  String rewardsReferralSuccessful(int count) {
+    return '$count Successful Referrals';
+  }
+
+  @override
+  String get rewardsApplyReferral => 'Have a referral code?';
+
+  @override
+  String get rewardsApplyReferralPrompt => 'Enter Referrer\'s Code';
+
+  @override
+  String get rewardsApplyReferralSuccess =>
+      'Referral code applied successfully!';
+
+  @override
+  String get rewardsStoreTitle => 'UdyogaSethu Rewards Store';
+
+  @override
+  String get rewardsStoreSubtitle =>
+      'Redeem your hard-earned points for official merchandise and safety gear';
+
+  @override
+  String rewardsStoreCost(int points) {
+    return '$points Points';
+  }
+
+  @override
+  String rewardsStoreStock(int count) {
+    return '$count left in stock';
+  }
+
+  @override
+  String get rewardsStoreOutOfStock => 'Out of Stock';
+
+  @override
+  String rewardsStoreLockedLevel(int level) {
+    return 'Requires Level $level';
+  }
+
+  @override
+  String get rewardsStoreLockedBadge => 'Requires Badge';
+
+  @override
+  String get rewardsStoreRedeemAction => 'Redeem Now';
+
+  @override
+  String get rewardsRedemptionDialogTitle => 'Confirm Redemption';
+
+  @override
+  String get rewardsShippingStreet => 'Street Address / Landmark';
+
+  @override
+  String get rewardsShippingPincode => 'Postal Pincode';
+
+  @override
+  String get rewardsShippingPhone => 'Contact Phone';
+
+  @override
+  String get rewardsRedeemSuccess => 'Redemption requested successfully!';
+
+  @override
+  String get rewardsRedemptionsHistoryTitle => 'Your Redemptions';
+
+  @override
+  String get rewardsStatusRequested => 'Requested';
+
+  @override
+  String get rewardsStatusApproved => 'Approved';
+
+  @override
+  String get rewardsStatusShipped => 'Shipped';
+
+  @override
+  String get rewardsStatusDelivered => 'Delivered';
+
+  @override
+  String get communityHubTitle => 'Community & Trust Wall';
+
+  @override
+  String get communityLocalityTrustTitle => 'Locality Trust Index';
+
+  @override
+  String get communityTrustHigh => 'High Trust Locality';
+
+  @override
+  String get communityTrustMedium => 'Medium Trust Locality';
+
+  @override
+  String get communityTrustNeedsImprovement => 'Needs Improvement';
+
+  @override
+  String communityTrustStats(String disputeFree, int completed) {
+    return '$disputeFree% dispute-free · $completed jobs verified';
+  }
+
+  @override
+  String get communityHeroSpotlights => 'Local Heroes & Success Stories';
+
+  @override
+  String get communityUpcomingEvents => 'Upcoming Training Camps & Events';
+
+  @override
+  String get communityRegisterEvent => 'Register Interest';
+
+  @override
+  String get communityEventRegistered => 'Registered ✓';
+
+  @override
+  String get learningHubTitle => 'Skill & Learning Hub';
+
+  @override
+  String get learningHubSubtitle =>
+      'Complete 5-minute modules, earn micro-credentials, and level up your career';
+
+  @override
+  String get learningEarnedCredentialsTitle => 'Earned Micro-Credentials';
+
+  @override
+  String get learningModuleStart => 'Start Module';
+
+  @override
+  String get learningModuleReview => 'Review Module';
+
+  @override
+  String get learningModuleCompleted => 'Completed ✓';
+
+  @override
+  String learningDurationMinutes(int minutes) {
+    return '$minutes mins read';
+  }
+
+  @override
+  String get learningTakeQuiz => 'Take Assessment Quiz';
+
+  @override
+  String get learningQuizTitle => 'Module Assessment';
+
+  @override
+  String get learningQuizPassMark =>
+      'Score 80% or higher to earn credential and +40 XP';
+
+  @override
+  String get learningQuizSubmit => 'Submit Answers';
+
+  @override
+  String learningQuizPassed(int score) {
+    return 'Congratulations! You passed with $score%';
+  }
+
+  @override
+  String learningQuizFailed(int score) {
+    return 'You scored $score%. 80% is needed to pass. Please review and try again.';
+  }
+
+  @override
+  String get learningUploadCertificateAction => 'Upload External Certificate';
+
+  @override
+  String get learningUploadTitle => 'Submit External Certificate';
+
+  @override
+  String get learningUploadDocTitle =>
+      'Certificate Title (e.g. ITI Diploma, FSSAI)';
+
+  @override
+  String get learningUploadIssuingOrg => 'Issuing Organization / Institute';
+
+  @override
+  String get learningUploadFile => 'Certificate File / Image Path';
+
+  @override
+  String get learningUploadPendingNotice =>
+      'Uploaded certificates will be reviewed by admin before verification.';
+
+  @override
+  String get learningUploadSuccess => 'Certificate submitted for admin review!';
+
+  @override
+  String get learningPendingReview => 'Pending Admin Review';
+
+  @override
+  String get learningVerifiedCredential => 'Admin Verified';
 }

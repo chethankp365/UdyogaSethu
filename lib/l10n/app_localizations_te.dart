@@ -3908,4 +3908,292 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get voiceTapToSpeak => '🎙 మాట్లాడటానికి నొక్కండి';
+
+  @override
+  String get rewardsHubTitle => 'రివార్డులు & పురోగతి హబ్';
+
+  @override
+  String get rewardsLevelStarter => 'స్టార్టర్';
+
+  @override
+  String get rewardsLevelReliable => 'నమ్మకమైన';
+
+  @override
+  String get rewardsLevelTrustedPro => 'ట్రస్టెడ్ ప్రో';
+
+  @override
+  String get rewardsLevelCommunityHero => 'కమ్యూనిటీ హీరో';
+
+  @override
+  String rewardsTotalXp(int xp) {
+    return '$xp మొత్తం XP';
+  }
+
+  @override
+  String rewardsAvailablePoints(int points) {
+    return '$points అందుబాటులో ఉన్న పాయింట్లు';
+  }
+
+  @override
+  String rewardsNextLevelIn(int points, String level) {
+    return '$level కి $points XP మిగిలి ఉంది';
+  }
+
+  @override
+  String get rewardsMaxLevel => 'గరిష్ట స్థాయి చేరుకున్నారు!';
+
+  @override
+  String get rewardsLevelPerksTitle => 'సక్రియ స్థాయి ప్రయోజనాలు';
+
+  @override
+  String rewardsPerkCommission(String rate) {
+    return 'కమిషన్: $rate% (తగ్గించబడింది)';
+  }
+
+  @override
+  String rewardsPerkSearchBoost(String boost) {
+    return 'శోధన బూస్ట్: ${boost}x విజిబిలిటీ';
+  }
+
+  @override
+  String get rewardsPerkPrioritySupport => 'ప్రాధాన్యత కస్టమర్ మద్దతు 24/7';
+
+  @override
+  String get rewardsPerkPremiumJobs => 'ప్రీమియం బుకింగ్‌లకు యాక్సెస్';
+
+  @override
+  String get rewardsStreaksTitle => 'సక్రియ స్ట్రీక్స్';
+
+  @override
+  String rewardsStreakDays(int count) {
+    return '$count సక్రియ రోజులు';
+  }
+
+  @override
+  String rewardsStreakJobs(int count) {
+    return '$count సమయానికి చేసిన పనులు';
+  }
+
+  @override
+  String get rewardsStreakRisk =>
+      'స్ట్రీక్ రిస్క్‌లో ఉంది! ఈరోజు ఒక పనిని పూర్తి చేయండి.';
+
+  @override
+  String get rewardsBadgesTitle => 'విజయాల బ్యాడ్జ్‌లు';
+
+  @override
+  String rewardsBadgesEarned(int earned, int total) {
+    return '$total లో $earned అన్‌లాక్ చేయబడ్డాయి';
+  }
+
+  @override
+  String rewardsLockedBadge(String criteria) {
+    return 'లాక్ చేయబడింది: $criteria';
+  }
+
+  @override
+  String get rewardsReferralsTitle => 'ఆహ్వానించండి & సంపాదించండి';
+
+  @override
+  String get rewardsReferralDesc =>
+      'మీ రిఫరల్ కోడ్‌ను పంచుకోండి. మీ స్నేహితుడు మొదటి పని పూర్తి చేసినప్పుడు 100 XP పొందండి!';
+
+  @override
+  String rewardsReferralCode(String code) {
+    return 'మీ కోడ్: $code';
+  }
+
+  @override
+  String get rewardsReferralCopy => 'కోడ్ కాపీ చేయండి';
+
+  @override
+  String get rewardsReferralCopied => 'రిఫరల్ కోడ్ కాపీ చేయబడింది!';
+
+  @override
+  String rewardsReferralSuccessful(int count) {
+    return '$count విజయవంతమైన రిఫరల్స్';
+  }
+
+  @override
+  String get rewardsApplyReferral => 'రిఫరల్ కోడ్ ఉందా?';
+
+  @override
+  String get rewardsApplyReferralPrompt => 'రిఫరర్ కోడ్‌ను నమోదు చేయండి';
+
+  @override
+  String get rewardsApplyReferralSuccess =>
+      'రిఫరల్ కోడ్ విజయవంతంగా వర్తింపజేయబడింది!';
+
+  @override
+  String get rewardsStoreTitle => 'ఉద్యోగసేతు రివార్డ్స్ స్టోర్';
+
+  @override
+  String get rewardsStoreSubtitle =>
+      'అధికారిక వస్తువులు మరియు భద్రతా గేర్ కోసం మీ పాయింట్లను రీడీమ్ చేయండి';
+
+  @override
+  String rewardsStoreCost(int points) {
+    return '$points పాయింట్లు';
+  }
+
+  @override
+  String rewardsStoreStock(int count) {
+    return '$count స్టాక్ మిగిలి ఉంది';
+  }
+
+  @override
+  String get rewardsStoreOutOfStock => 'స్టాక్ ముగిసింది';
+
+  @override
+  String rewardsStoreLockedLevel(int level) {
+    return 'లెవల్ $level అవసరం';
+  }
+
+  @override
+  String get rewardsStoreLockedBadge => 'బ్యాడ్జ్ అవసరం';
+
+  @override
+  String get rewardsStoreRedeemAction => 'ఇప్పుడే రీడీమ్ చేయండి';
+
+  @override
+  String get rewardsRedemptionDialogTitle => 'రివార్డ్ నిర్ధారణ';
+
+  @override
+  String get rewardsShippingStreet => 'చిరునామా / ల్యాండ్‌మార్క్';
+
+  @override
+  String get rewardsShippingPincode => 'పిన్‌కోడ్';
+
+  @override
+  String get rewardsShippingPhone => 'సంప్రదింపు ఫోన్';
+
+  @override
+  String get rewardsRedeemSuccess =>
+      'రివార్డ్ అభ్యర్థన విజయవంతంగా సమర్పించబడింది!';
+
+  @override
+  String get rewardsRedemptionsHistoryTitle => 'మీ రివార్డులు';
+
+  @override
+  String get rewardsStatusRequested => 'అభ్యర్థించబడింది';
+
+  @override
+  String get rewardsStatusApproved => 'ఆమోదించబడింది';
+
+  @override
+  String get rewardsStatusShipped => 'రవాణా చేయబడింది';
+
+  @override
+  String get rewardsStatusDelivered => 'డెలివరీ చేయబడింది';
+
+  @override
+  String get communityHubTitle => 'కమ్యూనిటీ & ట్రస్ట్ వాల్';
+
+  @override
+  String get communityLocalityTrustTitle => 'ప్రాంతీయ ట్రస్ట్ ఇండెక్స్';
+
+  @override
+  String get communityTrustHigh => 'అధిక నమ్మకమైన ప్రాంతం';
+
+  @override
+  String get communityTrustMedium => 'మధ్యస్థ నమ్మకమైన ప్రాంతం';
+
+  @override
+  String get communityTrustNeedsImprovement => 'మెరుగుదల అవసరం';
+
+  @override
+  String communityTrustStats(String disputeFree, int completed) {
+    return '$disputeFree% వివాద రహితం · $completed ధృవీకరించబడిన పనులు';
+  }
+
+  @override
+  String get communityHeroSpotlights => 'స్థానిక హీరోలు & విజయ గాథలు';
+
+  @override
+  String get communityUpcomingEvents => 'రాబోయే శిక్షణా శిబిరాలు & ఈవెంట్‌లు';
+
+  @override
+  String get communityRegisterEvent => 'ఆసక్తి నమోదు చేయండి';
+
+  @override
+  String get communityEventRegistered => 'నమోదైంది ✓';
+
+  @override
+  String get learningHubTitle => 'నైపుణ్యం & లెర్నింగ్ హబ్';
+
+  @override
+  String get learningHubSubtitle =>
+      '5 నిమిషాల మాడ్యూళ్లను పూర్తి చేయండి, మైక్రో-క్రెడెన్షియల్స్ పొందండి';
+
+  @override
+  String get learningEarnedCredentialsTitle =>
+      'సాధించిన మైక్రో-క్రెడెన్షియల్స్';
+
+  @override
+  String get learningModuleStart => 'మాడ్యూల్ ప్రారంభించండి';
+
+  @override
+  String get learningModuleReview => 'మాడ్యూల్ సమీక్షించండి';
+
+  @override
+  String get learningModuleCompleted => 'పూర్తయింది ✓';
+
+  @override
+  String learningDurationMinutes(int minutes) {
+    return '$minutes నిమిషాల చదువు';
+  }
+
+  @override
+  String get learningTakeQuiz => 'క్విజ్ తీసుకోండి';
+
+  @override
+  String get learningQuizTitle => 'మాడ్యూల్ మూల్యాంకనం';
+
+  @override
+  String get learningQuizPassMark =>
+      'క్రెడెన్షియల్ మరియు +40 XP పొందడానికి 80% లేదా అంతకంటే ఎక్కువ స్కోర్ చేయండి';
+
+  @override
+  String get learningQuizSubmit => 'సమాధానాలు సమర్పించండి';
+
+  @override
+  String learningQuizPassed(int score) {
+    return 'అభినందనలు! మీరు $score% తో ఉత్తీర్ణులయ్యారు';
+  }
+
+  @override
+  String learningQuizFailed(int score) {
+    return 'మీరు $score% స్కోర్ చేశారు. ఉత్తీర్ణతకు 80% అవసరం. దయచేసి మళ్లీ ప్రయత్నించండి.';
+  }
+
+  @override
+  String get learningUploadCertificateAction =>
+      'బాహ్య సర్టిఫికేట్ అప్‌లోడ్ చేయండి';
+
+  @override
+  String get learningUploadTitle => 'బాహ్య సర్టిఫికేట్ సమర్పించండి';
+
+  @override
+  String get learningUploadDocTitle =>
+      'సర్టిఫికేట్ శీర్షిక (ఉదా: ITI డిప్లొమా, FSSAI)';
+
+  @override
+  String get learningUploadIssuingOrg => 'జారీ చేసిన సంస్థ';
+
+  @override
+  String get learningUploadFile => 'సర్టిఫికేట్ ఫైల్ / ఇమేజ్ పాత్';
+
+  @override
+  String get learningUploadPendingNotice =>
+      'ధృవీకరణకు ముందు అప్‌లోడ్ చేసిన సర్టిఫికెట్లను అడ్మిన్ సమీక్షిస్తారు.';
+
+  @override
+  String get learningUploadSuccess =>
+      'సర్టిఫికేట్ అడ్మిన్ సమీక్ష కోసం సమర్పించబడింది!';
+
+  @override
+  String get learningPendingReview => 'అడ్మిన్ సమీక్ష పెండింగ్‌లో ఉంది';
+
+  @override
+  String get learningVerifiedCredential => 'అడ్మిన్ ధృవీకరించబడింది';
 }

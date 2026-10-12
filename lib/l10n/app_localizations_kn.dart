@@ -3918,4 +3918,292 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get voiceTapToSpeak => '🎙 ಮಾತನಾಡಲು ಒತ್ತಿ';
+
+  @override
+  String get rewardsHubTitle => 'ಬಹುಮಾನಗಳು ಮತ್ತು ಪ್ರಗತಿ ಕೇಂದ್ರ';
+
+  @override
+  String get rewardsLevelStarter => 'ಪ್ರಾರಂಭಿಕ';
+
+  @override
+  String get rewardsLevelReliable => 'ವಿಶ್ವಾಸಾರ್ಹ';
+
+  @override
+  String get rewardsLevelTrustedPro => 'ವಿಶ್ವಾಸಾರ್ಹ ಪ್ರೊ';
+
+  @override
+  String get rewardsLevelCommunityHero => 'ಸಮುದಾಯ ಹೀರೋ';
+
+  @override
+  String rewardsTotalXp(int xp) {
+    return '$xp ಒಟ್ಟು XP';
+  }
+
+  @override
+  String rewardsAvailablePoints(int points) {
+    return '$points ಲಭ್ಯವಿರುವ ಅಂಕಗಳು';
+  }
+
+  @override
+  String rewardsNextLevelIn(int points, String level) {
+    return '$level ತಲುಪಲು $points XP ಬಾಕಿ';
+  }
+
+  @override
+  String get rewardsMaxLevel => 'ಗರಿಷ್ಠ ಹಂತ ತಲುಪಲಾಗಿದೆ!';
+
+  @override
+  String get rewardsLevelPerksTitle => 'ಸಕ್ರಿಯ ಮಟ್ಟದ ಪ್ರಯೋಜನಗಳು';
+
+  @override
+  String rewardsPerkCommission(String rate) {
+    return 'ಕಮಿಷನ್: $rate% (ಕಡಿತಗೊಳಿಸಲಾಗಿದೆ)';
+  }
+
+  @override
+  String rewardsPerkSearchBoost(String boost) {
+    return 'ಹುಡುಕಾಟ ಬೂಸ್ಟ್: ${boost}x ಗೋಚರತೆ';
+  }
+
+  @override
+  String get rewardsPerkPrioritySupport => 'ಆದ್ಯತೆಯ ಗ್ರಾಹಕ ಬೆಂಬಲ 24/7';
+
+  @override
+  String get rewardsPerkPremiumJobs =>
+      'ಉನ್ನತ ಮೌಲ್ಯದ ಪ್ರೀಮಿಯಂ ಬುಕಿಂಗ್‌ಗಳಿಗೆ ಪ್ರವೇಶ';
+
+  @override
+  String get rewardsStreaksTitle => 'ಸಕ್ರಿಯ ಸ್ಟ್ರೀಕ್‌ಗಳು';
+
+  @override
+  String rewardsStreakDays(int count) {
+    return '$count ಸಕ್ರಿಯ ದಿನಗಳು';
+  }
+
+  @override
+  String rewardsStreakJobs(int count) {
+    return '$count ಸಮಯಪಾಲನೆಯ ಕೆಲಸಗಳು';
+  }
+
+  @override
+  String get rewardsStreakRisk =>
+      'ಸ್ಟ್ರೀಕ್ ಅಪಾಯದಲ್ಲಿದೆ! ಇಂದು ಒಂದು ಕೆಲಸ ಪೂರ್ಣಗೊಳಿಸಿ.';
+
+  @override
+  String get rewardsBadgesTitle => 'ಸಾಧನೆಯ ಬ್ಯಾಡ್ಜ್‌ಗಳು';
+
+  @override
+  String rewardsBadgesEarned(int earned, int total) {
+    return '$total ರಲ್ಲಿ $earned ಅನ್‌ಲಾಕ್ ಆಗಿದೆ';
+  }
+
+  @override
+  String rewardsLockedBadge(String criteria) {
+    return 'ಲಾಕ್ ಆಗಿದೆ: $criteria';
+  }
+
+  @override
+  String get rewardsReferralsTitle => 'ಆಹ್ವಾನಿಸಿ ಮತ್ತು ಗಳಿಸಿ';
+
+  @override
+  String get rewardsReferralDesc =>
+      'ನಿಮ್ಮ ರೆಫರಲ್ ಕೋಡ್ ಹಂಚಿಕೊಳ್ಳಿ. ನಿಮ್ಮ ಸ್ನೇಹಿತ ಮೊದಲ ಕೆಲಸ ಅಥವಾ ಆರ್ಡರ್ ಮುಗಿಸಿದಾಗ 100 XP ಗಳಿಸಿ!';
+
+  @override
+  String rewardsReferralCode(String code) {
+    return 'ನಿಮ್ಮ ಕೋಡ್: $code';
+  }
+
+  @override
+  String get rewardsReferralCopy => 'ಕೋಡ್ ನಕಲಿಸಿ';
+
+  @override
+  String get rewardsReferralCopied => 'ರೆಫರಲ್ ಕೋಡ್ ನಕಲಿಸಲಾಗಿದೆ!';
+
+  @override
+  String rewardsReferralSuccessful(int count) {
+    return '$count ಯಶಸ್ವಿ ರೆಫರಲ್‌ಗಳು';
+  }
+
+  @override
+  String get rewardsApplyReferral => 'ರೆಫರಲ್ ಕೋಡ್ ಇದೆಯೇ?';
+
+  @override
+  String get rewardsApplyReferralPrompt => 'ರೆಫರರ್ ಕೋಡ್ ನಮೂದಿಸಿ';
+
+  @override
+  String get rewardsApplyReferralSuccess =>
+      'ರೆಫರಲ್ ಕೋಡ್ ಯಶಸ್ವಿಯಾಗಿ ಅನ್ವಯಿಸಲಾಗಿದೆ!';
+
+  @override
+  String get rewardsStoreTitle => 'ಉದ್ಯೋಗಸೇತು ಬಹುಮಾನ ಮಳಿಗೆ';
+
+  @override
+  String get rewardsStoreSubtitle =>
+      'ಅಧಿಕೃತ ಉತ್ಪನ್ನಗಳು ಮತ್ತು ಸುರಕ್ಷತಾ ಗೇರ್‌ಗಳಿಗಾಗಿ ಅಂಕಗಳನ್ನು ಪಡೆದುಕೊಳ್ಳಿ';
+
+  @override
+  String rewardsStoreCost(int points) {
+    return '$points ಅಂಕಗಳು';
+  }
+
+  @override
+  String rewardsStoreStock(int count) {
+    return '$count ಸ್ಟಾಕ್ ಬಾಕಿ';
+  }
+
+  @override
+  String get rewardsStoreOutOfStock => 'ಸ್ಟಾಕ್ ಮುಗಿದಿದೆ';
+
+  @override
+  String rewardsStoreLockedLevel(int level) {
+    return 'ಹಂತ $level ಅಗತ್ಯವಿದೆ';
+  }
+
+  @override
+  String get rewardsStoreLockedBadge => 'ಬ್ಯಾಡ್ಜ್ ಅಗತ್ಯವಿದೆ';
+
+  @override
+  String get rewardsStoreRedeemAction => 'ಈಗಲೇ ಪಡೆದುಕೊಳ್ಳಿ';
+
+  @override
+  String get rewardsRedemptionDialogTitle => 'ಬಹುಮಾನ ದೃಢೀಕರಣ';
+
+  @override
+  String get rewardsShippingStreet => 'ವಿಳಾಸ / ಪ್ರಮುಖ ಸ್ಥಳ';
+
+  @override
+  String get rewardsShippingPincode => 'ಪಿನ್‌ಕೋಡ್';
+
+  @override
+  String get rewardsShippingPhone => 'ಸಂಪರ್ಕ ದೂರವಾಣಿ';
+
+  @override
+  String get rewardsRedeemSuccess => 'ಬಹುಮಾನದ ವಿನಂತಿ ಯಶಸ್ವಿಯಾಗಿದೆ!';
+
+  @override
+  String get rewardsRedemptionsHistoryTitle => 'ನಿಮ್ಮ ಬಹುಮಾನಗಳು';
+
+  @override
+  String get rewardsStatusRequested => 'ವಿನಂತಿಸಲಾಗಿದೆ';
+
+  @override
+  String get rewardsStatusApproved => 'ಅನುಮೋದಿಸಲಾಗಿದೆ';
+
+  @override
+  String get rewardsStatusShipped => 'ರವಾನಿಸಲಾಗಿದೆ';
+
+  @override
+  String get rewardsStatusDelivered => 'ತಲುಪಿಸಲಾಗಿದೆ';
+
+  @override
+  String get communityHubTitle => 'ಸಮುದಾಯ ಮತ್ತು ವಿಶ್ವಾಸ ಗೋಡೆ';
+
+  @override
+  String get communityLocalityTrustTitle => 'ಪ್ರದೇಶದ ವಿಶ್ವಾಸಾರ್ಹತೆ ಸೂಚ್ಯಂಕ';
+
+  @override
+  String get communityTrustHigh => 'ಉನ್ನತ ವಿಶ್ವಾಸಾರ್ಹ ಪ್ರದೇಶ';
+
+  @override
+  String get communityTrustMedium => 'ಮಧ್ಯಮ ವಿಶ್ವಾಸಾರ್ಹ ಪ್ರದೇಶ';
+
+  @override
+  String get communityTrustNeedsImprovement => 'ಸುಧಾರಣೆ ಅಗತ್ಯವಿದೆ';
+
+  @override
+  String communityTrustStats(String disputeFree, int completed) {
+    return '$disputeFree% ವಿವಾದ-ರಹಿತ · $completed ಪರಿಶೀಲಿಸಿದ ಕೆಲಸಗಳು';
+  }
+
+  @override
+  String get communityHeroSpotlights => 'ಸ್ಥಳೀಯ ಹೀರೋಗಳು ಮತ್ತು ಯಶೋಗಾಥೆಗಳು';
+
+  @override
+  String get communityUpcomingEvents =>
+      'ಮುಂಬರುವ ತರಬೇತಿ ಶಿಬಿರಗಳು ಮತ್ತು ಕಾರ್ಯಕ್ರಮಗಳು';
+
+  @override
+  String get communityRegisterEvent => 'ಆಸಕ್ತಿ ನೋಂದಾಯಿಸಿ';
+
+  @override
+  String get communityEventRegistered => 'ನೋಂದಾಯಿಸಲಾಗಿದೆ ✓';
+
+  @override
+  String get learningHubTitle => 'ಕೌಶಲ್ಯ ಮತ್ತು ಕಲಿಕಾ ಕೇಂದ್ರ';
+
+  @override
+  String get learningHubSubtitle =>
+      '5 ನಿಮಿಷಗಳ ಮಾಡ್ಯೂಲ್‌ಗಳನ್ನು ಪೂರ್ಣಗೊಳಿಸಿ, ಮೈಕ್ರೋ-ಪ್ರಮಾಣಪತ್ರಗಳನ್ನು ಪಡೆಯಿರಿ';
+
+  @override
+  String get learningEarnedCredentialsTitle => 'ಗಳಿಸಿದ ಮೈಕ್ರೋ-ಪ್ರಮಾಣಪತ್ರಗಳು';
+
+  @override
+  String get learningModuleStart => 'ಮಾಡ್ಯೂಲ್ ಪ್ರಾರಂಭಿಸಿ';
+
+  @override
+  String get learningModuleReview => 'ಮಾಡ್ಯೂಲ್ ಪರಿಶೀಲಿಸಿ';
+
+  @override
+  String get learningModuleCompleted => 'ಪೂರ್ಣಗೊಂಡಿದೆ ✓';
+
+  @override
+  String learningDurationMinutes(int minutes) {
+    return '$minutes ನಿಮಿಷಗಳ ಓದು';
+  }
+
+  @override
+  String get learningTakeQuiz => 'ಮೌಲ್ಯಮಾಪನ ರಸಪ್ರಶ್ನೆ ತೆಗೆದುಕೊಳ್ಳಿ';
+
+  @override
+  String get learningQuizTitle => 'ಮಾಡ್ಯೂಲ್ ಮೌಲ್ಯಮಾಪನ';
+
+  @override
+  String get learningQuizPassMark =>
+      'ಪ್ರಮಾಣಪತ್ರ ಮತ್ತು +40 XP ಪಡೆಯಲು 80% ಅಥವಾ ಹೆಚ್ಚು ಅಂಕ ಪಡೆಯಿರಿ';
+
+  @override
+  String get learningQuizSubmit => 'ಉತ್ತರಗಳನ್ನು ಸಲ್ಲಿಸಿ';
+
+  @override
+  String learningQuizPassed(int score) {
+    return 'ಅಭಿನಂದನೆಗಳು! ನೀವು $score% ನೊಂದಿಗೆ ಉತ್ತೀರ್ಣರಾಗಿದ್ದೀರಿ';
+  }
+
+  @override
+  String learningQuizFailed(int score) {
+    return 'ನೀವು $score% ಪಡೆದಿದ್ದೀರಿ. ಉತ್ತೀರ್ಣರಾಗಲು 80% ಅಗತ್ಯವಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ.';
+  }
+
+  @override
+  String get learningUploadCertificateAction =>
+      'ಬಾಹ್ಯ ಪ್ರಮಾಣಪತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ';
+
+  @override
+  String get learningUploadTitle => 'ಬಾಹ್ಯ ಪ್ರಮಾಣಪತ್ರ ಸಲ್ಲಿಸಿ';
+
+  @override
+  String get learningUploadDocTitle =>
+      'ಪ್ರಮಾಣಪತ್ರದ ಶೀರ್ಷಿಕೆ (ಉದಾ: ಐಟಿಐ ಡಿಪ್ಲೋಮಾ, ಎಫ್‌ಎಸ್‌ಎಸ್‌ಎಐ)';
+
+  @override
+  String get learningUploadIssuingOrg => 'ನೀಡಿದ ಸಂಸ್ಥೆ';
+
+  @override
+  String get learningUploadFile => 'ಪ್ರಮಾಣಪತ್ರ ಫೈಲ್ / ಚಿತ್ರದ ಹಾದಿ';
+
+  @override
+  String get learningUploadPendingNotice =>
+      'ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ ಪ್ರಮಾಣಪತ್ರಗಳನ್ನು ಪರಿಶೀಲನೆಗೆ ಮುನ್ನ ಅಡ್ಮಿನ್ ಪರಿಶೀಲಿಸುತ್ತಾರೆ.';
+
+  @override
+  String get learningUploadSuccess =>
+      'ಪ್ರಮಾಣಪತ್ರವನ್ನು ಅಡ್ಮಿನ್ ಪರಿಶೀಲನೆಗೆ ಸಲ್ಲಿಸಲಾಗಿದೆ!';
+
+  @override
+  String get learningPendingReview => 'ಅಡ್ಮಿನ್ ಪರಿಶೀಲನೆ ಬಾಕಿ';
+
+  @override
+  String get learningVerifiedCredential => 'ಅಡ್ಮಿನ್ ಪರಿಶೀಲಿಸಲಾಗಿದೆ';
 }

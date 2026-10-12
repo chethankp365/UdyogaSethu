@@ -1467,5 +1467,178 @@
   "voiceInstruction": "Tap mic and speak in Kannada, Hindi, Telugu, Tamil or English",
   "voiceProcessing": "Understanding command...",
   "voiceListeningStop": "🎙 Listening... (Tap to stop)",
-  "voiceTapToSpeak": "🎙 Tap to Speak"
+  "voiceTapToSpeak": "🎙 Tap to Speak",
+  "rewardsHubTitle": "Rewards & Progression Hub",
+  "rewardsLevelStarter": "Starter",
+  "rewardsLevelReliable": "Reliable",
+  "rewardsLevelTrustedPro": "Trusted Pro",
+  "rewardsLevelCommunityHero": "Community Hero",
+  "rewardsTotalXp": "{xp} Total XP",
+  "@rewardsTotalXp": {
+    "placeholders": {
+      "xp": { "type": "int" }
+    }
+  },
+  "rewardsAvailablePoints": "{points} Available Points",
+  "@rewardsAvailablePoints": {
+    "placeholders": {
+      "points": { "type": "int" }
+    }
+  },
+  "rewardsNextLevelIn": "{points} XP to {level}",
+  "@rewardsNextLevelIn": {
+    "placeholders": {
+      "points": { "type": "int" },
+      "level": { "type": "String" }
+    }
+  },
+  "rewardsMaxLevel": "Maximum Level Reached!",
+  "rewardsLevelPerksTitle": "Active Level Perks",
+  "rewardsPerkCommission": "Commission: {rate}% (Reduced)",
+  "@rewardsPerkCommission": {
+    "placeholders": {
+      "rate": { "type": "String" }
+    }
+  },
+  "rewardsPerkSearchBoost": "Search Boost: {boost}x Visibility",
+  "@rewardsPerkSearchBoost": {
+    "placeholders": {
+      "boost": { "type": "String" }
+    }
+  },
+  "rewardsPerkPrioritySupport": "Priority Customer Support 24/7",
+  "rewardsPerkPremiumJobs": "Access to High-Value Premium Bookings",
+  "rewardsStreaksTitle": "Active Streaks",
+  "rewardsStreakDays": "{count} Days Active",
+  "@rewardsStreakDays": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "rewardsStreakJobs": "{count} On-Time Jobs",
+  "@rewardsStreakJobs": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "rewardsStreakRisk": "Streak at risk! Complete an action today.",
+  "rewardsBadgesTitle": "Achievement Badges",
+  "rewardsBadgesEarned": "{earned} of {total} Unlocked",
+  "@rewardsBadgesEarned": {
+    "placeholders": {
+      "earned": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "rewardsLockedBadge": "Locked: {criteria}",
+  "@rewardsLockedBadge": {
+    "placeholders": {
+      "criteria": { "type": "String" }
+    }
+  },
+  "rewardsReferralsTitle": "Invite & Earn",
+  "rewardsReferralDesc": "Share your referral code. Earn 100 XP when your friend completes their first verified job or order!",
+  "rewardsReferralCode": "Your Code: {code}",
+  "@rewardsReferralCode": {
+    "placeholders": {
+      "code": { "type": "String" }
+    }
+  },
+  "rewardsReferralCopy": "Copy Code",
+  "rewardsReferralCopied": "Referral code copied to clipboard!",
+  "rewardsReferralSuccessful": "{count} Successful Referrals",
+  "@rewardsReferralSuccessful": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "rewardsApplyReferral": "Have a referral code?",
+  "rewardsApplyReferralPrompt": "Enter Referrer's Code",
+  "rewardsApplyReferralSuccess": "Referral code applied successfully!",
+  "rewardsStoreTitle": "UdyogaSethu Rewards Store",
+  "rewardsStoreSubtitle": "Redeem your hard-earned points for official merchandise and safety gear",
+  "rewardsStoreCost": "{points} Points",
+  "@rewardsStoreCost": {
+    "placeholders": {
+      "points": { "type": "int" }
+    }
+  },
+  "rewardsStoreStock": "{count} left in stock",
+  "@rewardsStoreStock": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "rewardsStoreOutOfStock": "Out of Stock",
+  "rewardsStoreLockedLevel": "Requires Level {level}",
+  "@rewardsStoreLockedLevel": {
+    "placeholders": {
+      "level": { "type": "int" }
+    }
+  },
+  "rewardsStoreLockedBadge": "Requires Badge",
+  "rewardsStoreRedeemAction": "Redeem Now",
+  "rewardsRedemptionDialogTitle": "Confirm Redemption",
+  "rewardsShippingStreet": "Street Address / Landmark",
+  "rewardsShippingPincode": "Postal Pincode",
+  "rewardsShippingPhone": "Contact Phone",
+  "rewardsRedeemSuccess": "Redemption requested successfully!",
+  "rewardsRedemptionsHistoryTitle": "Your Redemptions",
+  "rewardsStatusRequested": "Requested",
+  "rewardsStatusApproved": "Approved",
+  "rewardsStatusShipped": "Shipped",
+  "rewardsStatusDelivered": "Delivered",
+  "communityHubTitle": "Community & Trust Wall",
+  "communityLocalityTrustTitle": "Locality Trust Index",
+  "communityTrustHigh": "High Trust Locality",
+  "communityTrustMedium": "Medium Trust Locality",
+  "communityTrustNeedsImprovement": "Needs Improvement",
+  "communityTrustStats": "{disputeFree}% dispute-free · {completed} jobs verified",
+  "@communityTrustStats": {
+    "placeholders": {
+      "disputeFree": { "type": "String" },
+      "completed": { "type": "int" }
+    }
+  },
+  "communityHeroSpotlights": "Local Heroes & Success Stories",
+  "communityUpcomingEvents": "Upcoming Training Camps & Events",
+  "communityRegisterEvent": "Register Interest",
+  "communityEventRegistered": "Registered ✓",
+  "learningHubTitle": "Skill & Learning Hub",
+  "learningHubSubtitle": "Complete 5-minute modules, earn micro-credentials, and level up your career",
+  "learningEarnedCredentialsTitle": "Earned Micro-Credentials",
+  "learningModuleStart": "Start Module",
+  "learningModuleReview": "Review Module",
+  "learningModuleCompleted": "Completed ✓",
+  "learningDurationMinutes": "{minutes} mins read",
+  "@learningDurationMinutes": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "learningTakeQuiz": "Take Assessment Quiz",
+  "learningQuizTitle": "Module Assessment",
+  "learningQuizPassMark": "Score 80% or higher to earn credential and +40 XP",
+  "learningQuizSubmit": "Submit Answers",
+  "learningQuizPassed": "Congratulations! You passed with {score}%",
+  "@learningQuizPassed": {
+    "placeholders": {
+      "score": { "type": "int" }
+    }
+  },
+  "learningQuizFailed": "You scored {score}%. 80% is needed to pass. Please review and try again.",
+  "@learningQuizFailed": {
+    "placeholders": {
+      "score": { "type": "int" }
+    }
+  },
+  "learningUploadCertificateAction": "Upload External Certificate",
+  "learningUploadTitle": "Submit External Certificate",
+  "learningUploadDocTitle": "Certificate Title (e.g. ITI Diploma, FSSAI)",
+  "learningUploadIssuingOrg": "Issuing Organization / Institute",
+  "learningUploadFile": "Certificate File / Image Path",
+  "learningUploadPendingNotice": "Uploaded certificates will be reviewed by admin before verification.",
+  "learningUploadSuccess": "Certificate submitted for admin review!",
+  "learningPendingReview": "Pending Admin Review",
+  "learningVerifiedCredential": "Admin Verified"
 }

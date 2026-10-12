@@ -63,6 +63,10 @@ import 'package:udyogasethu/features/payments/presentation/payment_status_screen
 import 'package:udyogasethu/features/verification/presentation/face_check_screen.dart';
 import 'package:udyogasethu/features/marketplace/domain/produce_marketplace_item.dart';
 import 'package:udyogasethu/features/marketplace/domain/produce_order.dart';
+import 'package:udyogasethu/features/rewards/presentation/rewards_hub_screen.dart';
+import 'package:udyogasethu/features/rewards/presentation/rewards_store_screen.dart';
+import 'package:udyogasethu/features/community/presentation/community_hub_screen.dart';
+import 'package:udyogasethu/features/community/presentation/learning_hub_screen.dart';
 import 'package:udyogasethu/features/marketplace/presentation/produce_detail_screen.dart';
 import 'package:udyogasethu/features/marketplace/presentation/cart_screen.dart';
 import 'package:udyogasethu/features/marketplace/presentation/order_checkout_wizard.dart';
@@ -847,6 +851,29 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             bookingCode: extra['bookingCode'] as String? ?? 'CALL-ACTIVE',
             assignmentId: extra['assignmentId'] as String?,
           );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.rewards,
+        builder: (context, state) => const RewardsHubScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.rewardsStore,
+        builder: (context, state) => const RewardsStoreScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.community,
+        builder: (context, state) => const CommunityHubScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.learning,
+        builder: (context, state) => const LearningHubScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.learningModule,
+        builder: (context, state) {
+          final id = state.pathParameters['id'];
+          return LearningHubScreen(initialModuleId: id);
         },
       ),
 
