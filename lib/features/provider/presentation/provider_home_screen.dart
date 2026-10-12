@@ -8,6 +8,7 @@ import 'package:udyogasethu/core/l10n/locale_controller.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/services/job_thumbnail_service.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
+import 'package:udyogasethu/core/theme/app_spacing.dart';
 import 'package:udyogasethu/core/widgets/user_avatar.dart';
 import 'package:udyogasethu/features/provider/domain/nearby_worker.dart';
 import 'package:udyogasethu/features/provider/domain/provider_active_booking.dart';
@@ -16,6 +17,7 @@ import 'package:udyogasethu/features/provider/domain/provider_profile_draft.dart
 import 'package:udyogasethu/features/provider/presentation/provider_jobs_controller.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_wizard_controller.dart';
 import 'package:udyogasethu/features/provider/presentation/worker_search_controller.dart';
+import 'package:udyogasethu/features/marketplace/presentation/subscriptions_hub_tab.dart';
 import 'package:udyogasethu/features/provider/presentation/widgets/buyer_produce_tab.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
@@ -199,7 +201,7 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
                       child: BuyerProduceTab(),
                     );
                   } else if (hubIndex == 2) {
-                    return _buildSubscriptionsPlaceholder(l10n);
+                    return const SubscriptionsHubTab();
                   }
 
                   // Default: Workers & Services Tab
@@ -241,7 +243,7 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
                         // MY POSTED JOBS (Tabs: Open, Filled, Completed)
                         _buildMyJobsSection(openJobs, filledJobs, completedJobs, jobsAsync, l10n),
 
-                        const SizedBox(height: 80), // Padding for FAB
+                        AppSpacing.fabBottomSpacer, // Padding for FAB
                       ],
                     ),
                   );
@@ -272,8 +274,11 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 8,
+            runSpacing: 8,
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -282,6 +287,7 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(width: 8, height: 8, decoration: const BoxDecoration(color: Colors.lightGreenAccent, shape: BoxShape.circle)),
                     const SizedBox(width: 6),
@@ -299,6 +305,7 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     const Icon(Icons.verified_rounded, size: 14, color: Colors.lightGreenAccent),
                     const SizedBox(width: 4),
@@ -353,104 +360,6 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
   }
 
 
-  Widget _buildSubscriptionsPlaceholder(AppLocalizations l10n) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        children: [
-          // Recurring Services Card (Domestic Help, Cleaners, Cooks)
-          Card(
-            elevation: 2,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: AppColors.paleMint,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Icon(Icons.repeat_rounded, color: AppColors.headerGreenDark, size: 28),
-                      ),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              l10n.bookingRecurringOption,
-                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              l10n.bookingRecurringToggle,
-                              style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton.icon(
-                    onPressed: () => context.push(AppRoutes.recurringBookings),
-                    icon: const Icon(Icons.calendar_month_rounded, size: 18),
-                    label: Text(l10n.recurringManageTitle),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.headerGreenDark,
-                      foregroundColor: Colors.white,
-                      minimumSize: const Size.fromHeight(44),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Card(
-            elevation: 2,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  const Icon(Icons.local_shipping_rounded, size: 48, color: AppColors.amberOrange),
-                  const SizedBox(height: 12),
-                  Text(
-                    l10n.hubSubscriptionsComingSoon,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    l10n.hubSubscriptionsComingSoonDesc,
-                    style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 14),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.amber.shade50,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Text('Recurring Farm Baskets open in Phase 6', style: TextStyle(color: AppColors.amberOrange, fontWeight: FontWeight.bold, fontSize: 12)),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildQuickActions(BuildContext context, AppLocalizations l10n) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -473,9 +382,7 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
           label: l10n.hubActionMilkBasket,
           color: AppColors.amberOrange,
           onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Farm Fresh Milk & Vegetable Basket Subscriptions (Phase 6)')),
-            );
+            _hubTabController.animateTo(2);
           },
         ),
         _buildActionIcon(
@@ -607,9 +514,12 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
                     color: AppColors.paleMint,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Text(
-                    l10n.hubConfirmedBooking(booking.bookingCode),
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: AppColors.headerGreenDark),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      l10n.hubConfirmedBooking(booking.bookingCode),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: AppColors.headerGreenDark),
+                    ),
                   ),
                 ),
                 Text(
@@ -659,9 +569,15 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
                   ),
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  '• ${booking.formattedEscrowWage}',
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.headerGreenDark),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 90),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      '• ${booking.formattedEscrowWage}',
+                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.headerGreenDark),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -672,29 +588,41 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
             Row(
               children: [
                 Expanded(
-                  child: OutlinedButton.icon(
+                  child: OutlinedButton(
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.red.shade700,
                       side: BorderSide(color: Colors.red.shade400),
-                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
-                    icon: const Icon(Icons.warning_amber_rounded, size: 16),
-                    label: Text(l10n.hubWorkerNotArrived, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                     onPressed: () => _showNoShowHelpModal(context, l10n),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.warning_amber_rounded, size: 16),
+                        const SizedBox(width: 4),
+                        Flexible(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              l10n.hubWorkerNotArrived,
+                              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: ElevatedButton.icon(
+                  child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.headerGreenDark,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
-                    icon: const Icon(Icons.chat_bubble_outline_rounded, size: 16),
-                    label: Text(l10n.hubProtectedChat, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                     onPressed: () {
                       showDialog(
                         context: context,
@@ -705,6 +633,22 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
                         ),
                       );
                     },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.chat_bubble_outline_rounded, size: 16),
+                        const SizedBox(width: 4),
+                        Flexible(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              l10n.hubProtectedChat,
+                              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -811,34 +755,50 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
                         Text(w.headline, style: const TextStyle(fontSize: 12, color: AppColors.textMuted), maxLines: 1, overflow: TextOverflow.ellipsis),
                         const SizedBox(height: 2),
                         Wrap(
-                          spacing: 8,
+                          spacing: 6,
+                          runSpacing: 2,
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.star_rounded, size: 14, color: AppColors.amberOrange),
-                                const SizedBox(width: 2),
-                                Text('${w.ratingAvg.toStringAsFixed(1)} • ${w.formattedDistance}', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
-                              ],
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.star_rounded, size: 14, color: AppColors.amberOrange),
+                                  const SizedBox(width: 2),
+                                  Text('${w.ratingAvg.toStringAsFixed(1)} • ${w.formattedDistance}', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
+                                ],
+                              ),
                             ),
-                            Text(w.formattedRate, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.headerGreenDark)),
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(w.formattedRate, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.headerGreenDark)),
+                            ),
                           ],
                         ),
                       ],
                     ),
-                    trailing: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.headerGreenDark,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    trailing: SizedBox(
+                      width: 90,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.headerGreenDark,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        ),
+                        onPressed: () {
+                          ref.read(recentlyViewedWorkersProvider.notifier).addWorker(w);
+                          context.push('/provider/workers/${w.userId}');
+                        },
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            l10n.hubBookWorker,
+                            style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                          ),
+                        ),
                       ),
-                      onPressed: () {
-                        ref.read(recentlyViewedWorkersProvider.notifier).addWorker(w);
-                        context.push('/provider/workers/${w.userId}');
-                      },
-                      child: Text(l10n.hubBookWorker, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                     ),
                     onTap: () {
                       ref.read(recentlyViewedWorkersProvider.notifier).addWorker(w);
@@ -888,6 +848,8 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
           ),
           child: TabBar(
             controller: _myJobsTabController,
+            isScrollable: true,
+            tabAlignment: TabAlignment.start,
             indicatorColor: AppColors.headerGreenDark,
             indicatorWeight: 3,
             labelColor: AppColors.headerGreenDark,
@@ -1000,6 +962,8 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
                       Text(
                         orgOrName,
                         style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 2),
                       Row(
@@ -1017,9 +981,13 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
                           ),
                           if (draft.languages.isNotEmpty) ...[
                             const SizedBox(width: 6),
-                            Text(
-                              draft.languages.map((l) => l.toUpperCase()).join(', '),
-                              style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
+                            Flexible(
+                              child: Text(
+                                draft.languages.map((l) => l.toUpperCase()).join(', '),
+                                style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ],
                         ],
@@ -1260,6 +1228,79 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
               ],
             ),
 
+
+            const SizedBox(height: 8),
+
+            // Target Audience Chips
+            if (job.suitableFor.isEmpty)
+              InkWell(
+                onTap: () => context.push('/provider/jobs/${job.id}/edit'),
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.red.shade300),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.warning_amber_rounded, size: 14, color: Colors.red.shade700),
+                      const SizedBox(width: 6),
+                      Text(
+                        'Choose who can see this job',
+                        style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.red.shade700),
+                      ),
+                      const SizedBox(width: 4),
+                      Icon(Icons.edit, size: 12, color: Colors.red.shade700),
+                    ],
+                  ),
+                ),
+              )
+            else
+              Wrap(
+                spacing: 6,
+                runSpacing: 4,
+                children: job.suitableFor.map((aud) {
+                  Color chipColor = AppColors.headerGreenDark;
+                  IconData chipIcon = Icons.handyman_rounded;
+                  String label = aud;
+                  if (aud == 'student') {
+                    chipColor = Colors.blue.shade700;
+                    chipIcon = Icons.school_rounded;
+                    label = 'Student';
+                  } else if (aud == 'part_time') {
+                    chipColor = AppColors.amberOrange;
+                    chipIcon = Icons.schedule_rounded;
+                    label = 'Part-time';
+                  } else if (aud == 'informal') {
+                    chipColor = AppColors.headerGreenDark;
+                    chipIcon = Icons.handyman_rounded;
+                    label = 'Informal';
+                  }
+
+                  return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: chipColor.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: chipColor.withValues(alpha: 0.3)),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(chipIcon, size: 12, color: chipColor),
+                        const SizedBox(width: 4),
+                        Text(
+                          label,
+                          style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.bold, color: chipColor),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
 
             const SizedBox(height: 12),
 

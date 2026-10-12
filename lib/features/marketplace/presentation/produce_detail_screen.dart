@@ -10,6 +10,7 @@ import 'package:udyogasethu/features/marketplace/data/produce_marketplace_reposi
 import 'package:udyogasethu/features/marketplace/domain/lot_traceability_data.dart';
 import 'package:udyogasethu/features/marketplace/domain/produce_marketplace_item.dart';
 import 'package:udyogasethu/features/marketplace/presentation/widgets/farm_traceability_modal.dart';
+import 'package:udyogasethu/core/widgets/app_thumbnail.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class ProduceDetailScreen extends ConsumerStatefulWidget {
@@ -234,13 +235,17 @@ class _ProduceDetailScreenState extends ConsumerState<ProduceDetailScreen> {
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: const Color(0xFFE2E8F0)),
                     ),
+                    clipBehavior: Clip.antiAlias,
                     child: Stack(
                       children: [
-                        Center(
-                          child: Icon(
-                            item.categoryIcon,
-                            size: 80,
-                            color: const Color(0xFF00875A).withValues(alpha: 0.6),
+                        Positioned.fill(
+                          child: ProduceThumbnail.fromMarketplaceItem(
+                            item,
+                            size: ThumbnailSize.header,
+                            width: double.infinity,
+                            height: 200,
+                            borderRadius: BorderRadius.circular(20),
+                            showTitle: true,
                           ),
                         ),
                         // Lot Badge

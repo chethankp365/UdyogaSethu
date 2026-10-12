@@ -5,7 +5,9 @@ import 'package:intl/intl.dart';
 
 import '../../../core/router/routes.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_spacing.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../core/widgets/app_thumbnail.dart';
 import '../data/orders_repository.dart';
 import '../domain/produce_order.dart';
 import 'widgets/rate_produce_order_dialog.dart';
@@ -102,7 +104,7 @@ class _CustomerOrdersScreenState extends ConsumerState<CustomerOrdersScreen> {
                 }
 
                 return ListView.builder(
-                  padding: const EdgeInsets.all(16),
+                  padding: AppSpacing.fabListPadding,
                   itemCount: filtered.length,
                   itemBuilder: (ctx, idx) {
                     final order = filtered[idx];
@@ -158,14 +160,19 @@ class _CustomerOrdersScreenState extends ConsumerState<CustomerOrdersScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  order.orderCode,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF0F172A),
+                Expanded(
+                  child: Text(
+                    order.orderCode,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF0F172A),
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
+                const SizedBox(width: 8),
                 _buildStatusBadge(order.status),
               ],
             ),
@@ -179,8 +186,15 @@ class _CustomerOrdersScreenState extends ConsumerState<CustomerOrdersScreen> {
             // Middle row: Farmer & Total
             Row(
               children: [
-                const Icon(Icons.agriculture, color: Color(0xFF0D6548), size: 20),
-                const SizedBox(width: 8),
+                ProduceThumbnail(
+                  name: order.farmerName,
+                  size: ThumbnailSize.small,
+                  width: 44,
+                  height: 44,
+                  borderRadius: BorderRadius.circular(10),
+                  showTitle: false,
+                ),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,20 +206,31 @@ class _CustomerOrdersScreenState extends ConsumerState<CustomerOrdersScreen> {
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF0F172A),
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         '${order.itemsCount} produce items • ${order.fulfilment == 'pickup' ? 'Farm Pickup' : 'Delivery'}',
                         style: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
                 ),
-                Text(
-                  order.formattedTotal,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.headerGreenDark,
+                const SizedBox(width: 8),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 100),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      order.formattedTotal,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.headerGreenDark,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -224,7 +249,7 @@ class _CustomerOrdersScreenState extends ConsumerState<CustomerOrdersScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
                     ),
                     onPressed: () {
                       context.push(AppRoutes.orderTrackingWithId(order.orderId));
@@ -233,8 +258,13 @@ class _CustomerOrdersScreenState extends ConsumerState<CustomerOrdersScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Icon(Icons.track_changes, size: 16),
-                        const SizedBox(width: 6),
-                        Text(l10n?.trackOrderButton ?? 'Track Order'),
+                        const SizedBox(width: 4),
+                        Flexible(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(l10n?.trackOrderButton ?? 'Track Order'),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -249,7 +279,7 @@ class _CustomerOrdersScreenState extends ConsumerState<CustomerOrdersScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   ),
                   onPressed: () {
                     ref.read(cartNotifierProvider.notifier).addOrderItems(
@@ -269,7 +299,12 @@ class _CustomerOrdersScreenState extends ConsumerState<CustomerOrdersScreen> {
                     children: [
                       const Icon(Icons.repeat, size: 16),
                       const SizedBox(width: 4),
-                      Text(l10n?.reorderButton ?? 'Reorder'),
+                      Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(l10n?.reorderButton ?? 'Reorder'),
+                        ),
+                      ),
                     ],
                   ),
                 ),
