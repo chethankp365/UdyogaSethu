@@ -24,6 +24,7 @@ class SeekerJobItem {
   final String? message;
   final bool travelWarning;
   final double? gapMinutes;
+  final String employerId;
 
   const SeekerJobItem({
     required this.id,
@@ -43,6 +44,7 @@ class SeekerJobItem {
     this.message,
     this.travelWarning = false,
     this.gapMinutes,
+    this.employerId = '',
   });
 
   int get wageRupees => wagePaise ~/ 100;
@@ -76,6 +78,7 @@ class SeekerJobItem {
       message: json['message'] as String?,
       travelWarning: json['travel_warning'] as bool? ?? false,
       gapMinutes: (json['gap_minutes'] as num?)?.toDouble(),
+      employerId: json['employer_id'] as String? ?? json['provider_id'] as String? ?? '',
     );
   }
 

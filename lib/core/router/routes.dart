@@ -94,6 +94,8 @@ class AppRoutes {
   static const String customerOrders = '/orders/my-orders';
   static const String farmerOrders = '/farmer/orders';
   static const String farmerDeliverySlots = '/farmer/delivery-slots';
+  static const String chatDetail = '/chat';
+  static const String maskedCall = '/call/masked';
 
   // Debug Routes (gated under kDebugMode)
   static const String devGallery = '/dev/gallery';

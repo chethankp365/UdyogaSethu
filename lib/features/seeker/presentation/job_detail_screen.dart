@@ -19,6 +19,7 @@ import 'package:udyogasethu/core/services/job_thumbnail_service.dart';
 import 'package:udyogasethu/core/widgets/app_thumbnail.dart' as ui;
 import 'package:udyogasethu/features/seeker/presentation/job_detail_controller.dart';
 import 'package:udyogasethu/features/seeker/presentation/my_applications_controller.dart';
+import 'package:udyogasethu/features/chat/data/chat_repository.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class JobDetailScreen extends ConsumerStatefulWidget {
@@ -550,13 +551,19 @@ class _JobDetailScreenState extends ConsumerState<JobDetailScreen> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 ),
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Chat thread opens after applying or receiving booking invitation (wired in P7.1).'),
-                      duration: Duration(seconds: 3),
-                    ),
+                onPressed: () async {
+                  final repo = ref.read(chatRepositoryProvider);
+                  final threadId = await repo.getOrCreateThread(
+                    contextType: 'job',
+                    contextId: job.id,
+                    recipientId: job.providerId,
+                    subject: job.title,
+                    bookingCode: 'JOB-${job.id.length >= 6 ? job.id.substring(0, 6).toUpperCase() : job.id}',
+                    categoryTag: 'worker',
                   );
+                  if (context.mounted) {
+                    context.push('${AppRoutes.chatDetail}/$threadId');
+                  }
                 },
                 icon: const Icon(Icons.chat_bubble_outline_rounded, size: 20),
                 label: const Text('Chat', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),

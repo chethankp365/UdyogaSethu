@@ -18,6 +18,7 @@ import 'package:udyogasethu/features/provider/presentation/provider_jobs_control
 import 'package:udyogasethu/features/provider/presentation/provider_wizard_controller.dart';
 import 'package:udyogasethu/features/provider/presentation/worker_search_controller.dart';
 import 'package:udyogasethu/features/marketplace/presentation/subscriptions_hub_tab.dart';
+import 'package:udyogasethu/features/chat/data/chat_repository.dart';
 import 'package:udyogasethu/features/provider/presentation/widgets/buyer_produce_tab.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
@@ -623,15 +624,19 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
                       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (ctx) => AlertDialog(
-                          title: Text('${l10n.hubProtectedChat} (P7.1)'),
-                          content: Text('Chat proxy with ${booking.workerName} for booking ${booking.bookingCode} opens in Step P7.1.'),
-                          actions: [TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('OK'))],
-                        ),
+                    onPressed: () async {
+                      final repo = ref.read(chatRepositoryProvider);
+                      final threadId = await repo.getOrCreateThread(
+                        contextType: 'assignment',
+                        contextId: booking.assignmentId,
+                        recipientId: booking.workerId,
+                        subject: booking.jobTitle,
+                        bookingCode: booking.bookingCode,
+                        categoryTag: 'worker',
                       );
+                      if (context.mounted) {
+                        context.push('${AppRoutes.chatDetail}/$threadId');
+                      }
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

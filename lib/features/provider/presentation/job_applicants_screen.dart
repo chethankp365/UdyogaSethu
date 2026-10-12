@@ -12,6 +12,7 @@ import 'package:udyogasethu/features/provider/domain/job_applicant.dart';
 import 'package:udyogasethu/features/provider/domain/provider_job.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_jobs_controller.dart';
 import 'package:udyogasethu/core/widgets/app_thumbnail.dart';
+import 'package:udyogasethu/features/chat/data/chat_repository.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class JobApplicantsScreen extends ConsumerWidget {
@@ -75,7 +76,7 @@ class JobApplicantsScreen extends ConsumerWidget {
                         onShortlist: () => _handleShortlist(context, ref, applicant, l10n),
                         onReject: () => _handleReject(context, ref, applicant, l10n),
                         onViewProfile: () => _showWorkerProfileDialog(context, applicant),
-                        onChat: () => _handleChat(context, applicant),
+                        onChat: () => _handleChat(context, ref, applicant),
                       );
                     },
                   );
@@ -348,8 +349,22 @@ class JobApplicantsScreen extends ConsumerWidget {
     }
   }
 
-  void _handleChat(BuildContext context, JobApplicant applicant) {
-    context.push(AppRoutes.providerChat, extra: {'workerId': applicant.workerId, 'workerName': applicant.workerName});
+  void _handleChat(BuildContext context, WidgetRef ref, JobApplicant applicant) async {
+    final repo = ref.read(chatRepositoryProvider);
+    final idSnippet = applicant.applicationId.length >= 6
+        ? applicant.applicationId.substring(0, 6).toUpperCase()
+        : applicant.applicationId;
+    final threadId = await repo.getOrCreateThread(
+      contextType: 'application',
+      contextId: applicant.applicationId,
+      recipientId: applicant.workerId,
+      subject: applicant.workerName,
+      bookingCode: 'APP-$idSnippet',
+      categoryTag: 'worker',
+    );
+    if (context.mounted) {
+      context.push('${AppRoutes.chatDetail}/$threadId');
+    }
   }
 
   void _showWorkerProfileDialog(BuildContext context, JobApplicant applicant) {

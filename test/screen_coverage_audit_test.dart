@@ -98,6 +98,8 @@ void main() {
       AppRoutes.farmerPestAi,
       AppRoutes.farmerIrrigationAi,
       AppRoutes.farmerGovtSchemes,
+      AppRoutes.chatDetail,
+      AppRoutes.maskedCall,
 
       // Debug Routes
       AppRoutes.devGallery,
@@ -174,20 +176,8 @@ void main() {
           'Debug-only thumbnail gallery viewer with multilingual lettering preview gated under kDebugMode',
       AppRoutes.devJobVisibility:
           'Debug-only SQL audience visibility and diagnostic inspector gated under kDebugMode',
-      AppRoutes.seekerChat:
-          'Placeholder screen awaiting full real-time chat implementation in Phase P7.1',
-      AppRoutes.providerChat:
-          'Placeholder screen awaiting full real-time chat implementation in Phase P7.1',
-      AppRoutes.farmerChat:
-          'Placeholder screen awaiting full real-time chat implementation in Phase P7.1',
       AppRoutes.safetyHub:
           'Placeholder screen awaiting emergency SOS and Safety Hub implementation in Phase P7.3',
-      'shell_seeker_tab_2_chat':
-          'Placeholder tab awaiting real-time protected chat implementation in Phase P7.1',
-      'shell_provider_tab_2_chat':
-          'Placeholder tab awaiting real-time protected chat implementation in Phase P7.1',
-      'shell_farmer_tab_2_chat':
-          'Placeholder tab awaiting real-time protected chat implementation in Phase P7.1',
     };
 
     /// Screens, shells, and dialogs covered in the comprehensive overflow matrix suite
@@ -279,15 +269,25 @@ void main() {
       AppRoutes.customerOrders,
       AppRoutes.produceDetail,
 
+      // Chat & Voice Proxy (Phase P7.1 & P7.2)
+      AppRoutes.seekerChat,
+      AppRoutes.providerChat,
+      AppRoutes.farmerChat,
+      AppRoutes.chatDetail,
+      AppRoutes.maskedCall,
+
       // Shell Tabs
       'shell_seeker_tab_0_home',
       'shell_seeker_tab_1_jobs',
+      'shell_seeker_tab_2_chat',
       'shell_seeker_tab_3_profile',
       'shell_provider_tab_0_home',
       'shell_provider_tab_1_workers',
+      'shell_provider_tab_2_chat',
       'shell_provider_tab_3_profile',
       'shell_farmer_tab_0_home',
       'shell_farmer_tab_1_market',
+      'shell_farmer_tab_2_chat',
       'shell_farmer_tab_3_profile',
 
       // Dialogs & Sheets

@@ -10,6 +10,7 @@ import '../../../l10n/app_localizations.dart';
 import '../../../core/widgets/app_thumbnail.dart';
 import '../data/orders_repository.dart';
 import '../domain/produce_order.dart';
+import '../../chat/data/chat_repository.dart';
 import 'widgets/rate_produce_order_dialog.dart';
 
 /// Screen listing customer produce order history with real-time status updates,
@@ -324,6 +325,24 @@ class _CustomerOrdersScreenState extends ConsumerState<CustomerOrdersScreen> {
                     },
                   ),
                 ],
+                const SizedBox(width: 4),
+                IconButton(
+                  icon: const Icon(Icons.chat_bubble_outline_rounded, color: AppColors.headerGreenDark),
+                  tooltip: 'Chat with Farmer',
+                  onPressed: () async {
+                    final repo = ref.read(chatRepositoryProvider);
+                    final threadId = await repo.getOrCreateThread(
+                      contextType: 'order',
+                      contextId: order.orderId,
+                      recipientId: order.farmerId,
+                      subject: 'Order ${order.orderCode}',
+                      bookingCode: order.orderCode,
+                      categoryTag: 'farmer',
+                    );
+                    if (!mounted) return;
+                    context.push('${AppRoutes.chatDetail}/$threadId');
+                  },
+                ),
               ],
             ),
           ],

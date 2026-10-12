@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import 'package:go_router/go_router.dart';
+import '../../../core/router/routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/widgets/app_thumbnail.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../marketplace/data/orders_repository.dart';
 import '../../marketplace/domain/produce_order.dart';
+import '../../chat/data/chat_repository.dart';
 
 /// Farmer Order Board screen managing incoming orders, acceptance,
 /// packaging, dispatch, and PIN-verified delivery completion with escrow settlement.
@@ -454,6 +457,26 @@ class _FarmerOrderBoardScreenState extends ConsumerState<FarmerOrderBoardScreen>
                       color: Color(0xFF0F172A),
                     ),
                   ),
+                ),
+                const SizedBox(width: 8),
+                IconButton(
+                  icon: const Icon(Icons.chat_bubble_outline_rounded, size: 20, color: AppColors.headerGreenDark),
+                  tooltip: 'Chat with Buyer',
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  onPressed: () async {
+                    final repo = ref.read(chatRepositoryProvider);
+                    final threadId = await repo.getOrCreateThread(
+                      contextType: 'order',
+                      contextId: order.orderId,
+                      recipientId: order.customerId ?? '',
+                      subject: 'Order ${order.orderCode}',
+                      bookingCode: order.orderCode,
+                      categoryTag: 'customer',
+                    );
+                    if (!mounted) return;
+                    context.push('${AppRoutes.chatDetail}/$threadId');
+                  },
                 ),
               ],
             ),

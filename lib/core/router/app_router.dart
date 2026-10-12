@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:udyogasethu/core/errors/app_exception.dart';
 import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/core/router/app_shells.dart';
-import 'package:udyogasethu/core/router/placeholder_screen.dart';
 import 'package:udyogasethu/core/router/role_switcher_debug_screen.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/widgets/component_gallery_screen.dart';
@@ -73,6 +72,9 @@ import 'package:udyogasethu/features/farmer/presentation/soil_ai_test_screen.dar
 import 'package:udyogasethu/features/farmer/presentation/pest_ai_doc_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/irrigation_ai_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/govt_schemes_screen.dart';
+import 'package:udyogasethu/features/chat/presentation/protected_inbox_screen.dart';
+import 'package:udyogasethu/features/chat/presentation/chat_screen.dart';
+import 'package:udyogasethu/features/chat/presentation/secured_call_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_home_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_wizard_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/post_job_wizard_screen.dart';
@@ -411,11 +413,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: AppRoutes.seekerChat,
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Protected Inbox & Chat',
-                  roleName: 'Job Seeker',
-                  icon: Icons.chat_bubble_rounded,
-                ),
+                builder: (context, state) => const ProtectedInboxScreen(),
               ),
             ],
           ),
@@ -456,11 +454,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: AppRoutes.providerChat,
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Worker Messages & Calls',
-                  roleName: 'Job Provider',
-                  icon: Icons.chat_bubble_rounded,
-                ),
+                builder: (context, state) => const ProtectedInboxScreen(),
               ),
             ],
           ),
@@ -501,11 +495,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: AppRoutes.farmerChat,
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Buyer & Worker Chat',
-                  roleName: 'Farmer',
-                  icon: Icons.chat_bubble_rounded,
-                ),
+                builder: (context, state) => const ProtectedInboxScreen(),
               ),
             ],
           ),
@@ -818,6 +808,26 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.farmerGovtSchemes,
         builder: (context, state) => const GovtSchemesScreen(),
+      ),
+      GoRoute(
+        path: '${AppRoutes.chatDetail}/:threadId',
+        builder: (context, state) {
+          final threadId = state.pathParameters['threadId'] ?? '';
+          return ChatScreen(threadId: threadId);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.maskedCall,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          return SecuredCallScreen(
+            recipientId: extra['recipientId'] as String? ?? '',
+            recipientName: extra['recipientName'] as String? ?? 'Verified Contact',
+            recipientRole: extra['recipientRole'] as String?,
+            bookingCode: extra['bookingCode'] as String? ?? 'CALL-ACTIVE',
+            assignmentId: extra['assignmentId'] as String?,
+          );
+        },
       ),
 
       // Debug Routes

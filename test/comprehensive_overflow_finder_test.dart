@@ -27,7 +27,171 @@ import 'package:udyogasethu/features/farmer/presentation/pest_ai_doc_screen.dart
 import 'package:udyogasethu/features/farmer/presentation/soil_ai_test_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/irrigation_ai_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/govt_schemes_screen.dart';
+import 'dart:io';
+import 'package:udyogasethu/features/chat/presentation/protected_inbox_screen.dart';
+import 'package:udyogasethu/features/chat/presentation/chat_screen.dart';
+import 'package:udyogasethu/features/chat/presentation/secured_call_screen.dart';
+import 'package:udyogasethu/features/chat/data/chat_repository.dart';
+import 'package:udyogasethu/features/chat/domain/call_session.dart';
+import 'package:udyogasethu/features/chat/domain/chat_message.dart';
+import 'package:udyogasethu/features/chat/domain/chat_thread.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
+
+class FakeChatRepository implements ChatRepository {
+  @override
+  Future<List<ChatThread>> getThreads({
+    String filter = 'all',
+    String roleFilter = 'all',
+    String searchQuery = '',
+  }) async {
+    return [
+      ChatThread(
+        id: 'demo_thread_01',
+        contextType: 'assignment',
+        contextId: 'demo_assign_01',
+        participantA: 'user_01',
+        participantB: 'partner_01',
+        subject: 'Farm Harvesting Specialist Shift',
+        bookingCode: 'BOOK-9842',
+        status: 'active',
+        categoryTag: 'farmer',
+        lastMessageAt: DateTime.now(),
+        createdAt: DateTime.now().subtract(const Duration(days: 1)),
+        otherPartyId: 'partner_01',
+        otherPartyName: 'Suresh Kumar',
+        otherPartyRole: 'farmer',
+        lastMessageSnippet: 'Looking forward to tomorrow.',
+        unreadCount: 2,
+      ),
+      ChatThread(
+        id: 'demo_thread_02',
+        contextType: 'order',
+        contextId: 'demo_order_01',
+        participantA: 'user_01',
+        participantB: 'partner_02',
+        subject: 'Organic Tomato Bulk Delivery',
+        bookingCode: 'ORD-5412',
+        status: 'completed',
+        readOnlyAt: DateTime.now().subtract(const Duration(hours: 4)),
+        categoryTag: 'customer',
+        lastMessageAt: DateTime.now().subtract(const Duration(hours: 4)),
+        createdAt: DateTime.now().subtract(const Duration(days: 2)),
+        otherPartyId: 'partner_02',
+        otherPartyName: 'Ananya Sharma',
+        otherPartyRole: 'customer',
+        lastMessageSnippet: 'Package received safely. Thank you!',
+        unreadCount: 0,
+      ),
+    ];
+  }
+
+  @override
+  Future<ChatThread> getThread(String threadId) async {
+    return ChatThread(
+      id: threadId,
+      contextType: 'assignment',
+      contextId: 'demo_assign_01',
+      participantA: 'user_01',
+      participantB: 'partner_01',
+      subject: 'Farm Harvesting Specialist Shift',
+      bookingCode: 'BOOK-9842',
+      status: 'active',
+      categoryTag: 'farmer',
+      lastMessageAt: DateTime.now(),
+      createdAt: DateTime.now().subtract(const Duration(days: 1)),
+      otherPartyId: 'partner_01',
+      otherPartyName: 'Suresh Kumar',
+      otherPartyRole: 'farmer',
+      lastMessageSnippet: 'Looking forward to tomorrow.',
+      unreadCount: 0,
+    );
+  }
+
+  @override
+  Future<String> getOrCreateThread({
+    required String contextType,
+    required String contextId,
+    required String recipientId,
+    String? subject,
+    String? bookingCode,
+    String? categoryTag,
+  }) async {
+    return 'demo_thread_01';
+  }
+
+  @override
+  Stream<List<ChatMessage>> streamMessages(String threadId) {
+    return Stream.value([
+      ChatMessage(
+        id: 'msg_01',
+        threadId: threadId,
+        senderId: 'partner_01',
+        body: 'Hello! Are you reaching by 8:00 AM tomorrow?',
+        wasMasked: false,
+        createdAt: DateTime.now().subtract(const Duration(minutes: 20)),
+        isMe: false,
+      ),
+      ChatMessage(
+        id: 'msg_02',
+        threadId: threadId,
+        senderId: 'user_01',
+        body: 'Yes, on time. Contact details are masked here.',
+        wasMasked: true,
+        createdAt: DateTime.now().subtract(const Duration(minutes: 10)),
+        isMe: true,
+      ),
+    ]);
+  }
+
+  @override
+  Future<ChatMessage> sendMessage({
+    required String threadId,
+    required String body,
+    String? attachmentPath,
+  }) async {
+    return ChatMessage(
+      id: 'msg_new',
+      threadId: threadId,
+      senderId: 'user_01',
+      body: body,
+      wasMasked: false,
+      createdAt: DateTime.now(),
+      isMe: true,
+    );
+  }
+
+  @override
+  Future<String?> uploadAttachment(File file) async {
+    return 'https://example.com/demo.jpg';
+  }
+
+  @override
+  Future<void> markThreadRead(String threadId) async {}
+
+  @override
+  Future<CallSession> initiateMaskedCall({
+    required String recipientId,
+    String? bookingCode,
+    String? assignmentId,
+  }) async {
+    return const CallSession(
+      callId: 'demo-call-123',
+      status: 'in-progress',
+      proxyDisplay: '+91 80 4719 8200 (Udyoga Proxy)',
+      isDemo: true,
+      callerName: 'You',
+      recipientName: 'Ramesh Patel',
+      recipientRole: 'Worker',
+      bookingCode: 'BOOK-9842',
+    );
+  }
+
+  @override
+  Future<void> endMaskedCall({
+    required String callId,
+    int durationSeconds = 0,
+  }) async {}
+}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -166,6 +330,7 @@ void main() {
     List<double> widths = testWidths,
     List<double> scales = testTextScales,
     List<Locale> locales = testLocales,
+    List<dynamic> overrides = const [],
   }) async {
     for (final width in widths) {
       for (final textScale in scales) {
@@ -189,6 +354,7 @@ void main() {
           try {
             await tester.pumpWidget(
               ProviderScope(
+                overrides: overrides.cast(),
                 child: MaterialApp(
                   locale: loc,
                   localizationsDelegates: const [
@@ -237,6 +403,8 @@ void main() {
         }
       }
     }
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump();
   }
 
   final longTransaction = WalletTransaction(
@@ -983,6 +1151,41 @@ void main() {
         tester: tester,
         testName: 'GovtSchemesScreen',
         builder: (ctx, l10n) => const GovtSchemesScreen(),
+      );
+    });
+
+    testWidgets('ProtectedInboxScreen layout overflow check', (tester) async {
+      await runOverflowMatrix(
+        tester: tester,
+        testName: 'ProtectedInboxScreen',
+        builder: (ctx, l10n) => const ProtectedInboxScreen(),
+        overrides: [chatRepositoryProvider.overrideWithValue(FakeChatRepository())],
+      );
+    });
+
+    testWidgets('ChatScreen layout overflow check', (tester) async {
+      await runOverflowMatrix(
+        tester: tester,
+        testName: 'ChatScreen',
+        builder: (ctx, l10n) => const SizedBox(
+          height: 1200,
+          child: ChatScreen(threadId: 'demo_thread_01'),
+        ),
+        overrides: [chatRepositoryProvider.overrideWithValue(FakeChatRepository())],
+      );
+    });
+
+    testWidgets('SecuredCallScreen layout overflow check', (tester) async {
+      await runOverflowMatrix(
+        tester: tester,
+        testName: 'SecuredCallScreen',
+        builder: (ctx, l10n) => const SecuredCallScreen(
+          recipientId: 'worker_01',
+          recipientName: 'Ramesh Patel (Farm Harvesting Specialist)',
+          recipientRole: 'Worker',
+          bookingCode: 'BOOK-9842',
+        ),
+        overrides: [chatRepositoryProvider.overrideWithValue(FakeChatRepository())],
       );
     });
   });

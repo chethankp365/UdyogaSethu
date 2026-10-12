@@ -7,6 +7,7 @@ import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/theme/app_spacing.dart';
 import 'package:udyogasethu/features/seeker/domain/seeker_job_item.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_jobs_controller.dart';
+import 'package:udyogasethu/features/chat/data/chat_repository.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class SeekerJobsScreen extends ConsumerStatefulWidget {
@@ -343,10 +344,20 @@ class _SeekerJobsScreenState extends ConsumerState<SeekerJobsScreen> {
                     ),
                     icon: const Icon(Icons.chat_bubble_outline_rounded, size: 16),
                     label: const Text('Request More Details', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Chat with ${item.providerName} opens in P7.1')),
+                    onPressed: () async {
+                      final repo = ref.read(chatRepositoryProvider);
+                      final recipient = item.employerId.isNotEmpty ? item.employerId : 'partner_01';
+                      final threadId = await repo.getOrCreateThread(
+                        contextType: 'job',
+                        contextId: item.jobId,
+                        recipientId: recipient,
+                        subject: item.title,
+                        bookingCode: item.bookingCode ?? 'REQ-${item.jobId.length >= 6 ? item.jobId.substring(0, 6).toUpperCase() : item.jobId}',
+                        categoryTag: 'worker',
                       );
+                      if (context.mounted) {
+                        context.push('${AppRoutes.chatDetail}/$threadId');
+                      }
                     },
                   ),
                 ),
