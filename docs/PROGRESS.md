@@ -72,8 +72,8 @@
 - [x] **P6.8**: Farmer AI tools through a secure Edge Function (Status: Done | Secure Edge Function `ai-assist` powered by Gemini via `@google/genai` with rate-limiting, strict schema validation, privacy scrubber for PII/GPS/biometrics, and graceful fallback to `mode: "basic"`; 4 responsive Flutter screens for Pest AI Doc, Soil AI Test, Irrigation AI, and Curated Government Schemes; 0 RenderFlex overflows and zero API key exposure)
 
 ## Phase 7 (Communication and safety)
-- [ ] **P7.1**: Protected inbox and realtime chat (Status: Todo)
-- [ ] **P7.2**: Masked voice call (Status: Todo)
+- [x] **P7.1**: Protected inbox and realtime chat (Status: Done | Protected inbox with Escrow Network header, search, filter chips, and role filters; real-time chat with message bubbles, delivery ticks, quick replies, photo attachments to chat-attachments bucket, unread counts, header safety tips; server-side PostgreSQL trigger enforcing regex masking for 10-digit/spaced phone numbers and UPI IDs with was_masked flag; automatic thread lifecycle with read-only state for completed bookings; evidence preservation for dispute arbitration)
+- [x] **P7.2**: Masked voice call (Status: Done | Protected Masked Voice Proxy Edge Function deployed behind CallProvider interface supporting MockCallProvider, TwilioCallProvider, and ExotelCallProvider; Dark Navy panel call screen with SOS pill, live incrementing timer, Mute/Speaker toggles, End Call button, and Privacy Guard notice; unmissable amber Demo Mode banner when mock provider is used; server-side call_logs table for audit; wired to "Call Worker Directly" in no-show recovery sheet)
 - [ ] **P7.3**: SOS, Safety Hub, emergency contacts and job protection claims (Status: Todo)
 - [ ] **P7.4**: Push notifications and notification centre (Status: Todo)
 

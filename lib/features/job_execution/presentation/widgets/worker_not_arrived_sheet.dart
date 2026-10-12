@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/job_execution/data/job_execution_repository.dart';
 import 'package:udyogasethu/features/job_execution/domain/active_job_detail.dart';
@@ -82,15 +84,16 @@ class _WorkerNotArrivedSheetState extends ConsumerState<WorkerNotArrivedSheet> {
   }
 
   void _handleCallWorker() {
-    final l10n = AppLocalizations.of(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: const Color(0xFFF59E0B),
-        content: Text(
-          l10n?.maskedCallDemoMsg ??
-              'Dialing worker... (Demo mode: Masked call arrives in P7.2)',
-        ),
-      ),
+    Navigator.of(context).pop();
+    context.push(
+      AppRoutes.maskedCall,
+      extra: {
+        'recipientId': widget.jobDetail.workerId,
+        'recipientName': widget.jobDetail.workerName,
+        'recipientRole': 'Worker',
+        'bookingCode': widget.jobDetail.bookingCode,
+        'assignmentId': widget.jobDetail.assignmentId,
+      },
     );
   }
 

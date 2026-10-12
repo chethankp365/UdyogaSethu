@@ -32,6 +32,8 @@ This document records key design, architectural, role model, and implementation 
 | D62 | Job Execution Lifecycle, QR Ticket Windows, Rejection Codes, Step 2 Presence & Digital ID Card (Prompt 2 of 3) | Adopted | Execution, Attendance & Digital ID |
 | D63 | Wallet & Escrow Ledger Invariants, Farmer Real Profile & Mandi Rails, Manifest Fallbacks & Single Voice Mic (Prompt 3 of 3) | Adopted | Wallet, Farmer, Assets & Honesty |
 | D64 | Full Job Lifecycle State Transitions & Root Cause Resolution (P4.3 to P4.9) | Adopted | Lifecycle Architecture & Bug Fixes |
+| D66 | Protected Inbox, Realtime Chat & Server-Side RegEx Masking (P7.1) | Adopted | Secure Chat, Evidence & Masking |
+| D67 | Protected Masked Voice Proxy & CallProvider Demo Mode (P7.2) | Adopted | Voice Proxy, Twilio/Exotel & Privacy |
 
 ## Known Issues & Planned Fixes (Pre-P5.1)
 
@@ -534,3 +536,14 @@ This document records key design, architectural, role model, and implementation 
     * Clustered pins sharing coordinates within $\approx 25\text{m}$ ($0.0003^\circ$ latitude/longitude threshold).
     * Clustered markers render a badge indicating the total job count at that site.
     * Tapping a cluster pin highlights the site, animates the map, and scrolls/expands the bottom sheet list to display all opportunities at that location.
+
+* **D66 — Protected Inbox, Realtime Chat & Server-Side RegEx Masking (P7.1)**:
+  * **Server-Side Enforcement**: Masking of phone numbers, UPI handles, and off-platform payment attempts is enforced strictly on the database server via PostgreSQL `BEFORE INSERT OR UPDATE` trigger `trg_mask_chat_message` executing `mask_chat_message_content()` on table `chat_messages`. The trigger regex scrubs 10-digit phone numbers (`[6-9]\d{9}`), +91/0 prefixed numbers (`(\+91|0)[-\s]?[6-9]\d{9}`), spaced digit patterns (`[6-9](\s*\d){9}`), UPI VPA handles (`[-a-zA-Z0-9._]+@(okhdfcbank|okaxis|oksbi|okicici|paytm|upi|ybl|ibl|axl)`), and payment triggers (`gpay|phonepe|paytm|google pay|bhim|send to upi`). Replaces them with `[MASKED PHONE]` / `[MASKED UPI]` and prepends polite escrow notice: `[Security Guard: Phone numbers and off-platform payment handles are masked for your privacy and escrow protection.]`.
+  * **Evidence in Disputes**: `was_masked` is flagged as `true` in the message row. Threads and messages remain persisted for dispute arbitration and cannot be altered by users.
+  * **Thread Lifecycle & Read-Only**: Threads are created or retrieved via SECURITY DEFINER RPC `get_or_create_chat_thread`. Completed assignments and orders mark threads as `read_only` (`status = 'read_only'`). The trigger rejects new message insertion into read-only threads.
+  * **Role-Based Filtering**: Search across participants, crops, jobs, booking codes; filter by status (All, Active, Completed) and role tags (Worker Chats, Customer Chats, Farmer Chats).
+
+* **D67 — Protected Masked Voice Proxy & CallProvider Demo Mode (P7.2)**:
+  * **Architecture & Extensibility**: Edge function `masked-call` implements the `CallProvider` interface in Deno (`_shared/call_provider.ts`) supporting `MockCallProvider` (default), `TwilioCallProvider`, and `ExotelCallProvider`. Real providers can be enabled anytime via environment variables (`CALL_PROVIDER=twilio` or `CALL_PROVIDER=exotel`) with Account SID and Auth Tokens.
+  * **Privacy Guarantee**: Neither party's real telephone number is ever sent to the client, logged in client logs, or exposed in network responses. The server bridges the call through a virtual proxy number (`+91 80 4719 8200`).
+  * **Demo Mode Transparency**: In Demo Mode (default when no provider credentials are configured), the server returns `is_demo: true` and logs calls in `call_logs` with `is_demo = true`. The client renders a prominent, unmissable amber banner: *"Demo mode: No real call placed. Simulating proxy bridge (+91 80 4719 8200)."* All UI audio controls (Mute, Speaker toggle, timer, SOS alert) operate smoothly in demo simulation.
