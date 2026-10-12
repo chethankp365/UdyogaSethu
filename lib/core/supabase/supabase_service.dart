@@ -7,7 +7,13 @@ final supabaseClientProvider = Provider<SupabaseClient>((ref) {
   try {
     return Supabase.instance.client;
   } catch (_) {
-    return SupabaseClient('https://dummy.supabase.co', 'dummy_anon_key');
+    final client = SupabaseClient(
+      'https://dummy.supabase.co',
+      'dummy_anon_key',
+      authOptions: const AuthClientOptions(autoRefreshToken: false),
+    );
+    ref.onDispose(client.dispose);
+    return client;
   }
 });
 
