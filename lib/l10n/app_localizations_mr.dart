@@ -3773,405 +3773,404 @@ class AppLocalizationsMr extends AppLocalizations {
       'जीपीएस पिन शिवाय कामाचे ठिकाण पत्ता दिला आहे';
 
   @override
-  String get safetyHubTitle => 'Safety & Emergency Hub';
+  String get safetyHubTitle => 'सुरक्षा आणि आणीबाणी केंद्र';
 
   @override
-  String get emergencyContactsTitle => 'Emergency Contacts';
+  String get emergencyContactsTitle => 'आणीबाणी संपर्क';
 
   @override
-  String get jobProtectionClaimTitle => 'Job Protection Claim';
+  String get jobProtectionClaimTitle => 'काम संरक्षण दावा';
 
   @override
-  String get notificationCentreTitle => 'Notification Centre';
+  String get notificationCentreTitle => 'सूचना केंद्र';
 
   @override
-  String get notifNewApplicantTitle => 'New Job Applicant';
+  String get notifNewApplicantTitle => 'नवीन नोकरी अर्जदार';
 
   @override
   String notifNewApplicantBody(String worker, String job) {
-    return '$worker applied for $job';
+    return '$worker यांनी $job साठी अर्ज केला आहे';
   }
 
   @override
-  String get notifApplicationStatusTitle => 'Application Update';
+  String get notifApplicationStatusTitle => 'अर्ज स्थिती अपडेट';
 
   @override
   String notifApplicationStatusBody(String job, String status) {
-    return 'Your application for $job was updated to $status';
+    return '$job साठीचा तुमचा अर्ज $status करण्यात आला आहे';
   }
 
   @override
-  String get notifAssignmentStatusTitle => 'Booking Status Update';
+  String get notifAssignmentStatusTitle => 'बुकिंग स्थिती अपडेट';
 
   @override
   String notifAssignmentStatusBody(String code, String status) {
-    return '$code is now $status';
+    return '$code आता $status आहे';
   }
 
   @override
-  String get notifNewOrderTitle => 'New Farm Produce Order';
+  String get notifNewOrderTitle => 'नवीन शेतमाल ऑर्डर';
 
   @override
   String notifNewOrderBody(String code) {
-    return 'New farm produce order $code received';
+    return 'नवीन शेतमाल ऑर्डर $code प्राप्त झाली';
   }
 
   @override
-  String get notifOrderStatusTitle => 'Produce Order Update';
+  String get notifOrderStatusTitle => 'शेतमाल ऑर्डर अपडेट';
 
   @override
   String notifOrderStatusBody(String code, String status) {
-    return '$code status updated to $status';
+    return '$code स्थिती $status करण्यात आली आहे';
   }
 
   @override
-  String get notifPaymentReceivedTitle => 'Payment Received';
+  String get notifPaymentReceivedTitle => 'पेमेंट प्राप्त झाले';
 
   @override
   String notifPaymentReceivedBody(String amount) {
-    return 'Payment received: $amount';
+    return 'पेमेंट मिळाले: $amount';
   }
 
   @override
-  String get notifSosAlertTitle => 'EMERGENCY SOS ALERT';
+  String get notifSosAlertTitle => 'आणीबाणी एसओएस इशारा';
 
   @override
   String get notifSosAlertBody =>
-      'Emergency SOS incident registered. Safety team alerted.';
+      'आणीबाणी एसओएस घटना नोंदवली गेली. सुरक्षा पथकाला सतर्क केले आहे.';
 
   @override
-  String get notifClaimSubmittedTitle => 'Job Protection Claim';
+  String get notifClaimSubmittedTitle => 'काम संरक्षण दावा';
 
   @override
   String notifClaimSubmittedBody(String type) {
-    return 'Your claim for $type was registered for review.';
+    return '$type साठीचा तुमचा दावा पुनरावलोकनासाठी नोंदवला गेला आहे.';
   }
 
   @override
-  String get notifGeneralTitle => 'Notification';
+  String get notifGeneralTitle => 'सूचना';
 
   @override
-  String get notifGeneralBody => 'You have a new update in UdyogaSethu.';
+  String get notifGeneralBody => 'उद्योगसेतूमध्ये आपल्यासाठी नवीन अपडेट आहे.';
 
   @override
-  String get voiceAssistantTitle => 'AI MULTILINGUAL VOICE ASSISTANT';
+  String get voiceAssistantTitle => 'एआय बहुभाषिक व्हॉइस असिस्टंट';
 
   @override
-  String get voiceExampleCommandsTitle =>
-      'TAP EXAMPLE COMMAND TO DIRECT SEARCH';
+  String get voiceExampleCommandsTitle => 'थेट शोधासाठी उदाहरण आदेशावर टॅप करा';
 
   @override
-  String get voiceListening => 'Listening to your voice...';
+  String get voiceListening => 'तुमचा आवाज ऐकत आहे...';
 
   @override
   String get voiceInstruction =>
-      'Tap mic and speak in Kannada, Hindi, Telugu, Tamil or English';
+      'माईक दाबा आणि कन्नड, हिंदी, तेलुगू, तमिळ किंवा इंग्रजीत बोला';
 
   @override
-  String get voiceProcessing => 'Understanding command...';
+  String get voiceProcessing => 'आदेश समजून घेत आहे...';
 
   @override
-  String get voiceListeningStop => '🎙 Listening... (Tap to stop)';
+  String get voiceListeningStop => '🎙 ऐकत आहे... (थांबवण्यासाठी टॅप करा)';
 
   @override
-  String get voiceTapToSpeak => '🎙 Tap to Speak';
+  String get voiceTapToSpeak => '🎙 बोलण्यासाठी टॅप करा';
 
   @override
-  String get rewardsHubTitle => 'Rewards & Progression Hub';
+  String get rewardsHubTitle => 'रिवॉर्ड्स आणि प्रगती केंद्र';
 
   @override
-  String get rewardsLevelStarter => 'Starter';
+  String get rewardsLevelStarter => 'आरंभी';
 
   @override
-  String get rewardsLevelReliable => 'Reliable';
+  String get rewardsLevelReliable => 'विश्वसनीय';
 
   @override
-  String get rewardsLevelTrustedPro => 'Trusted Pro';
+  String get rewardsLevelTrustedPro => 'विश्वसनीय व्यावसायिक';
 
   @override
-  String get rewardsLevelCommunityHero => 'Community Hero';
+  String get rewardsLevelCommunityHero => 'समुदाय नायक';
 
   @override
   String rewardsTotalXp(int xp) {
-    return '$xp Total XP';
+    return '$xp एकूण XP';
   }
 
   @override
   String rewardsAvailablePoints(int points) {
-    return '$points Available Points';
+    return '$points उपलब्ध गुण';
   }
 
   @override
   String rewardsNextLevelIn(int points, String level) {
-    return '$points XP to $level';
+    return '$level साठी $points XP बाकी';
   }
 
   @override
-  String get rewardsMaxLevel => 'Maximum Level Reached!';
+  String get rewardsMaxLevel => 'कमाल स्तर गाठला!';
 
   @override
-  String get rewardsLevelPerksTitle => 'Active Level Perks';
+  String get rewardsLevelPerksTitle => 'सक्रिय स्तर फायदे';
 
   @override
   String rewardsPerkCommission(String rate) {
-    return 'Commission: $rate% (Reduced)';
+    return 'कमिशन: $rate% (कमी केले)';
   }
 
   @override
   String rewardsPerkSearchBoost(String boost) {
-    return 'Search Boost: ${boost}x Visibility';
+    return 'शोध बूस्ट: ${boost}x दृश्यता';
   }
 
   @override
-  String get rewardsPerkPrioritySupport => 'Priority Customer Support 24/7';
+  String get rewardsPerkPrioritySupport => 'प्राधान्य ग्राहक सेवा 24/7';
 
   @override
-  String get rewardsPerkPremiumJobs => 'Access to High-Value Premium Bookings';
+  String get rewardsPerkPremiumJobs => 'उच्च-मूल्य प्रीमियम बुकिंगची उपलब्धता';
 
   @override
-  String get rewardsStreaksTitle => 'Active Streaks';
+  String get rewardsStreaksTitle => 'सक्रिय सातत्य (स्ट्रिक्स)';
 
   @override
   String rewardsStreakDays(int count) {
-    return '$count Days Active';
+    return '$count दिवस सक्रिय';
   }
 
   @override
   String rewardsStreakJobs(int count) {
-    return '$count On-Time Jobs';
+    return '$count वेळेवर पूर्ण कामे';
   }
 
   @override
-  String get rewardsStreakRisk => 'Streak at risk! Complete an action today.';
+  String get rewardsStreakRisk => 'सातत्य धोक्यात आहे! आज एक काम पूर्ण करा.';
 
   @override
-  String get rewardsBadgesTitle => 'Achievement Badges';
+  String get rewardsBadgesTitle => 'गौरव बिल्ले (बॅजेस)';
 
   @override
   String rewardsBadgesEarned(int earned, int total) {
-    return '$earned of $total Unlocked';
+    return '$total पैकी $earned अनलॉक केले';
   }
 
   @override
   String rewardsLockedBadge(String criteria) {
-    return 'Locked: $criteria';
+    return 'कुलूपबंद: $criteria';
   }
 
   @override
-  String get rewardsReferralsTitle => 'Invite & Earn';
+  String get rewardsReferralsTitle => 'आमंत्रित करा आणि मिळवा';
 
   @override
   String get rewardsReferralDesc =>
-      'Share your referral code. Earn 100 XP when your friend completes their first verified job or order!';
+      'तुमचा रेफरल कोड शेअर करा. तुमच्या मित्राने पहिले सत्यापित काम किंवा ऑर्डर पूर्ण केल्यावर 100 XP मिळवा!';
 
   @override
   String rewardsReferralCode(String code) {
-    return 'Your Code: $code';
+    return 'तुमचा कोड: $code';
   }
 
   @override
-  String get rewardsReferralCopy => 'Copy Code';
+  String get rewardsReferralCopy => 'कोड कॉपी करा';
 
   @override
-  String get rewardsReferralCopied => 'Referral code copied to clipboard!';
+  String get rewardsReferralCopied => 'रेफरल कोड क्लिपबोर्डवर कॉपी केला!';
 
   @override
   String rewardsReferralSuccessful(int count) {
-    return '$count Successful Referrals';
+    return '$count यशस्वी रेफरल्स';
   }
 
   @override
-  String get rewardsApplyReferral => 'Have a referral code?';
+  String get rewardsApplyReferral => 'रेफरल कोड आहे का?';
 
   @override
-  String get rewardsApplyReferralPrompt => 'Enter Referrer\'s Code';
+  String get rewardsApplyReferralPrompt => 'रेफरल कोड टाका';
 
   @override
-  String get rewardsApplyReferralSuccess =>
-      'Referral code applied successfully!';
+  String get rewardsApplyReferralSuccess => 'रेफरल कोड यशस्वीरित्या लागू केला!';
 
   @override
-  String get rewardsStoreTitle => 'UdyogaSethu Rewards Store';
+  String get rewardsStoreTitle => 'उद्योगसेतू रिवॉर्ड्स स्टोअर';
 
   @override
   String get rewardsStoreSubtitle =>
-      'Redeem your hard-earned points for official merchandise and safety gear';
+      'तुमच्या कष्टाने कमावलेल्या गुणांचे अधिकृत उत्पादने आणि सुरक्षा उपकरणांमध्ये रूपांतर करा';
 
   @override
   String rewardsStoreCost(int points) {
-    return '$points Points';
+    return '$points गुण';
   }
 
   @override
   String rewardsStoreStock(int count) {
-    return '$count left in stock';
+    return '$count साठा शिल्लक';
   }
 
   @override
-  String get rewardsStoreOutOfStock => 'Out of Stock';
+  String get rewardsStoreOutOfStock => 'साठा संपला';
 
   @override
   String rewardsStoreLockedLevel(int level) {
-    return 'Requires Level $level';
+    return 'स्तर $level आवश्यक';
   }
 
   @override
-  String get rewardsStoreLockedBadge => 'Requires Badge';
+  String get rewardsStoreLockedBadge => 'बिल्ला आवश्यक';
 
   @override
-  String get rewardsStoreRedeemAction => 'Redeem Now';
+  String get rewardsStoreRedeemAction => 'आता रिडीम करा';
 
   @override
-  String get rewardsRedemptionDialogTitle => 'Confirm Redemption';
+  String get rewardsRedemptionDialogTitle => 'रिडीम करण्याची पुष्टी करा';
 
   @override
-  String get rewardsShippingStreet => 'Street Address / Landmark';
+  String get rewardsShippingStreet => 'पत्ता / लँडमार्क';
 
   @override
-  String get rewardsShippingPincode => 'Postal Pincode';
+  String get rewardsShippingPincode => 'पिनकोड';
 
   @override
-  String get rewardsShippingPhone => 'Contact Phone';
+  String get rewardsShippingPhone => 'संपर्क फोन';
 
   @override
-  String get rewardsRedeemSuccess => 'Redemption requested successfully!';
+  String get rewardsRedeemSuccess => 'रिडीम विनंती यशस्वीरित्या पाठवली!';
 
   @override
-  String get rewardsRedemptionsHistoryTitle => 'Your Redemptions';
+  String get rewardsRedemptionsHistoryTitle => 'तुमची रिडीम केलेली उत्पादने';
 
   @override
-  String get rewardsStatusRequested => 'Requested';
+  String get rewardsStatusRequested => 'विनंती केली';
 
   @override
-  String get rewardsStatusApproved => 'Approved';
+  String get rewardsStatusApproved => 'मंजूर';
 
   @override
-  String get rewardsStatusShipped => 'Shipped';
+  String get rewardsStatusShipped => 'पाठवले';
 
   @override
-  String get rewardsStatusDelivered => 'Delivered';
+  String get rewardsStatusDelivered => 'पोहोचवले';
 
   @override
-  String get communityHubTitle => 'Community & Trust Wall';
+  String get communityHubTitle => 'समुदाय आणि विश्वास भिंत';
 
   @override
-  String get communityLocalityTrustTitle => 'Locality Trust Index';
+  String get communityLocalityTrustTitle => 'परिसर विश्वास निर्देशांक';
 
   @override
-  String get communityTrustHigh => 'High Trust Locality';
+  String get communityTrustHigh => 'उच्च विश्वास परिसर';
 
   @override
-  String get communityTrustMedium => 'Medium Trust Locality';
+  String get communityTrustMedium => 'मध्यम विश्वास परिसर';
 
   @override
-  String get communityTrustNeedsImprovement => 'Needs Improvement';
+  String get communityTrustNeedsImprovement => 'सुधारणेची गरज';
 
   @override
   String communityTrustStats(String disputeFree, int completed) {
-    return '$disputeFree% dispute-free · $completed jobs verified';
+    return '$disputeFree% विवादमुक्त · $completed सत्यापित कामे';
   }
 
   @override
-  String get communityHeroSpotlights => 'Local Heroes & Success Stories';
+  String get communityHeroSpotlights => 'स्थानिक नायक आणि यशोगाथा';
 
   @override
-  String get communityUpcomingEvents => 'Upcoming Training Camps & Events';
+  String get communityUpcomingEvents => 'आगामी प्रशिक्षण शिबिरे आणि कार्यक्रम';
 
   @override
-  String get communityRegisterEvent => 'Register Interest';
+  String get communityRegisterEvent => 'नोंदणी करा';
 
   @override
-  String get communityEventRegistered => 'Registered ✓';
+  String get communityEventRegistered => 'नोंदणी झाली ✓';
 
   @override
-  String get learningHubTitle => 'Skill & Learning Hub';
+  String get learningHubTitle => 'कौशल्य आणि शिक्षण केंद्र';
 
   @override
   String get learningHubSubtitle =>
-      'Complete 5-minute modules, earn micro-credentials, and level up your career';
+      '5 मिनिटांचे मॉड्युल्स पूर्ण करा, सूक्ष्म-प्रमाणपत्रे मिळवा आणि प्रगती करा';
 
   @override
-  String get learningEarnedCredentialsTitle => 'Earned Micro-Credentials';
+  String get learningEarnedCredentialsTitle => 'मिळवलेली सूक्ष्म-प्रमाणपत्रे';
 
   @override
-  String get learningModuleStart => 'Start Module';
+  String get learningModuleStart => 'मॉड्यूल सुरू करा';
 
   @override
-  String get learningModuleReview => 'Review Module';
+  String get learningModuleReview => 'पुनरावलोकन करा';
 
   @override
-  String get learningModuleCompleted => 'Completed ✓';
+  String get learningModuleCompleted => 'पूर्ण झाले ✓';
 
   @override
   String learningDurationMinutes(int minutes) {
-    return '$minutes mins read';
+    return '$minutes मिनिटे वाचन';
   }
 
   @override
-  String get learningTakeQuiz => 'Take Assessment Quiz';
+  String get learningTakeQuiz => 'चाचणी परीक्षा द्या';
 
   @override
-  String get learningQuizTitle => 'Module Assessment';
+  String get learningQuizTitle => 'मॉड्यूल मूल्यांकन';
 
   @override
   String get learningQuizPassMark =>
-      'Score 80% or higher to earn credential and +40 XP';
+      'प्रमाणपत्र आणि +40 XP मिळवण्यासाठी 80% किंवा अधिक गुण मिळवा';
 
   @override
-  String get learningQuizSubmit => 'Submit Answers';
+  String get learningQuizSubmit => 'उत्तरे सबमिट करा';
 
   @override
   String learningQuizPassed(int score) {
-    return 'Congratulations! You passed with $score%';
+    return 'अभिनंदन! तुम्ही $score% गुणांसह उत्तीर्ण झालात';
   }
 
   @override
   String learningQuizFailed(int score) {
-    return 'You scored $score%. 80% is needed to pass. Please review and try again.';
+    return 'तुम्हाला $score% गुण मिळाले. उत्तीर्ण होण्यासाठी 80% आवश्यक आहेत. कृपया पुन्हा प्रयत्न करा.';
   }
 
   @override
-  String get learningUploadCertificateAction => 'Upload External Certificate';
+  String get learningUploadCertificateAction => 'बाह्य प्रमाणपत्र अपलोड करा';
 
   @override
-  String get learningUploadTitle => 'Submit External Certificate';
+  String get learningUploadTitle => 'बाह्य प्रमाणपत्र सादर करा';
 
   @override
   String get learningUploadDocTitle =>
-      'Certificate Title (e.g. ITI Diploma, FSSAI)';
+      'प्रमाणपत्र शीर्षक (उदा. ITI डिप्लोमा, FSSAI)';
 
   @override
-  String get learningUploadIssuingOrg => 'Issuing Organization / Institute';
+  String get learningUploadIssuingOrg => 'जारी करणारी संस्था / संस्था';
 
   @override
-  String get learningUploadFile => 'Certificate File / Image Path';
+  String get learningUploadFile => 'प्रमाणपत्र फाइल / फोटो पाथ';
 
   @override
   String get learningUploadPendingNotice =>
-      'Uploaded certificates will be reviewed by admin before verification.';
+      'अपलोड केलेल्या प्रमाणपत्रांची पडताळणीपूर्वी प्रशासकाद्वारे तपासणी केली जाईल.';
 
   @override
-  String get learningUploadSuccess => 'Certificate submitted for admin review!';
+  String get learningUploadSuccess =>
+      'प्रमाणपत्र प्रशासकीय तपासणीसाठी सादर केले!';
 
   @override
-  String get learningPendingReview => 'Pending Admin Review';
+  String get learningPendingReview => 'प्रशासक पुनरावलोकन प्रलंबित';
 
   @override
-  String get learningVerifiedCredential => 'Admin Verified';
+  String get learningVerifiedCredential => 'प्रशासक सत्यापित';
 
   @override
-  String get creditReadinessTitle => 'Credit Readiness Guidance';
+  String get creditReadinessTitle => 'कर्ज पात्रता मार्गदर्शन';
 
   @override
-  String get wellnessTitle => 'Wellness & Benefits';
+  String get wellnessTitle => 'कल्याण आणि फायदे';
 
   @override
-  String get actionBook => 'Book Worker';
+  String get actionBook => 'कामगार बुक करा';
 
   @override
-  String get actionPay => 'Pay / Wallet';
+  String get actionPay => 'पेमेंट / वॉलेट';
 
   @override
   String get disclaimerCreditGuidance =>
-      'This is guidance only. It does not guarantee any loan. Future links to regulated financial partners would need your consent.';
+      'हे केवळ मार्गदर्शन आहे. हे कोणत्याही कर्जाची हमी देत नाही. नियमन केलेल्या वित्तीय भागीदारांशी भविष्यातील जोडणीसाठी तुमची संमती आवश्यक असेल.';
 }

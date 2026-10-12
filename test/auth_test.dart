@@ -99,6 +99,23 @@ class MockAuthRepository implements AuthRepository {
   Future<void> copyGoogleProfileDetails() async {}
 
   @override
+  Future<AuthResponse> signInWithDemoCredentials(String email, String password) async {
+    return AuthResponse(
+      session: Session(
+        accessToken: 'mock_demo_token',
+        tokenType: 'bearer',
+        user: const User(
+          id: 'mock_demo_user_id',
+          appMetadata: {},
+          userMetadata: {},
+          aud: 'authenticated',
+          createdAt: '2026-10-02T00:00:00Z',
+        ),
+      ),
+    );
+  }
+
+  @override
   Future<void> signOut() async {}
 }
 

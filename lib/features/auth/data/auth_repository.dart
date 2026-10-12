@@ -16,6 +16,7 @@ abstract class AuthRepository {
   Future<AuthResponse> verifyPhoneChangeOtp(String rawPhone, String otpToken);
   Future<void> linkGoogleAccount();
   Future<void> copyGoogleProfileDetails();
+  Future<AuthResponse> signInWithDemoCredentials(String email, String password);
   Future<void> signOut();
 }
 
@@ -336,6 +337,31 @@ class SupabaseAuthRepository implements AuthRepository {
       AppLogger.i('Logged terms consent via RPC record_user_consent');
     } catch (err) {
       AppLogger.w('Could not record consent via RPC: $err');
+    }
+  }
+
+  @override
+  Future<AuthResponse> signInWithDemoCredentials(String email, String password) async {
+    if (!Env.isDemoBuild) {
+      throw const AppException.auth('Demo sign-in is disabled in production release builds.');
+    }
+    try {
+      AppLogger.i('Signing in with demo credentials for $email');
+      final response = await _supabase.auth.signInWithPassword(
+        email: email,
+        password: password,
+      );
+      if (response.session != null) {
+        _recordConsent();
+      }
+      return response;
+    } on AuthException catch (e) {
+      AppLogger.e('AuthException during demo signInWithPassword: ${e.message}');
+      throw AppException.auth('Demo sign-in failed: ${e.message}', code: e.code);
+    } catch (e) {
+      AppLogger.e('Unexpected error during demo signInWithPassword: $e');
+      if (e is AppException) rethrow;
+      throw AppException.unknown('Failed to authenticate demo user: $e');
     }
   }
 

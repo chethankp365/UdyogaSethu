@@ -27,6 +27,10 @@ import 'package:udyogasethu/features/safety/presentation/job_protection_claim_sc
 import 'package:udyogasethu/features/notifications/presentation/notification_centre_screen.dart';
 import 'package:udyogasethu/features/wallet/presentation/credit_readiness_screen.dart';
 import 'package:udyogasethu/features/wellness/presentation/wellness_benefits_screen.dart';
+import 'package:udyogasethu/core/config/env.dart';
+import 'package:udyogasethu/features/demo/presentation/admin_trust_preview_screen.dart';
+import 'package:udyogasethu/features/demo/presentation/demo_accounts_screen.dart';
+import 'package:udyogasethu/features/demo/presentation/demo_launcher_sheet.dart';
 import 'package:udyogasethu/features/farmer/domain/farm_resource_model.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_home_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_listings_screen.dart';
@@ -886,6 +890,25 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.wellness,
         builder: (context, state) => const WellnessBenefitsScreen(),
       ),
+
+      // Guided Demo Routes (gated under Env.isDemoBuild)
+      if (Env.isDemoBuild) ...[
+        GoRoute(
+          path: AppRoutes.demo,
+          builder: (context, state) => const Scaffold(
+            backgroundColor: Color(0xFFF8FAFC),
+            body: SafeArea(child: DemoLauncherSheet()),
+          ),
+        ),
+        GoRoute(
+          path: AppRoutes.demoAccounts,
+          builder: (context, state) => const DemoAccountsScreen(),
+        ),
+        GoRoute(
+          path: AppRoutes.demoAdminReview,
+          builder: (context, state) => const AdminTrustPreviewScreen(),
+        ),
+      ],
 
       // Debug Routes
       if (kDebugMode) ...[

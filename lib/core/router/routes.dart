@@ -108,6 +108,11 @@ class AppRoutes {
   static const String creditReadiness = '/credit-readiness';
   static const String wellness = '/wellness';
 
+  // Guided Demo Routes (gated under Env.isDemoBuild)
+  static const String demo = '/demo';
+  static const String demoAccounts = '/demo/accounts';
+  static const String demoAdminReview = '/demo/admin-review';
+
   // Debug Routes (gated under kDebugMode)
   static const String devGallery = '/dev/gallery';
   static const String devConnection = '/dev/connection';

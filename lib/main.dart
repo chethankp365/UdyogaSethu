@@ -12,6 +12,8 @@ import 'package:udyogasethu/l10n/app_localizations.dart';
 
 import 'package:udyogasethu/core/notifications/notification_service.dart';
 import 'package:udyogasethu/core/widgets/offline_banner_wrapper.dart';
+import 'package:udyogasethu/core/widgets/demo_build_badge.dart';
+import 'package:udyogasethu/features/demo/presentation/widgets/demo_coach_mark_overlay.dart';
 import 'package:udyogasethu/features/account/presentation/settings_controller.dart';
 
 void main() async {
@@ -111,7 +113,14 @@ class _UdyogaSethuAppState extends ConsumerState<UdyogaSethuApp> {
             textScaler: TextScaler.linear(settings.textScale.clamp(0.85, 1.60)),
           ),
           child: OfflineBannerWrapper(
-            child: child ?? const SizedBox.shrink(),
+            child: DemoCoachMarkOverlay(
+              child: Stack(
+                children: [
+                  child ?? const SizedBox.shrink(),
+                  const DemoBuildBadge(),
+                ],
+              ),
+            ),
           ),
         );
       },

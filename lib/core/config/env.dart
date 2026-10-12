@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// Environment configuration class reading values from `--dart-define` or `--dart-define-from-file`.
@@ -43,10 +44,18 @@ class Env {
   /// Set to false by default. In debug builds, can be toggled via Dev Menu.
   static const bool profileQrEnabled = false;
 
+  /// Demo Build Flag: Available in debug/profile builds, or when explicitly enabled
+  /// via `--dart-define=DEMO_BUILD=true`. Strictly false in production release builds.
+  static const bool _envDemoBuild = bool.fromEnvironment('DEMO_BUILD', defaultValue: false);
+  static bool get isDemoBuild => (!kReleaseMode) || _envDemoBuild;
+
   /// Returns true if valid Supabase configuration is available.
   static bool get isConfigured =>
       supabaseUrl.trim().isNotEmpty && supabaseAnonKey.trim().isNotEmpty;
 }
+
+/// Global demo build flag constant
+bool get kIsDemoBuild => Env.isDemoBuild;
 
 /// Global feature flag constant matching Env.allowMultiRole
 const bool kAllowMultiRole = Env.allowMultiRole;

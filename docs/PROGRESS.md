@@ -89,8 +89,8 @@
 *Note: The Admin Console is built in a separate web/desktop project and is out of scope for this Flutter app.*
 
 ## Phase 10 (Polish, security, tests and release)
-- [ ] **P10.1**: Guided demo scenarios (Status: Todo)
-- [ ] **P10.2**: Translation pass and empty/loading/error audit (Status: Todo)
+- [x] **P10.1**: Guided demo scenarios (Status: Done | Evaluator-friendly guided scenarios strictly gated under `Env.isDemoBuild` / `!kReleaseMode`; 5 reproducible canonical scenarios covering Worker Day, Customer Service Booking, Farmer Tomato Sale, Community Bulk Order, and Admin Trust Review; pedagogical `DemoCoachMarkOverlay` explaining "Why this matters" at every step; persistent scenario progress tracking; seeded test accounts screen `DemoAccountsScreen`; visible "DEMO BUILD" badges; server-authoritative `reset_demo()` RPC enforcing confirmation code token; zero layout overflows across 320–600dp and 1.0–1.6× text scale; 13/13 passing tests in `test/guided_demo_scenarios_test.dart`)
+- [x] **P10.2**: Translation pass and empty/loading/error audit (Status: Done | Completed all 114 missing translation keys across Marathi `mr`, Bengali `bn`, and Odia `or` ARB files; verified 100% key completeness [1,273 keys across all 8 languages `en`, `kn`, `hi`, `te`, `ta`, `mr`, `bn`, `or`] with `tool/check_l10n.dart`; authored honest terminology review in `docs/L10N_REVIEW.md` noting machine translations pending certified field linguist audit; performed comprehensive UI state audit in `docs/QA_CHECKLIST.md` across 29 screens for loading spinners, actionable empty states, error retry, offline modes, and button submission locking; zero `RenderFlex` overflows in `tool/check_overflow.bat`; all 664 tests passing in `flutter test`)
 - [ ] **P10.3**: Security and privacy audit (red team yourself) (Status: Todo)
 - [ ] **P10.4**: Automated tests for the critical flows (Status: Todo)
 - [ ] **P10.5**: Release build, documentation and final handover (Status: Todo)
@@ -1312,8 +1312,35 @@
   - `flutter analyze`: 0 issues found (clean).
   - `tool/check_overflow.bat`: All 3 suites passed with 0 overflows across 320-600dp and text scale 1.0-2.0.
   - Test suites: 31/31 Phase 8.5 & 8.6 related tests passed cleanly; 650+ total tests passing in full test suite.
+- **Phase 10.1 & Phase 10.2**: Guided Demo Scenarios, Localization Completeness & Comprehensive UI State Audit (Status: Done)
+  - Backend & Migrations:
+    - `supabase/migrations/0760_demo_scenarios_and_reset.sql`: Populated `demo_users` registry for 15 test accounts; created `reset_demo(p_confirmation_code TEXT)` SECURITY DEFINER RPC restoring baseline job assignments, tomato stock (500 kg), and test account wallet balances (₹1,500.00). Strictly guarded with confirmation code `DEMO_RESET_UDYOGASETHU_2026` and admin role checks.
+  - Configuration & Flavour Isolation:
+    - `lib/core/config/env.dart`: Added `Env.isDemoBuild` and `kIsDemoBuild` flags ensuring demo shortcuts, demo logins, and demo reset capabilities are completely stripped and unreachable in release builds.
+    - `lib/features/auth/data/auth_repository.dart`: Added `signInWithDemoCredentials(email, password)` for authentic Supabase JWT sessions on test accounts during evaluations, strictly gated behind `Env.isDemoBuild`.
+  - Demo Architecture & Domain:
+    - `lib/features/demo/domain/demo_scenario.dart`: Implemented `DemoStep`, `DemoScenario`, and `DemoScenariosCatalog` defining the 5 canonical scenarios: Worker Day (`worker_day`), Customer Service Booking (`customer_booking`), Farmer Tomato Sale (`farmer_sale`), Community Bulk Order (`community_bulk`), and Admin Trust Review (`admin_trust`), each under 3 minutes with pedagogical "Why this matters" explanations.
+    - `lib/features/demo/data/demo_repository.dart`: Created `DemoRepository`, `DemoState`, and `DemoNotifier` (`demoNotifierProvider`) with scenario step advancement, completion persistence, and `resetAllDemoState()` calling `reset_demo` RPC.
+  - Presentation & Overlays:
+    - `lib/features/demo/presentation/demo_launcher_sheet.dart`: Evaluator modal with progress bar, scenario cards, Demo Accounts launcher, and Reset Demo action.
+    - `lib/features/demo/presentation/demo_accounts_screen.dart`: Seeded test accounts selector across Seeker, Provider, Farmer, and Admin roles with prominent "DEMO BUILD" badge and evaluator notice.
+    - `lib/features/demo/presentation/admin_trust_preview_screen.dart`: Read-only showcase of seeded dispute (#DSP-2026-004) with frozen escrow and unverified ITI trade certificate, featuring mandatory architectural notice explaining that Admin actions occur exclusively in the separate Admin project.
+    - `lib/features/demo/presentation/widgets/demo_coach_mark_overlay.dart`: Persistent coach mark overlay highlighting active step, "Why this matters" explanation, Open Screen shortcut, and Next Step navigation.
+    - `lib/core/widgets/demo_build_badge.dart`: Floating demo badge on main screens gated strictly by `Env.isDemoBuild`.
+    - `lib/features/auth/presentation/login_screen.dart`: Added Evaluator Quick Login card gated strictly by `Env.isDemoBuild`.
+  - Localization Pass (P10.2):
+    - `lib/l10n/app_mr.arb`, `lib/l10n/app_bn.arb`, `lib/l10n/app_or.arb`: Added all 114 missing keys, achieving 100% completeness (1,273 keys across all 8 languages: English, Kannada, Hindi, Telugu, Tamil, Marathi, Bengali, Odia).
+    - `docs/L10N_REVIEW.md`: Created comprehensive terminology review covering Escrow, Credit Readiness disclaimer, Social Protection welfare schemes, and Worksite Verification, explicitly documenting that machine translations require field certification by native linguists.
+  - UI State & QA Audit (P10.2):
+    - `docs/QA_CHECKLIST.md`: Documented full audit across 29 primary screens and 10 functional modules checking Loading spinners, actionable Empty states, Error states with retry, Offline indicators, and submission button locking.
+  - Verification & Testing:
+    - `dart run tool/check_l10n.dart`: 100% key completeness verified across all 8 ARB files (0 missing keys).
+    - `flutter analyze`: 0 issues found (clean).
+    - `tool/check_overflow.bat`: All 3 suites passed with ZERO RenderFlex overflows across 320–600dp widths and 1.0–2.0 text scales.
+    - `test/guided_demo_scenarios_test.dart`: 13/13 unit and responsive matrix tests passed (including zero-overflow matrix across 320–600dp, 1.0–1.6× text scale, and 8 locales).
+    - `flutter test`: All 664 tests in the repository passed cleanly with 0 regressions.
 - **Manual steps to apply**:
-  - Run Supabase migration `supabase/migrations/0750_wellness_benefits_trust_readiness.sql` against the live database using `npx supabase db push` or SQL Editor.
+  - Run Supabase migration `supabase/migrations/0760_demo_scenarios_and_reset.sql` against the live database using `npx supabase db push` or SQL Editor.
 
 ## Known issues
 - **Profile & Auth Foreign Key Cascade vs D11 Retention**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`. The financial retention refactor will decouple `auth.users` deletion from audit records in an upcoming migration.
