@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/supabase/supabase_service.dart';
+import '../../../core/theme/app_spacing.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../marketplace/data/orders_repository.dart';
 import '../../marketplace/domain/delivery_slot.dart';
@@ -63,7 +64,7 @@ class _DeliverySlotsScreenState extends ConsumerState<DeliverySlotsScreen> {
             onRefresh: () async => ref.refresh(farmerDeliverySlotsProvider(farmerId)),
             color: const Color(0xFF0D6548),
             child: ListView.builder(
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 90),
+              padding: AppSpacing.fabListPadding,
               itemCount: slots.length,
               itemBuilder: (ctx, i) => _buildSlotCard(slots[i], l10n),
             ),

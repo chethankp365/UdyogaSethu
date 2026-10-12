@@ -566,5 +566,48 @@ void main() {
       expect(find.text('Site Helper Needed'), findsOneWidget);
       expect(find.text('2 Slots'), findsOneWidget);
     });
+
+    testWidgets('Post Job Wizard requires target audience selection before proceeding', (tester) async {
+      final fakeRepo = FakeProviderJobsRepository();
+      await tester.pumpWidget(createTestApp(const PostJobWizardScreen(), fakeRepo));
+      await tester.pumpAndSettle();
+
+      // Step 1: Select category & enter title
+      await tester.tap(find.text('Construction Helper'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField).first, 'Student Friendly Gig');
+      await tester.pumpAndSettle();
+
+      // Advance to Step 2 (Target Workers)
+      await tester.tap(find.text('Next'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Who is this job for?'), findsOneWidget);
+
+      // Deselect informal audience (empty audience)
+      final element = tester.element(find.byType(PostJobWizardScreen));
+      final container = ProviderScope.containerOf(element);
+      container.read(postJobWizardProvider.notifier).setSuitableFor([]);
+      await tester.pumpAndSettle();
+
+      // Try tapping Next with empty audience
+      await tester.tap(find.text('Next'));
+      await tester.pumpAndSettle();
+
+      // Blocked! SnackBar and inline error shown and still on Target Workers step
+      expect(find.text('Please select at least one worker type'), findsWidgets);
+      expect(find.text('Who is this job for?'), findsOneWidget);
+
+      // Now select Student audience and clear error snackbar
+      ScaffoldMessenger.of(element).clearSnackBars();
+      container.read(postJobWizardProvider.notifier).setSuitableFor(['student']);
+      await tester.pumpAndSettle();
+
+      // Now tap Next -> successfully advances to Wages & Schedule!
+      await tester.tap(find.text('Next'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Wages & Schedule'), findsWidgets);
+    });
   });
 }

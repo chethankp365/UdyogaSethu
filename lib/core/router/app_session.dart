@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:udyogasethu/core/router/routes.dart';
+import 'package:udyogasethu/features/seeker/presentation/my_applications_controller.dart';
+import 'package:udyogasethu/features/seeker/presentation/seeker_home_controller.dart';
 
 /// Enum representing session auth/onboarding lifecycle status.
 enum AuthSessionStatus {
@@ -93,15 +95,24 @@ class AppSessionNotifier extends Notifier<AppSessionData> {
   UserRole get activeRole => state.activeRole;
 
   void setSessionStatus(AuthSessionStatus status) {
+    if (status == AuthSessionStatus.signedOut) {
+      ref.read(myApplicationsProvider.notifier).clear();
+      ref.invalidate(seekerHomeProfileProvider);
+      ref.invalidate(seekerRecommendedJobsProvider);
+    }
     state = state.copyWith(status: status);
   }
 
   void setRole(UserRole role) {
     state = state.copyWith(activeRole: role);
+    ref.invalidate(seekerHomeProfileProvider);
+    ref.invalidate(seekerRecommendedJobsProvider);
   }
 
   void setSeekerType(String? seekerType) {
     state = state.copyWith(seekerType: seekerType, seekerTypeLoaded: true);
+    ref.invalidate(seekerHomeProfileProvider);
+    ref.invalidate(seekerRecommendedJobsProvider);
   }
 
   void setDeepLinkPending(String? uri) {
@@ -131,6 +142,14 @@ class AppSessionNotifier extends Notifier<AppSessionData> {
     bool? faceRequiredAtLogin,
     bool? hasEnrolledFace,
   }) {
+    if (status == AuthSessionStatus.signedOut) {
+      ref.read(myApplicationsProvider.notifier).clear();
+      ref.invalidate(seekerHomeProfileProvider);
+      ref.invalidate(seekerRecommendedJobsProvider);
+    } else if ((role != null && role != state.activeRole) || (seekerType != null && seekerType != state.seekerType)) {
+      ref.invalidate(seekerHomeProfileProvider);
+      ref.invalidate(seekerRecommendedJobsProvider);
+    }
     state = state.copyWith(
       status: status,
       activeRole: role,

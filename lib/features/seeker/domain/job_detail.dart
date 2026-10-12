@@ -28,6 +28,10 @@ class JobDetail {
   final String status;
   final String? sitePhotoUrl;
   final List<String> suitableFor;
+  final String myApplicationStatus;
+  final String? myAssignmentStatus;
+  final String? myApplicationId;
+  final String? myAssignmentId;
 
   const JobDetail({
     required this.id,
@@ -59,6 +63,10 @@ class JobDetail {
     this.status = 'open',
     this.sitePhotoUrl,
     this.suitableFor = const ['informal'],
+    this.myApplicationStatus = 'none',
+    this.myAssignmentStatus,
+    this.myApplicationId,
+    this.myAssignmentId,
   });
 
   int get slotsOpen => (slotsTotal - slotsFilled).clamp(0, slotsTotal);
@@ -116,11 +124,15 @@ class JobDetail {
       distanceKm: (json['distance_km'] as num?)?.toDouble() ?? 0.0,
       walkingMinutes: (json['walking_minutes'] as num?)?.toInt() ?? 0,
       status: json['status'] as String? ?? 'open',
-      sitePhotoUrl: json['site_photo_url'] as String? ?? json['photo_url'] as String?,
+      sitePhotoUrl: json['thumbnail_path'] as String? ?? json['site_photo_url'] as String? ?? json['photo_url'] as String?,
       suitableFor: (json['suitable_for'] as List?)?.map((e) => e.toString()).toList() ??
           (json['requirements'] is Map && (json['requirements'] as Map)['students_ok'] == true
               ? const ['informal', 'student']
               : const ['informal']),
+      myApplicationStatus: (json['my_application_status'] ?? json['application_status'] ?? 'none').toString(),
+      myAssignmentStatus: (json['my_assignment_status'] ?? json['assignment_status'])?.toString(),
+      myApplicationId: (json['my_application_id'] ?? json['application_id'])?.toString(),
+      myAssignmentId: (json['my_assignment_id'] ?? json['assignment_id'])?.toString(),
     );
   }
 

@@ -18,6 +18,16 @@ class AppSpacing {
   static const double minTouchTarget = 48.0;
   static const double maxContentWidth = 480.0;
 
+  /// Standard bottom padding for scrollable views sitting above or under a Floating Action Button
+  /// or bottom navigation bar, ensuring the last item can scroll fully clear without being obscured.
+  static const double fabBottomPadding = 128.0;
+
+  /// Shared EdgeInsets helper for list views that sit under a floating action button
+  static const EdgeInsets fabListPadding = EdgeInsets.fromLTRB(16.0, 16.0, 16.0, fabBottomPadding);
+
+  /// Shared bottom spacer for scroll views that sit under a floating action button
+  static const Widget fabBottomSpacer = SizedBox(height: fabBottomPadding);
+
   // Border Radius Tokens
   static const double radiusSm = 8.0;
   static const double radiusMd = 12.0;

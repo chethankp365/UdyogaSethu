@@ -25,6 +25,11 @@ class JobRecommendation {
   final bool isFlexibleShift;
   final double score;
   final List<String> reasons;
+  final String myApplicationStatus;
+  final String? myAssignmentStatus;
+  final String? myApplicationId;
+  final String? myAssignmentId;
+  final bool isLocationFallback;
 
   const JobRecommendation({
     required this.id,
@@ -53,6 +58,11 @@ class JobRecommendation {
     this.isFlexibleShift = false,
     this.score = 50.0,
     this.reasons = const [],
+    this.myApplicationStatus = 'none',
+    this.myAssignmentStatus,
+    this.myApplicationId,
+    this.myAssignmentId,
+    this.isLocationFallback = false,
   });
 
   factory JobRecommendation.fromJson(Map<String, dynamic> json) {
@@ -96,12 +106,17 @@ class JobRecommendation {
       categoryNames: names,
       categoryIcon: json['category_icon'] as String? ?? 'work',
       categorySlug: json['category_slug'] as String? ?? 'general',
-      sitePhotoUrl: json['site_photo_url'] as String? ?? json['photo_url'] as String?,
+      sitePhotoUrl: json['thumbnail_path'] as String? ?? json['site_photo_url'] as String? ?? json['photo_url'] as String?,
       studentsOk: isStudentsOk,
       isStudentFriendly: isStudentsOk || json['is_student_friendly'] == true,
       isFlexibleShift: json['is_flexible_shift'] as bool? ?? false,
       score: (json['score'] as num?)?.toDouble() ?? 50.0,
       reasons: parsedReasons,
+      myApplicationStatus: (json['my_application_status'] ?? json['application_status'] ?? 'none').toString(),
+      myAssignmentStatus: (json['my_assignment_status'] ?? json['assignment_status'])?.toString(),
+      myApplicationId: (json['my_application_id'] ?? json['application_id'])?.toString(),
+      myAssignmentId: (json['my_assignment_id'] ?? json['assignment_id'])?.toString(),
+      isLocationFallback: json['is_location_fallback'] == true,
     );
   }
 

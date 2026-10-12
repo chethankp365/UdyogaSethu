@@ -7061,6 +7061,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'SELF-DECLARED PROFILE'**
   String get selfDeclaredProfile;
+
+  /// No description provided for @locationPinNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Site address provided without GPS pin'**
+  String get locationPinNotice;
 }
 
 class _AppLocalizationsDelegate

@@ -466,7 +466,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER SET search_path = public;
 
-GRANT EXECUTE ON FUNCTION public.nearby_jobs TO authenticated, anon;
+GRANT EXECUTE ON FUNCTION public.nearby_jobs(DOUBLE PRECISION, DOUBLE PRECISION, DOUBLE PRECISION, UUID, BIGINT, BIGINT, TEXT, INT, INT) TO authenticated, anon;
 
 -- ============================================================================
 -- 5. Enhanced recommended_jobs RPC
@@ -685,13 +685,15 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER SET search_path = public;
 
-GRANT EXECUTE ON FUNCTION public.recommended_jobs TO authenticated, anon;
+GRANT EXECUTE ON FUNCTION public.recommended_jobs(UUID, DOUBLE PRECISION, DOUBLE PRECISION, INT, DOUBLE PRECISION) TO authenticated, anon;
 
 -- ============================================================================
 -- 6. Enhanced get_job_applicants RPC
 -- Returns photo, name, seeker type, badge, level, rating, skills, distance, message, created_at
 -- Guarded by provider ownership or admin
 -- ============================================================================
+DROP FUNCTION IF EXISTS public.get_job_applicants(UUID);
+
 CREATE OR REPLACE FUNCTION public.get_job_applicants(
   p_job_id UUID
 )

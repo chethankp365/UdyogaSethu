@@ -1336,5 +1336,6 @@
   "primaryCropsLabel": "मुख्य पिके",
   "apmcMandiLabel": "नोंदणीकृत एपीएमसी मार्केट",
   "farmDetailsUpdatedSuccess": "शेती तपशील यशस्वीरित्या अपडेट केले",
-  "selfDeclaredProfile": "स्वयं-घोषित प्रोफाइल"
+  "selfDeclaredProfile": "स्वयं-घोषित प्रोफाइल",
+  "locationPinNotice": "जीपीएस पिन शिवाय कामाचे ठिकाण पत्ता दिला आहे"
 }

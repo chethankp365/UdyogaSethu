@@ -1336,5 +1336,6 @@
   "primaryCropsLabel": "முக்கிய பயிர்கள்",
   "apmcMandiLabel": "பதிவுசெய்யப்பட்ட ஏபிஎம்சி மண்டி",
   "farmDetailsUpdatedSuccess": "பண்ணை விவரங்கள் வெற்றிகரமாக புதுப்பிக்கப்பட்டன",
-  "selfDeclaredProfile": "சுய அறிவிப்பு சுயவிவரம்"
+  "selfDeclaredProfile": "சுய அறிவிப்பு சுயவிவரம்",
+  "locationPinNotice": "ஜிபிஎஸ் பின் இல்லாமல் தள முகவரி வழங்கப்பட்டுள்ளது"
 }

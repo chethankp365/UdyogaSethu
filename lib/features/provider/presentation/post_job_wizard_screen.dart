@@ -16,6 +16,9 @@ import 'package:udyogasethu/features/provider/domain/job_post_draft.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_home_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_jobs_controller.dart';
 import 'package:udyogasethu/core/services/job_thumbnail_service.dart';
+import 'package:udyogasethu/core/services/thumbnail_library.dart';
+import 'package:udyogasethu/core/widgets/app_thumbnail.dart' as ui;
+import 'package:udyogasethu/core/widgets/thumbnail_picker_sheet.dart';
 import 'package:udyogasethu/features/seeker/domain/seeker_profile_draft.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
@@ -280,17 +283,30 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
       setState(() => _isUploadingPhoto = true);
       final bytes = await picked.readAsBytes();
 
-      // Compress to max 800 width/height
+      // Compress and crop to 16:9 aspect ratio (800x450)
       Uint8List compressed = bytes;
       try {
         final decoded = img.decodeImage(bytes);
-        if (decoded != null && (decoded.width > 800 || decoded.height > 800)) {
-          final resized = img.copyResize(
+        if (decoded != null) {
+          int targetWidth = decoded.width;
+          int targetHeight = (decoded.width * 9) ~/ 16;
+          int cropX = 0;
+          int cropY = (decoded.height - targetHeight) ~/ 2;
+          if (targetHeight > decoded.height) {
+            targetHeight = decoded.height;
+            targetWidth = (decoded.height * 16) ~/ 9;
+            cropX = (decoded.width - targetWidth) ~/ 2;
+            cropY = 0;
+          }
+          final cropped = img.copyCrop(
             decoded,
-            width: decoded.width >= decoded.height ? 800 : null,
-            height: decoded.height > decoded.width ? 800 : null,
+            x: cropX.clamp(0, decoded.width),
+            y: cropY.clamp(0, decoded.height),
+            width: targetWidth.clamp(1, decoded.width),
+            height: targetHeight.clamp(1, decoded.height),
           );
-          compressed = Uint8List.fromList(img.encodeJpg(resized, quality: 80));
+          final resized = img.copyResize(cropped, width: 800, height: 450);
+          compressed = Uint8List.fromList(img.encodeJpg(resized, quality: 82));
         }
       } catch (_) {}
 
@@ -347,7 +363,7 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
           children: [
             ListTile(
               leading: const Icon(Icons.camera_alt_rounded, color: AppColors.headerGreenDark),
-              title: const Text('Take Photo with Camera'),
+              title: Text(AppLocalizations.of(ctx)?.takePhotoCamera ?? 'Take Photo with Camera'),
               onTap: () {
                 Navigator.pop(ctx);
                 _pickAndUploadSitePhoto(ImageSource.camera);
@@ -355,7 +371,7 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.photo_library_rounded, color: AppColors.amberOrange),
-              title: const Text('Choose from Gallery'),
+              title: Text(AppLocalizations.of(ctx)?.chooseGallery ?? 'Choose from Gallery'),
               onTap: () {
                 Navigator.pop(ctx);
                 _pickAndUploadSitePhoto(ImageSource.gallery);
@@ -532,8 +548,7 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
                       : const Icon(Icons.work_outline_rounded, size: 16, color: AppColors.headerGreenDark),
                   onSelected: (selected) {
                     if (selected) {
-                      final allowsStudent = cat.audience.contains('student') || cat.audience.contains('part_time');
-                      notifier.setCategory(cat.id, catName, allowsStudent: allowsStudent);
+                      notifier.setCategory(cat.id, catName);
                     }
                   },
                 );
@@ -576,13 +591,20 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
 
   Widget _buildSitePhotoSection(JobPostDraft draft) {
     final notifier = ref.read(postJobWizardProvider.notifier);
-    final hasPhoto = draft.sitePhotoUrl != null && draft.sitePhotoUrl!.isNotEmpty;
+    final suggested = ThumbnailLibrary.suggestJobIllustration(
+      title: draft.title,
+      categorySlug: draft.categoryName?.toLowerCase() ?? 'general',
+    );
+    final hasCustomUpload = draft.sitePhotoUrl != null && draft.sitePhotoUrl!.isNotEmpty;
+    final hasChosenLibrary = draft.thumbnailPath != null &&
+        draft.thumbnailPath!.startsWith('assets/') &&
+        draft.thumbnailPath != suggested.assetPath;
 
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.grey.shade300),
       ),
       child: Column(
@@ -590,108 +612,253 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
         children: [
           Row(
             children: [
-              const Icon(Icons.add_a_photo_outlined, size: 20, color: AppColors.headerGreenDark),
+              const Icon(Icons.palette_outlined, size: 20, color: AppColors.headerGreenDark),
               const SizedBox(width: 8),
               const Expanded(
                 child: Text(
-                  'Site Photo (Optional)',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  'Job Cover Thumbnail',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                 ),
               ),
-              if (hasPhoto)
+              if (hasCustomUpload || hasChosenLibrary)
                 TextButton.icon(
                   style: TextButton.styleFrom(visualDensity: VisualDensity.compact),
-                  onPressed: () => notifier.setSitePhotoUrl(null),
-                  icon: const Icon(Icons.delete_outline, size: 16, color: Colors.red),
-                  label: const Text('Remove', style: TextStyle(color: Colors.red, fontSize: 12)),
+                  onPressed: () {
+                    notifier.setCoverThumbnail(null);
+                    notifier.setSitePhotoUrl(null);
+                  },
+                  icon: const Icon(Icons.restart_alt_rounded, size: 16, color: AppColors.headerGreenDark),
+                  label: const Text('Reset', style: TextStyle(color: AppColors.headerGreenDark, fontSize: 12)),
                 ),
             ],
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 4),
           Text(
-            'Upload a real photo of the workplace or site to build trust with workers.',
+            'Shown on job cards, maps, and detail header with playful Indic lettering.',
             style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
           ),
-          const SizedBox(height: 12),
-          if (_isUploadingPhoto)
-            const Center(
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                child: CircularProgressIndicator(color: AppColors.headerGreenDark),
-              ),
-            )
-          else if (hasPhoto)
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
+          const SizedBox(height: 14),
+
+          // Live 16:9 Preview
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
               child: Stack(
+                fit: StackFit.expand,
                 children: [
-                  draft.sitePhotoUrl!.startsWith('http')
-                      ? Image.network(
-                          draft.sitePhotoUrl!,
-                          width: double.infinity,
-                          height: 140,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => Container(
-                            height: 140,
-                            color: Colors.grey.shade200,
-                            child: const Center(child: Icon(Icons.broken_image, size: 36)),
-                          ),
-                        )
-                      : Container(
-                          height: 140,
-                          color: AppColors.paleMint,
-                          child: const Center(
-                            child: Icon(Icons.photo_camera_rounded, size: 40, color: AppColors.headerGreenDark),
-                          ),
-                        ),
+                  ui.JobThumbnail(
+                    title: draft.title.isNotEmpty ? draft.title : (draft.categoryName ?? 'Job Title'),
+                    categorySlug: draft.categoryName?.toLowerCase() ?? 'general',
+                    thumbnailPath: draft.thumbnailPath ?? draft.sitePhotoUrl,
+                    sitePhotoUrl: draft.sitePhotoUrl,
+                    size: ui.ThumbnailSize.card,
+                    width: double.infinity,
+                    height: double.infinity,
+                    borderRadius: BorderRadius.circular(12),
+                    showTitle: true,
+                  ),
                   Positioned(
-                    bottom: 8,
-                    right: 8,
-                    child: ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black.withValues(alpha: 0.7),
-                        foregroundColor: Colors.white,
-                        visualDensity: VisualDensity.compact,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    top: 8,
+                    left: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.7),
+                        borderRadius: BorderRadius.circular(6),
                       ),
-                      onPressed: _showPhotoPickerSheet,
-                      icon: const Icon(Icons.edit, size: 14),
-                      label: const Text('Change', style: TextStyle(fontSize: 11)),
+                      child: const Text(
+                        'Live 16:9 Preview',
+                        style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
                 ],
               ),
-            )
-          else
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      side: BorderSide(color: Colors.grey.shade400),
-                    ),
-                    onPressed: () => _pickAndUploadSitePhoto(ImageSource.camera),
-                    icon: const Icon(Icons.camera_alt_rounded, size: 18, color: AppColors.headerGreenDark),
-                    label: const Text('Camera', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.textDark)),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: OutlinedButton.icon(
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      side: BorderSide(color: Colors.grey.shade400),
-                    ),
-                    onPressed: () => _pickAndUploadSitePhoto(ImageSource.gallery),
-                    icon: const Icon(Icons.photo_library_rounded, size: 18, color: AppColors.amberOrange),
-                    label: const Text('Gallery', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.textDark)),
-                  ),
-                ),
-              ],
             ),
+          ),
+
+          const SizedBox(height: 16),
+          const Text(
+            'Choose Cover Source:',
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.textDark),
+          ),
+          const SizedBox(height: 10),
+
+          // Choice 1: Suggested Illustration
+          InkWell(
+            onTap: () {
+              notifier.setCoverThumbnail(null);
+              notifier.setSitePhotoUrl(null);
+            },
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: (!hasCustomUpload && !hasChosenLibrary)
+                    ? const Color(0xFFECFDF5)
+                    : Colors.grey.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: (!hasCustomUpload && !hasChosenLibrary)
+                      ? const Color(0xFF0D6548)
+                      : Colors.grey.shade300,
+                  width: (!hasCustomUpload && !hasChosenLibrary) ? 1.5 : 1,
+                ),
+              ),
+              child: Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: Image.asset(
+                      suggested.assetPath,
+                      width: 48,
+                      height: 27,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Text(
+                              'Suggested Illustration',
+                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(width: 6),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFD1FAE5),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: const Text(
+                                'Auto',
+                                style: TextStyle(fontSize: 10, color: Color(0xFF047857), fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          suggested.title,
+                          style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (!hasCustomUpload && !hasChosenLibrary)
+                    const Icon(Icons.check_circle_rounded, color: Color(0xFF0D6548), size: 20),
+                ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          // Choice 2: Pick from Library
+          InkWell(
+            onTap: () async {
+              final picked = await ThumbnailPickerSheet.show(
+                context,
+                selectedAssetPath: draft.thumbnailPath ?? suggested.assetPath,
+              );
+              if (picked != null) {
+                notifier.setCoverThumbnail(picked.assetPath);
+                notifier.setSitePhotoUrl(null);
+              }
+            },
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: hasChosenLibrary ? const Color(0xFFECFDF5) : Colors.grey.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: hasChosenLibrary ? const Color(0xFF0D6548) : Colors.grey.shade300,
+                  width: hasChosenLibrary ? 1.5 : 1,
+                ),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.grid_view_rounded, size: 24, color: AppColors.amberOrange),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Choose from Library (41 Items)',
+                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          hasChosenLibrary
+                              ? 'Selected: ${draft.thumbnailPath?.split('/').last ?? ''}'
+                              : 'Browse trades, flexible student gigs, farm produce...',
+                          style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Icon(Icons.chevron_right_rounded, color: Colors.grey, size: 20),
+                ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          // Choice 3: Upload My Own Photo
+          InkWell(
+            onTap: _showPhotoPickerSheet,
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: hasCustomUpload ? const Color(0xFFECFDF5) : Colors.grey.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: hasCustomUpload ? const Color(0xFF0D6548) : Colors.grey.shade300,
+                  width: hasCustomUpload ? 1.5 : 1,
+                ),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.camera_alt_outlined, size: 24, color: AppColors.headerGreenDark),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Upload Workplace / Site Photo',
+                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          hasCustomUpload
+                              ? 'Custom photo uploaded (16:9 auto-cropped)'
+                              : 'Take photo or choose from gallery (auto 16:9 crop)',
+                          style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (_isUploadingPhoto)
+                    const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.headerGreenDark),
+                    )
+                  else if (hasCustomUpload)
+                    const Icon(Icons.check_circle_rounded, color: Color(0xFF0D6548), size: 20)
+                  else
+                    const Icon(Icons.add_photo_alternate_rounded, color: Colors.grey, size: 20),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -1427,13 +1594,13 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
             Row(
               children: [
                 JobThumbnailWidget(
-                  sitePhotoUrl: draft.sitePhotoUrl,
+                  sitePhotoUrl: draft.thumbnailPath ?? draft.sitePhotoUrl,
                   categorySlug: draft.categoryName?.toLowerCase() ?? 'general',
                   jobId: draft.jobId ?? 'preview-draft',
                   title: draft.title,
                   description: draft.description,
-                  width: 52,
-                  height: 52,
+                  width: 64,
+                  height: 64,
                 ),
                 const SizedBox(width: 14),
                 Expanded(
@@ -1700,6 +1867,15 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
                         notifier.nextStep();
                       } else {
                         // PUBLISH
+                        if (draft.latitude == null || draft.longitude == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Site coordinates are required. Please set the map pin location before publishing.'),
+                              backgroundColor: Colors.orange,
+                            ),
+                          );
+                          return;
+                        }
                         setState(() => _isPublishing = true);
                         try {
                           await notifier.publish();

@@ -14,6 +14,8 @@ import 'package:udyogasethu/core/widgets/dev_assets_screen.dart';
 import 'package:udyogasethu/core/widgets/not_found_screen.dart';
 import 'package:udyogasethu/features/dev/presentation/edge_health_screen.dart';
 import 'package:udyogasethu/features/dev/presentation/lifecycle_test_panel_screen.dart';
+import 'package:udyogasethu/features/admin/presentation/debug_thumbnail_gallery_screen.dart';
+import 'package:udyogasethu/features/admin/presentation/debug_job_visibility_screen.dart';
 import 'package:udyogasethu/features/account/presentation/linked_accounts_screen.dart';
 import 'package:udyogasethu/features/account/presentation/settings_screen.dart';
 import 'package:udyogasethu/features/auth/presentation/login_screen.dart';
@@ -66,6 +68,11 @@ import 'package:udyogasethu/features/marketplace/presentation/order_tracking_scr
 import 'package:udyogasethu/features/marketplace/presentation/customer_orders_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_order_board_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/delivery_slots_screen.dart';
+import 'package:udyogasethu/features/marketplace/presentation/subscriptions_screen.dart';
+import 'package:udyogasethu/features/farmer/presentation/soil_ai_test_screen.dart';
+import 'package:udyogasethu/features/farmer/presentation/pest_ai_doc_screen.dart';
+import 'package:udyogasethu/features/farmer/presentation/irrigation_ai_screen.dart';
+import 'package:udyogasethu/features/farmer/presentation/govt_schemes_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_home_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_wizard_screen.dart';
 import 'package:udyogasethu/features/provider/presentation/post_job_wizard_screen.dart';
@@ -788,6 +795,30 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.farmerDeliverySlots,
         builder: (context, state) => const DeliverySlotsScreen(),
       ),
+      GoRoute(
+        path: AppRoutes.subscriptions,
+        builder: (context, state) => const SubscriptionsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.groupOrders,
+        builder: (context, state) => const SubscriptionsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.farmerSoilAi,
+        builder: (context, state) => const SoilAiTestScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.farmerPestAi,
+        builder: (context, state) => const PestAiDocScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.farmerIrrigationAi,
+        builder: (context, state) => const IrrigationAiScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.farmerGovtSchemes,
+        builder: (context, state) => const GovtSchemesScreen(),
+      ),
 
       // Debug Routes
       if (kDebugMode) ...[
@@ -816,6 +847,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           builder: (context, state) => LifecycleTestPanelScreen(
             initialAssignmentId: state.uri.queryParameters['id'],
           ),
+        ),
+        GoRoute(
+          path: AppRoutes.devThumbnails,
+          builder: (context, state) => const DebugThumbnailGalleryScreen(),
+        ),
+        GoRoute(
+          path: AppRoutes.devJobVisibility,
+          builder: (context, state) => const DebugJobVisibilityScreen(),
         ),
       ],
     ],

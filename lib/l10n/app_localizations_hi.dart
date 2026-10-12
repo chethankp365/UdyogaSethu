@@ -3771,4 +3771,8 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get selfDeclaredProfile => 'स्व-घोषित प्रोफ़ाइल';
+
+  @override
+  String get locationPinNotice =>
+      'जीपीएस पिन के बिना साइट का पता प्रदान किया गया है';
 }

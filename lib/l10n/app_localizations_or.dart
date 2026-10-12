@@ -3774,4 +3774,8 @@ class AppLocalizationsOr extends AppLocalizations {
 
   @override
   String get selfDeclaredProfile => 'ସ୍ୱୟଂ ଘୋଷିତ ପ୍ରୋଫାଇଲ୍';
+
+  @override
+  String get locationPinNotice =>
+      'ଜିପିଏସ ପିନ୍ ବିନା କାର୍ଯ୍ୟସ୍ଥଳୀ ଠିକଣା ପ୍ରଦାନ କରାଯାଇଛି';
 }

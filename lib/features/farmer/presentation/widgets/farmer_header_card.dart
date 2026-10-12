@@ -46,47 +46,60 @@ class FarmerHeaderCard extends StatelessWidget {
         children: [
           // 1. Workspace Pill & Cluster Tag + Avatar
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Left: Green Pulse Pill + Cluster
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.18),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.white.withValues(alpha: 0.25)),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.circle, color: Color(0xFF34D399), size: 9),
-                        const SizedBox(width: 5),
-                        Text(
-                          l10n?.farmerWorkspace ?? 'FARMER WORKSPACE',
-                          style: const TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 0.9,
-                            color: Colors.white,
+              // Left: Green Pulse Pill + Cluster in responsive Wrap
+              Expanded(
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 4,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.18),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.white.withValues(alpha: 0.25)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.circle, color: Color(0xFF34D399), size: 8),
+                          const SizedBox(width: 4),
+                          Flexible(
+                            child: Text(
+                              l10n?.farmerWorkspace ?? 'FARMER WORKSPACE',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 9.5,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0.5,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
+                        ],
+                      ),
+                    ),
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 180),
+                      child: Text(
+                        clusterName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white.withValues(alpha: 0.85),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    clusterName,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white.withValues(alpha: 0.85),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+              const SizedBox(width: 8),
               // Right: Profile Avatar
               InkWell(
                 onTap: () => context.push(AppRoutes.profileSetupFarmer),
@@ -136,6 +149,7 @@ class FarmerHeaderCard extends StatelessWidget {
           // 3. Three Metrics Cards (Produce Sold, Direct Earnings, Active Labor)
           // Strictly display real values (0 is natural for new farmers - never fake data)
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Metric 1: Produce Sold
               Expanded(
@@ -210,7 +224,7 @@ class FarmerHeaderCard extends StatelessWidget {
               letterSpacing: 0.6,
               color: Color(0xFFD1FAE5),
             ),
-            maxLines: 1,
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 1),
@@ -221,7 +235,7 @@ class FarmerHeaderCard extends StatelessWidget {
               fontWeight: FontWeight.w500,
               color: Colors.white.withValues(alpha: 0.7),
             ),
-            maxLines: 1,
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
         ],

@@ -309,8 +309,8 @@ class SupabaseJobExecutionRepository implements JobExecutionRepository {
     try {
       final res = await _client.rpc('get_worker_schedule', params: {
         'p_worker_id': workerId,
-        'p_start_date': start.toIso8601String(),
-        'p_end_date': end.toIso8601String(),
+        'p_start_date': start.toUtc().toIso8601String(),
+        'p_end_date': end.toUtc().toIso8601String(),
       });
 
       if (res != null && res is List) {

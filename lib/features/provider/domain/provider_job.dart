@@ -23,6 +23,7 @@ class ProviderJob {
   final String status; // 'draft', 'open', 'filled', 'closed', 'cancelled'
   final List<String> suitableFor; // 'informal', 'student', 'part_time'
   final String? sitePhotoUrl;
+  final String? thumbnailPath;
   final DateTime createdAt;
   final int applicantCount;
   final int hiredCount;
@@ -49,6 +50,7 @@ class ProviderJob {
     this.status = 'open',
     this.suitableFor = const ['informal'],
     this.sitePhotoUrl,
+    this.thumbnailPath,
     required this.createdAt,
     this.applicantCount = 0,
     this.hiredCount = 0,
@@ -113,6 +115,7 @@ class ProviderJob {
               ? const ['informal', 'student']
               : const ['informal']),
       sitePhotoUrl: json['site_photo_url'] as String? ?? json['photo_url'] as String?,
+      thumbnailPath: json['thumbnail_path'] as String? ?? json['site_photo_url'] as String? ?? json['photo_url'] as String?,
       createdAt: json['created_at'] != null
           ? DateTime.tryParse(json['created_at'].toString()) ?? DateTime.now()
           : DateTime.now(),
@@ -144,6 +147,7 @@ class ProviderJob {
       'status': status,
       'suitable_for': suitableFor,
       'site_photo_url': sitePhotoUrl,
+      'thumbnail_path': thumbnailPath,
       'created_at': createdAt.toIso8601String(),
       'applicant_count': applicantCount,
       'hired_count': hiredCount,

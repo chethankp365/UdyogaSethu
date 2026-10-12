@@ -3,9 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
+import 'package:udyogasethu/core/theme/app_spacing.dart';
 import 'package:udyogasethu/features/farmer/data/farmer_listings_repository.dart';
 import 'package:udyogasethu/features/farmer/domain/produce_listing_model.dart';
 import 'package:udyogasethu/features/farmer/presentation/widgets/edit_listing_modal.dart';
+import 'package:udyogasethu/core/widgets/app_thumbnail.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class FarmerListingsScreen extends ConsumerStatefulWidget {
@@ -311,7 +313,7 @@ class _FarmerListingsScreenState extends ConsumerState<FarmerListingsScreen> {
                     ref.invalidate(farmerListingsProvider);
                   },
                   child: ListView.separated(
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
+                    padding: AppSpacing.fabListPadding,
                     itemCount: filtered.length,
                     separatorBuilder: (_, _) => const SizedBox(height: 12),
                     itemBuilder: (ctx, idx) {
@@ -377,26 +379,17 @@ class _FarmerListingsScreenState extends ConsumerState<FarmerListingsScreen> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Icon Container
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFECFDF5),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: item.images.isNotEmpty
-                    ? Image.network(
-                        item.images.first,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Center(
-                          child: Text(_getCategoryEmoji(item.category), style: const TextStyle(fontSize: 24)),
-                        ),
-                      )
-                    : Center(
-                        child: Text(_getCategoryEmoji(item.category), style: const TextStyle(fontSize: 24)),
-                      ),
+              // Illustrated Produce Thumbnail
+              ProduceThumbnail(
+                name: item.name,
+                category: item.category,
+                images: item.images,
+                imageUrl: item.images.isNotEmpty ? item.images.first : null,
+                size: ThumbnailSize.small,
+                width: 52,
+                height: 52,
+                borderRadius: BorderRadius.circular(14),
+                showTitle: false,
               ),
 
               const SizedBox(width: 12),
@@ -446,12 +439,18 @@ class _FarmerListingsScreenState extends ConsumerState<FarmerListingsScreen> {
                   color: item.status.backgroundColor,
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: Text(
-                  _getStatusLabel(item.status, l10n),
-                  style: TextStyle(
-                    color: item.status.color,
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 90),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      _getStatusLabel(item.status, l10n),
+                      style: TextStyle(
+                        color: item.status.color,
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -479,12 +478,16 @@ class _FarmerListingsScreenState extends ConsumerState<FarmerListingsScreen> {
                         style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.bold, color: Color(0xFF94A3B8)),
                       ),
                       const SizedBox(height: 2),
-                      Text(
-                        item.formattedPrice,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF064E3B),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          item.formattedPrice,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF064E3B),
+                          ),
                         ),
                       ),
                     ],
@@ -510,12 +513,16 @@ class _FarmerListingsScreenState extends ConsumerState<FarmerListingsScreen> {
                         style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.bold, color: Color(0xFF94A3B8)),
                       ),
                       const SizedBox(height: 2),
-                      Text(
-                        '${item.stockQty.toStringAsFixed(item.stockQty.truncateToDouble() == item.stockQty ? 0 : 1)} ${item.unit}',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: item.stockQty <= 0 ? Colors.red : const Color(0xFF0F172A),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          '${item.stockQty.toStringAsFixed(item.stockQty.truncateToDouble() == item.stockQty ? 0 : 1)} ${item.unit}',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: item.stockQty <= 0 ? Colors.red : const Color(0xFF0F172A),
+                          ),
                         ),
                       ),
                     ],
@@ -597,25 +604,6 @@ class _FarmerListingsScreenState extends ConsumerState<FarmerListingsScreen> {
         ],
       ),
     );
-  }
-
-  String _getCategoryEmoji(String category) {
-    switch (category.toLowerCase()) {
-      case 'vegetable':
-        return '🍅';
-      case 'fruit':
-        return '🍌';
-      case 'grain':
-        return '🌾';
-      case 'pulse':
-        return '🫘';
-      case 'spices':
-        return '🌶️';
-      case 'dairy':
-        return '🥛';
-      default:
-        return '🥬';
-    }
   }
 
   String _getStatusLabel(ProduceStatus status, AppLocalizations? l10n) {

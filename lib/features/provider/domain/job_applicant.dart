@@ -18,6 +18,7 @@ class JobApplicant {
   final int reviewCount;
   final int jobsCompletedCount;
   final double distanceM;
+  final String? assignmentId;
   final List<String> languages;
   final List<String> skills;
 
@@ -38,14 +39,23 @@ class JobApplicant {
     this.reviewCount = 0,
     this.jobsCompletedCount = 0,
     this.distanceM = 800.0,
+    this.assignmentId,
     this.languages = const ['kn'],
     this.skills = const [],
   });
 
-  bool get isHired => status == 'hired';
+  bool get isHired =>
+      status == 'hired' ||
+      status == 'accepted' ||
+      status == 'ticket_issued' ||
+      status == 'arrived' ||
+      status == 'in_progress_verified' ||
+      status == 'completed' ||
+      (assignmentId != null && assignmentId!.isNotEmpty);
+
   bool get isShortlisted => status == 'shortlisted';
-  bool get isRejected => status == 'rejected';
-  bool get isPending => status == 'applied';
+  bool get isRejected => status == 'rejected' || status == 'declined';
+  bool get isPending => !isHired && !isShortlisted && !isRejected;
 
   String get formattedDistance {
     if (distanceM < 1000) {
@@ -64,7 +74,9 @@ class JobApplicant {
       createdAt: json['created_at'] != null
           ? DateTime.tryParse(json['created_at'].toString()) ?? DateTime.now()
           : DateTime.now(),
-      workerName: json['worker_name'] as String? ?? 'Worker',
+      workerName: (json['worker_name'] as String?)?.trim().isNotEmpty == true
+          ? (json['worker_name'] as String).trim()
+          : 'Name not set',
       workerAvatar: json['worker_avatar'] as String?,
       seekerType: json['seeker_type'] as String? ?? 'informal',
       badgeName: json['badge_name'] as String? ?? 'Registered Worker',
@@ -74,6 +86,7 @@ class JobApplicant {
       reviewCount: (json['review_count'] as num?)?.toInt() ?? 0,
       jobsCompletedCount: (json['jobs_completed_count'] as num?)?.toInt() ?? 0,
       distanceM: (json['distance_m'] as num?)?.toDouble() ?? 800.0,
+      assignmentId: json['assignment_id']?.toString(),
       languages: json['languages'] is List
           ? (json['languages'] as List).map((e) => e.toString()).toList()
           : const ['kn'],
@@ -101,6 +114,7 @@ class JobApplicant {
       'review_count': reviewCount,
       'jobs_completed_count': jobsCompletedCount,
       'distance_m': distanceM,
+      'assignment_id': assignmentId,
       'languages': languages,
       'skills': skills,
     };
@@ -108,6 +122,7 @@ class JobApplicant {
 
   JobApplicant copyWith({
     String? status,
+    String? assignmentId,
   }) {
     return JobApplicant(
       applicationId: applicationId,
@@ -126,6 +141,7 @@ class JobApplicant {
       reviewCount: reviewCount,
       jobsCompletedCount: jobsCompletedCount,
       distanceM: distanceM,
+      assignmentId: assignmentId ?? this.assignmentId,
       languages: languages,
       skills: skills,
     );

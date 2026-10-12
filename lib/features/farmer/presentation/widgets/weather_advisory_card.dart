@@ -44,10 +44,14 @@ class WeatherAdvisoryCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Header: Weather Advisory Radar & Location + Live Pulse
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 8,
+            runSpacing: 6,
             children: [
               Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
                     Icons.radar_rounded,
@@ -55,18 +59,23 @@ class WeatherAdvisoryCard extends StatelessWidget {
                     size: 20,
                   ),
                   const SizedBox(width: 8),
-                  Text(
-                    l10n?.farmerWeatherAdvisoryRadar ?? 'WEATHER ADVISORY RADAR',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.1,
-                      color: Color(0xFF1E293B),
+                  Flexible(
+                    child: Text(
+                      l10n?.farmerWeatherAdvisoryRadar ?? 'WEATHER ADVISORY RADAR',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.1,
+                        color: Color(0xFF1E293B),
+                      ),
                     ),
                   ),
                 ],
               ),
               Container(
+                constraints: const BoxConstraints(maxWidth: 240),
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -78,12 +87,16 @@ class WeatherAdvisoryCard extends StatelessWidget {
                   children: [
                     Icon(Icons.location_on_rounded, size: 12, color: severityColor),
                     const SizedBox(width: 4),
-                    Text(
-                      advisory.locationName,
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        color: severityColor,
+                    Flexible(
+                      child: Text(
+                        advisory.locationName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: severityColor,
+                        ),
                       ),
                     ),
                   ],
@@ -93,11 +106,14 @@ class WeatherAdvisoryCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
 
-          // Weather Summary Chips Row (Temp, Rain Prob, Precipitation)
-          Row(
+          // Weather Summary Chips Wrap (Temp, Rain Prob, Precipitation, Simulated chip)
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                constraints: const BoxConstraints(maxWidth: 220),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
@@ -108,16 +124,20 @@ class WeatherAdvisoryCard extends StatelessWidget {
                   children: [
                     const Icon(Icons.thermostat_rounded, size: 14, color: Color(0xFFE65100)),
                     const SizedBox(width: 4),
-                    Text(
-                      '${advisory.currentTemp.round()}°C (${advisory.minTemp.round()}°-${advisory.maxTemp.round()}°)',
-                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
+                    Flexible(
+                      child: Text(
+                        '${advisory.currentTemp.round()}°C (${advisory.minTemp.round()}°-${advisory.maxTemp.round()}°)',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
+                      ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(width: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                constraints: const BoxConstraints(maxWidth: 220),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
@@ -128,16 +148,19 @@ class WeatherAdvisoryCard extends StatelessWidget {
                   children: [
                     const Icon(Icons.water_drop_rounded, size: 14, color: Color(0xFF0284C7)),
                     const SizedBox(width: 4),
-                    Text(
-                      l10n?.farmerRainProbability(advisory.rainProbability) ??
-                          '${advisory.rainProbability}% Rain',
-                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF0369A1)),
+                    Flexible(
+                      child: Text(
+                        l10n?.farmerRainProbability(advisory.rainProbability) ??
+                            '${advisory.rainProbability}% Rain',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold, color: Color(0xFF0369A1)),
+                      ),
                     ),
                   ],
                 ),
               ),
-              if (advisory.isSimulated) ...[
-                const SizedBox(width: 8),
+              if (advisory.isSimulated)
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
@@ -149,7 +172,6 @@ class WeatherAdvisoryCard extends StatelessWidget {
                     style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF92400E)),
                   ),
                 ),
-              ],
             ],
           ),
           const SizedBox(height: 12),

@@ -77,13 +77,10 @@ class SupabaseSeekerProfileRepository implements SeekerProfileRepository {
 
       double? lat;
       double? lng;
-      final homeLoc = profileRes?['home_location'];
-      if (homeLoc != null && homeLoc is Map) {
-        final coords = homeLoc['coordinates'];
-        if (coords is List && coords.length >= 2) {
-          lng = (coords[0] as num).toDouble();
-          lat = (coords[1] as num).toDouble();
-        }
+      final parsed = _parsePostgisPoint(profileRes?['home_location']);
+      if (parsed != null) {
+        lat = parsed.lat;
+        lng = parsed.lng;
       }
 
       return SeekerProfileDraft(
@@ -320,4 +317,38 @@ class SupabaseSeekerProfileRepository implements SeekerProfileRepository {
       rethrow;
     }
   }
+
+  static ({double lat, double lng})? _parsePostgisPoint(dynamic raw) {
+    if (raw == null) return null;
+    if (raw is Map) {
+      final coords = raw['coordinates'];
+      if (coords is List && coords.length >= 2) {
+        return (lat: (coords[1] as num).toDouble(), lng: (coords[0] as num).toDouble());
+      }
+    }
+    if (raw is String && raw.length >= 42) {
+      try {
+        final hex = raw.trim();
+        final bytes = <int>[];
+        for (int i = 0; i < hex.length; i += 2) {
+          bytes.add(int.parse(hex.substring(i, i + 2), radix: 16));
+        }
+        final bd = ByteData.sublistView(Uint8List.fromList(bytes));
+        final isLittle = bytes[0] == 1;
+        final endian = isLittle ? Endian.little : Endian.big;
+        final type = bd.getUint32(1, endian);
+        int offset = 5;
+        if ((type & 0x20000000) != 0) {
+          offset += 4; // Skip SRID
+        }
+        final lng = bd.getFloat64(offset, endian);
+        final lat = bd.getFloat64(offset + 8, endian);
+        if (lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
+          return (lat: lat, lng: lng);
+        }
+      } catch (_) {}
+    }
+    return null;
+  }
 }
+

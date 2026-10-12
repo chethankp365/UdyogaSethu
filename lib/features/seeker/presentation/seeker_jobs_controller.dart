@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:udyogasethu/features/seeker/data/seeker_jobs_repository.dart';
+import 'package:udyogasethu/features/seeker/domain/job_application_status.dart';
 import 'package:udyogasethu/features/seeker/domain/seeker_job_item.dart';
+import 'package:udyogasethu/features/seeker/presentation/my_applications_controller.dart';
 
 class SeekerJobsState {
   final bool isLoading;
@@ -44,11 +46,32 @@ class SeekerJobsNotifier extends Notifier<SeekerJobsState> {
   SeekerJobsRepository get _repo => ref.read(seekerJobsRepositoryProvider);
   StreamSubscription? _subscription;
 
+  void _seedFromSegments(Map<SeekerJobSegment, List<SeekerJobItem>> segments) {
+    final List<WorkerJobStatus> statuses = [];
+    for (final items in segments.values) {
+      for (final item in items) {
+        statuses.add(WorkerJobStatus(
+          jobId: item.jobId,
+          applicationStatus: JobAppStatus.fromString(item.status),
+          assignmentStatus: (item.segment == SeekerJobSegment.accepted || item.segment == SeekerJobSegment.active)
+              ? item.status
+              : null,
+          applicationId: item.segment == SeekerJobSegment.applied ? item.id : null,
+          assignmentId: item.segment != SeekerJobSegment.applied ? item.id : null,
+        ));
+      }
+    }
+    if (statuses.isNotEmpty) {
+      ref.read(myApplicationsProvider.notifier).seedStatuses(statuses);
+    }
+  }
+
   @override
   SeekerJobsState build() {
     _subscription?.cancel();
     _subscription = _repo.watchSeekerJobs().listen(
       (data) {
+        _seedFromSegments(data);
         state = state.copyWith(isLoading: false, segments: data, error: null);
       },
       onError: (e) {
@@ -71,6 +94,7 @@ class SeekerJobsNotifier extends Notifier<SeekerJobsState> {
     state = state.copyWith(isLoading: true, error: null);
     try {
       final data = await _repo.fetchSeekerJobs();
+      _seedFromSegments(data);
       state = state.copyWith(isLoading: false, segments: data);
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());

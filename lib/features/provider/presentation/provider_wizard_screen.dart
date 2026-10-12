@@ -258,15 +258,39 @@ class _ProviderWizardScreenState extends ConsumerState<ProviderWizardScreen> {
                 spacing: 8,
                 runSpacing: 8,
                 children: [
-                  OutlinedButton.icon(
+                  OutlinedButton(
                     onPressed: state.isSaving ? null : () => _pickAndUploadPhoto(ImageSource.camera),
-                    icon: const Icon(Icons.camera_alt_rounded, size: 18),
-                    label: Text(l10n.takePhotoCamera),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.camera_alt_rounded, size: 18),
+                        const SizedBox(width: 8),
+                        Flexible(
+                          child: Text(
+                            l10n.takePhotoCamera,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  OutlinedButton.icon(
+                  OutlinedButton(
                     onPressed: state.isSaving ? null : () => _pickAndUploadPhoto(ImageSource.gallery),
-                    icon: const Icon(Icons.photo_library_rounded, size: 18),
-                    label: Text(l10n.chooseGallery),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.photo_library_rounded, size: 18),
+                        const SizedBox(width: 8),
+                        Flexible(
+                          child: Text(
+                            l10n.chooseGallery,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

@@ -182,14 +182,24 @@ class _VerifyPresenceScreenState extends ConsumerState<VerifyPresenceScreen> {
     }
 
     if (_selfieFile == null) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please capture a live selfie with your workplace in the background.'),
-          backgroundColor: Colors.orange,
-        ),
-      );
-      return;
+      if (kDebugMode && _simulationMode != LocationSimulationMode.real) {
+        // Auto-generate mock jpeg in demo mode
+        final tempDir = Directory.systemTemp;
+        final mockFile = File('${tempDir.path}/mock_selfie_${DateTime.now().millisecondsSinceEpoch}.jpg');
+        final image = img.Image(width: 100, height: 100);
+        img.fill(image, color: img.ColorRgb8(128, 128, 128));
+        await mockFile.writeAsBytes(img.encodeJpg(image));
+        _selfieFile = mockFile;
+      } else {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please capture a live selfie with your workplace in the background.'),
+            backgroundColor: Colors.orange,
+          ),
+        );
+        return;
+      }
     }
 
     setState(() {
@@ -233,7 +243,7 @@ class _VerifyPresenceScreenState extends ConsumerState<VerifyPresenceScreen> {
 
       // 3. Image Brightness Check
       final bytes = await _selfieFile!.readAsBytes();
-      if (_isImageTooDark(bytes)) {
+      if (_simulationMode == LocationSimulationMode.real && _isImageTooDark(bytes)) {
         _failedAttempts++;
         setState(() => _isSubmitting = false);
         if (_failedAttempts >= 3) {

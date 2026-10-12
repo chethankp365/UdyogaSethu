@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:udyogasethu/core/services/job_thumbnail_service.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
+import 'package:udyogasethu/core/widgets/job_action_button.dart';
 import 'package:udyogasethu/features/seeker/domain/job_recommendation.dart';
 
 class JobRow extends StatelessWidget {
@@ -158,19 +159,14 @@ class JobRow extends StatelessWidget {
                             color: AppColors.headerGreenDark,
                           ),
                         ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: isApplied ? Colors.grey.shade400 : AppColors.headerGreenDark,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                          ),
-                          onPressed: isApplied
-                              ? null
-                              : () {
-                                  Navigator.pop(ctx);
-                                  onApply?.call();
-                                },
-                          child: Text(isApplied ? 'Applied ✓' : 'Apply Now'),
+                        JobActionButton(
+                          jobId: job.id,
+                          jobTitle: job.title,
+                          isCompact: false,
+                          onApplyCustom: () {
+                            Navigator.pop(ctx);
+                            onApply?.call();
+                          },
                         ),
                       ],
                     ),
@@ -260,10 +256,11 @@ class JobRow extends StatelessWidget {
                   const SizedBox(height: 3),
 
                   // Rating and Distance line
-                  Row(
+                  Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 3,
                     children: [
                       const Icon(Icons.star_rounded, size: 14, color: Colors.amber),
-                      const SizedBox(width: 2),
                       Text(
                         job.employerRating.toStringAsFixed(1),
                         style: const TextStyle(
@@ -273,18 +270,16 @@ class JobRow extends StatelessWidget {
                         ),
                       ),
                       const Text(
-                        ' • ',
+                        '•',
                         style: TextStyle(fontSize: 11, color: AppColors.textMuted),
                       ),
-                      Flexible(
-                        child: Text(
-                          job.formattedDistance,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: AppColors.textMuted,
-                          ),
+                      Text(
+                        job.formattedDistance,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: AppColors.textMuted,
                         ),
                       ),
                     ],
@@ -305,20 +300,23 @@ class JobRow extends StatelessWidget {
                               borderRadius: BorderRadius.circular(4),
                               border: Border.all(color: const Color(0xFFF59E0B), width: 0.8),
                             ),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.school, size: 10, color: Color(0xFFD97706)),
-                                SizedBox(width: 3),
-                                Text(
-                                  'Students Welcome',
-                                  style: TextStyle(
-                                    fontSize: 9.5,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF92400E),
+                            child: const FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.school, size: 10, color: Color(0xFFD97706)),
+                                  SizedBox(width: 3),
+                                  Text(
+                                    'Students Welcome',
+                                    style: TextStyle(
+                                      fontSize: 9.5,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFF92400E),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         if (job.reasons.isNotEmpty)
@@ -342,42 +340,32 @@ class JobRow extends StatelessWidget {
             const SizedBox(width: 8),
 
             // 3. Right Column: Wage in bold green + "Apply Now" green pill
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    job.formattedWage,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF0D6548),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 6),
-                InkWell(
-                  onTap: isApplied ? null : onApply,
-                  borderRadius: BorderRadius.circular(14),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: isApplied ? Colors.grey.shade200 : const Color(0xFF0D6548),
-                      borderRadius: BorderRadius.circular(14),
-                    ),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 96),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
                     child: Text(
-                      isApplied ? 'Applied ✓' : 'Apply Now',
-                      style: TextStyle(
-                        fontSize: 11,
+                      job.formattedWage,
+                      style: const TextStyle(
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        color: isApplied ? AppColors.textMuted : Colors.white,
+                        color: Color(0xFF0D6548),
                       ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 6),
+                  JobActionButton(
+                    jobId: job.id,
+                    jobTitle: job.title,
+                    isCompact: true,
+                    onApplyCustom: onApply,
+                  ),
+                ],
+              ),
             ),
           ],
         ),

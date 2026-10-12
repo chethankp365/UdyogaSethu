@@ -19,3 +19,4 @@ build/
 .pub/
 .packages
 pubspec.lock
+scratch/

@@ -31,6 +31,7 @@ This document records key design, architectural, role model, and implementation 
 | D61 | Real Jobs, Job Posting, Seeker Home, 4a Bug Resolution & Thumbnail Resolver (Prompt 1 of 3) | Adopted | Marketplace Real Data & Polish |
 | D62 | Job Execution Lifecycle, QR Ticket Windows, Rejection Codes, Step 2 Presence & Digital ID Card (Prompt 2 of 3) | Adopted | Execution, Attendance & Digital ID |
 | D63 | Wallet & Escrow Ledger Invariants, Farmer Real Profile & Mandi Rails, Manifest Fallbacks & Single Voice Mic (Prompt 3 of 3) | Adopted | Wallet, Farmer, Assets & Honesty |
+| D64 | Full Job Lifecycle State Transitions & Root Cause Resolution (P4.3 to P4.9) | Adopted | Lifecycle Architecture & Bug Fixes |
 
 ## Known Issues & Planned Fixes (Pre-P5.1)
 
@@ -466,8 +467,70 @@ This document records key design, architectural, role model, and implementation 
   * **Swiggy/Zomato Style Mandi Cards & Multi-Tier Manifest Asset Architecture (F5, G1-G5)**:
     * 2-column Mandi price grid with horizontal category rails (Vegetables, Fruits, Grains & Pulses, Spices, Flowers), bold modal prices, unit toggles (kg vs quintal), percentage change indicators, demand chips, skeleton loading, and offline caching.
     * Multi-tier asset resolver: checks disk asset -> commodity manifest entry -> fallback gradient with first letter and category emoji.
-    * `docs/IMAGE_PROMPTS.md` documents 40 job prompts (800x450, <70 KB) and 40 crop prompts (600x600, <50 KB) in warm, bright Indian illustration style.
     * `tool/check_images.dart` audits asset completeness and file sizes against size thresholds.
 
+* **D64 — Full Job Lifecycle State Transitions & Root Cause Resolution (P4.3 to P4.9)**:
+  * **Canonical Lifecycle State Machine Trace**:
+    ```
+    [1. Open Job]
+          │
+          ▼  apply_to_job(job_id)
+    [2. Applied] (job_applications.status = 'applied')
+          │
+          ▼  respond_to_application(application_id, 'hired')
+    [3. Hired & Requested] (job_applications.status = 'hired', job_assignments.status = 'requested')
+          │
+          ▼  accept_assignment(assignment_id)
+    [4. Accepted] (job_assignments.status = 'accepted', assignment_events: 'accepted')
+          │
+          ▼  get_job_ticket(assignment_id) / qr-issue
+    [5. Ticket Issued] (job_assignments.status = 'ticket_issued', rotating signed HMAC token)
+          │
+          ▼  verify_ticket_scan(token_id, lat, lng)
+    [6. Arrived] (job_assignments.status = 'arrived', arrived_at = NOW())
+          │
+          ▼  recordStep2Verification(assignment_id, selfie, lat, lng)
+    [7. In Progress (Verified)] (job_assignments.status = 'in_progress_verified', started_at = NOW())
+          │
+          ▼  confirm_completion(assignment_id)
+    [8. Completed & Payment Released] (job_assignments.status = 'completed' -> 'payment_released')
+    ```
+  * **Lifecycle Matrix: Tables, Transitions, and Reading Screens**:
+    | Step | Trigger Action | Database Mutation | Reading Screen & Provider |
+    | ---- | -------------- | ----------------- | ------------------------- |
+    | 1. Apply | `apply_to_job(job_id, msg)` | `INSERT INTO job_applications(status: 'applied')` | Seeker: `SeekerJobsScreen` (Applied tab)<br>Provider: `JobApplicantsScreen` via `get_job_applicants(job_id)` |
+    | 2. Hire | `respond_to_application(app_id, 'hired')` | `UPDATE job_applications(status: 'hired')`<br>`INSERT INTO job_assignments(status: 'requested')`<br>`UPDATE jobs(slots_filled = slots_filled + 1)` | Seeker: `SeekerJobsScreen` (Requests tab)<br>Provider: `JobApplicantsScreen` ("Hired" chip) |
+    | 3. Accept | `accept_assignment(asg_id)` | `UPDATE job_assignments(status: 'accepted')`<br>`INSERT INTO assignment_events(event_type: 'accepted')` | Both phones: `ActiveJobScreen` updates to 'Accepted' within 1s via Realtime<br>Seeker: `WorkerScheduleScreen` |
+    | 4. Ticket | `get_job_ticket(asg_id)` | `UPDATE job_assignments(status: 'ticket_issued')`<br>`INSERT INTO assignment_events(event_type: 'ticket_issued')` | Seeker: `JobTicketScreen` (Rotating HMAC QR)<br>Seeker: `DigitalIdScreen` (Next ticket) |
+    | 5. Scan | `verify_ticket_scan(token, lat, lng)` | `UPDATE job_assignments(status: 'arrived', arrived_at: NOW())`<br>`INSERT INTO assignment_events(event_type: 'arrived')` | Provider: `AttendanceScannerScreen` (Verified Check)<br>Seeker: Navigates automatically to Step 2 |
+    | 6. Verified Start | `recordStep2Verification(asg_id, ...)` | `UPDATE job_assignments(status: 'in_progress_verified', started_at: NOW())`<br>`INSERT INTO assignment_events(event_type: 'in_progress_verified')` | Both phones: `ActiveJobScreen` displays active timer |
+    | 7. Complete | `confirm_completion(asg_id)` | `UPDATE job_assignments(status: 'completed' -> 'payment_released')`<br>`INSERT INTO assignment_events(event_type: 'completed')` | Provider: `RateJobDialog`<br>Seeker: `WalletScreen` (Escrow credit) |
+  * **Root Cause Fixes**:
+    * **Wrong ID Propagation**: In `seeker_jobs_repository.dart`, accepted applications previously saved `a['id']` (application ID) into `SeekerJobItem.id`, leading to `Active job assignment 7b2e... not found` when opening active job. Resolved by resolving the real assignment ID.
+    * **Defensive RPC ID Resolution**: `get_active_job_details` defensively checks `ja.id = p_id`, then `ja.job_id = p_id`, then `job_applications.id = p_id`.
+    * **Profiles RLS Boundary**: Never open `profiles` table directly. Created SECURITY DEFINER `get_job_applicants` returning safe public worker attributes (name, avatar, verification, badges, level, rating, completed count, distance, languages, skills, assignment_id) without phone or email. Fallback to `"Name not set"` instead of `"Worker"`.
+    * **Live Status Realtime Sync**: `ActiveJobScreen` subscribes to `watchAssignmentStatus(asgId)` to invalidate `activeJobDetailProvider` immediately when status updates occur, eliminating the stuck "Waiting for worker acceptance" state.
+    * **Geometry Handling & Map Coordinates**: RPCs explicitly cast to `extensions.geometry` with `ST_Y` and `ST_X` float numbers. Post-job wizard requires non-null coordinates before publishing.
+    * **Timezone Safety**: `WorkerScheduleItem` timestamps parsed via `.toLocal()` (Asia/Kolkata), preventing shifts across UTC/IST calendar day boundaries.
 
-
+* **D65 — Unified Job Application Status, In-Memory Reactive Cache, Partial Unique Index & Pin Clustering**:
+  * **Database Single Source of Truth**:
+    * Created partial unique index `uq_active_job_application ON public.job_applications (job_id, worker_id) WHERE status != 'withdrawn'`, guaranteeing that a worker cannot have multiple active applications for the same job while permitting re-application after withdrawal.
+    * Made `apply_to_job` RPC idempotent: if an active application exists or if eligibility code is `ALREADY_APPLIED`, it returns the existing application ID without throwing an exception.
+    * Added SECURITY DEFINER RPC `withdraw_job_application(p_job_id UUID)` allowing workers to cancel pending applications safely.
+    * Updated `recommended_jobs`, `nearby_jobs`, and `get_job_detail` RPCs to join the caller's active application (`my_application_status`, `my_application_id`) and active assignment (`my_assignment_status`, `my_assignment_id`) via `auth.uid()`.
+    * Added batch RPC `get_my_job_application_statuses()` to hydrate the client's in-memory map efficiently in a single round-trip.
+  * **Client Single Source of Truth (`myApplicationsProvider`)**:
+    * Managed by `MyApplicationsNotifier` storing `Map<String, WorkerJobStatus>`.
+    * Supports optimistic apply with automatic rollback upon server error.
+    * Subscribes to Supabase Realtime changes across `job_applications` and `job_assignments` for the signed-in user's `worker_id`.
+    * Automatically clears state upon `signedOut` via `AppSessionNotifier`.
+    * Preserves optimistic states if local update timestamp is newer than remote feed data.
+  * **Unified Action Widget (`JobActionButton`)**:
+    * Replaced disparate button widgets across `SeekerHomeScreen` cards, `NearbyJobsMapScreen` bottom sheet, and `JobDetailScreen` with a single reusable `JobActionButton`.
+    * Uses fine-grained Riverpod selector `ref.watch(myApplicationsProvider.select((m) => m[jobId]))` so only the affected job button re-renders, preserving scroll position.
+    * Handles all lifecycle states: Unapplied (`Apply Now` / `Apply`), Applied (`Applied ✓`), Shortlisted (`Shortlisted ★`), Accepted/Hired (`Accepted ✓` / `View Active Job Ticket →`), Rejected (`Closed`), Ineligible (`Not eligible`), and Offline mode (`Offline - Reconnect to Apply`).
+  * **Map Pin Clustering & Coordinate Overlap**:
+    * Clustered pins sharing coordinates within $\approx 25\text{m}$ ($0.0003^\circ$ latitude/longitude threshold).
+    * Clustered markers render a badge indicating the total job count at that site.
+    * Tapping a cluster pin highlights the site, animates the map, and scrolls/expands the bottom sheet list to display all opportunities at that location.

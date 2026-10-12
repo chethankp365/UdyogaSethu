@@ -14,6 +14,7 @@ import 'package:udyogasethu/features/marketplace/presentation/produce_detail_scr
 import 'package:udyogasethu/features/marketplace/presentation/produce_map_view.dart';
 import 'package:udyogasethu/features/marketplace/presentation/widgets/farm_traceability_modal.dart';
 import 'package:udyogasethu/features/marketplace/presentation/widgets/produce_filter_sheet.dart';
+import 'package:udyogasethu/core/widgets/app_thumbnail.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class BuyerProduceTab extends ConsumerStatefulWidget {
@@ -615,16 +616,13 @@ class _BuyerProduceTabState extends ConsumerState<BuyerProduceTab> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFECFDF5),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Center(
-                    child: Icon(item.categoryIcon, color: const Color(0xFF00875A), size: 26),
-                  ),
+                ProduceThumbnail.fromMarketplaceItem(
+                  item,
+                  size: ThumbnailSize.small,
+                  width: 52,
+                  height: 52,
+                  borderRadius: BorderRadius.circular(14),
+                  showTitle: false,
                 ),
 
                 const SizedBox(width: 12),
@@ -672,12 +670,18 @@ class _BuyerProduceTabState extends ConsumerState<BuyerProduceTab> {
                     color: const Color(0xFFECFDF5),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Text(
-                    item.formattedPrice,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w900,
-                      color: Color(0xFF064E3B),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 100),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        item.formattedPrice,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xFF064E3B),
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -773,16 +777,30 @@ class _BuyerProduceTabState extends ConsumerState<BuyerProduceTab> {
                     onPressed: () => _openTraceabilityModal(item),
                   ),
 
-                  ElevatedButton.icon(
+                  ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF064E3B),
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                     ),
-                    icon: const Icon(Icons.shopping_bag_outlined, size: 16),
-                    label: Text(l10n?.orderDirect ?? 'Order Direct', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                     onPressed: () => _showOrderBottomSheet(context, item, l10n),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.shopping_bag_outlined, size: 16),
+                        const SizedBox(width: 4),
+                        Flexible(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              l10n?.orderDirect ?? 'Order Direct',
+                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

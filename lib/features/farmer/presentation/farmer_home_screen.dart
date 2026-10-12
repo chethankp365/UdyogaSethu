@@ -6,7 +6,7 @@ import 'package:udyogasethu/core/config/env.dart';
 import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
-import 'package:udyogasethu/core/widgets/compact_language_selector.dart';
+import 'package:udyogasethu/core/theme/app_spacing.dart';
 import 'package:udyogasethu/features/account/presentation/role_switcher_bottom_sheet.dart';
 import 'package:udyogasethu/features/farmer/data/farm_resources_repository.dart';
 import 'package:udyogasethu/features/farmer/data/farmer_home_repository.dart';
@@ -449,7 +449,9 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
             icon: const Icon(Icons.more_vert_rounded),
             tooltip: 'Options',
             onSelected: (val) {
-              if (val == 'simulate_rain') {
+              if (val == 'language') {
+                context.push(AppRoutes.language);
+              } else if (val == 'simulate_rain') {
                 ref.read(simulatedRainForecastProvider.notifier).toggle();
                 ref.invalidate(farmerWeatherAdvisoryProvider);
               } else if (val == 'farmer_orders') {
@@ -468,6 +470,16 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
               }
             },
             itemBuilder: (ctx) => [
+              PopupMenuItem(
+                value: 'language',
+                child: Row(
+                  children: [
+                    const Icon(Icons.language_rounded, size: 20, color: Color(0xFF0D6548)),
+                    const SizedBox(width: 8),
+                    Text(l10n?.languageScreenTitle ?? 'Language'),
+                  ],
+                ),
+              ),
               PopupMenuItem(
                 value: 'simulate_rain',
                 child: Row(
@@ -547,7 +559,11 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
               ),
             ],
           ),
-          const CompactLanguageSelector(),
+          IconButton(
+            icon: const Icon(Icons.language_rounded),
+            tooltip: l10n?.languageScreenTitle ?? 'Language',
+            onPressed: () => context.push(AppRoutes.language),
+          ),
         ],
       ),
       body: RefreshIndicator(
@@ -555,7 +571,7 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
         color: AppColors.headerGreenDark,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, AppSpacing.fabBottomPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -610,6 +626,14 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
                     context.push(AppRoutes.farmerListings);
                   } else if (item.type == EssentialSuiteType.hireWorkers) {
                     _handleHireWorkers(context);
+                  } else if (item.type == EssentialSuiteType.soilAiTest) {
+                    context.push(AppRoutes.farmerSoilAi);
+                  } else if (item.type == EssentialSuiteType.pestAiDoc) {
+                    context.push(AppRoutes.farmerPestAi);
+                  } else if (item.type == EssentialSuiteType.irrigationAi) {
+                    context.push(AppRoutes.farmerIrrigationAi);
+                  } else if (item.type == EssentialSuiteType.govtSchemes) {
+                    context.push(AppRoutes.farmerGovtSchemes);
                   } else {
                     EssentialSuiteGrid.showItemModal(context, item);
                   }

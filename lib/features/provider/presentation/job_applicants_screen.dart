@@ -11,6 +11,7 @@ import 'package:udyogasethu/features/provider/data/provider_jobs_repository.dart
 import 'package:udyogasethu/features/provider/domain/job_applicant.dart';
 import 'package:udyogasethu/features/provider/domain/provider_job.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_jobs_controller.dart';
+import 'package:udyogasethu/core/widgets/app_thumbnail.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class JobApplicantsScreen extends ConsumerWidget {
@@ -67,7 +68,7 @@ class JobApplicantsScreen extends ConsumerWidget {
                     separatorBuilder: (_, _) => const SizedBox(height: 12),
                     itemBuilder: (context, index) {
                       final applicant = applicants[index];
-                      return _ApplicantCard(
+                      return ApplicantCard(
                         applicant: applicant,
                         job: currentJob,
                         onHire: () => _handleHire(context, ref, applicant, currentJob, l10n),
@@ -96,11 +97,33 @@ class JobApplicantsScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                l10n.providerSlotsCounter(job.slotsFilled, job.slotsTotal),
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: AppColors.headerGreenDark),
+              JobThumbnail.fromProviderJob(
+                job,
+                size: ThumbnailSize.small,
+                width: 52,
+                height: 52,
+                borderRadius: BorderRadius.circular(10),
+                showTitle: false,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      job.title,
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      l10n.providerSlotsCounter(job.slotsFilled, job.slotsTotal),
+                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.headerGreenDark),
+                    ),
+                  ],
+                ),
               ),
               Chip(
                 visualDensity: VisualDensity.compact,
@@ -116,7 +139,7 @@ class JobApplicantsScreen extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
@@ -412,7 +435,7 @@ class JobApplicantsScreen extends ConsumerWidget {
   }
 }
 
-class _ApplicantCard extends StatelessWidget {
+class ApplicantCard extends StatelessWidget {
   final JobApplicant applicant;
   final ProviderJob? job;
   final VoidCallback onHire;
@@ -421,7 +444,8 @@ class _ApplicantCard extends StatelessWidget {
   final VoidCallback onViewProfile;
   final VoidCallback onChat;
 
-  const _ApplicantCard({
+  const ApplicantCard({
+    super.key,
     required this.applicant,
     required this.job,
     required this.onHire,
@@ -444,104 +468,115 @@ class _ApplicantCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top Row: Avatar, Name, Rating, Distance & Seeker Type
+            // Top Row: Avatar, Worker Name + Verification, and Status Chip
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                UserAvatar(avatarPath: applicant.workerAvatar, name: applicant.workerName, radius: 26),
-                const SizedBox(width: 12),
+                UserAvatar(avatarPath: applicant.workerAvatar, name: applicant.workerName, radius: 22),
+                const SizedBox(width: 10),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Row(
                     children: [
-                      Row(
-                        children: [
-                          Flexible(
-                            child: Text(
-                              applicant.workerName,
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                            ),
-                          ),
-                          if (applicant.isVerified) ...[
-                            const SizedBox(width: 4),
-                            const Icon(Icons.verified, color: AppColors.headerGreenDark, size: 18),
-                          ],
-                        ],
+                      Flexible(
+                        child: Text(
+                          applicant.workerName,
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                      const SizedBox(height: 2),
-                      Row(
-                        children: [
-                          // Seeker Type Chip
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: applicant.seekerType == 'student'
-                                  ? Colors.purple.shade50
-                                  : applicant.seekerType == 'part_time'
-                                      ? Colors.blue.shade50
-                                      : Colors.amber.shade50,
-                              borderRadius: BorderRadius.circular(6),
-                              border: Border.all(
-                                color: applicant.seekerType == 'student'
-                                    ? Colors.purple.shade200
-                                    : applicant.seekerType == 'part_time'
-                                        ? Colors.blue.shade200
-                                        : Colors.amber.shade200,
-                              ),
-                            ),
-                            child: Text(
-                              applicant.seekerType.toUpperCase(),
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                color: applicant.seekerType == 'student'
-                                    ? Colors.purple.shade900
-                                    : applicant.seekerType == 'part_time'
-                                        ? Colors.blue.shade900
-                                        : Colors.amber.shade900,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          // Badge / Level
-                          Text(
-                            'Lv.${applicant.levelNumber} • ${applicant.badgeName}',
-                            style: const TextStyle(fontSize: 11, color: AppColors.textMuted, fontWeight: FontWeight.w600),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          const Icon(Icons.star_rounded, color: AppColors.amberOrange, size: 16),
-                          const SizedBox(width: 2),
-                          Text(applicant.rating.toStringAsFixed(1), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                          const SizedBox(width: 8),
-                          Text('• ${l10n.applicantCardJobsDone(applicant.jobsCompletedCount)}', style: const TextStyle(fontSize: 12, color: AppColors.textMuted)),
-                        ],
-                      ),
-                      const SizedBox(height: 2),
-                      Row(
-                        children: [
-                          const Icon(Icons.location_on_outlined, size: 14, color: AppColors.textMuted),
-                          const SizedBox(width: 2),
-                          Text(applicant.formattedDistance, style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
-                        ],
-                      ),
+                      if (applicant.isVerified) ...[
+                        const SizedBox(width: 4),
+                        const Icon(Icons.verified, color: AppColors.headerGreenDark, size: 16),
+                      ],
                     ],
                   ),
                 ),
-                // Status Chip & Applied Time
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    _buildStatusChip(applicant.status, l10n),
-                    const SizedBox(height: 4),
-                    Text(
-                      DateFormat('dd MMM, h:mm a').format(applicant.createdAt),
-                      style: const TextStyle(fontSize: 10, color: AppColors.textMuted),
+                const SizedBox(width: 8),
+                _buildStatusChip(applicant, l10n),
+              ],
+            ),
+
+            const SizedBox(height: 6),
+
+            // Subtitle Row: Seeker Type & Level Badge
+            Row(
+              children: [
+                // Seeker Type Chip
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: applicant.seekerType == 'student'
+                        ? Colors.purple.shade50
+                        : applicant.seekerType == 'part_time'
+                            ? Colors.blue.shade50
+                            : Colors.amber.shade50,
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(
+                      color: applicant.seekerType == 'student'
+                          ? Colors.purple.shade200
+                          : applicant.seekerType == 'part_time'
+                              ? Colors.blue.shade200
+                              : Colors.amber.shade200,
                     ),
+                  ),
+                  child: Text(
+                    applicant.seekerType.toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      color: applicant.seekerType == 'student'
+                          ? Colors.purple.shade900
+                          : applicant.seekerType == 'part_time'
+                              ? Colors.blue.shade900
+                              : Colors.amber.shade900,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 6),
+                // Badge / Level
+                Flexible(
+                  child: Text(
+                    'Lv.${applicant.levelNumber} • ${applicant.badgeName}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 11, color: AppColors.textMuted, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 8),
+
+            // Metrics row: Rating, Jobs Done, Distance and Applied Date
+            Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.star_rounded, color: AppColors.amberOrange, size: 15),
+                    const SizedBox(width: 2),
+                    Text(applicant.rating.toStringAsFixed(1), style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold)),
                   ],
+                ),
+                Text(
+                  '• ${l10n.applicantCardJobsDone(applicant.jobsCompletedCount)}',
+                  style: const TextStyle(fontSize: 11.5, color: AppColors.textMuted),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.location_on_outlined, size: 13, color: AppColors.textMuted),
+                    const SizedBox(width: 2),
+                    Text(applicant.formattedDistance, style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
+                  ],
+                ),
+                Text(
+                  '• ${DateFormat('dd MMM, h:mm a').format(applicant.createdAt)}',
+                  style: const TextStyle(fontSize: 10, color: AppColors.textMuted),
                 ),
               ],
             ),
@@ -643,12 +678,12 @@ class _ApplicantCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(color: Colors.green.shade50, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.green)),
-                    child: const Row(
+                    child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.check_circle_rounded, color: Colors.green, size: 16),
-                        SizedBox(width: 4),
-                        Text('Hired', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 12)),
+                        const Icon(Icons.check_circle_rounded, color: Colors.green, size: 16),
+                        const SizedBox(width: 4),
+                        Text(l10n.applicantStatusHired, style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 12)),
                       ],
                     ),
                   ),
@@ -661,38 +696,45 @@ class _ApplicantCard extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusChip(String status, AppLocalizations l10n) {
+  Widget _buildStatusChip(JobApplicant applicant, AppLocalizations l10n) {
     Color bg;
     Color fg;
     String label;
-    switch (status) {
-      case 'hired':
-        bg = Colors.green.shade100;
-        fg = Colors.green.shade900;
-        label = l10n.applicantStatusHired;
-        break;
-      case 'shortlisted':
-        bg = Colors.blue.shade100;
-        fg = Colors.blue.shade900;
-        label = l10n.applicantStatusShortlisted;
-        break;
-      case 'rejected':
-        bg = Colors.grey.shade200;
-        fg = Colors.grey.shade700;
-        label = l10n.applicantStatusRejected;
-        break;
-      case 'applied':
-      default:
-        bg = AppColors.paleMint;
-        fg = AppColors.headerGreenDark;
-        label = l10n.applicantStatusApplied;
-        break;
+    if (applicant.isHired) {
+      bg = Colors.green.shade100;
+      fg = Colors.green.shade900;
+      label = l10n.applicantStatusHired;
+    } else if (applicant.isShortlisted) {
+      bg = Colors.blue.shade100;
+      fg = Colors.blue.shade900;
+      label = l10n.applicantStatusShortlisted;
+    } else if (applicant.isRejected) {
+      bg = Colors.grey.shade200;
+      fg = Colors.grey.shade700;
+      label = l10n.applicantStatusRejected;
+    } else if (applicant.status == 'withdrawn') {
+      bg = Colors.amber.shade50;
+      fg = Colors.amber.shade900;
+      label = 'Withdrawn';
+    } else {
+      bg = AppColors.paleMint;
+      fg = AppColors.headerGreenDark;
+      label = l10n.applicantStatusApplied;
     }
-    return Chip(
-      visualDensity: VisualDensity.compact,
-      padding: EdgeInsets.zero,
-      backgroundColor: bg,
-      label: Text(label, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: fg)),
+    return Container(
+      constraints: const BoxConstraints(maxWidth: 90),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          label,
+          style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: fg),
+        ),
+      ),
     );
   }
 }

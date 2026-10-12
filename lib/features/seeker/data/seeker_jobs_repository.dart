@@ -43,51 +43,22 @@ class SupabaseSeekerJobsRepository implements SeekerJobsRepository {
     }
 
     try {
-      // 1. Fetch Job Applications (Applied segment)
-      final apps = await _client
-          .from('job_applications')
-          .select('*, jobs!job_id(title, wage_paise, start_at, est_duration_minutes, address_text, profiles!provider_id(full_name), service_categories(slug, icon))')
-          .eq('worker_id', uid)
-          .order('created_at', ascending: false);
-
-      for (final a in (apps as List)) {
-        final job = a['jobs'] as Map<String, dynamic>? ?? {};
-        final provider = job['profiles'] as Map<String, dynamic>?;
-        final cat = job['service_categories'] as Map<String, dynamic>?;
-        final appStatus = (a['status'] as String? ?? 'applied').toLowerCase();
-        final isAccepted = appStatus == 'hired' || appStatus == 'accepted';
-        final segment = isAccepted ? SeekerJobSegment.accepted : SeekerJobSegment.applied;
-
-        result[segment]!.add(SeekerJobItem(
-          id: a['id'] as String,
-          jobId: a['job_id'] as String,
-          title: job['title'] as String? ?? 'Work',
-          providerName: provider?['full_name'] as String? ?? 'Employer',
-          providerVerified: true,
-          wagePaise: (job['wage_paise'] as num?)?.toInt() ?? 60000,
-          startAt: job['start_at'] != null ? DateTime.parse(job['start_at']) : DateTime.now(),
-          estDurationMinutes: (job['est_duration_minutes'] as num?)?.toInt() ?? 480,
-          status: a['status'] as String? ?? 'applied',
-          segment: segment,
-          categorySlug: cat?['slug'] as String? ?? 'general',
-          categoryIcon: cat?['icon'] as String? ?? 'handyman',
-          addressText: job['address_text'] as String? ?? '',
-          message: a['message'] as String?,
-        ));
-      }
-
-      // 2. Fetch Job Assignments (Requests, Accepted, Active, Completed)
+      // 1. Fetch Job Assignments first (Requests, Accepted, Active, Completed)
       final assigns = await _client
           .from('job_assignments')
           .select('*, jobs!job_id(title, wage_paise, start_at, est_duration_minutes, address_text, profiles!provider_id(full_name), service_categories(slug, icon))')
           .eq('worker_id', uid)
           .order('created_at', ascending: false);
 
+      final Map<String, Map<String, dynamic>> assignmentByJobId = {};
+
       for (final asg in (assigns as List)) {
         final job = asg['jobs'] as Map<String, dynamic>? ?? {};
         final provider = job['profiles'] as Map<String, dynamic>?;
         final cat = job['service_categories'] as Map<String, dynamic>?;
         final status = (asg['status'] as String? ?? 'requested').toLowerCase();
+        final jId = asg['job_id'] as String;
+        assignmentByJobId[jId] = Map<String, dynamic>.from(asg as Map);
 
         SeekerJobSegment segment;
         if (status == 'requested') {
@@ -103,13 +74,9 @@ class SupabaseSeekerJobsRepository implements SeekerJobsRepository {
           segment = SeekerJobSegment.completed;
         }
 
-        if (segment == SeekerJobSegment.accepted) {
-          result[segment]!.removeWhere((item) => item.jobId == asg['job_id']);
-        }
-
         result[segment]!.add(SeekerJobItem(
           id: asg['id'] as String,
-          jobId: asg['job_id'] as String,
+          jobId: jId,
           title: job['title'] as String? ?? 'Direct Work Booking',
           providerName: provider?['full_name'] as String? ?? 'Employer',
           providerVerified: true,
@@ -122,6 +89,47 @@ class SupabaseSeekerJobsRepository implements SeekerJobsRepository {
           categorySlug: cat?['slug'] as String? ?? 'general',
           categoryIcon: cat?['icon'] as String? ?? 'handyman',
           addressText: job['address_text'] as String? ?? '',
+        ));
+      }
+
+      // 2. Fetch Job Applications (Applied segment, avoiding duplicate hired/accepted cards)
+      final apps = await _client
+          .from('job_applications')
+          .select('*, jobs!job_id(title, wage_paise, start_at, est_duration_minutes, address_text, profiles!provider_id(full_name), service_categories(slug, icon))')
+          .eq('worker_id', uid)
+          .order('created_at', ascending: false);
+
+      for (final a in (apps as List)) {
+        final jId = a['job_id'] as String;
+        final appStatus = (a['status'] as String? ?? 'applied').toLowerCase();
+        final isAccepted = appStatus == 'hired' || appStatus == 'accepted';
+
+        // If an assignment exists for this job, the assignment item above is already
+        // the single source of truth for execution (requests/accepted/active/completed).
+        if (assignmentByJobId.containsKey(jId)) {
+          continue;
+        }
+
+        final job = a['jobs'] as Map<String, dynamic>? ?? {};
+        final provider = job['profiles'] as Map<String, dynamic>?;
+        final cat = job['service_categories'] as Map<String, dynamic>?;
+        final segment = isAccepted ? SeekerJobSegment.accepted : SeekerJobSegment.applied;
+
+        result[segment]!.add(SeekerJobItem(
+          id: a['id'] as String,
+          jobId: jId,
+          title: job['title'] as String? ?? 'Work',
+          providerName: provider?['full_name'] as String? ?? 'Employer',
+          providerVerified: true,
+          wagePaise: (job['wage_paise'] as num?)?.toInt() ?? 60000,
+          startAt: job['start_at'] != null ? DateTime.parse(job['start_at']) : DateTime.now(),
+          estDurationMinutes: (job['est_duration_minutes'] as num?)?.toInt() ?? 480,
+          status: a['status'] as String? ?? 'applied',
+          segment: segment,
+          categorySlug: cat?['slug'] as String? ?? 'general',
+          categoryIcon: cat?['icon'] as String? ?? 'handyman',
+          addressText: job['address_text'] as String? ?? '',
+          message: a['message'] as String?,
         ));
       }
     } catch (e) {

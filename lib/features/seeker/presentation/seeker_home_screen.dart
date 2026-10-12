@@ -8,9 +8,10 @@ import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/widgets/job_row.dart';
 import 'package:udyogasethu/core/widgets/user_avatar.dart';
-import 'package:udyogasethu/features/seeker/data/seeker_home_repository.dart';
+import 'package:udyogasethu/features/seeker/domain/job_application_status.dart';
 import 'package:udyogasethu/features/seeker/domain/job_recommendation.dart';
 import 'package:udyogasethu/features/seeker/domain/seeker_profile_draft.dart';
+import 'package:udyogasethu/features/seeker/presentation/my_applications_controller.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_home_controller.dart';
 import 'package:udyogasethu/features/earnings/data/earnings_repository.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
@@ -596,16 +597,28 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> with Widget
     final isAdDismissed = ref.watch(seekerAdDismissedProvider);
     final hasGpsConsentAsync = ref.watch(seekerHasGpsConsentProvider);
     final locationState = ref.watch(seekerLocationProvider);
-    final appliedJobIds = ref.watch(seekerAppliedJobsProvider);
 
     final draft = profileAsync.value ?? const SeekerProfileDraft(userId: '');
     final seekerType = draft.seekerType;
 
-    // Precache first few job images safely when recommendations load
+    // Precache first few job images and seed application statuses when recommendations load
     ref.listen(seekerRecommendedJobsProvider, (prev, next) {
       next.whenData((jobs) {
-        if (jobs.isNotEmpty && context.mounted) {
-          JobRow.precacheJobs(context, jobs);
+        if (jobs.isNotEmpty) {
+          if (context.mounted) {
+            JobRow.precacheJobs(context, jobs);
+          }
+          ref.read(myApplicationsProvider.notifier).seedStatuses(
+                jobs.map(
+                  (j) => WorkerJobStatus(
+                    jobId: j.id,
+                    applicationStatus: JobAppStatus.fromString(j.myApplicationStatus),
+                    assignmentStatus: j.myAssignmentStatus,
+                    applicationId: j.myApplicationId,
+                    assignmentId: j.myAssignmentId,
+                  ),
+                ),
+              );
         }
       });
     });
@@ -614,6 +627,7 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> with Widget
       backgroundColor: const Color(0xFFF8FAFC),
       body: RefreshIndicator(
         onRefresh: () async {
+          await ref.read(myApplicationsProvider.notifier).loadAll();
           ref.invalidate(seekerHomeProfileProvider);
           ref.invalidate(seekerHomeSummaryProvider);
           ref.invalidate(seekerRecommendedJobsProvider);
@@ -665,7 +679,6 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> with Widget
                 child: _buildRecommendationsSection(
                   context,
                   recommendationsAsync,
-                  appliedJobIds,
                   seekerType,
                 ),
               ),
@@ -1366,7 +1379,6 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> with Widget
   Widget _buildRecommendationsSection(
     BuildContext context,
     AsyncValue<List<JobRecommendation>> recommendationsAsync,
-    Set<String> appliedJobIds,
     String seekerType,
   ) {
     final l10n = AppLocalizations.of(context);
@@ -1427,6 +1439,54 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> with Widget
 
         const SizedBox(height: 12),
 
+        () {
+          final locState = ref.watch(seekerLocationProvider);
+          final isFallback = !locState.isGps || (recommendationsAsync.value?.any((j) => j.isLocationFallback) ?? false);
+          if (isFallback) {
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              margin: const EdgeInsets.only(bottom: 12),
+              decoration: BoxDecoration(
+                color: AppColors.paleMint.withValues(alpha: 0.6),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.cardBorderGreen),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.location_on_outlined, color: AppColors.headerGreenDark, size: 20),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          locState.displayName.isNotEmpty && locState.displayName != 'Select Location'
+                              ? 'Showing jobs near ${locState.displayName}'
+                              : 'Set your location to see nearby jobs',
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.headerGreenDark),
+                        ),
+                        const Text(
+                          'Enable live GPS or pick your area for walking distance',
+                          style: TextStyle(fontSize: 11, color: AppColors.textMuted),
+                        ),
+                      ],
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: _showManualLocationPicker,
+                    style: TextButton.styleFrom(
+                      visualDensity: VisualDensity.compact,
+                      foregroundColor: AppColors.headerGreenDark,
+                    ),
+                    child: const Text('Change', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                  ),
+                ],
+              ),
+            );
+          }
+          return const SizedBox.shrink();
+        }(),
+
         if (recommendationsAsync.hasError)
           Container(
             padding: const EdgeInsets.all(16),
@@ -1470,42 +1530,10 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> with Widget
               separatorBuilder: (context, index) => const SizedBox(height: 10),
               itemBuilder: (context, index) {
                 final job = filtered[index];
-                final isApplied = appliedJobIds.contains(job.id);
                 return JobRow(
                   job: job,
-                  isApplied: isApplied,
                   seekerType: seekerType,
                   onTap: () => context.push('/job/${job.id}', extra: job),
-                  onApply: () async {
-                    final uid = Supabase.instance.client.auth.currentUser?.id;
-                    if (uid != null) {
-                      try {
-                        await ref.read(seekerHomeRepositoryProvider).applyToJob(
-                              jobId: job.id,
-                              workerId: uid,
-                            );
-                        ref.read(seekerAppliedJobsProvider.notifier).add(job.id);
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Applied to ${job.title}! ✓')),
-                          );
-                        }
-                      } catch (e) {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Application rejected: $e')),
-                          );
-                        }
-                      }
-                    } else {
-                      ref.read(seekerAppliedJobsProvider.notifier).add(job.id);
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Applied to ${job.title}! ✓')),
-                        );
-                      }
-                    }
-                  },
                 );
               },
             );

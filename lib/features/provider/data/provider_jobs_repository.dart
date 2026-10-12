@@ -76,6 +76,8 @@ class SupabaseProviderJobsRepository implements ProviderJobsRepository {
               status: row['status']?.toString() ?? 'open',
               suitableFor: (row['suitable_for'] as List?)?.map((e) => e.toString()).toList() ??
                   const ['informal', 'student', 'part_time'],
+              sitePhotoUrl: row['site_photo_url']?.toString(),
+              thumbnailPath: row['thumbnail_path']?.toString() ?? row['site_photo_url']?.toString(),
               createdAt: row['created_at'] != null
                   ? DateTime.tryParse(row['created_at'].toString()) ?? DateTime.now()
                   : DateTime.now(),
@@ -313,7 +315,7 @@ class SupabaseProviderJobsRepository implements ProviderJobsRepository {
         'p_wage_type': draft.wageType,
         'p_wage_paise': draft.wagePaise,
         'p_est_duration_minutes': draft.estDurationMinutes,
-        'p_start_at': draft.startAt.toIso8601String(),
+        'p_start_at': draft.startAt.toUtc().toIso8601String(),
         'p_slots_total': draft.slotsTotal,
         'p_materials_provided': draft.materialsProvided,
         'p_payment_mode': draft.paymentMode,
@@ -325,6 +327,7 @@ class SupabaseProviderJobsRepository implements ProviderJobsRepository {
         'p_suitable_for': draft.suitableFor,
         'p_landmark': draft.landmark,
         'p_site_photo_url': draft.sitePhotoUrl,
+        'p_thumbnail_path': draft.thumbnailPath ?? draft.sitePhotoUrl,
       });
 
       return res?.toString() ?? '';
@@ -346,7 +349,7 @@ class SupabaseProviderJobsRepository implements ProviderJobsRepository {
         'p_wage_type': draft.wageType,
         'p_wage_paise': draft.wagePaise,
         'p_est_duration_minutes': draft.estDurationMinutes,
-        'p_start_at': draft.startAt.toIso8601String(),
+        'p_start_at': draft.startAt.toUtc().toIso8601String(),
         'p_slots_total': draft.slotsTotal,
         'p_materials_provided': draft.materialsProvided,
         'p_payment_mode': draft.paymentMode,
@@ -358,6 +361,7 @@ class SupabaseProviderJobsRepository implements ProviderJobsRepository {
         'p_suitable_for': draft.suitableFor,
         'p_landmark': draft.landmark,
         'p_site_photo_url': draft.sitePhotoUrl,
+        'p_thumbnail_path': draft.thumbnailPath ?? draft.sitePhotoUrl,
       });
 
       return res == true;

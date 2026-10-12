@@ -1336,5 +1336,6 @@
   "primaryCropsLabel": "ମୁଖ୍ୟ ଫସଲ",
   "apmcMandiLabel": "ପଞ୍ଜୀକୃତ ଏପିଏମସି ମଣ୍ଡି",
   "farmDetailsUpdatedSuccess": "କୃଷି ବିବରଣୀ ସଫଳତାର ସହିତ ଅପଡେଟ୍ ହୋଇଛି",
-  "selfDeclaredProfile": "ସ୍ୱୟଂ ଘୋଷିତ ପ୍ରୋଫାଇଲ୍"
+  "selfDeclaredProfile": "ସ୍ୱୟଂ ଘୋଷିତ ପ୍ରୋଫାଇଲ୍",
+  "locationPinNotice": "ଜିପିଏସ ପିନ୍ ବିନା କାର୍ଯ୍ୟସ୍ଥଳୀ ଠିକଣା ପ୍ରଦାନ କରାଯାଇଛି"
 }

@@ -182,6 +182,8 @@ class PostJobWizardNotifier extends Notifier<JobPostDraft> {
       addressText: job.addressText ?? '',
       geofenceRadiusM: job.geofenceRadiusM,
       suitableFor: job.suitableFor,
+      sitePhotoUrl: job.sitePhotoUrl,
+      thumbnailPath: job.thumbnailPath ?? job.sitePhotoUrl,
       currentStep: 0,
     );
     if (job.categoryId != null) {
@@ -214,24 +216,17 @@ class PostJobWizardNotifier extends Notifier<JobPostDraft> {
   }
 
   void setSitePhotoUrl(String? url) {
-    state = state.copyWith(sitePhotoUrl: url);
+    state = state.copyWith(sitePhotoUrl: url, thumbnailPath: url);
   }
 
-  Future<void> setCategory(String categoryId, String categoryName, {bool allowsStudent = false}) async {
-    final updatedSuitableFor = List<String>.from(state.suitableFor);
-    bool updatedStudentsOk = state.studentsOk;
-    if (!allowsStudent) {
-      updatedStudentsOk = false;
-      updatedSuitableFor.remove('student');
-      if (updatedSuitableFor.isEmpty) {
-        updatedSuitableFor.add('informal');
-      }
-    }
+  void setCoverThumbnail(String? path) {
+    state = state.copyWith(thumbnailPath: path);
+  }
+
+  Future<void> setCategory(String categoryId, String categoryName) async {
     state = state.copyWith(
       categoryId: categoryId,
       categoryName: categoryName,
-      studentsOk: updatedStudentsOk,
-      suitableFor: updatedSuitableFor,
     );
     await checkWageBand(categoryId);
   }

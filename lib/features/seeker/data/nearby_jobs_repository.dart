@@ -42,12 +42,20 @@ class SupabaseNearbyJobsRepository implements NearbyJobsRepository {
     }
 
     try {
+      final cleanLat = (lat != 0.0) ? lat : null;
+      final cleanLng = (lng != 0.0) ? lng : null;
+      final workerId = client.auth.currentUser?.id;
+
       final params = <String, dynamic>{
-        'p_lat': lat,
-        'p_lng': lng,
+        'p_lat': cleanLat,
+        'p_lng': cleanLng,
         'p_radius_m': radiusM,
         'p_limit': limit,
       };
+
+      if (workerId != null) {
+        params['p_worker_id'] = workerId;
+      }
 
       if (categoryId != null && categoryId.isNotEmpty) {
         params['p_category_id'] = categoryId;

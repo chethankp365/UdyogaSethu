@@ -1398,5 +1398,6 @@
   "primaryCropsLabel": "Primary Crops Grown",
   "apmcMandiLabel": "Registered APMC Mandi",
   "farmDetailsUpdatedSuccess": "Farm details updated successfully",
-  "selfDeclaredProfile": "SELF-DECLARED PROFILE"
+  "selfDeclaredProfile": "SELF-DECLARED PROFILE",
+  "locationPinNotice": "Site address provided without GPS pin"
 }

@@ -119,7 +119,9 @@ class PhoneAuthNotifier extends Notifier<PhoneAuthState> {
         );
 
         // Run bootstrap to process pending role selection and profile status
-        await ref.read(bootstrapProvider.notifier).runBootstrap();
+        try {
+          await ref.read(bootstrapProvider.notifier).runBootstrap();
+        } catch (_) {}
 
         return true;
       } else {
@@ -183,7 +185,9 @@ class PhoneAuthNotifier extends Notifier<PhoneAuthState> {
           step: PhoneAuthStep.success,
         );
 
-        await ref.read(bootstrapProvider.notifier).runBootstrap();
+        try {
+          await ref.read(bootstrapProvider.notifier).runBootstrap();
+        } catch (_) {}
         return true;
       }
 

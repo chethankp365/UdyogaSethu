@@ -176,6 +176,7 @@ class FarmResource {
   }
 
   String get formattedRating => ratingAvg.toStringAsFixed(1);
+  String? get imageUrl => images.isNotEmpty ? images.first : null;
 
   factory FarmResource.fromJson(Map<String, dynamic> json) {
     final rawImgs = json['images'];

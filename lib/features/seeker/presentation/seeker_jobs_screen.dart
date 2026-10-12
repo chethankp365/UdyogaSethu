@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/services/job_thumbnail_service.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
+import 'package:udyogasethu/core/theme/app_spacing.dart';
 import 'package:udyogasethu/features/seeker/domain/seeker_job_item.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_jobs_controller.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
@@ -193,7 +194,7 @@ class _SeekerJobsScreenState extends ConsumerState<SeekerJobsScreen> {
     final list = state.currentList;
 
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: AppSpacing.fabListPadding,
       children: [
         if (list.isEmpty)
           _buildEmptyState(state.selectedSegment)

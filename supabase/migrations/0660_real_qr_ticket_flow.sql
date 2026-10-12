@@ -10,11 +10,11 @@
 -- ============================================================================
 
 -- 1. Seed timing controls in admin_settings
-INSERT INTO public.admin_settings (key, value, description)
+INSERT INTO public.admin_settings (key, value)
 VALUES 
-  ('ticket_valid_before_minutes', '60', 'Minutes before job start when ticket check-in opens'),
-  ('ticket_valid_after_minutes', '120', 'Minutes after job start when ticket check-in closes'),
-  ('qr_ticket_expiry_seconds', '120', 'Rotating QR ticket token lifetime in seconds')
+  ('ticket_valid_before_minutes', '60'::jsonb),
+  ('ticket_valid_after_minutes', '120'::jsonb),
+  ('qr_ticket_expiry_seconds', '120'::jsonb)
 ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;
 
 -- 2. Drop existing function overloads to prevent ambiguous signature issues
@@ -128,7 +128,7 @@ BEGIN
   INTO v_ja
   FROM public.job_assignments ja JOIN public.jobs j ON ja.job_id = j.id
   JOIN public.profiles p ON ja.worker_id = p.id LEFT JOIN public.worker_profiles wp ON ja.worker_id = wp.user_id
-  WHERE ja.id = v_qr.assignment_id FOR UPDATE;
+  WHERE ja.id = v_qr.assignment_id FOR UPDATE OF ja;
 
   IF v_ja.id IS NULL THEN
     RETURN jsonb_build_object('valid', false, 'status', 'error', 'error_code', 'ASSIGNMENT_NOT_FOUND', 'error_message', 'Assignment not found.');

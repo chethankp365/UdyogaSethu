@@ -3800,4 +3800,8 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get selfDeclaredProfile => 'స్వయం ప్రకటిత ప్రొఫైల్';
+
+  @override
+  String get locationPinNotice =>
+      'జీపీఎస్ పిన్ లేకుండా సైట్ చిరునామా అందించబడింది';
 }

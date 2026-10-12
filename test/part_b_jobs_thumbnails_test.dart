@@ -80,8 +80,7 @@ void main() {
         title: 'Complete house wiring and switchboard replacement',
       );
       expect(elec.isNetwork, isFalse);
-      expect(elec.categorySlug, 'electrician');
-      expect(elec.uri, startsWith('assets/images/jobs/electrician-'));
+      expect(elec.uri, 'assets/thumbnails/electrician.webp');
 
       // 2. Plumbing
       final plumb = service.selectThumbnail(
@@ -90,8 +89,7 @@ void main() {
         title: 'Fix bathroom tap leak and water tank pipe',
       );
       expect(plumb.isNetwork, isFalse);
-      expect(plumb.categorySlug, 'plumbing');
-      expect(plumb.uri, startsWith('assets/images/jobs/plumbing-'));
+      expect(plumb.uri, 'assets/thumbnails/plumbing.webp');
 
       // 3. Carpenter
       final carp = service.selectThumbnail(
@@ -100,8 +98,7 @@ void main() {
         title: 'Custom wooden dining table and furniture fixing',
       );
       expect(carp.isNetwork, isFalse);
-      expect(carp.categorySlug, 'carpenter');
-      expect(carp.uri, startsWith('assets/images/jobs/carpenter-'));
+      expect(carp.uri, 'assets/thumbnails/carpenter.webp');
 
       // 4. Cleaner
       final clean = service.selectThumbnail(
@@ -110,19 +107,17 @@ void main() {
         title: 'Deep office cleaning and dusting',
       );
       expect(clean.isNetwork, isFalse);
-      expect(clean.categorySlug, 'cleaner');
-      expect(clean.uri, startsWith('assets/images/jobs/cleaner-'));
+      expect(clean.uri, 'assets/thumbnails/cleaner.webp');
     });
 
-    test('Falls back to category slug and general when no keywords match', () {
+    test('Falls back to category slug and generic when no keywords match', () {
       final fallback = service.selectThumbnail(
         categorySlug: 'mason',
         jobId: 'j-5',
         title: 'Miscellaneous manual help',
       );
       expect(fallback.isNetwork, isFalse);
-      expect(fallback.categorySlug, 'mason');
-      expect(fallback.uri, startsWith('assets/images/jobs/mason-'));
+      expect(fallback.uri, 'assets/thumbnails/mason.webp');
 
       final unknown = service.selectThumbnail(
         categorySlug: 'unknown_trade',
@@ -130,23 +125,20 @@ void main() {
         title: 'Some unspecified task',
       );
       expect(unknown.isNetwork, isFalse);
-      expect(unknown.categorySlug, 'general');
-      expect(unknown.uri, startsWith('assets/images/jobs/general-'));
+      expect(unknown.uri, 'assets/thumbnails/fallback_generic.webp');
     });
 
-    test('Wall paint keyword gives painting-interior library image', () {
+    test('Wall paint keyword gives painting library thumbnail', () {
       final interior = service.selectThumbnail(
         categorySlug: 'painting',
         jobId: 'j-7',
         title: 'Need 2BHK wall paint and plaster touchup',
       );
       expect(interior.isNetwork, isFalse);
-      expect(interior.categorySlug, 'painting');
-      expect(interior.imageName, 'painting-interior');
-      expect(interior.uri, 'assets/images/jobs/painting-interior.webp');
+      expect(interior.uri, 'assets/thumbnails/painting.webp');
     });
 
-    test('Priority sequence: provider site photo > library image > category fallback', () {
+    test('Priority sequence: provider site photo > library illustration > fallback', () {
       // 1. Site photo takes priority even if title has "wall paint"
       final siteThumb = service.selectThumbnail(
         sitePhotoUrl: 'https://example.com/actual_room.jpg',
@@ -157,15 +149,14 @@ void main() {
       expect(siteThumb.isNetwork, isTrue);
       expect(siteThumb.uri, 'https://example.com/actual_room.jpg');
 
-      // 2. Without site photo, library image is resolved
+      // 2. Without site photo, library illustration is resolved
       final libThumb = service.selectThumbnail(
         categorySlug: 'painting',
         jobId: 'j-8',
         title: 'Urgent wall paint job',
       );
       expect(libThumb.isNetwork, isFalse);
-      expect(libThumb.imageName, 'painting-interior');
-      expect(libThumb.uri, 'assets/images/jobs/painting-interior.webp');
+      expect(libThumb.uri, 'assets/thumbnails/painting.webp');
     });
   });
 
@@ -194,13 +185,17 @@ void main() {
       );
 
       await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
-            body: Column(
-              children: [
-                JobRow(job: jobWithStudents),
-                JobRow(job: jobWithoutStudents),
-              ],
+        const ProviderScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    JobRow(job: jobWithStudents),
+                    JobRow(job: jobWithoutStudents),
+                  ],
+                ),
+              ),
             ),
           ),
         ),

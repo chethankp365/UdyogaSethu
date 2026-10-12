@@ -6,15 +6,19 @@ import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
+import 'package:udyogasethu/core/widgets/job_action_button.dart';
 import 'package:udyogasethu/core/widgets/user_avatar.dart';
 import 'package:udyogasethu/features/provider/data/provider_jobs_repository.dart';
 import 'package:udyogasethu/features/provider/domain/job_applicant.dart';
 import 'package:udyogasethu/features/provider/presentation/provider_jobs_controller.dart';
+import 'package:udyogasethu/features/seeker/domain/job_application_status.dart';
 import 'package:udyogasethu/features/seeker/domain/job_detail.dart';
 import 'package:udyogasethu/features/seeker/domain/job_recommendation.dart';
 import 'package:udyogasethu/features/seeker/presentation/apply_bottom_sheet.dart';
 import 'package:udyogasethu/core/services/job_thumbnail_service.dart';
+import 'package:udyogasethu/core/widgets/app_thumbnail.dart' as ui;
 import 'package:udyogasethu/features/seeker/presentation/job_detail_controller.dart';
+import 'package:udyogasethu/features/seeker/presentation/my_applications_controller.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class JobDetailScreen extends ConsumerStatefulWidget {
@@ -48,7 +52,20 @@ class _JobDetailScreenState extends ConsumerState<JobDetailScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       body: detailAsync.when(
-        data: (data) => _buildDetailContent(context, data.detail, data.isOffline, l10n),
+        data: (data) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            ref.read(myApplicationsProvider.notifier).seedStatuses([
+              WorkerJobStatus(
+                jobId: data.detail.id,
+                applicationStatus: JobAppStatus.fromString(data.detail.myApplicationStatus),
+                assignmentStatus: data.detail.myAssignmentStatus,
+                applicationId: data.detail.myApplicationId,
+                assignmentId: data.detail.myAssignmentId,
+              ),
+            ]);
+          });
+          return _buildDetailContent(context, data.detail, data.isOffline, l10n);
+        },
         loading: () {
           // If we have preloadedJob from navigation, display immediately with shimmer
           if (widget.preloadedJob != null) {
@@ -163,28 +180,11 @@ class _JobDetailScreenState extends ConsumerState<JobDetailScreen> {
                   background: Stack(
                     fit: StackFit.expand,
                     children: [
-                      if (thumb.isNetwork)
-                        Image.network(
-                          thumb.uri,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => Image.asset(
-                            JobThumbnailService().selectThumbnail(categorySlug: job.categorySlug, jobId: job.id, title: job.title, description: job.description).uri,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, _, _) => Container(
-                              color: AppColors.headerGreenDark,
-                              child: Icon(categoryIcon, color: Colors.white, size: 64),
-                            ),
-                          ),
-                        )
-                      else
-                        Image.asset(
-                          thumb.uri,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => Container(
-                            color: AppColors.headerGreenDark,
-                            child: Icon(categoryIcon, color: Colors.white, size: 64),
-                          ),
-                        ),
+                      ui.JobThumbnail.fromDetail(
+                        job,
+                        size: ui.ThumbnailSize.header,
+                        showTitle: false,
+                      ),
                       // Dark gradient overlay
                       Container(
                         decoration: BoxDecoration(
@@ -581,15 +581,14 @@ class _JobDetailScreenState extends ConsumerState<JobDetailScreen> {
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                         ),
                       )
-                    : ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: isOffline ? Colors.grey.shade400 : AppColors.headerGreenDark,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          elevation: isOffline ? 0 : 2,
-                        ),
-                        onPressed: isOffline
+                    : JobActionButton(
+                        jobId: job.id,
+                        jobTitle: job.title,
+                        isCompact: false,
+                        showWithdrawOption: true,
+                        fallbackAssignmentId: job.myAssignmentId,
+                        isOffline: isOffline,
+                        onApplyCustom: isOffline
                             ? () {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
@@ -599,11 +598,6 @@ class _JobDetailScreenState extends ConsumerState<JobDetailScreen> {
                                 );
                               }
                             : () => ApplyBottomSheet.show(context, job),
-                        icon: Icon(isOffline ? Icons.cloud_off_rounded : Icons.send_rounded, size: 18),
-                        label: Text(
-                          isOffline ? 'Offline - Reconnect to Apply' : 'Apply Now (Quick & Easy ✨)',
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                        ),
                       ),
               ),
             ],

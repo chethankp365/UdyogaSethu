@@ -7,6 +7,7 @@ import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/trust/data/kyc_repository.dart';
 import 'package:udyogasethu/features/trust/domain/kyc_record.dart';
 import 'package:udyogasethu/features/trust/domain/verification_visibility.dart';
+import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class StudentVerificationScreen extends ConsumerStatefulWidget {
   const StudentVerificationScreen({super.key});
@@ -57,7 +58,7 @@ class _StudentVerificationScreenState extends ConsumerState<StudentVerificationS
             children: [
               ListTile(
                 leading: const Icon(Icons.camera_alt_rounded, color: Colors.white),
-                title: const Text('Take Photo (Camera)', style: TextStyle(color: Colors.white)),
+                title: Text(AppLocalizations.of(context)?.takePhotoCamera ?? 'Take Photo (Camera)', style: const TextStyle(color: Colors.white)),
                 onTap: () async {
                   Navigator.pop(context);
                   _captureImage(ImageSource.camera);
@@ -65,7 +66,7 @@ class _StudentVerificationScreenState extends ConsumerState<StudentVerificationS
               ),
               ListTile(
                 leading: const Icon(Icons.photo_library_rounded, color: Colors.white),
-                title: const Text('Choose from Gallery', style: TextStyle(color: Colors.white)),
+                title: Text(AppLocalizations.of(context)?.chooseGallery ?? 'Choose from Gallery', style: const TextStyle(color: Colors.white)),
                 onTap: () async {
                   Navigator.pop(context);
                   _captureImage(ImageSource.gallery);

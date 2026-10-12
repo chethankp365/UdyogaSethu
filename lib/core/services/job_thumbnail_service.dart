@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:udyogasethu/core/theme/app_colors.dart';
+import 'package:udyogasethu/core/services/thumbnail_library.dart';
+import 'package:udyogasethu/core/widgets/app_thumbnail.dart' as ui;
 
 enum ThumbnailSourceType {
   network,
@@ -250,7 +251,6 @@ class JobThumbnailService {
   }) {
     init();
 
-    // 1. Provider site photo priority (highest priority)
     if (sitePhotoUrl != null && sitePhotoUrl.trim().isNotEmpty) {
       return JobThumbnail(
         sourceType: ThumbnailSourceType.network,
@@ -261,75 +261,64 @@ class JobThumbnailService {
       );
     }
 
-    // 2. Library image chosen by category AND keywords in title & description
-    final text = '${title ?? ''} ${description ?? ''}'.toLowerCase();
-    final libraryMatch = _matchLibraryRule(text, categorySlug);
-    if (libraryMatch != null) {
+    final res = ThumbnailLibrary.resolveJob(
+      thumbnailPath: sitePhotoUrl,
+      sitePhotoUrl: sitePhotoUrl,
+      title: title,
+      categorySlug: categorySlug,
+      description: description,
+    );
+
+    if (res.isNetwork && res.networkUrl != null) {
       return JobThumbnail(
-        sourceType: ThumbnailSourceType.asset,
-        uri: libraryMatch.assetPath,
-        categorySlug: libraryMatch.categorySlug,
-        categoryIcon: getCategoryIcon(libraryMatch.categorySlug),
-        imageName: libraryMatch.imageName,
+        sourceType: ThumbnailSourceType.network,
+        uri: res.networkUrl!,
+        categorySlug: categorySlug,
+        categoryIcon: getCategoryIcon(categorySlug),
+        imageName: null,
       );
     }
 
-    // 3. Fallback to category slug and deterministic variant
-    String effectiveSlug = _matchKeywords(title, description) ?? categorySlug;
-    if (!_knownSlugs.contains(effectiveSlug)) {
-      effectiveSlug = 'general';
+    if (res.itemKey != 'fallback_generic' && res.assetPath != null) {
+      final effectiveCat = res.itemKey ?? categorySlug;
+      return JobThumbnail(
+        sourceType: ThumbnailSourceType.asset,
+        uri: res.assetPath!,
+        categorySlug: effectiveCat,
+        categoryIcon: getCategoryIcon(effectiveCat),
+        imageName: res.itemKey,
+      );
     }
 
-    final variant = (jobId.hashCode.abs() % 2) + 1;
-    final imageName = '$effectiveSlug-$variant';
-    final assetPath = 'assets/images/jobs/$imageName.webp';
+    // Check if keyword or category matches one of the 20 job categories in assets/images/jobs
+    final kwSlug = _matchKeywords(title, description);
+    final targetSlug = (kwSlug != null && kwSlug != 'general') ? kwSlug : categorySlug;
+    if (_knownSlugs.contains(targetSlug) && targetSlug != 'general') {
+      final variant = (jobId.hashCode.abs() % 2) + 1;
+      final imageName = '$targetSlug-$variant';
+      final assetPath = 'assets/images/jobs/$imageName.webp';
+      return JobThumbnail(
+        sourceType: ThumbnailSourceType.asset,
+        uri: assetPath,
+        categorySlug: targetSlug,
+        categoryIcon: getCategoryIcon(targetSlug),
+        imageName: imageName,
+      );
+    }
 
     return JobThumbnail(
       sourceType: ThumbnailSourceType.asset,
-      uri: assetPath,
-      categorySlug: effectiveSlug,
-      categoryIcon: getCategoryIcon(effectiveSlug),
-      imageName: imageName,
+      uri: res.assetPath ?? ThumbnailLibrary.fallbackAsset,
+      categorySlug: categorySlug,
+      categoryIcon: getCategoryIcon(categorySlug),
+      imageName: res.itemKey,
     );
-  }
-
-  LibraryImageRule? _matchLibraryRule(String text, String categorySlug) {
-    if (text.trim().isEmpty) return null;
-
-    // First check rules matching the given categorySlug
-    final catRules = _libraryRules.where((r) => r.categorySlug == categorySlug).toList();
-    for (final rule in catRules) {
-      for (final kw in rule.keywords) {
-        if (text.contains(kw.toLowerCase())) {
-          return rule;
-        }
-      }
-    }
-
-    // Then check all rules, prioritizing longer multi-word phrases first
-    final sortedRules = [..._libraryRules];
-    sortedRules.sort((a, b) {
-      final maxA = a.keywords.map((k) => k.length).fold(0, (prev, len) => len > prev ? len : prev);
-      final maxB = b.keywords.map((k) => k.length).fold(0, (prev, len) => len > prev ? len : prev);
-      return maxB.compareTo(maxA);
-    });
-
-    for (final rule in sortedRules) {
-      for (final kw in rule.keywords) {
-        if (text.contains(kw.toLowerCase())) {
-          return rule;
-        }
-      }
-    }
-
-    return null;
   }
 
   String? _matchKeywords(String? title, String? description) {
     final text = '${title ?? ''} ${description ?? ''}'.toLowerCase();
     if (text.trim().isEmpty) return null;
 
-    // Check longer multi-word keywords first, then single words
     final sortedKeywords = _keywordToSlug.keys.toList()
       ..sort((a, b) => b.length.compareTo(a.length));
 
@@ -404,7 +393,7 @@ class JobThumbnailService {
 }
 
 /// Dynamic thumbnail widget with site photo priority, keyword asset fallback,
-/// and gradient/icon error container
+/// and comic outlined lettering
 class JobThumbnailWidget extends StatelessWidget {
   final String? sitePhotoUrl;
   final String categorySlug;
@@ -431,81 +420,18 @@ class JobThumbnailWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final thumb = JobThumbnailService().selectThumbnail(
-      sitePhotoUrl: sitePhotoUrl,
+    return ui.JobThumbnail(
+      title: title,
       categorySlug: categorySlug,
       jobId: jobId,
-      title: title,
+      thumbnailPath: sitePhotoUrl,
+      sitePhotoUrl: sitePhotoUrl,
       description: description,
-    );
-
-    final radius = borderRadius ?? BorderRadius.circular(10);
-
-    Widget imageContent;
-    if (thumb.isNetwork) {
-      imageContent = Image.network(
-        thumb.uri,
-        width: width,
-        height: height,
-        fit: fit,
-        errorBuilder: (ctx, err, stack) => _buildAssetFallback(thumb, radius),
-      );
-    } else {
-      imageContent = _buildAssetFallback(thumb, radius);
-    }
-
-    return ClipRRect(
-      borderRadius: radius,
-      child: SizedBox(
-        width: width,
-        height: height,
-        child: imageContent,
-      ),
-    );
-  }
-
-  Widget _buildAssetFallback(JobThumbnail thumb, BorderRadius radius) {
-    // Generate deterministic asset fallback if network fails
-    final fallbackAsset = thumb.isNetwork
-        ? JobThumbnailService().selectThumbnail(
-            sitePhotoUrl: null,
-            categorySlug: categorySlug,
-            jobId: jobId,
-            title: title,
-            description: description,
-          ).uri
-        : thumb.uri;
-
-    return Image.asset(
-      fallbackAsset,
+      size: width >= 120 ? ui.ThumbnailSize.card : ui.ThumbnailSize.small,
       width: width,
       height: height,
+      borderRadius: borderRadius,
       fit: fit,
-      errorBuilder: (ctx, err, stack) => _buildGradientFallback(thumb),
-    );
-  }
-
-  Widget _buildGradientFallback(JobThumbnail thumb) {
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppColors.headerGreenDark,
-            AppColors.primaryTeal.withValues(alpha: 0.8),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
-      child: Center(
-        child: Icon(
-          thumb.categoryIcon,
-          color: Colors.white,
-          size: width * 0.45,
-        ),
-      ),
     );
   }
 }

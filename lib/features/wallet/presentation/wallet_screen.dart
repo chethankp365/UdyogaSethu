@@ -205,8 +205,11 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Top Row: WALLET BALANCE & Escrow Protected Pill
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 8,
+            runSpacing: 6,
             children: [
               const Text(
                 'WALLET BALANCE',
@@ -229,12 +232,17 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                   children: [
                     Icon(Icons.shield_rounded, color: Color(0xFF10B981), size: 14),
                     SizedBox(width: 4),
-                    Text(
-                      'Escrow Protected',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          'Escrow Protected',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -275,23 +283,31 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        balance.todayCreditPaise > 0
-                            ? '+${balance.formattedTodayCredit}'
-                            : '₹0',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF34D399),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          balance.todayCreditPaise > 0
+                              ? '+${balance.formattedTodayCredit}'
+                              : '₹0',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF34D399),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 2),
-                      const Text(
-                        "Today's Released",
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFFE2E8F0),
+                      const FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Today's Released",
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFFE2E8F0),
+                          ),
                         ),
                       ),
                     ],
@@ -312,21 +328,29 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        balance.formattedEscrow,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFFFDE68A),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          balance.formattedEscrow,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFFFDE68A),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 2),
-                      const Text(
-                        'Pending Escrow',
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFFE2E8F0),
+                      const FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Pending Escrow',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFFE2E8F0),
+                          ),
                         ),
                       ),
                     ],
@@ -342,40 +366,62 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
             children: [
               // Withdraw Button
               Expanded(
-                child: ElevatedButton.icon(
+                child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: const Color(0xFF0D6548),
                     elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
-                  icon: const Icon(Icons.arrow_outward_rounded, size: 18),
-                  label: const Text(
-                    'Withdraw',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
                   ),
                   onPressed: () => _openWithdrawDialog(balance),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.arrow_outward_rounded, size: 18),
+                      SizedBox(width: 4),
+                      Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'Withdraw',
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
 
               // Scan UPI QR Button
               Expanded(
-                child: OutlinedButton.icon(
+                child: OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     backgroundColor: Colors.white.withValues(alpha: 0.15),
                     foregroundColor: Colors.white,
                     side: const BorderSide(color: Colors.white38),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
-                  icon: const Icon(Icons.qr_code_scanner_rounded, size: 18),
-                  label: const Text(
-                    'Scan UPI QR',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
                   ),
                   onPressed: _openScanUpiDialog,
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.qr_code_scanner_rounded, size: 18),
+                      SizedBox(width: 4),
+                      Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'Scan UPI QR',
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

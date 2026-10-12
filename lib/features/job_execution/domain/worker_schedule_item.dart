@@ -61,11 +61,11 @@ class WorkerScheduleItem {
 
   factory WorkerScheduleItem.fromJson(Map<String, dynamic> json) {
     final start = json['start_at'] != null
-        ? DateTime.tryParse(json['start_at'].toString()) ?? DateTime.now()
+        ? (DateTime.tryParse(json['start_at'].toString()) ?? DateTime.now()).toLocal()
         : DateTime.now();
     final duration = (json['est_duration_minutes'] as num?)?.toInt() ?? 480;
     final end = json['end_at'] != null
-        ? DateTime.tryParse(json['end_at'].toString()) ?? start.add(Duration(minutes: duration))
+        ? (DateTime.tryParse(json['end_at'].toString()) ?? start.add(Duration(minutes: duration))).toLocal()
         : start.add(Duration(minutes: duration));
 
     return WorkerScheduleItem(

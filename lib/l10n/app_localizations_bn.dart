@@ -3767,4 +3767,8 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get selfDeclaredProfile => 'স্বঘোষিত প্রোফাইল';
+
+  @override
+  String get locationPinNotice =>
+      'জিপিএস পিন ছাড়া সাইটের ঠিকানা দেওয়া হয়েছে';
 }

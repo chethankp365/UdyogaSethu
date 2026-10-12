@@ -1336,5 +1336,6 @@
   "primaryCropsLabel": "ಮುಖ್ಯವಾಗಿ ಬೆಳೆಯುವ ಬೆಳೆಗಳು",
   "apmcMandiLabel": "ನೋಂದಾಯಿತ ಎಪಿಎಂಸಿ ಮಂಡಿ",
   "farmDetailsUpdatedSuccess": "ಕೃಷಿ ವಿವರಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ",
-  "selfDeclaredProfile": "ಸ್ವಯಂ ಘೋಷಿತ ವಿವರ"
+  "selfDeclaredProfile": "ಸ್ವಯಂ ಘೋಷಿತ ವಿವರ",
+  "locationPinNotice": "ಜಿಪಿಎಸ್ ಪಿನ್ ಇಲ್ಲದೆ ಸೈಟ್ ವಿಳಾಸವನ್ನು ನೀಡಲಾಗಿದೆ"
 }

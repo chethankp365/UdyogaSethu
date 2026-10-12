@@ -23,6 +23,10 @@ class JobPin {
   final Map<String, dynamic> categoryName;
   final String categoryIcon;
   final String categorySlug;
+  final String myApplicationStatus;
+  final String? myAssignmentStatus;
+  final String? myApplicationId;
+  final String? myAssignmentId;
 
   const JobPin({
     required this.id,
@@ -46,6 +50,10 @@ class JobPin {
     this.categoryName = const {},
     this.categoryIcon = 'work',
     this.categorySlug = 'general',
+    this.myApplicationStatus = 'none',
+    this.myAssignmentStatus,
+    this.myApplicationId,
+    this.myAssignmentId,
   });
 
   LatLng get latLng => LatLng(lat, lng);
@@ -134,6 +142,10 @@ class JobPin {
       categoryName: catMap,
       categoryIcon: json['category_icon']?.toString() ?? 'work',
       categorySlug: json['category_slug']?.toString() ?? 'general',
+      myApplicationStatus: (json['my_application_status'] ?? json['application_status'] ?? 'none').toString(),
+      myAssignmentStatus: (json['my_assignment_status'] ?? json['assignment_status'])?.toString(),
+      myApplicationId: (json['my_application_id'] ?? json['application_id'])?.toString(),
+      myAssignmentId: (json['my_assignment_id'] ?? json['assignment_id'])?.toString(),
     );
   }
 }

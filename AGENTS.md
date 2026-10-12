@@ -2,7 +2,9 @@
 
 • **Always**: Before any work read AGENTS.md, docs/PROJECT_CONTEXT.md, docs/PROGRESS.md (and docs/UI_REFERENCE.md for UI work). Do only the step I gave. Never start the next step. If the step needs an unfinished earlier step, stop and tell me.
 
-• **Finish protocol**: Run `flutter analyze` (and `flutter test` when tests exist) and fix every issue. Update docs/PROGRESS.md (status, files created, manual steps I must do, known issues). End with a short report: what was built, how to test it, what is NOT done.
+• **Finish protocol**: Run `flutter analyze`, the overflow test suite (`tool/check_overflow.sh` or `tool/check_overflow.bat`), and `flutter test` when tests exist, and fix every issue. Update docs/PROGRESS.md (status, files created, manual steps I must do, known issues). End with a short report: what was built, how to test it, what is NOT done.
+
+• **Zero Layout Overflow**: Every new screen and reusable card/row widget must be covered by the overflow test suite (using `runOverflowMatrix` / `pumpAtAllSizes` across logical widths 320–600dp, text scales 1.0–2.0, and supported locales) before it is marked finished. Fix all overflows at the root cause (Flexible/Expanded, Wrap, FittedBox on compact labels, scrollable tab bars, SingleChildScrollView). Never suppress overflow warnings.
 
 • **Plan first**: For backend, auth, payments and verification, list the files you will touch before editing.
 

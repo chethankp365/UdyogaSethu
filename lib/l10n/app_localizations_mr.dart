@@ -3767,4 +3767,8 @@ class AppLocalizationsMr extends AppLocalizations {
 
   @override
   String get selfDeclaredProfile => 'स्वयं-घोषित प्रोफाइल';
+
+  @override
+  String get locationPinNotice =>
+      'जीपीएस पिन शिवाय कामाचे ठिकाण पत्ता दिला आहे';
 }

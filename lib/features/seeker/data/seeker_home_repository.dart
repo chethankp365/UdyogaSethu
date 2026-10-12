@@ -59,12 +59,15 @@ class SupabaseSeekerHomeRepository implements SeekerHomeRepository {
     int limit = 20,
   }) async {
     try {
+      final cleanLat = (lat != null && lat != 0.0) ? lat : null;
+      final cleanLng = (lng != null && lng != 0.0) ? lng : null;
+
       final response = await _supabase.rpc(
         'recommended_jobs',
         params: {
           'p_worker_id': workerId,
-          'p_lat': lat,
-          'p_lng': lng,
+          'p_lat': cleanLat,
+          'p_lng': cleanLng,
           'p_limit': limit,
           'p_radius_m': radiusM,
         },
@@ -79,30 +82,13 @@ class SupabaseSeekerHomeRepository implements SeekerHomeRepository {
         }
       }
 
-      final isStudentOrPartTime = seekerType == 'student' || seekerType == 'part_time';
-
-      final now = DateTime.now();
-      final filteredList = rawList.where((job) {
-        if (job.startAt != null && job.startAt!.isBefore(now)) return false;
-        if (job.slotsTotal > 0 && job.slotsFilled >= job.slotsTotal) return false;
-        if (isStudentOrPartTime) {
-          if (tradeCategorySlugs.contains(job.categorySlug) && !job.isStudentFriendly) return false;
-          return studentCategorySlugs.contains(job.categorySlug) || job.isStudentFriendly;
-        } else {
-          if (studentCategorySlugs.contains(job.categorySlug) && !job.isStudentFriendly) return false;
-          return true;
-        }
-      }).toList();
-
       if (kDebugMode) {
-        debugPrint('[DEBUG SeekerFeed] RPC called: recommended_jobs(workerId: $workerId, lat: $lat, lng: $lng, radiusM: $radiusM)');
+        debugPrint('[DEBUG SeekerFeed] RPC called: recommended_jobs(workerId: $workerId, lat: $cleanLat, lng: $cleanLng, radiusM: $radiusM)');
         debugPrint('[DEBUG SeekerFeed] Seeker type: $seekerType');
-        debugPrint('[DEBUG SeekerFeed] Target audience filter: ${isStudentOrPartTime ? "[student, part_time]" : "[informal]"}');
-        debugPrint('[DEBUG SeekerFeed] Jobs returned before filter: ${rawList.length}');
-        debugPrint('[DEBUG SeekerFeed] Jobs returned after filter: ${filteredList.length}');
+        debugPrint('[DEBUG SeekerFeed] Jobs returned from SQL source of truth: ${rawList.length}');
       }
 
-      return filteredList;
+      return rawList;
     } catch (e, stack) {
       AppLogger.e('Failed to fetch recommended_jobs: $e', e, stack);
       rethrow;

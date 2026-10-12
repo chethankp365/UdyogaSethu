@@ -259,6 +259,7 @@ class AttendanceScanResult {
       jobTitle: json['job_title'] as String?,
       arrivedAt: arrived,
       message: msg,
+      errorMessage: msg,
       errorCode: code,
       scannedAtTime: json['scanned_at'] as String? ?? json['scanned_at_time'] as String?,
       expiredAtTime: json['expired_at'] as String? ?? json['expired_at_time'] as String?,

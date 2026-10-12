@@ -5,6 +5,7 @@ import 'package:latlong2/latlong.dart' hide Path;
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/farmer/data/farm_resources_repository.dart';
 import 'package:udyogasethu/features/farmer/domain/farm_resource_model.dart';
+import 'package:udyogasethu/core/widgets/app_thumbnail.dart';
 import 'package:udyogasethu/features/farmer/presentation/widgets/book_resource_modal.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
@@ -465,15 +466,16 @@ class _FarmResourcesMapScreenState extends ConsumerState<FarmResourcesMapScreen>
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Icon avatar
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: res.type.badgeColor.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(res.type.icon, color: res.type.badgeColor, size: 26),
+                // Illustrated Resource Thumbnail
+                ResourceThumbnail(
+                  title: res.name,
+                  resourceType: res.type.name,
+                  imageUrl: res.imageUrl,
+                  size: ThumbnailSize.small,
+                  width: 52,
+                  height: 52,
+                  borderRadius: BorderRadius.circular(12),
+                  showTitle: false,
                 ),
                 const SizedBox(width: 12),
 

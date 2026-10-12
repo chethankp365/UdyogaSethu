@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
+import 'package:udyogasethu/core/theme/app_spacing.dart';
 import 'package:udyogasethu/features/farmer/data/farm_resources_repository.dart';
 import 'package:udyogasethu/features/farmer/domain/farm_resource_model.dart';
 import 'package:udyogasethu/features/farmer/domain/resource_booking_model.dart';
+import 'package:udyogasethu/core/widgets/app_thumbnail.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class VendorResourcesScreen extends ConsumerStatefulWidget {
@@ -229,6 +231,8 @@ class _VendorResourcesScreenState extends ConsumerState<VendorResourcesScreen>
         ),
         bottom: TabBar(
           controller: _tabController,
+          isScrollable: true,
+          tabAlignment: TabAlignment.start,
           indicatorColor: Colors.amber,
           indicatorWeight: 3,
           labelColor: Colors.white,
@@ -296,7 +300,7 @@ class _VendorResourcesScreenState extends ConsumerState<VendorResourcesScreen>
     }
 
     return ListView.builder(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
+      padding: AppSpacing.fabListPadding,
       itemCount: _vendorResources.length,
       itemBuilder: (context, idx) {
         final res = _vendorResources[idx];
@@ -311,14 +315,15 @@ class _VendorResourcesScreenState extends ConsumerState<VendorResourcesScreen>
           padding: const EdgeInsets.all(14),
           child: Row(
             children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: res.type.badgeColor.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(res.type.icon, color: res.type.badgeColor, size: 26),
+              ResourceThumbnail(
+                title: res.name,
+                resourceType: res.type.name,
+                imageUrl: res.imageUrl,
+                size: ThumbnailSize.small,
+                width: 52,
+                height: 52,
+                borderRadius: BorderRadius.circular(12),
+                showTitle: false,
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -372,7 +377,7 @@ class _VendorResourcesScreenState extends ConsumerState<VendorResourcesScreen>
     }
 
     return ListView.builder(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
+      padding: AppSpacing.fabListPadding,
       itemCount: _incomingBookings.length,
       itemBuilder: (context, idx) {
         final bkg = _incomingBookings[idx];
@@ -485,7 +490,7 @@ class _VendorResourcesScreenState extends ConsumerState<VendorResourcesScreen>
     }
 
     return ListView.builder(
-      padding: const EdgeInsets.all(16),
+      padding: AppSpacing.fabListPadding,
       itemCount: _myFarmerBookings.length,
       itemBuilder: (context, idx) {
         final bkg = _myFarmerBookings[idx];

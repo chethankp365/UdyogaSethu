@@ -76,6 +76,16 @@ class _ComponentGalleryScreenState extends State<ComponentGalleryScreen> {
                             runSpacing: 8,
                             children: [
                               OutlinedButton.icon(
+                                icon: const Icon(Icons.visibility_rounded, size: 18),
+                                label: const Text('/dev/job-visibility'),
+                                onPressed: () => GoRouter.of(context).push('/dev/job-visibility'),
+                              ),
+                              OutlinedButton.icon(
+                                icon: const Icon(Icons.collections_rounded, size: 18),
+                                label: const Text('/dev/thumbnails'),
+                                onPressed: () => GoRouter.of(context).push('/dev/thumbnails'),
+                              ),
+                              OutlinedButton.icon(
                                 icon: const Icon(Icons.image_rounded, size: 18),
                                 label: const Text('/dev/assets'),
                                 onPressed: () => GoRouter.of(context).push('/dev/assets'),

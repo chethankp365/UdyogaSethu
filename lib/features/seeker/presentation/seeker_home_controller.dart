@@ -9,6 +9,7 @@ import 'package:udyogasethu/features/privacy/domain/consent_purpose.dart';
 import 'package:udyogasethu/features/seeker/data/seeker_home_repository.dart';
 import 'package:udyogasethu/features/seeker/domain/job_recommendation.dart';
 import 'package:udyogasethu/features/seeker/domain/seeker_profile_draft.dart';
+import 'package:udyogasethu/features/seeker/presentation/my_applications_controller.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_wizard_controller.dart';
 
 class SeekerLocationState {
@@ -150,31 +151,72 @@ class SeekerLocationNotifier extends Notifier<SeekerLocationState> {
 
       final consentRepo = ref.read(consentRepositoryProvider);
       final hasGpsConsent = await consentRepo.hasValidConsent(ConsentPurpose.gps);
-      if (!hasGpsConsent) return;
+      if (hasGpsConsent) {
+        final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+        if (serviceEnabled) {
+          final perm = await Geolocator.checkPermission();
+          if (perm == LocationPermission.always || perm == LocationPermission.whileInUse) {
+            final position = await Geolocator.getCurrentPosition(
+              locationSettings: const LocationSettings(
+                accuracy: LocationAccuracy.medium,
+                timeLimit: Duration(seconds: 4),
+              ),
+            );
 
-      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) return;
+            final displayName = await _reverseGeocode(position.latitude, position.longitude);
 
-      final perm = await Geolocator.checkPermission();
-      if (perm == LocationPermission.always || perm == LocationPermission.whileInUse) {
-        final position = await Geolocator.getCurrentPosition(
-          locationSettings: const LocationSettings(
-            accuracy: LocationAccuracy.medium,
-            timeLimit: Duration(seconds: 4),
-          ),
-        );
+            final newState = SeekerLocationState(
+              displayName: displayName,
+              lat: position.latitude,
+              lng: position.longitude,
+              isGps: true,
+              cachedAt: DateTime.now(),
+            );
+            state = newState;
+            await _saveCache(newState);
+            return;
+          }
+        }
+      }
 
-        final displayName = await _reverseGeocode(position.latitude, position.longitude);
-
-        final newState = SeekerLocationState(
-          displayName: displayName,
-          lat: position.latitude,
-          lng: position.longitude,
-          isGps: true,
-          cachedAt: DateTime.now(),
-        );
-        state = newState;
-        await _saveCache(newState);
+      // Fallback: If live GPS is not active, load profile saved home_location & address
+      if (state.lat == 0.0 || state.displayName == 'Select Location') {
+        final userId = Supabase.instance.client.auth.currentUser?.id;
+        if (userId != null && userId.isNotEmpty) {
+          final profile = await ref.read(seekerHomeProfileProvider.future);
+          if (profile.latitude != null && profile.longitude != null && profile.latitude != 0.0) {
+            String areaName = 'Saved Location';
+            if (profile.homeAddress != null && profile.homeAddress!.trim().isNotEmpty) {
+              final parts = profile.homeAddress!.trim().split(',');
+              areaName = parts.length > 1 ? '${parts[0].trim()}, ${parts[1].trim()}' : parts[0].trim();
+              if (areaName.length > 28) areaName = areaName.substring(0, 28);
+            }
+            final newState = SeekerLocationState(
+              displayName: areaName,
+              lat: profile.latitude!,
+              lng: profile.longitude!,
+              isGps: false,
+              cachedAt: DateTime.now(),
+            );
+            state = newState;
+            await _saveCache(newState);
+            return;
+          } else if (profile.homeAddress != null && profile.homeAddress!.trim().isNotEmpty) {
+            final parts = profile.homeAddress!.trim().split(',');
+            String areaName = parts.length > 1 ? '${parts[0].trim()}, ${parts[1].trim()}' : parts[0].trim();
+            if (areaName.length > 28) areaName = areaName.substring(0, 28);
+            final newState = SeekerLocationState(
+              displayName: areaName,
+              lat: 0.0,
+              lng: 0.0,
+              isGps: false,
+              cachedAt: DateTime.now(),
+            );
+            state = newState;
+            await _saveCache(newState);
+            return;
+          }
+        }
       }
     } catch (e) {
       AppLogger.w('Location initialization error: $e');
@@ -337,8 +379,17 @@ final seekerAdDismissedProvider =
 
 class SeekerAppliedJobsNotifier extends Notifier<Set<String>> {
   @override
-  Set<String> build() => {};
-  void add(String jobId) => state = {...state, jobId};
+  Set<String> build() {
+    final apps = ref.watch(myApplicationsProvider);
+    return apps.entries
+        .where((e) => e.value.isApplied || e.value.isShortlisted || e.value.isHired)
+        .map((e) => e.key)
+        .toSet();
+  }
+
+  void add(String jobId) {
+    ref.read(myApplicationsProvider.notifier).applyToJob(jobId: jobId);
+  }
 }
 
 final seekerAppliedJobsProvider =
@@ -437,12 +488,14 @@ final seekerRecommendedJobsProvider =
 
   final targetUid = uid ?? '00000000-0000-0000-0000-000000000000';
   final seekerType = profileAsync.value?.seekerType ?? 'informal';
+  final cleanLat = (location.lat != 0.0) ? location.lat : null;
+  final cleanLng = (location.lng != 0.0) ? location.lng : null;
 
   return repo.fetchRecommendations(
     workerId: targetUid,
     seekerType: seekerType,
-    lat: location.lat,
-    lng: location.lng,
+    lat: cleanLat,
+    lng: cleanLng,
     radiusM: radius,
     limit: 20,
   );

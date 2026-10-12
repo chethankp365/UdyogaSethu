@@ -68,8 +68,8 @@
 - [ ] **P6.4**: Buyer marketplace: browse, filters, map and traceability (Status: Todo)
 - [ ] **P6.5**: Cart, delivery slots and checkout (Status: Todo)
 - [x] **P6.6**: Order tracking and farmer order management (Status: Done)
-- [ ] **P6.7**: Subscriptions and apartment group orders (Status: Todo)
-- [ ] **P6.8**: Farmer AI tools through a secure Edge Function (Status: Todo)
+- [x] **P6.7**: Subscriptions and apartment group orders (Status: Done | Database schema, scheduled SQL jobs for daily deliveries and recurring bookings with stock checks and shortage notifications, group order tier evaluator with automatic order placement & refunds, interactive UI for subscriptions and community bulk orders with live progress bars and tier badges, debug scheduler trigger)
+- [x] **P6.8**: Farmer AI tools through a secure Edge Function (Status: Done | Secure Edge Function `ai-assist` powered by Gemini via `@google/genai` with rate-limiting, strict schema validation, privacy scrubber for PII/GPS/biometrics, and graceful fallback to `mode: "basic"`; 4 responsive Flutter screens for Pest AI Doc, Soil AI Test, Irrigation AI, and Curated Government Schemes; 0 RenderFlex overflows and zero API key exposure)
 
 ## Phase 7 (Communication and safety)
 - [ ] **P7.1**: Protected inbox and realtime chat (Status: Todo)
@@ -917,38 +917,262 @@
      - `QR_SIGNING_SECRET` (for `qr-issue`, `qr-verify`)
      - `DATA_GOV_API_KEY` (for `mandi-sync`)
 
-### Real QR Ticket Flow End-to-End (Prompt C)
+### Job Lifecycle Bug-Fix Pass (P4.3 to P4.9: Symptoms A through F)
 - **Status**: Completed (2026-10-11)
 - **Files created / updated**:
-  - `supabase/migrations/0660_real_qr_ticket_flow.sql` (Authored, not applied)
-  - `supabase/functions/qr-verify/index.ts`
-  - `lib/core/supabase/edge_api.dart`
-  - `lib/features/job_execution/data/job_execution_repository.dart`
-  - `lib/features/job_execution/presentation/attendance_scanner_screen.dart`
-  - `lib/features/job_execution/presentation/job_ticket_screen.dart`
-  - `lib/features/job_execution/presentation/verify_presence_screen.dart`
-  - `lib/features/trust/presentation/digital_id_screen.dart`
-  - `lib/features/dev/presentation/lifecycle_test_panel_screen.dart`
-  - `lib/core/router/routes.dart`
-  - `lib/core/router/app_router.dart`
-  - `lib/core/router/role_switcher_debug_screen.dart`
-  - `docs/TEST_TWO_PHONES.md`
-  - `test/qr_ticket_flow_test.dart`
-  - `test/lifecycle_test_panel_test.dart`
-  - `test/job_ticket_test.dart`
+  - `supabase/migrations/0670_lifecycle_root_cause_fixes.sql` (Pushed to remote DB)
+  - `supabase/migrations/0671_lifecycle_fixes_final.sql` (Pushed to remote DB)
+  - `supabase/tests/lifecycle_fixes_tests.sql` (Automated SQL test suite)
+  - `lib/features/seeker/data/seeker_jobs_repository.dart` (Query assignments first, index by job ID, eliminate application ID leakage)
+  - `lib/features/provider/domain/job_applicant.dart` (Added assignmentId, safe workerName fallback, robust isHired getters)
+  - `lib/features/provider/presentation/job_applicants_screen.dart` (Updated _buildStatusChip to respect isHired, localized chips)
+  - `lib/features/job_execution/domain/worker_schedule_item.dart` (Parse start/end with .toLocal() for accurate calendar day matching)
+  - `lib/features/job_execution/data/job_execution_repository.dart` (Send UTC ISO8601 timestamps to get_worker_schedule)
+  - `lib/features/job_execution/presentation/worker_schedule_screen.dart` (Added action needed badge for requested jobs)
+  - `lib/features/job_execution/presentation/active_job_screen.dart` (Realtime status listener, missing coordinates fallback with Open in Maps launcher, user-friendly error card with touch targets >= 48dp)
+  - `lib/features/job_execution/presentation/verify_presence_screen.dart` (Demo mode mock selfie support, bypass image brightness check)
+  - `lib/features/provider/presentation/post_job_wizard_screen.dart` (Enforce non-null GPS pin coordinates before publishing)
+  - `lib/features/job_execution/domain/job_ticket.dart` (Populate errorMessage in AttendanceScanResult.fromJson)
+  - `lib/features/auth/data/phone_auth_notifier.dart` (Safeguard async bootstrap execution from aborting verified auth)
+  - ARB files (`en`, `kn`, `hi`, `te`, `ta`, `bn`, `mr`, `or`): Added `locationPinNotice`
+- **What was built & fixed**:
+  - **Symptom A**: Fixed provider applicant card showing fallback `'Worker'` and `'Rejected'` for hired/accepted workers. Replaced RLS-blocked `profiles` client select with `SECURITY DEFINER` RPC `get_job_applicants` returning `worker_name`, `worker_avatar`, `assignment_id`, and safe seeker attributes while keeping phone and email private. Updated `_buildStatusChip` to display green `'Hired'` chip whenever `applicant.isHired` or `assignmentId` is present.
+  - **Symptom B**: Fixed `ValidationException: [error_validation] Active job assignment 7b2e... not found`. Root cause was `seeker_jobs_repository.dart` setting `item.id = a['id']` (application ID) for hired jobs, causing the worker phone to push `/jobs/active/<applicationId>` instead of `<assignmentId>`. Refactored `fetchSeekerJobs()` to query `job_assignments` first, map `assignmentByJobId`, and use the assignment ID as single source of truth. Additionally made `get_active_job_details` defensively resolve assignment ID, job ID, or application ID.
+  - **Symptom C**: Fixed "Job location is not available" map message when text address is present. In `post_job_wizard_screen.dart`, enforced non-null site coordinates prior to publishing. In `active_job_screen.dart`, provided an amber address card and an "Open in Maps" external navigation button (`url_launcher`) with touch targets >= 48dp.
+  - **Symptom D**: Fixed timeline staying on "Request Created: Waiting for worker acceptance". Added Realtime subscription in `active_job_screen.dart` listening to `watchAssignmentStatus(widget.assignmentId)` to invalidate `activeJobDetailProvider` immediately when status updates to `'accepted'`.
+  - **Symptom E**: Fixed empty worker schedule. Converted `WorkerScheduleItem` `startAt` and `endAt` parsing to `.toLocal()` (Asia/Kolkata), sent UTC timestamps from repository, added `INTERVAL '1 day'` padding to DB query, and added an amber "Waiting for your answer" status badge for requested assignments.
+  - **Symptom F**: Unblocked QR ticket and verified start flow by resolving B, and added demo mode selfie generation for testing presence verification.
+- **Verification**:
+  - `flutter analyze`: 0 issues found.
+  - `supabase db lint --linked`: 0 errors/warnings on lifecycle functions.
+  - `flutter test test/part_e_job_execution_ticket_test.dart`: 12/12 passing.
+  - `flutter test test/auth_test.dart`: 11/11 passing.
+
+### Unified Job Application Status Bug-Fix Pass (Account-Wide "Applied" State & Map Clustering)
+- **Status**: Completed (2026-10-11)
+- **Files created / updated**:
+  - `supabase/migrations/0680_unified_job_application_status.sql` (Pushed to remote DB & linted cleanly)
+  - `supabase/tests/unified_application_status_tests.sql` (Automated SQL test suite for isolation, idempotency, and withdrawal)
+  - `lib/features/seeker/domain/job_application_status.dart` (`JobAppStatus`, `WorkerJobStatus` immutable state models)
+  - `lib/features/seeker/domain/job_recommendation.dart` (Parsed caller's active application & assignment status/IDs)
+  - `lib/features/seeker/domain/job_pin.dart` (Parsed caller's active application & assignment status/IDs)
+  - `lib/features/seeker/domain/job_detail.dart` (Parsed caller's active application & assignment status/IDs)
+  - `lib/features/seeker/data/my_applications_repository.dart` (`MyApplicationsRepository` & Supabase implementation with RPC/table fallbacks and realtime channels)
+  - `lib/features/seeker/presentation/my_applications_controller.dart` (`myApplicationsProvider` with optimistic updates, rollback, realtime postgres change syncing, and signout cleanup)
+  - `lib/core/widgets/job_action_button.dart` (Reusable reactive button widget using `ref.watch(myApplicationsProvider.select(...))` with compact/full modes, checkmarks, withdrawal modal, and offline handling)
+  - `lib/core/widgets/job_row.dart` (Integrated `JobActionButton` into card & modal sheet)
+  - `lib/features/seeker/presentation/seeker_home_screen.dart` (Seeded initial batch application statuses from recommendations, pull-to-refresh reload)
+  - `lib/features/seeker/presentation/seeker_home_controller.dart` (Bridged legacy `seekerAppliedJobsProvider` to read directly from `myApplicationsProvider`)
+  - `lib/features/seeker/presentation/map/nearby_jobs_map_screen.dart` (Integrated `JobActionButton`, pin coordinate clustering $\approx 25\text{m}$ with count badge and zoom expansion)
+  - `lib/features/seeker/presentation/map/nearby_jobs_map_controller.dart` (Synchronized with `myApplicationsProvider.notifier.applyToJob`)
+  - `lib/features/seeker/presentation/job_detail_screen.dart` (Seeded status on detail load, hosted `JobActionButton` with withdrawal option)
+  - `lib/features/seeker/presentation/job_detail_controller.dart` (Synced `JobApplyNotifier` with `jobDetailRepository` and `myApplicationsProvider`)
+  - `lib/features/seeker/presentation/seeker_jobs_controller.dart` (Seeded `myApplicationsProvider` from all fetched tabs)
+  - `lib/features/provider/presentation/job_applicants_screen.dart` (Supported `Withdrawn` application status badge)
+  - `lib/core/router/app_session.dart` (Cleared `myApplicationsProvider` on user sign-out)
+  - `test/my_applications_test.dart` (Comprehensive unit & widget test suite covering optimistic apply, rollback, realtime, signout, and multi-screen synchronization)
+- **What was built & fixed**:
+  - **Root Cause Confirmed**: Screens previously maintained separate isolated local state sets (e.g. `seekerAppliedJobsProvider`, `NearbyJobsMapState.appliedJobIds`, `JobDetailScreen`) that never synchronized across routes or survived navigation/reloads, and job query RPCs (`recommended_jobs`, `nearby_jobs`, `get_job_detail`) did not join the calling user's active application state.
+  - **Database Migration `0680`**: Created partial unique index `uq_active_job_application ON public.job_applications (job_id, worker_id) WHERE status != 'withdrawn'`. Made `apply_to_job` idempotent (returning existing ID if already applied). Authored security definer `withdraw_job_application(p_job_id)`. Updated `recommended_jobs`, `nearby_jobs`, and `get_job_detail` to join caller's active application (`my_application_status`, `my_application_id`) and assignment (`my_assignment_status`, `my_assignment_id`) via `auth.uid()`. Created batch RPC `get_my_job_application_statuses()`. Pushed & linted cleanly on Supabase.
+  - **Single Client Source of Truth**: Created `myApplicationsProvider` managing `Map<String, WorkerJobStatus>` with optimistic apply, automatic rollback on server error, live Supabase Realtime synchronization across `job_applications` and `job_assignments`, and immediate reset on sign-out.
+  - **Unified Action Widget**: Built `JobActionButton` with selective Riverpod rebuilds (`.select((m) => m[jobId])`), supporting all states (Not applied, Applied with check, Shortlisted, Accepted/Hired with "View Job", Rejected, Ineligible, and Offline mode), preserving list scroll position.
+  - **Map Pin Clustered Badges**: Added coordinate clustering ($\approx 25\text{m}$) for overlapping map pins, rendering a count badge atop the pin and automatically scrolling/expanding the bottom sheet card list on tap.
+- **Verification**:
+  - `flutter analyze`: 0 issues found.
+  - `npx supabase db lint --linked`: 0 errors/warnings.
+  - `flutter test test/my_applications_test.dart`: 7/7 passing.
+  - `flutter test test/job_detail_and_requests_test.dart`: 6/6 passing.
+  - `flutter test test/nearby_jobs_map_test.dart`: 8/8 passing.
+  - `flutter test test/seeker_home_recommendations_test.dart`: 9/9 passing.
+  - `flutter test test/seeker_audience_feed_test.dart`: 8/8 passing.
+  - `flutter build apk --debug`: Built cleanly (`app-debug.apk` in 89.4s).
+
+### Illustrated Thumbnails Library, Comic Typography & Dynamic Cover Image System
+- **Status**: Completed (2026-10-11)
+- **Files created / updated**:
+  - `docs/reference/assets/thumbnail_style_reference.png` (Style reference asset saved from user prompt attachment)
+  - `assets/thumbnails/*` (All 41 16:9 WebP illustrations, under 120 KB each, registered in `pubspec.yaml`)
+  - `supabase/migrations/0690_jobs_thumbnail_path.sql` (Pushed to remote DB: added `thumbnail_path` to `jobs` table, updated `post_provider_job` and `update_provider_job` RPCs)
+  - `lib/core/services/thumbnail_library.dart` (Central registry of 41 items, source priority resolution, keyword & crop matching with word-boundary and plural support, precaching top assets)
+  - `lib/core/widgets/app_thumbnail.dart` (`JobThumbnail`, `ProduceThumbnail`, `ResourceThumbnail`, sizes: `card`, `header`, `small`, custom outlined comic typography using `Lilita One` with Indic `Noto Sans` fallbacks, CachedNetworkImage shimmer & error handling, auto-suppression for `campus_ambassador`)
+  - `lib/core/widgets/thumbnail_picker_sheet.dart` (Categorized modal bottom sheet for picking cover illustrations with live selection and category tabs)
+  - `lib/core/services/job_thumbnail_service.dart` (Delegates `JobThumbnailWidget` to `ui.JobThumbnail` and uses `ThumbnailLibrary.resolveJob`)
+  - `lib/features/admin/presentation/debug_thumbnail_gallery_screen.dart` (Debug-only route `/dev/thumbnails` displaying all 41 thumbnails with dynamic lettering in English, Kannada, Hindi, Tamil, Telugu across card, header, and small sizes)
+  - `lib/core/router/app_router.dart` (Registered `/dev/thumbnails` route)
+  - `lib/features/admin/presentation/component_gallery_screen.dart` (Added shortcut button to `/dev/thumbnails`)
+  - `lib/features/provider/domain/provider_job.dart` (Added `thumbnailPath` property to `ProviderJob`)
+  - `lib/features/provider/domain/job_post_draft.dart` (Added `thumbnailPath` to draft model and `copyWith`)
+  - `lib/features/provider/data/provider_jobs_repository.dart` (Passed `p_thumbnail_path` to RPCs and fallback query)
+  - `lib/features/provider/presentation/provider_jobs_controller.dart` (Added `setCoverThumbnail` and draft editing mapping)
+  - `lib/features/provider/presentation/post_job_wizard_screen.dart` (Added 16:9 Cover Image step with suggested illustration, library sheet picker, and image upload)
+  - `lib/core/widgets/job_row.dart` (Updated to use `ui.JobThumbnail`)
+  - `lib/features/seeker/presentation/job_detail_screen.dart` (Replaced header gradient with `JobThumbnail.fromDetail`)
+  - `lib/features/provider/presentation/widgets/buyer_produce_tab.dart` (Updated to `ProduceThumbnail.fromMarketplaceItem`)
+  - `lib/features/marketplace/presentation/produce_detail_screen.dart` (Updated header to `ProduceThumbnail.fromMarketplaceItem`)
+  - `lib/features/farmer/presentation/farmer_listings_screen.dart` (Updated produce cards to `ProduceThumbnail`)
+  - `lib/features/farmer/presentation/widgets/equipment_rental_section.dart` (Updated equipment cards to `ResourceThumbnail`)
+  - `lib/features/farmer/presentation/vendor_resources_screen.dart` (Updated vendor resources to `ResourceThumbnail`)
+  - `lib/features/farmer/presentation/farm_resources_map_screen.dart` (Updated resource cards & pin sheets to `ResourceThumbnail`)
+  - `lib/features/farmer/domain/farm_resource_model.dart` (Added `imageUrl` getter)
+  - `lib/features/marketplace/presentation/customer_orders_screen.dart` (Updated order cards to `ProduceThumbnail`)
+  - `lib/features/farmer/presentation/farmer_order_board_screen.dart` (Updated order items to `ProduceThumbnail`)
+  - `test/thumbnails_library_and_layout_test.dart` (Comprehensive test suite covering 41 items, resolution order, Indic text, responsive layout at 360dp/412dp with 1.6 textScale)
+  - `test/part_b_jobs_thumbnails_test.dart` (Keyword selector tests and JobRow tests)
+- **What was built & fixed**:
+  - **41 WebP Thumbnails Created**: Matched user's reference illustration style (bright cartoon/comic illustration, thick outlines, vibrant colors, diverse young Indian characters, 16:9 landscape, ~800x450, <120 KB each). 13 generated via Google AI Image Generation (`generate_image`), 27 generated via hand-crafted SVG vector compositions converted to WebP, and 1 user-provided reference image converted to WebP (`campus_ambassador.webp`).
+  - **Resolution Priority Order**: Implemented (a) poster-uploaded photo, (b) dedicated illustration for exact title if exists, (c) category illustration, (d) generic fallback. Never shows plain gradient or empty boxes.
+  - **Lettering Engine**: Implemented `AppThumbnailLettering` rendering bold comic lettering with thick black stroke and golden-amber gradient fill using `Lilita One` with Noto Indic fallbacks (`Noto Sans Kannada`, `Noto Sans Devanagari`, `Noto Sans Tamil`, `Noto Sans Telugu`), automatic font scaling, ellipsis, and auto-suppression on `campus_ambassador` which has title baked into artwork.
+  - **Cover Image Selection in Post Job**: Added 16:9 cover image section in `PostJobWizardScreen` with 3 choices: use suggested illustration (preselected via keyword matching), browse and pick another illustration from `ThumbnailPickerSheet`, or upload custom photo cropped/scaled to 16:9 and saved to `jobs.thumbnail_path`.
+  - **Every Screen Updated**: Job cards (`JobRow`), detail headers (`JobDetailScreen`), produce listings (`BuyerProduceTab`, `ProduceDetailScreen`, `FarmerListingsScreen`, `CustomerOrdersScreen`, `FarmerOrderBoardScreen`), and equipment/resource listings (`EquipmentRentalSection`, `VendorResourcesScreen`, `FarmResourcesMapScreen`).
+  - **Review Gallery Route `/dev/thumbnails`**: Built interactive review gallery at `/dev/thumbnails` allowing instant preview of all 41 thumbnails with titles rendered in English, Kannada, Hindi, Tamil, and Telugu across `card`, `header`, and `small` sizes.
+- **Verification**:
+  - `flutter analyze`: 0 issues found.
+  - `flutter test test/thumbnails_library_and_layout_test.dart test/part_b_jobs_thumbnails_test.dart`: 18/18 passing.
+  - Tested responsive layouts at 360dp and 412dp with text scale 1.6: zero overflow.
+  - `flutter build apk --debug`: Verified compilation and asset packaging.
+
+### Zero Layout Overflow Elimination & Automated Overflow Test Suite
+- **Status**: Completed (2026-10-11)
+- **Files created / updated**:
+  - `test/comprehensive_overflow_finder_test.dart` (Automated matrix test running 1,200 layout checks across 6 screen widths: 320, 360, 393, 412, 480, 600 dp; 4 text scale factors: 1.0, 1.3, 1.6, 2.0; and 5 regional languages: en, kn, hi, ta, te)
+  - `tool/check_overflow.sh` (Bash script to execute the comprehensive overflow test suite)
+  - `tool/check_overflow.bat` (Batch script to execute the comprehensive overflow test suite on Windows)
+  - `AGENTS.md` (Added Zero Layout Overflow rule and updated Finish Protocol)
+  - `lib/core/widgets/job_row.dart` (Right column wage constrained; distance & rating wrapped in `Wrap`)
+  - `lib/core/widgets/job_action_button.dart` (Compact status chips wrapped in `FittedBox` with bounded constraints)
+  - `lib/features/provider/presentation/job_applicants_screen.dart` (`ApplicantCard` restructured into flexible rows, status pill wrapped in `FittedBox`)
+  - Photo picker buttons in `seeker_wizard_screen.dart`, `provider_wizard_screen.dart`, `farmer_wizard_screen.dart`, `student_verification_screen.dart`, `post_job_wizard_screen.dart`, `edit_listing_modal.dart` (Replaced rigid `OutlinedButton.icon` with responsive `Row` with `Flexible` and localized text)
+  - `lib/features/provider/presentation/provider_home_screen.dart` (Scrollable `TabBar`, responsive active booking card action buttons, wage in `ConstrainedBox` + `FittedBox`, worker card button wrapped with `SizedBox` + `FittedBox`, subtitle rating row with `FittedBox`, profile header ellipsis)
+  - Scrollable TabBars in `profile_screen.dart`, `vendor_resources_screen.dart`, `farmer_order_board_screen.dart`
+  - `lib/features/wallet/presentation/wallet_screen.dart` (Replaced rigid header `Row` with `Wrap`, fitted escrow protected pill and metric texts with `FittedBox`, flexible and fitted action buttons)
+  - `lib/features/wallet/presentation/widgets/transaction_tile.dart` (Constrained amount & status chip to `maxWidth: 100` with `FittedBox`, wrapped fee line in `Expanded` with ellipsis)
+  - `lib/features/provider/presentation/widgets/buyer_produce_tab.dart` (Constrained price chip with `maxWidth: 100` and `FittedBox`, responsive button label)
+  - `lib/features/farmer/presentation/farmer_listings_screen.dart` (Constrained status pill with `maxWidth: 90` and `FittedBox`, selling price and stock in `FittedBox`)
+  - `lib/features/marketplace/presentation/customer_orders_screen.dart` (Wrapped order code in `Expanded` with ellipsis, constrained total in `FittedBox`, flexible button labels)
+  - `lib/features/job_execution/presentation/assignment_timeline_widget.dart` (Wrapped header title in `Expanded` with ellipsis)
+  - `lib/features/job_execution/presentation/worker_schedule_screen.dart` (Constrained wage with `maxWidth: 90` and `FittedBox`, wrapped schedule time in `Expanded` with ellipsis)
+  - `lib/core/services/job_thumbnail_service.dart` (Fixed keyword resolution to specific job assets for unmapped categories like gardener)
+- **What was built & fixed**:
+  - **Automated Overflow Test Suite**: Created `test/comprehensive_overflow_finder_test.dart` checking 10 reusable widgets and cards against 6 screen widths (320, 360, 393, 412, 480, 600 dp), 4 text scale factors (1.0, 1.3, 1.6, 2.0), and 5 Indian regional languages (English, Kannada, Hindi, Tamil, Telugu) with realistic long strings.
+  - **Root Cause Overflow Fixes**: Fixed rigid horizontal rows by wrapping labels in `Flexible`/`Expanded`, replacing rigid rows with `Wrap`, adding `isScrollable: true` and `tabAlignment: TabAlignment.start` to all `TabBar` widgets, constraining status chips and badges inside `FittedBox(fit: BoxFit.scaleDown)` with bounded widths, and restructuring buttons so icons and text gracefully scale down without clipping or overflow.
+  - **Keyword Resolution Restoration**: Restored `JobThumbnailService` keyword matching for categories such as `gardener` that have dedicated variants in `assets/images/jobs/`, ensuring both `test/part_b_jobs_thumbnails_test.dart` and `test/part_g_assets_test.dart` pass 100%.
+- **Verification**:
+  - `flutter analyze`: 0 issues found (ran cleanly in 9.3s).
+  - `tool/check_overflow.bat`: 10/10 passed (1,200 layout check configurations tested with 0 overflows).
+  - `flutter test`: 531/531 tests passing across the entire project.
+
+### Job Visibility & Audience Matching Bug-Fix Pass (Real Provider Jobs for Matching Workers)
+- **Status**: Completed (2026-10-12)
+- **Files created / updated**:
+  - `supabase/migrations/0700_unified_job_visibility.sql` (Unified visibility function `job_visible_to`, diagnostic RPCs, and updated `recommended_jobs`, `nearby_jobs`, `check_job_eligibility`, `apply_to_job`)
+  - `test/sql/verify_job_visibility.sql` (Comprehensive SQL test suite verifying multi-role audience isolation, eligibility, application guards, and fallback)
+  - `lib/features/seeker/domain/job_recommendation.dart` (Added `isLocationFallback` boolean to domain model and serialization)
+  - `lib/features/seeker/data/seeker_home_repository.dart` (Removed client-side category slug overrides; sanitized 0,0 coordinates to null; relied on SQL single source of truth)
+  - `lib/features/seeker/data/nearby_jobs_repository.dart` (Sanitized coordinates and passed authenticated worker ID)
+  - `lib/features/seeker/data/seeker_profile_repository.dart` (Added PostGIS EWKB hex parser `_parsePostgisPoint` to decode binary geometry points into lat/lng)
+  - `lib/features/seeker/presentation/seeker_home_controller.dart` (Handled GPS-denied fallback to profile `home_location` and address; sanitized 0,0 coordinates; added Realtime subscription to `jobs` table)
+  - `lib/features/seeker/presentation/seeker_home_screen.dart` (Added fallback location banner: "Showing jobs near [displayName]" / "Set your location to see nearby jobs" with Change action)
+  - `lib/features/provider/data/provider_jobs_repository.dart` (Ensured startAt timestamp is converted to UTC ISO8601 string)
+  - `lib/features/provider/presentation/provider_jobs_controller.dart` (Preserved student audience when updating categories)
+  - `lib/features/provider/presentation/post_job_wizard_screen.dart` (Enforced audience selection validation before advancing Step 1)
+  - `lib/features/provider/presentation/provider_home_screen.dart` (Rendered audience chips on My Jobs cards with warning prompt if empty)
+  - `lib/core/router/app_session.dart` (Invalidated seeker feed providers on role or seeker type switch)
+  - `lib/core/router/routes.dart` & `lib/core/router/app_router.dart` (Added `/dev/job-visibility` route in debug mode)
+  - `lib/core/widgets/component_gallery_screen.dart` (Added debug launcher for `/dev/job-visibility`)
+  - `lib/features/admin/presentation/debug_job_visibility_screen.dart` (Created visual diagnostics inspector listing all jobs with `[VISIBLE]` / `[HIDDEN]` badges and exact reason codes)
+- **Root causes identified & fixed**:
+  1. **Location & Null Island**: When GPS permission was absent/denied, `SeekerLocationNotifier` passed `(0.0, 0.0)` to `recommended_jobs`. PostGIS calculated distance from Null Island off Africa (~7,800 km away), filtering out 100% of jobs in India. Fixed by falling back to profile `home_location`, then city, or null, and sanitizing (0.0, 0.0) in SQL.
+  2. **PostGIS EWKB Hex Parsing in Dart**: PostgREST returns geography point columns as EWKB hex strings (`0101000020E6100000...`). The Flutter profile repository checked `if (homeLoc is Map)`, which failed silently and left lat/lng null. Fixed by implementing binary EWKB parsing.
+  3. **Client-side Category Slug Overrides**: `seeker_home_repository.dart` filtered out categories locally (`tradeCategorySlugs` vs `studentCategorySlugs`), discarding jobs regardless of their `suitable_for` column. Removed client override; Postgres is now the single source of truth.
+  4. **Postgres Enum Array Type Mismatch**: `jobs.suitable_for` is typed `public.seeker_type[]`. Explicit casting `::public.seeker_type = ANY(...)` was required in Postgres to prevent runtime type mismatch.
+  5. **Timezone Offset**: Job posting was sending local ISO string without `.toUtc()`, causing start dates to misalign across UTC queries.
+- **Verification**:
+  - `test/sql/verify_job_visibility.sql`: Successfully executed against remote database (`task-2276`, exit code 0).
+  - `npx supabase db lint --linked`: Clean (0 issues).
+  - `flutter analyze`: Clean (0 warnings, 0 errors, ran in 8.6s).
+  - `tool/check_overflow.bat`: 10/10 passed (0 overflows).
+  - `flutter test`: All seeker audience feed, recommendations, and provider job tests passed 100%.
+
+### Mobile Layout Robustness Pass (Second Phone, Farmer Home & Coverage Matrix)
+- **Status**: Completed (2026-10-12)
+- **Files created / updated**:
+  - `lib/core/theme/app_spacing.dart`: Added standard `fabBottomPadding = 128.0`, `fabListPadding = EdgeInsets.fromLTRB(16, 16, 16, fabBottomPadding)`, and `fabBottomSpacer = SizedBox(height: fabBottomPadding)`.
+  - `lib/core/services/thumbnail_library.dart`: Added `ThumbnailLibrary.resolveCrop(...)` mapping commodities (tomato, onion, paddy, sugarcane, banana, cardamom, coconut, mango) and categories to illustrated WebP assets in `assets/thumbnails/`.
+  - `lib/features/farmer/presentation/widgets/mandi_prices_section.dart`: Replaced missing asset path lookups with `ThumbnailLibrary.resolveCrop(...)`, eliminated plain yellow fallback squares, dynamically scaled grid `childAspectRatio` based on `MediaQuery.textScalerOf(context)`, adjusted crop photo height from 94dp to 76dp, converted header and title rows to `Wrap`, and wrapped prices/locations in `Flexible`/`FittedBox`.
+  - `lib/features/farmer/presentation/widgets/farmer_header_card.dart`: Wrapped chip and cluster name in `Expanded(child: Wrap(...))` with spacing, keeping avatar within the card; allowed metric labels and sublabels to wrap cleanly to two lines.
+  - `lib/features/farmer/presentation/farmer_home_screen.dart`: Removed 190dp-wide language chip from AppBar actions, replacing it with an icon button and popup menu, freeing the title from being truncated to "Farmer H..."; applied `AppSpacing.fabBottomPadding`.
+  - `lib/features/farmer/presentation/widgets/essential_suite_grid.dart`: Wrapped header text in `Expanded`, scaled aspect ratio dynamically with text scale factor to prevent 44px overflow.
+  - `lib/features/farmer/presentation/widgets/weather_advisory_card.dart`: Replaced rigid header Row and weather summary chips Row with `Wrap`, added constraints and `Flexible` with ellipsis on location and rain probability labels in regional languages.
+  - `lib/features/farmer/presentation/widgets/equipment_rental_section.dart`: Replaced rigid header row with `Wrap` and wrapped Escrow Guaranteed badge text in `Flexible`.
+  - `lib/features/provider/presentation/provider_home_screen.dart`: Added `AppSpacing.fabBottomSpacer` so floating "Post a Job" action button never covers the last job card in My Jobs.
+  - `lib/features/farmer/presentation/farmer_listings_screen.dart`: Applied `AppSpacing.fabListPadding` for FAB clearance.
+  - `lib/features/farmer/presentation/vendor_resources_screen.dart`: Applied `AppSpacing.fabListPadding` across all three tabs.
+  - `lib/features/farmer/presentation/delivery_slots_screen.dart`: Applied `AppSpacing.fabListPadding`.
+  - `lib/features/seeker/presentation/seeker_jobs_screen.dart`: Applied `AppSpacing.fabListPadding`.
+  - `lib/features/marketplace/presentation/customer_orders_screen.dart`: Applied `AppSpacing.fabListPadding`.
+  - `lib/features/farmer/presentation/farmer_order_board_screen.dart`: Applied `AppSpacing.fabListPadding`.
+  - `lib/core/widgets/app_bottom_sheet.dart`: Added `MediaQuery.viewInsetsOf(context).bottom` inside `SafeArea` so all bottom sheet modals automatically adjust above on-screen keyboard.
+  - `test/screen_coverage_audit_test.dart`: Created coverage audit test verifying all 48 `AppRoutes`, 12 shell tabs, and 22 dialog/sheet helpers are tested or explicitly exempted with rationale (all 4 assertions passing).
+  - `test/farmer_home_overflow_test.dart`: Created comprehensive isolated matrix test for `FarmerHomeScreen` testing all 120 combinations (6 widths x 4 scales x 5 languages) with mocked providers (0 network calls). All 120 configurations pass 100% with ZERO overflows.
+  - `tool/check_overflow.bat` and `tool/check_overflow.sh`: Updated to run all 3 suites sequentially (Screen coverage audit, comprehensive component overflow finder, and farmer home responsive matrix).
+- **Root causes identified & fixed**:
+  1. **Farmer Home Missing from Tests**: Earlier overflow tests only tested isolated widgets without overriding data providers (`farmerHomeProfileProvider`, `farmerStatsProvider`, `mandiPricesProvider`, `nearbyEquipmentProvider`), leading to unhandled Supabase network calls if run inside widget tests. Created `farmer_home_overflow_test.dart` with complete fake providers and mocked state.
+  2. **Farmer Header Card Overflow**: Chip and cluster name sat in an unconstrained `Row` beside the avatar. Changed to `Expanded(child: Wrap(...))` with spacing, keeping the avatar inside the card.
+  3. **Mandi Cards Plain Yellow Boxes**: Mandi prices card looked up non-existent paths in `assets/images/commodities/$slug.webp`. Implemented `ThumbnailLibrary.resolveCrop(...)` pointing to `assets/thumbnails/crop_*.webp` with graceful category fallbacks.
+  4. **FAB Overlap on Scrollable Screens**: Lists sat directly below the FAB with only 16-24dp padding. Implemented shared `AppSpacing.fabListPadding` (128dp bottom) and `AppSpacing.fabBottomSpacer` so the last card scrolls completely clear of the FAB across Provider and Farmer screens.
+  5. **Narrow Screen & High Font Scale Overflows**: GridView aspect ratios were hardcoded constants (0.68), which overflowed when text scaled to 1.3-2.0. Converted aspect ratios to scale dynamically with `MediaQuery.textScalerOf(context)`, reduced image heights slightly (94dp -> 76dp), and converted rigid row titles to `Wrap`.
+- **Verification**:
+  - `test/screen_coverage_audit_test.dart`: 4/4 assertions passed.
+  - `tool/check_overflow.bat`: All 3 suites passed with 0 RenderFlex overflows across 120 configurations.
+  - `flutter analyze`: Clean (0 issues found).
+
+### Phase 6.7 & 6.8: Subscriptions, Apartment Group Orders & Farmer AI Suite (Gemini Edge Function)
+- **Status**: Completed (2026-10-12)
+- **Files created / updated**:
+  - `supabase/migrations/0710_subscriptions_groups_and_ai.sql`: Database schema enhancements, curated `public.government_schemes` table, SQL functions `generate_tomorrow_deliveries`, `evaluate_group_orders`, `join_group_order`, `skip_subscription_delivery`, `change_subscription_quantity`, and RLS policies.
+  - `supabase/migrations/0711_subscriptions_scheduler_fix.sql` to `0716_fix_evaluate_group_orders.sql`: Fixes for order events, recurring service bookings (P4.6), jsonb category names, in-app shortage notifications, and group order tier evaluation logic.
+  - `supabase/functions/ai-assist/index.ts`: Edge Function supporting 5 task types (`pest_diagnosis`, `soil_advice`, `irrigation_plan`, `scheme_finder`, `price_advice`) using `@google/genai`, client-side privacy scrubbing, P1.8 rate limiter (20/min/user), strict JSON response validation, and automatic rule-based fallback to `mode: "basic"` when the API key is missing or quota is exhausted.
+  - `test/sql/verify_subscriptions_and_ai.sql`: End-to-end SQL verification suite testing subscription creation, pause/resume, skip tomorrow, stock shortage notification, group tiered bulk pricing thresholds, deadline evaluation, and refund triggers.
+  - `lib/features/marketplace/domain/subscription_model.dart` & `lib/features/marketplace/domain/group_order_model.dart`: Domain entities with JSON serialization and tier calculation helpers.
+  - `lib/features/marketplace/data/subscriptions_repository.dart`: Supabase data layer with real-time streams, RPC wrappers, and offline fallback.
+  - `lib/features/marketplace/presentation/subscriptions_controller.dart`: Riverpod state notifier for active subscriptions, apartment group orders, and debug scheduler execution.
+  - `lib/features/marketplace/presentation/subscriptions_screen.dart` & `lib/features/marketplace/presentation/subscriptions_hub_tab.dart`: Responsive UI matching "Daily Farm Subscriptions: fresh morning milk and organic veggie boxes", with segmented tabs (Active Subscriptions, Apartment Bulk Orders), debug scheduler trigger banner, and detailed cards.
+  - `lib/features/marketplace/presentation/widgets/subscription_card.dart` & `lib/features/marketplace/presentation/widgets/group_order_card.dart`: Interactive cards with pause/resume, skip tomorrow, quantity stepper, tiered price badges, dynamic progress bars, and join modal launcher.
+  - `lib/features/marketplace/presentation/widgets/create_subscription_modal.dart`, `lib/features/marketplace/presentation/widgets/create_group_order_modal.dart`, `lib/features/marketplace/presentation/widgets/join_group_order_modal.dart`: Bottom sheet modals with dropdowns, quantity selectors, and instant pricing feedback.
+  - `lib/features/farmer/domain/ai_assist_models.dart`: Structured Dart data models for Gemini responses and fallback states.
+  - `lib/features/farmer/data/farmer_ai_repository.dart`: Invokes `ai-assist` Edge Function via `EdgeApiClient`, handles image compression, and provides local rule-based fallback responses.
+  - `lib/features/farmer/presentation/pest_ai_doc_screen.dart`: Leaf photo capture/picker, symptom selector, likely causes, organic-first treatments, agronomist consultation disclaimer, and expert helpline fallback.
+  - `lib/features/farmer/presentation/soil_ai_test_screen.dart`: Soil pH and soil type inputs, amendment recommendations, organic matter advice, and suitable crops.
+  - `lib/features/farmer/presentation/irrigation_ai_screen.dart`: Crop stage, soil moisture, and weather inputs returning custom watering schedules, critical moisture periods, and water conservation tips.
+  - `lib/features/farmer/presentation/govt_schemes_screen.dart`: Curated list of verified central and state schemes (PM-KISAN, KCC, PMFBY, Soil Health Card, Krishi Bhagya) with AI eligibility matcher and official government portal links.
+  - `lib/features/farmer/presentation/widgets/essential_suite_grid.dart`: Wired AI suite grid tiles to the 4 screens with phase updated to P6.8.
+  - `lib/features/provider/presentation/provider_home_screen.dart`: Wired tab 2 to `SubscriptionsHubTab`.
+  - `lib/core/router/routes.dart` & `lib/core/router/app_router.dart`: Added routes `/farmer/ai/pest`, `/farmer/ai/soil`, `/farmer/ai/irrigation`, `/farmer/ai/schemes`, `/marketplace/subscriptions`.
+  - `test/screen_coverage_audit_test.dart` & `test/comprehensive_overflow_finder_test.dart`: Updated screen inventory and overflow tests.
 - **What was built**:
-  - Atomic race-safe `verify_ticket_scan` RPC with `FOR UPDATE` lock and 10 stable rejection codes.
-  - Provider scanner with camera, worker preview card, and distinct handling for rejections vs network errors.
-  - Seeker phone Realtime status listener with auto-navigation to Step 2 live selfie.
-  - Step 2 live workplace selfie with 150m geofence, brightness check, face match, and private upload.
-  - Realtime timeline synchronized across both devices.
-  - Digital ID card dynamically showing rotating QR of next accepted assignment.
-  - Dev Menu `/dev/lifecycle` with token state, short TTL toggle, and function health checks.
+  - **Part 1 (Subscriptions & Group Orders)**:
+    - Daily/weekdays/weekly recurring deliveries of milk, organic veggie boxes, and produce with quantity adjustment, pause/resume, and skip tomorrow.
+    - Automated SQL scheduler job `generate_tomorrow_deliveries(target_date)` creating orders, respecting skip dates, deducting inventory, creating timeline events, and notifying buyers when stock is low.
+    - Recurring service bookings (P4.6) processed seamlessly by the same daily scheduler.
+    - Apartment group orders with community organizer setup, participant joining, tiered bulk pricing discounts, real-time progress bars, and automatic order placement/refunds via `evaluate_group_orders(current_ts)`.
+    - Debug-only "Run Scheduler Now" button for testing on physical devices without waiting for cron triggers.
+  - **Part 2 (Farmer AI Tools powered by Gemini)**:
+    - Secure Edge Function `ai-assist` with `@google/genai` integration, reading `GEMINI_API_KEY` and `GEMINI_MODEL` strictly from environment secrets.
+    - Zero key leaks: API key is never exposed to the client app, logged, or returned in response payloads.
+    - Privacy scrubber removing all PII, GPS coordinates, phone numbers, and identity documents before sending context to Gemini.
+    - Graceful degradation: If the key is not set, quota is exceeded, or timeout occurs, returns `mode: "basic"` using deterministic agricultural knowledge bases.
+    - 4 production Flutter screens carrying clear "AI suggestion (Gemini), not professional advice" disclaimers, high-contrast DarkPanel themes, and 100% zero RenderFlex overflow across all screen widths and text scales.
+- **Verification**:
+  - `test/sql/verify_subscriptions_and_ai.sql`: All tests passed on remote Supabase database (exit code 0).
+  - `flutter analyze`: 0 issues found (clean).
+  - `tool/check_overflow.bat`: All 3 suites passed with 0 overflows across 320-600dp and text scale 1.0-2.0.
+  - Security grep: Confirmed `GEMINI_API_KEY` appears nowhere in code, app bundle, or git commits.
 
 ## Known issues
 - **Profile & Auth Foreign Key Cascade vs D11 Retention**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`. The financial retention refactor will decouple `auth.users` deletion from audit records in an upcoming migration.
-- **Phase 6.3 - 6.5, 6.7 - 6.8**: Farm equipment rental/labour hiring, buyer produce marketplace, carts & checkout, and subscriptions are upcoming phases.
+- **Phase 6.3 - 6.5**: Farm equipment rental/labour hiring, buyer produce marketplace, and carts & checkout are upcoming phases (P6.7 & P6.8 completed).
 - **Phase 9 (Admin Console)**: Admin console is built in a separate web/desktop project and is out of scope for this Flutter app.
+
 
 
 

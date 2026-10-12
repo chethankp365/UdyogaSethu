@@ -1336,5 +1336,6 @@
   "primaryCropsLabel": "প্রধান উৎপাদিত ফসল",
   "apmcMandiLabel": "নিবন্ধিত এপিএমসি মান্ডি",
   "farmDetailsUpdatedSuccess": "খামারের বিবরণ সফলভাবে আপডেট হয়েছে",
-  "selfDeclaredProfile": "স্বঘোষিত প্রোফাইল"
+  "selfDeclaredProfile": "স্বঘোষিত প্রোফাইল",
+  "locationPinNotice": "জিপিএস পিন ছাড়া সাইটের ঠিকানা দেওয়া হয়েছে"
 }

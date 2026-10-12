@@ -1336,5 +1336,6 @@
   "primaryCropsLabel": "ప్రధానంగా పండించే పంటలు",
   "apmcMandiLabel": "నమోదిత ఏపీఎంసీ మార్కెట్",
   "farmDetailsUpdatedSuccess": "వ్యవసాయ వివరాలు విజయవంతంగా నవీకరించబడ్డాయి",
-  "selfDeclaredProfile": "స్వయం ప్రకటిత ప్రొఫైల్"
+  "selfDeclaredProfile": "స్వయం ప్రకటిత ప్రొఫైల్",
+  "locationPinNotice": "జీపీఎస్ పిన్ లేకుండా సైట్ చిరునామా అందించబడింది"
 }

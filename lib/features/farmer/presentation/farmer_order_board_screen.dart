@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/widgets/app_thumbnail.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../marketplace/data/orders_repository.dart';
 import '../../marketplace/domain/produce_order.dart';
@@ -266,6 +268,8 @@ class _FarmerOrderBoardScreenState extends ConsumerState<FarmerOrderBoardScreen>
         ],
         bottom: TabBar(
           controller: _tabController,
+          isScrollable: true,
+          tabAlignment: TabAlignment.start,
           indicatorColor: const Color(0xFFF59E0B),
           indicatorWeight: 3,
           labelColor: Colors.white,
@@ -356,7 +360,7 @@ class _FarmerOrderBoardScreenState extends ConsumerState<FarmerOrderBoardScreen>
     }
 
     return ListView.builder(
-      padding: const EdgeInsets.all(16),
+      padding: AppSpacing.fabListPadding,
       itemCount: orders.length,
       itemBuilder: (ctx, idx) {
         final order = orders[idx];
@@ -497,9 +501,22 @@ class _FarmerOrderBoardScreenState extends ConsumerState<FarmerOrderBoardScreen>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          '${it.name} (${it.quantity} ${it.unit})',
-                          style: const TextStyle(fontSize: 12.5, color: Color(0xFF1E293B)),
+                        Row(
+                          children: [
+                            ProduceThumbnail(
+                              name: it.name,
+                              size: ThumbnailSize.small,
+                              width: 26,
+                              height: 26,
+                              borderRadius: BorderRadius.circular(6),
+                              showTitle: false,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              '${it.name} (${it.quantity} ${it.unit})',
+                              style: const TextStyle(fontSize: 12.5, color: Color(0xFF1E293B)),
+                            ),
+                          ],
                         ),
                         Text(
                           it.formattedSubtotal,

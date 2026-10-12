@@ -179,7 +179,7 @@ class _EditListingModalState extends ConsumerState<EditListingModal> {
           children: [
             ListTile(
               leading: const Icon(Icons.camera_alt_rounded, color: Color(0xFF047857)),
-              title: const Text('Take Photo with Camera'),
+              title: Text(AppLocalizations.of(ctx)?.takePhotoCamera ?? 'Take Photo with Camera'),
               onTap: () {
                 Navigator.of(ctx).pop();
                 _pickImage(ImageSource.camera);
@@ -187,7 +187,7 @@ class _EditListingModalState extends ConsumerState<EditListingModal> {
             ),
             ListTile(
               leading: const Icon(Icons.photo_library_rounded, color: Color(0xFF047857)),
-              title: const Text('Choose from Gallery'),
+              title: Text(AppLocalizations.of(ctx)?.chooseGallery ?? 'Choose from Gallery'),
               onTap: () {
                 Navigator.of(ctx).pop();
                 _pickImage(ImageSource.gallery);

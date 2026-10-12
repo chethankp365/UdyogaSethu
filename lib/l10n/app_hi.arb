@@ -1336,5 +1336,6 @@
   "primaryCropsLabel": "मुख्य उगाई जाने वाली फसलें",
   "apmcMandiLabel": "पंजीकृत एपीएमसी मंडी",
   "farmDetailsUpdatedSuccess": "खेत का विवरण सफलतापूर्वक अपडेट किया गया",
-  "selfDeclaredProfile": "स्व-घोषित प्रोफ़ाइल"
+  "selfDeclaredProfile": "स्व-घोषित प्रोफ़ाइल",
+  "locationPinNotice": "जीपीएस पिन के बिना साइट का पता प्रदान किया गया है"
 }

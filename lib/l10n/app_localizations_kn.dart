@@ -3810,4 +3810,8 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get selfDeclaredProfile => 'ಸ್ವಯಂ ಘೋಷಿತ ವಿವರ';
+
+  @override
+  String get locationPinNotice =>
+      'ಜಿಪಿಎಸ್ ಪಿನ್ ಇಲ್ಲದೆ ಸೈಟ್ ವಿಳಾಸವನ್ನು ನೀಡಲಾಗಿದೆ';
 }

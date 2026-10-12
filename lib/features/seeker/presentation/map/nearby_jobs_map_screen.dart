@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart' hide Path;
 import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/core/services/job_thumbnail_service.dart';
+import 'package:udyogasethu/core/widgets/job_action_button.dart';
 import 'package:udyogasethu/features/seeker/domain/job_pin.dart';
 import 'package:udyogasethu/features/seeker/presentation/map/nearby_jobs_map_controller.dart';
 import 'package:udyogasethu/features/seeker/presentation/map/tile_config.dart';
@@ -85,6 +86,27 @@ class _NearbyJobsMapScreenState extends ConsumerState<NearbyJobsMapScreen> {
   void _zoomIn() {
     final current = _mapController.camera.zoom;
     _mapController.move(_mapController.camera.center, (current + 1.0).clamp(3.0, 19.0));
+  }
+
+  List<List<JobPin>> _clusterJobPins(List<JobPin> pins) {
+    final clusters = <List<JobPin>>[];
+    for (final pin in pins) {
+      bool added = false;
+      for (final cluster in clusters) {
+        final ref = cluster.first;
+        final dLat = (ref.lat - pin.lat).abs();
+        final dLng = (ref.lng - pin.lng).abs();
+        if (dLat < 0.0003 && dLng < 0.0003) {
+          cluster.add(pin);
+          added = true;
+          break;
+        }
+      }
+      if (!added) {
+        clusters.add([pin]);
+      }
+    }
+    return clusters;
   }
 
   void _zoomOut() {
@@ -359,21 +381,32 @@ class _NearbyJobsMapScreenState extends ConsumerState<NearbyJobsMapScreen> {
             ],
           ),
 
-        // 3. Price Pin Markers
+        // 3. Price Pin Markers & Clusters
         MarkerLayer(
-          markers: state.jobPins.map((job) {
-            final isSelected = state.selectedJobId == job.id;
+          markers: _clusterJobPins(state.jobPins).map((cluster) {
+            final isCluster = cluster.length > 1;
+            final isSelected = cluster.any((j) => j.id == state.selectedJobId);
+            final firstJob = cluster.first;
             return Marker(
-              point: job.latLng,
-              width: 76,
-              height: 42,
+              point: firstJob.latLng,
+              width: isCluster ? 86 : 76,
+              height: isCluster ? 46 : 42,
               child: GestureDetector(
                 onTap: () {
-                  notifier.selectJob(job.id);
-                  _animateMapTo(job.latLng);
-                  _scrollToJob(job.id, state.jobPins);
+                  notifier.selectJob(firstJob.id);
+                  _animateMapTo(firstJob.latLng);
+                  _scrollToJob(firstJob.id, state.jobPins);
+                  if (_sheetController.isAttached && _sheetController.size < 0.45) {
+                    _sheetController.animateTo(
+                      0.45,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeOut,
+                    );
+                  }
                 },
-                child: _buildPricePinMarker(job, isSelected),
+                child: isCluster
+                    ? _buildClusteredPinMarker(cluster, isSelected)
+                    : _buildPricePinMarker(firstJob, isSelected),
               ),
             );
           }).toList(),
@@ -461,6 +494,42 @@ class _NearbyJobsMapScreenState extends ConsumerState<NearbyJobsMapScreen> {
         CustomPaint(
           size: const Size(8, 4),
           painter: _TrianglePainter(color: bgColor),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildClusteredPinMarker(List<JobPin> cluster, bool isSelected) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        _buildPricePinMarker(cluster.first, isSelected),
+        Positioned(
+          top: -5,
+          right: -4,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF59E0B),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.white, width: 1.5),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.28),
+                  blurRadius: 3,
+                  offset: const Offset(0, 1),
+                ),
+              ],
+            ),
+            child: Text(
+              '${cluster.length}',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+                fontSize: 10,
+              ),
+            ),
+          ),
         ),
       ],
     );
@@ -961,26 +1030,13 @@ class _NearbyJobsMapScreenState extends ConsumerState<NearbyJobsMapScreen> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                SizedBox(
-                  height: 32,
-                  child: ElevatedButton(
-                    onPressed: isApplied ? null : onApply,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: isApplied ? const Color(0xFFE2E8F0) : kPinColor,
-                      foregroundColor: isApplied ? const Color(0xFF64748B) : Colors.white,
-                      elevation: 0,
-                      padding: const EdgeInsets.symmetric(horizontal: 14),
-                      shape: RoundedRectangleRadius(16),
-                    ),
-                    child: Text(
-                      isApplied ? l10n.applied : l10n.applyButton,
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: isApplied ? const Color(0xFF64748B) : Colors.white,
-                      ),
-                    ),
-                  ),
+                JobActionButton(
+                  jobId: job.id,
+                  jobTitle: job.title,
+                  isCompact: true,
+                  customApplyLabel: l10n.applyButton,
+                  isApplied: isApplied,
+                  onApplyCustom: onApply,
                 ),
               ],
             ),

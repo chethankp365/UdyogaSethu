@@ -46,6 +46,12 @@ class AppRoutes {
   static const String farmerListings = '/farmer/listings';
   static const String farmerResources = '/farmer/resources';
   static const String farmerVendorResources = '/farmer/vendor-resources';
+  static const String subscriptions = '/subscriptions';
+  static const String groupOrders = '/group-orders';
+  static const String farmerSoilAi = '/farmer/soil-ai';
+  static const String farmerPestAi = '/farmer/pest-ai';
+  static const String farmerIrrigationAi = '/farmer/irrigation-ai';
+  static const String farmerGovtSchemes = '/farmer/govt-schemes';
 
   // Shared Feature Screens
   static const String settings = '/settings';
@@ -96,4 +102,6 @@ class AppRoutes {
   static const String devAssets = '/dev/assets';
   static const String devEdgeHealth = '/dev/edge-health';
   static const String devLifecycle = '/dev/lifecycle';
+  static const String devThumbnails = '/dev/thumbnails';
+  static const String devJobVisibility = '/dev/job-visibility';
 }

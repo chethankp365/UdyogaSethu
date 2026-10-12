@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/farmer/domain/farm_resource_model.dart';
 import 'package:udyogasethu/features/farmer/presentation/widgets/book_resource_modal.dart';
+import 'package:udyogasethu/core/widgets/app_thumbnail.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class EquipmentRentalSection extends StatelessWidget {
@@ -27,18 +28,19 @@ class EquipmentRentalSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Section Header matching Screen 26
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 8,
+          runSpacing: 6,
           children: [
-            Expanded(
-              child: Text(
-                l10n?.farmerNearbyRentals ?? 'NEARBY EQUIPMENT & DRONE RENTALS',
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 0.8,
-                  color: Color(0xFF1E293B),
-                ),
+            Text(
+              l10n?.farmerNearbyRentals ?? 'NEARBY EQUIPMENT & DRONE RENTALS',
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.8,
+                color: Color(0xFF1E293B),
               ),
             ),
             Container(
@@ -53,12 +55,16 @@ class EquipmentRentalSection extends StatelessWidget {
                 children: [
                   const Icon(Icons.shield_rounded, size: 12, color: Color(0xFF0D6548)),
                   const SizedBox(width: 4),
-                  Text(
-                    l10n?.farmerEscrowGuaranteed ?? 'Escrow Guaranteed',
-                    style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF0D6548),
+                  Flexible(
+                    child: Text(
+                      l10n?.farmerEscrowGuaranteed ?? 'Escrow Guaranteed',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF0D6548),
+                      ),
                     ),
                   ),
                 ],
@@ -117,15 +123,16 @@ class EquipmentRentalSection extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Equipment Icon / Avatar
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: res.type.badgeColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(res.type.icon, color: res.type.badgeColor, size: 26),
+              // Illustrated Equipment / Resource Thumbnail
+              ResourceThumbnail(
+                title: res.name,
+                resourceType: res.type.name,
+                imageUrl: res.imageUrl,
+                size: ThumbnailSize.small,
+                width: 52,
+                height: 52,
+                borderRadius: BorderRadius.circular(12),
+                showTitle: false,
               ),
               const SizedBox(width: 12),
 

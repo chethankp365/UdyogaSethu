@@ -60,17 +60,17 @@ enum EssentialSuiteType {
       case EssentialSuiteType.hireWorkers:
         return 'P6.3';
       case EssentialSuiteType.soilAiTest:
-        return 'P6.x';
+        return 'P6.8';
       case EssentialSuiteType.sellProduce:
         return 'P6.2';
       case EssentialSuiteType.pestAiDoc:
-        return 'P6.x';
+        return 'P6.8';
       case EssentialSuiteType.govtSchemes:
-        return 'P6.x';
+        return 'P6.8';
       case EssentialSuiteType.agriDrone:
         return 'P6.3';
       case EssentialSuiteType.irrigationAi:
-        return 'P6.x';
+        return 'P6.8';
     }
   }
 
@@ -272,13 +272,17 @@ class EssentialSuiteGrid extends StatelessWidget {
           children: [
             const Icon(Icons.grid_view_rounded, size: 18, color: Color(0xFF0D6548)),
             const SizedBox(width: 8),
-            Text(
-              l10n?.farmerEssentialSuite ?? 'FARMER ESSENTIAL SUITE',
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 0.9,
-                color: Color(0xFF1E293B),
+            Expanded(
+              child: Text(
+                l10n?.farmerEssentialSuite ?? 'FARMER ESSENTIAL SUITE',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.9,
+                  color: Color(0xFF1E293B),
+                ),
               ),
             ),
           ],
@@ -288,11 +292,11 @@ class EssentialSuiteGrid extends StatelessWidget {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: items.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 4,
             crossAxisSpacing: 10,
             mainAxisSpacing: 12,
-            childAspectRatio: 0.82,
+            childAspectRatio: (0.68 / MediaQuery.textScalerOf(context).scale(1.0).clamp(1.0, 1.6)).clamp(0.45, 0.72),
           ),
           itemBuilder: (context, index) {
             final it = items[index];
@@ -320,31 +324,36 @@ class EssentialSuiteGrid extends StatelessWidget {
                     ),
                   ],
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      width: 40,
-                      height: 40,
+                      width: 36,
+                      height: 36,
                       decoration: BoxDecoration(
                         color: it.color.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(it.icon, color: it.color, size: 22),
+                      child: Icon(it.icon, color: it.color, size: 20),
                     ),
-                    const SizedBox(height: 6),
-                    Text(
-                      title,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E293B),
-                        height: 1.15,
+                    const SizedBox(height: 4),
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.center,
+                        child: Text(
+                          title,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1E293B),
+                            height: 1.15,
+                          ),
+                          maxLines: 2,
+                        ),
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),

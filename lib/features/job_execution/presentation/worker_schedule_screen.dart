@@ -393,13 +393,36 @@ class _WorkerScheduleScreenState extends ConsumerState<WorkerScheduleScreen> {
                         Text(
                           'Client: ${item.providerName}',
                           style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
+                        if (item.status == 'requested') ...[
+                          const SizedBox(height: 4),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: Colors.amber.shade100,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: const Text(
+                              'Waiting for your answer',
+                              style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.brown),
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),
-                  Text(
-                    '₹${item.agreedWageRupees}',
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.headerGreenDark),
+                  const SizedBox(width: 8),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 90),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        '₹${item.agreedWageRupees}',
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.headerGreenDark),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -411,9 +434,13 @@ class _WorkerScheduleScreenState extends ConsumerState<WorkerScheduleScreen> {
                 children: [
                   const Icon(Icons.schedule_rounded, size: 14, color: AppColors.textMuted),
                   const SizedBox(width: 4),
-                  Text(
-                    '${DateFormat('hh:mm a').format(item.startAt)} - ${DateFormat('hh:mm a').format(item.endAt)} (${item.estDurationMinutes} mins)',
-                    style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+                  Expanded(
+                    child: Text(
+                      '${DateFormat('hh:mm a').format(item.startAt)} - ${DateFormat('hh:mm a').format(item.endAt)} (${item.estDurationMinutes} mins)',
+                      style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ],
               ),

@@ -115,35 +115,44 @@ class TransactionTile extends StatelessWidget {
               const SizedBox(width: 10),
 
               // Signed Amount & Status Chip
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    transaction.formattedSignedAmount,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: amountColor,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: transaction.statusColor.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: transaction.statusColor.withValues(alpha: 0.3)),
-                    ),
-                    child: Text(
-                      transaction.statusDisplay,
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                        color: transaction.statusColor,
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 100),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        transaction.formattedSignedAmount,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: amountColor,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 4),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: transaction.statusColor.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: transaction.statusColor.withValues(alpha: 0.3)),
+                      ),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          transaction.statusDisplay,
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            color: transaction.statusColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -162,11 +171,15 @@ class TransactionTile extends StatelessWidget {
                 children: [
                   const Icon(Icons.shield_outlined, size: 12, color: AppColors.textMuted),
                   const SizedBox(width: 6),
-                  Text(
-                    'Fee & Protection: ${WalletBalance.formatIndianCurrency(transaction.feePaise)}',
-                    style: const TextStyle(
-                      fontSize: 11,
-                      color: AppColors.textMuted,
+                  Expanded(
+                    child: Text(
+                      'Fee & Protection: ${WalletBalance.formatIndianCurrency(transaction.feePaise)}',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: AppColors.textMuted,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],

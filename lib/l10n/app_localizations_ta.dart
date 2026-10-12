@@ -3815,4 +3815,8 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get selfDeclaredProfile => 'சுய அறிவிப்பு சுயவிவரம்';
+
+  @override
+  String get locationPinNotice =>
+      'ஜிபிஎஸ் பின் இல்லாமல் தள முகவரி வழங்கப்பட்டுள்ளது';
 }

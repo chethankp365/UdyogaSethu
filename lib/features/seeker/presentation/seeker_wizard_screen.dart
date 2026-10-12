@@ -251,22 +251,48 @@ class _SeekerWizardScreenState extends ConsumerState<SeekerWizardScreen> {
                 spacing: 8,
                 runSpacing: 8,
                 children: [
-                  OutlinedButton.icon(
+                  OutlinedButton(
                     onPressed: state.isSaving ? null : () => _pickAndUploadPhoto(ref, ImageSource.camera),
-                    icon: const Icon(Icons.camera_alt, size: 18, color: AppColors.headerGreenDark),
-                    label: Text(l10n.takePhotoCamera, style: const TextStyle(fontSize: 13, color: AppColors.headerGreenDark)),
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: AppColors.headerGreenDark),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.camera_alt, size: 18, color: AppColors.headerGreenDark),
+                        const SizedBox(width: 8),
+                        Flexible(
+                          child: Text(
+                            l10n.takePhotoCamera,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontSize: 13, color: AppColors.headerGreenDark),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  OutlinedButton.icon(
+                  OutlinedButton(
                     onPressed: state.isSaving ? null : () => _pickAndUploadPhoto(ref, ImageSource.gallery),
-                    icon: const Icon(Icons.photo_library, size: 18, color: AppColors.headerGreenDark),
-                    label: Text(l10n.chooseGallery, style: const TextStyle(fontSize: 13, color: AppColors.headerGreenDark)),
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: AppColors.headerGreenDark),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.photo_library, size: 18, color: AppColors.headerGreenDark),
+                        const SizedBox(width: 8),
+                        Flexible(
+                          child: Text(
+                            l10n.chooseGallery,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontSize: 13, color: AppColors.headerGreenDark),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],

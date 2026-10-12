@@ -208,6 +208,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
                 delegate: _SliverTabBarDelegate(
                   TabBar(
                     controller: _tabController,
+                    isScrollable: true,
+                    tabAlignment: TabAlignment.start,
                     labelColor: AppColors.headerGreenDark,
                     unselectedLabelColor: AppColors.textMuted,
                     indicatorColor: AppColors.headerGreenDark,

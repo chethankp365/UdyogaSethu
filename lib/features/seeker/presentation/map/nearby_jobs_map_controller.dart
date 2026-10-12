@@ -4,7 +4,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:udyogasethu/core/errors/app_exception.dart';
 import 'package:udyogasethu/features/seeker/data/nearby_jobs_repository.dart';
+import 'package:udyogasethu/features/seeker/domain/job_application_status.dart';
 import 'package:udyogasethu/features/seeker/domain/job_pin.dart';
+import 'package:udyogasethu/features/seeker/presentation/my_applications_controller.dart';
 
 /// State of the nearby jobs map screen.
 class NearbyJobsMapState {
@@ -201,6 +203,19 @@ class NearbyJobsMapNotifier extends Notifier<NearbyJobsMapState> {
         isLoading: false,
         clearError: true,
       );
+
+      // Seed statuses into single source of truth
+      ref.read(myApplicationsProvider.notifier).seedStatuses(
+            pins.map(
+              (p) => WorkerJobStatus(
+                jobId: p.id,
+                applicationStatus: JobAppStatus.fromString(p.myApplicationStatus),
+                assignmentStatus: p.myAssignmentStatus,
+                applicationId: p.myApplicationId,
+                assignmentId: p.myAssignmentId,
+              ),
+            ),
+          );
     } catch (e) {
       AppLogger.e('Error fetching job pins: $e');
       state = state.copyWith(
@@ -257,11 +272,13 @@ class NearbyJobsMapNotifier extends Notifier<NearbyJobsMapState> {
   }
 
   Future<bool> applyToJob(String jobId) async {
-    final updated = Set<String>.from(state.appliedJobIds)..add(jobId);
-    state = state.copyWith(appliedJobIds: updated);
-
-    final repo = ref.read(nearbyJobsRepositoryProvider);
-    return await repo.applyToJob(jobId);
+    final result = await ref.read(myApplicationsProvider.notifier).applyToJob(jobId: jobId);
+    if (result.success) {
+      state = state.copyWith(
+        appliedJobIds: Set<String>.from(state.appliedJobIds)..add(jobId),
+      );
+    }
+    return result.success;
   }
 
   Future<void> recenterOnUser() async {

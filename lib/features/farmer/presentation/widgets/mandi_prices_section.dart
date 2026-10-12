@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:udyogasethu/core/services/thumbnail_library.dart';
 import 'package:udyogasethu/features/farmer/domain/mandi_price_model.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
@@ -89,66 +90,65 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // 1. Header with Live Feed Pulse Pill & Unit Toggle
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 8,
+          runSpacing: 6,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          l10n?.farmerLiveMandiPrices ?? 'LIVE MANDI PRICES & DEMAND',
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 0.9,
-                            color: Color(0xFF1E293B),
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 4,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Text(
+                      l10n?.farmerLiveMandiPrices ?? 'LIVE MANDI PRICES & DEMAND',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.9,
+                        color: Color(0xFF1E293B),
                       ),
-                      const SizedBox(width: 6),
-                      // Live Feed Badge
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFE6F4EA),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: const Color(0xFFA7F3D0)),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Icons.circle, color: Color(0xFF00875A), size: 7),
-                            const SizedBox(width: 4),
-                            Text(
-                              l10n?.farmerLiveFeed ?? 'Live Feed',
-                              style: const TextStyle(
-                                fontSize: 9,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF00875A),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    dateLabel,
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF64748B),
                     ),
+                    // Live Feed Badge
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE6F4EA),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: const Color(0xFFA7F3D0)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.circle, color: Color(0xFF00875A), size: 7),
+                          const SizedBox(width: 4),
+                          Text(
+                            l10n?.farmerLiveFeed ?? 'Live Feed',
+                            style: const TextStyle(
+                              fontSize: 9,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF00875A),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  dateLabel,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF64748B),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             // Unit Switcher (₹/kg vs ₹/qtl)
             Container(
@@ -236,11 +236,11 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: filteredPrices.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
-              childAspectRatio: 0.68,
+              childAspectRatio: (0.62 / MediaQuery.textScalerOf(context).scale(1.0).clamp(1.0, 1.8)).clamp(0.38, 0.68),
             ),
             itemBuilder: (context, index) {
               final price = filteredPrices[index];
@@ -291,8 +291,11 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
         ? price.formattedPricePerKg
         : price.formattedModalPricePerQtl;
 
-    final slug = price.commodity.toLowerCase().replaceAll(' ', '_');
-    final assetPath = 'assets/images/commodities/$slug.webp';
+    final cropRes = ThumbnailLibrary.resolveCrop(
+      commodity: price.commodity,
+      category: price.category.name,
+    );
+    final assetPath = cropRes.assetPath ?? ThumbnailLibrary.fallbackAsset;
 
     return Container(
       decoration: BoxDecoration(
@@ -311,9 +314,9 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 1. Large Top Photo with Gradient & First-Letter Fallback
+          // 1. Illustrated Crop Photo from Thumbnail Library
           SizedBox(
-            height: 94,
+            height: 76,
             width: double.infinity,
             child: Stack(
               fit: StackFit.expand,
@@ -322,22 +325,26 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
                   assetPath,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
-                    return _buildGradientFallback(price);
+                    return Image.asset(
+                      ThumbnailLibrary.fallbackAsset,
+                      fit: BoxFit.cover,
+                      errorBuilder: (ctx, err, stack) => _buildGradientFallback(price),
+                    );
                   },
                 ),
                 // Top Right Change Arrow Badge
                 Positioned(
-                  top: 6,
-                  right: 6,
+                  top: 5,
+                  right: 5,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
+                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.95),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(6),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.08),
-                          blurRadius: 4,
+                          blurRadius: 3,
                         ),
                       ],
                     ),
@@ -351,7 +358,7 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
                         Text(
                           price.formattedChange,
                           style: TextStyle(
-                            fontSize: 10,
+                            fontSize: 9.5,
                             fontWeight: FontWeight.bold,
                             color: trendColor,
                           ),
@@ -362,18 +369,18 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
                 ),
                 // Bottom Left Demand Chip in Overlay
                 Positioned(
-                  bottom: 6,
-                  left: 6,
+                  bottom: 5,
+                  left: 5,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                     decoration: BoxDecoration(
                       color: Colors.black.withValues(alpha: 0.7),
-                      borderRadius: BorderRadius.circular(6),
+                      borderRadius: BorderRadius.circular(5),
                     ),
                     child: Text(
                       _getDemandTagText(price.demandTag, l10n),
                       style: const TextStyle(
-                        fontSize: 9,
+                        fontSize: 8.5,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
@@ -387,7 +394,7 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
           // 2. Card Content Body
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+              padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -400,18 +407,17 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
                       Text(
                         price.commodity,
                         style: const TextStyle(
-                          fontSize: 14,
+                          fontSize: 13,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF1E293B),
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 1),
                       Text(
                         price.variety,
                         style: const TextStyle(
-                          fontSize: 10.5,
+                          fontSize: 10,
                           color: Color(0xFF64748B),
                           fontWeight: FontWeight.w500,
                         ),
@@ -432,18 +438,22 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
                         child: Text(
                           displayPrice,
                           style: const TextStyle(
-                            fontSize: 18,
+                            fontSize: 16,
                             fontWeight: FontWeight.w900,
                             color: Color(0xFF0D6548),
                           ),
                         ),
                       ),
-                      Text(
-                        _showPerKg ? price.formattedModalPricePerQtl : price.formattedPricePerKg,
-                        style: const TextStyle(
-                          fontSize: 9.5,
-                          color: Color(0xFF94A3B8),
-                          fontWeight: FontWeight.w500,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          _showPerKg ? price.formattedModalPricePerQtl : price.formattedPricePerKg,
+                          style: const TextStyle(
+                            fontSize: 9,
+                            color: Color(0xFF94A3B8),
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ],
@@ -452,13 +462,13 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
                   // Market & District location row
                   Row(
                     children: [
-                      const Icon(Icons.location_on_outlined, size: 11, color: Color(0xFF94A3B8)),
-                      const SizedBox(width: 3),
+                      const Icon(Icons.location_on_outlined, size: 10, color: Color(0xFF94A3B8)),
+                      const SizedBox(width: 2),
                       Expanded(
                         child: Text(
                           '${price.market}, ${price.district}',
                           style: const TextStyle(
-                            fontSize: 9.5,
+                            fontSize: 9,
                             color: Color(0xFF64748B),
                             fontWeight: FontWeight.w500,
                           ),
@@ -549,11 +559,11 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: 4,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 12,
             mainAxisSpacing: 12,
-            childAspectRatio: 0.68,
+            childAspectRatio: (0.62 / MediaQuery.textScalerOf(context).scale(1.0).clamp(1.0, 1.8)).clamp(0.38, 0.68),
           ),
           itemBuilder: (context, index) {
             return Container(
@@ -566,7 +576,7 @@ class _MandiPricesSectionState extends State<MandiPricesSection> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: 94,
+                    height: 76,
                     width: double.infinity,
                     color: Colors.grey.shade200,
                   ),

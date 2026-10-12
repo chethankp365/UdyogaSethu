@@ -3779,4 +3779,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selfDeclaredProfile => 'SELF-DECLARED PROFILE';
+
+  @override
+  String get locationPinNotice => 'Site address provided without GPS pin';
 }

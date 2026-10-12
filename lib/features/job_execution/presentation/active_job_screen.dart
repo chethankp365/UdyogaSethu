@@ -7,6 +7,8 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:udyogasethu/core/errors/app_exception.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/services/routing_service.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
@@ -48,6 +50,7 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
   bool? _overrideSimpleMode;
   bool _hasShownNoShowSheet = false;
   Timer? _noShowCheckTimer;
+  StreamSubscription<String>? _statusSubscription;
 
   @override
   void initState() {
@@ -55,6 +58,25 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
     _initTts();
     _fetchRoute();
     _startNoShowChecker();
+    _listenToStatusChanges();
+  }
+
+  void _listenToStatusChanges() {
+    try {
+      final repo = ref.read(jobExecutionRepositoryProvider);
+      _statusSubscription = repo.watchAssignmentStatus(widget.assignmentId).listen((newStatus) {
+        if (kDebugMode) {
+          debugPrint('[ActiveJobScreen] Realtime assignment status update: $newStatus');
+        }
+        if (mounted) {
+          ref.invalidate(activeJobDetailProvider(widget.assignmentId));
+        }
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[ActiveJobScreen] Status subscription error: $e');
+      }
+    }
   }
 
   void _startNoShowChecker() {
@@ -151,6 +173,7 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
 
   @override
   void dispose() {
+    _statusSubscription?.cancel();
     _noShowCheckTimer?.cancel();
     _tts.stop();
     super.dispose();
@@ -219,25 +242,76 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
         loading: () => const Center(
           child: CircularProgressIndicator(color: AppColors.headerGreenDark),
         ),
-        error: (err, _) => Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.warning_amber_rounded, color: Colors.red, size: 48),
-                const SizedBox(height: 12),
-                Text('Error loading active job: $err', textAlign: TextAlign.center),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: AppColors.headerGreenDark),
-                  onPressed: () => ref.invalidate(activeJobDetailProvider(widget.assignmentId)),
-                  child: const Text('Retry', style: TextStyle(color: Colors.white)),
-                ),
-              ],
+        error: (err, _) {
+          final friendly = AppException.userFriendlyMessage(err);
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade50,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.error_outline_rounded, color: Colors.red, size: 48),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Unable to Load Active Job',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    friendly,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 14, color: AppColors.textMuted),
+                  ),
+                  if (kDebugMode) ...[
+                    const SizedBox(height: 10),
+                    Text(
+                      err.toString(),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 11, color: Colors.red, fontFamily: 'monospace'),
+                    ),
+                  ],
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: const Size(130, 48),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                        onPressed: () => context.pop(),
+                        icon: const Icon(Icons.arrow_back, size: 18),
+                        label: const Text('Go Back'),
+                      ),
+                      const SizedBox(width: 12),
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.headerGreenDark,
+                          foregroundColor: Colors.white,
+                          minimumSize: const Size(130, 48),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                        onPressed: () {
+                          ref.invalidate(activeJobDetailProvider(widget.assignmentId));
+                          _fetchRoute();
+                        },
+                        icon: const Icon(Icons.refresh_rounded, size: 18),
+                        label: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
         data: (detail) {
           // Auto-trigger No-Show Sheet once for Provider when worker is late
           if (isProvider && detail.isLate && !_hasShownNoShowSheet && mounted) {
@@ -877,29 +951,85 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            const Icon(Icons.location_off_rounded, size: 36, color: AppColors.warningOrange),
+            const Icon(Icons.location_on_outlined, size: 36, color: AppColors.warningOrange),
             const SizedBox(height: 8),
             const Text(
-              'Job location is not available',
+              'Site Location (Address Text)',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: AppColors.textDark),
             ),
-            const SizedBox(height: 4),
-            Text(
-              detail.addressText.isNotEmpty ? detail.addressText : 'No site coordinates recorded for this job',
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+            const SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFFBEB),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: const Color(0xFFFDE68A)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.info_outline_rounded, size: 18, color: Color(0xFFD97706)),
+                      const SizedBox(width: 6),
+                      Text(
+                        l10n?.locationPinNotice ?? 'Site address provided without GPS pin',
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF92400E)),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    detail.addressText.isNotEmpty
+                        ? detail.addressText
+                        : 'No site coordinates or address recorded for this job.',
+                    style: const TextStyle(fontSize: 13, color: Color(0xFF78350F), fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 14),
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.headerGreenDark,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              ),
-              icon: const Icon(Icons.work_outline_rounded, size: 16),
-              label: const Text('Open Job Details', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-              onPressed: () => context.push('/jobs/${detail.jobId}'),
+            Row(
+              children: [
+                if (detail.addressText.isNotEmpty) ...[
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.headerGreenDark,
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size(0, 48),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                      ),
+                      icon: const Icon(Icons.navigation_outlined, size: 18),
+                      label: const Text('Open in Maps', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                      onPressed: () async {
+                        final encoded = Uri.encodeComponent(detail.addressText);
+                        final uri = Uri.parse('https://www.google.com/maps/search/?api=1&query=$encoded');
+                        if (await canLaunchUrl(uri)) {
+                          await launchUrl(uri, mode: LaunchMode.externalApplication);
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                ],
+                Expanded(
+                  child: OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.headerGreenDark,
+                      side: const BorderSide(color: AppColors.headerGreenDark),
+                      minimumSize: const Size(0, 48),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                    ),
+                    icon: const Icon(Icons.work_outline_rounded, size: 18),
+                    label: const Text('Job Details', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                    onPressed: () => context.push('/jobs/${detail.jobId}'),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
