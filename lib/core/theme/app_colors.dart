@@ -11,6 +11,7 @@ class AppColors {
   static const Color emeraldPrimary = Color(0xFF0D6548);
   static const Color primaryEmerald = Color(0xFF0D6548);
   static const Color primaryTeal = Color(0xFF00875A);
+  static const Color primaryGreen = Color(0xFF00875A);
   static const Color emerald = Color(0xFF10B981);
   static const Color paleMint = Color(0xFFE6F4EA);
   static const Color mintBackground = Color(0xFFF0FDF4);

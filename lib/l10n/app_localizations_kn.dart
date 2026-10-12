@@ -3814,4 +3814,85 @@ class AppLocalizationsKn extends AppLocalizations {
   @override
   String get locationPinNotice =>
       'ಜಿಪಿಎಸ್ ಪಿನ್ ಇಲ್ಲದೆ ಸೈಟ್ ವಿಳಾಸವನ್ನು ನೀಡಲಾಗಿದೆ';
+
+  @override
+  String get safetyHubTitle => 'ಸುರಕ್ಷತೆ ಮತ್ತು ತುರ್ತು ಕೇಂದ್ರ';
+
+  @override
+  String get emergencyContactsTitle => 'ತುರ್ತು ಸಂಪರ್ಕಗಳು';
+
+  @override
+  String get jobProtectionClaimTitle => 'ಕೆಲಸ ರಕ್ಷಣೆ ಕ್ಲೈಮ್';
+
+  @override
+  String get notificationCentreTitle => 'ಸೂಚನಾ ಕೇಂದ್ರ';
+
+  @override
+  String get notifNewApplicantTitle => 'ಹೊಸ ಉದ್ಯೋಗ ಅರ್ಜಿದಾರರು';
+
+  @override
+  String notifNewApplicantBody(String worker, String job) {
+    return '$worker ಅವರು $job ಗೆ ಅರ್ಜಿ ಸಲ್ಲಿಸಿದ್ದಾರೆ';
+  }
+
+  @override
+  String get notifApplicationStatusTitle => 'ಅರ್ಜಿ ನವೀಕರಣ';
+
+  @override
+  String notifApplicationStatusBody(String job, String status) {
+    return '$job ಗಾಗಿ ನಿಮ್ಮ ಅರ್ಜಿಯು $status ಗೆ ನವೀಕರಿಸಲಾಗಿದೆ';
+  }
+
+  @override
+  String get notifAssignmentStatusTitle => 'ಬುಕಿಂಗ್ ಸ್ಥಿತಿ ನವೀಕರಣ';
+
+  @override
+  String notifAssignmentStatusBody(String code, String status) {
+    return '$code ಈಗ $status';
+  }
+
+  @override
+  String get notifNewOrderTitle => 'ಹೊಸ ಕೃಷಿ ಉತ್ಪನ್ನ ಆರ್ಡರ್';
+
+  @override
+  String notifNewOrderBody(String code) {
+    return 'ಹೊಸ ಕೃಷಿ ಉತ್ಪನ್ನ ಆರ್ಡರ್ $code ಸ್ವೀಕರಿಸಲಾಗಿದೆ';
+  }
+
+  @override
+  String get notifOrderStatusTitle => 'ಉತ್ಪನ್ನ ಆರ್ಡರ್ ನವೀಕರಣ';
+
+  @override
+  String notifOrderStatusBody(String code, String status) {
+    return '$code ಸ್ಥಿತಿ $status ಗೆ ನವೀಕರಿಸಲಾಗಿದೆ';
+  }
+
+  @override
+  String get notifPaymentReceivedTitle => 'ಪಾವತಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ';
+
+  @override
+  String notifPaymentReceivedBody(String amount) {
+    return 'ಪಾವತಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ: $amount';
+  }
+
+  @override
+  String get notifSosAlertTitle => 'ತುರ್ತು ಎಸ್ಒಎಸ್ ಎಚ್ಚರಿಕೆ';
+
+  @override
+  String get notifSosAlertBody =>
+      'ತುರ್ತು ಎಸ್ಒಎಸ್ ಘಟನೆ ನೋಂದಾಯಿಸಲಾಗಿದೆ. ಸುರಕ್ಷತಾ ತಂಡವನ್ನು ಎಚ್ಚರಿಸಲಾಗಿದೆ.';
+
+  @override
+  String get notifClaimSubmittedTitle => 'ಕೆಲಸ ರಕ್ಷಣೆ ಕ್ಲೈಮ್';
+
+  @override
+  String notifClaimSubmittedBody(String type) {
+    return '$type ಗಾಗಿ ನಿಮ್ಮ ಕ್ಲೈಮ್ ಪರಿಶೀಲನೆಗೆ ನೋಂದಾಯಿಸಲಾಗಿದೆ.';
+  }
+
+  @override
+  String get notifGeneralTitle => 'ಸೂಚನೆ';
+
+  @override
+  String get notifGeneralBody => 'ಉದ್ಯೋಗ ಸೇತುವಿನಲ್ಲಿ ನಿಮಗೆ ಹೊಸ ನವೀಕರಣವಿದೆ.';
 }

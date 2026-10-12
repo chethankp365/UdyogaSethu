@@ -3819,4 +3819,86 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get locationPinNotice =>
       'ஜிபிஎஸ் பின் இல்லாமல் தள முகவரி வழங்கப்பட்டுள்ளது';
+
+  @override
+  String get safetyHubTitle => 'பாதுகாப்பு மற்றும் அவசர மையம்';
+
+  @override
+  String get emergencyContactsTitle => 'அவசர தொடர்புகள்';
+
+  @override
+  String get jobProtectionClaimTitle => 'வேலை பாதுகாப்பு கோரிக்கை';
+
+  @override
+  String get notificationCentreTitle => 'அறிவிப்பு மையம்';
+
+  @override
+  String get notifNewApplicantTitle => 'புதிய வேலை விண்ணப்பதாரர்';
+
+  @override
+  String notifNewApplicantBody(String worker, String job) {
+    return '$worker $job க்கு விண்ணப்பித்துள்ளார்';
+  }
+
+  @override
+  String get notifApplicationStatusTitle => 'விண்ணப்ப புதுப்பிப்பு';
+
+  @override
+  String notifApplicationStatusBody(String job, String status) {
+    return '$job க்கான உங்கள் விண்ணப்பம் $status ஆக புதுப்பிக்கப்பட்டது';
+  }
+
+  @override
+  String get notifAssignmentStatusTitle => 'முன்பதிவு நிலை புதுப்பிப்பு';
+
+  @override
+  String notifAssignmentStatusBody(String code, String status) {
+    return '$code இப்போது $status';
+  }
+
+  @override
+  String get notifNewOrderTitle => 'புதிய விவசாய விளைபொருள் ஆர்டர்';
+
+  @override
+  String notifNewOrderBody(String code) {
+    return 'புதிய விவசாய விளைபொருள் ஆர்டர் $code பெறப்பட்டது';
+  }
+
+  @override
+  String get notifOrderStatusTitle => 'விளைபொருள் ஆர்டர் புதுப்பிப்பு';
+
+  @override
+  String notifOrderStatusBody(String code, String status) {
+    return '$code நிலை $status ஆக புதுப்பிக்கப்பட்டது';
+  }
+
+  @override
+  String get notifPaymentReceivedTitle => 'பணம் பெறப்பட்டது';
+
+  @override
+  String notifPaymentReceivedBody(String amount) {
+    return 'பணம் பெறப்பட்டது: $amount';
+  }
+
+  @override
+  String get notifSosAlertTitle => 'அவசர எஸ்ஓஎஸ் எச்சரிக்கை';
+
+  @override
+  String get notifSosAlertBody =>
+      'அவசர எஸ்ஓஎஸ் சம்பவம் பதிவு செய்யப்பட்டது. பாதுகாப்புக் குழு எச்சரிக்கப்பட்டுள்ளது.';
+
+  @override
+  String get notifClaimSubmittedTitle => 'வேலை பாதுகாப்பு கோரிக்கை';
+
+  @override
+  String notifClaimSubmittedBody(String type) {
+    return '$type க்கான உங்கள் கோரிக்கை மதிப்பாய்வுக்கு பதிவு செய்யப்பட்டது.';
+  }
+
+  @override
+  String get notifGeneralTitle => 'அறிவிப்பு';
+
+  @override
+  String get notifGeneralBody =>
+      'உத்யோக சேதுவில் உங்களுக்கு புதிய புதுப்பிப்பு உள்ளது.';
 }

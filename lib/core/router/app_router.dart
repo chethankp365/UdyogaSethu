@@ -21,6 +21,10 @@ import 'package:udyogasethu/features/auth/presentation/login_screen.dart';
 import 'package:udyogasethu/features/auth/presentation/otp_screen.dart';
 import 'package:udyogasethu/features/auth/presentation/suspended_screen.dart';
 import 'package:udyogasethu/features/auth/presentation/verify_phone_screen.dart';
+import 'package:udyogasethu/features/safety/presentation/safety_hub_screen.dart';
+import 'package:udyogasethu/features/safety/presentation/emergency_contacts_screen.dart';
+import 'package:udyogasethu/features/safety/presentation/job_protection_claim_screen.dart';
+import 'package:udyogasethu/features/notifications/presentation/notification_centre_screen.dart';
 import 'package:udyogasethu/features/farmer/domain/farm_resource_model.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_home_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_listings_screen.dart';
@@ -603,6 +607,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.termsAndPrivacy,
         builder: (context, state) => const TermsPrivacyScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.safetyHub,
+        builder: (context, state) => const SafetyHubScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.emergencyContacts,
+        builder: (context, state) => const EmergencyContactsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.jobProtectionClaim,
+        builder: (context, state) => const JobProtectionClaimScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.notifications,
+        builder: (context, state) => const NotificationCentreScreen(),
       ),
       GoRoute(
         path: '/account/linked',

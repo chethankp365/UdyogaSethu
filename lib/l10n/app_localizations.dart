@@ -7067,6 +7067,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Site address provided without GPS pin'**
   String get locationPinNotice;
+
+  /// No description provided for @safetyHubTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Safety & Emergency Hub'**
+  String get safetyHubTitle;
+
+  /// No description provided for @emergencyContactsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency Contacts'**
+  String get emergencyContactsTitle;
+
+  /// No description provided for @jobProtectionClaimTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Protection Claim'**
+  String get jobProtectionClaimTitle;
+
+  /// No description provided for @notificationCentreTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Centre'**
+  String get notificationCentreTitle;
+
+  /// No description provided for @notifNewApplicantTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New Job Applicant'**
+  String get notifNewApplicantTitle;
+
+  /// No description provided for @notifNewApplicantBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{worker} applied for {job}'**
+  String notifNewApplicantBody(String worker, String job);
+
+  /// No description provided for @notifApplicationStatusTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Application Update'**
+  String get notifApplicationStatusTitle;
+
+  /// No description provided for @notifApplicationStatusBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your application for {job} was updated to {status}'**
+  String notifApplicationStatusBody(String job, String status);
+
+  /// No description provided for @notifAssignmentStatusTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking Status Update'**
+  String get notifAssignmentStatusTitle;
+
+  /// No description provided for @notifAssignmentStatusBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{code} is now {status}'**
+  String notifAssignmentStatusBody(String code, String status);
+
+  /// No description provided for @notifNewOrderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New Farm Produce Order'**
+  String get notifNewOrderTitle;
+
+  /// No description provided for @notifNewOrderBody.
+  ///
+  /// In en, this message translates to:
+  /// **'New farm produce order {code} received'**
+  String notifNewOrderBody(String code);
+
+  /// No description provided for @notifOrderStatusTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Produce Order Update'**
+  String get notifOrderStatusTitle;
+
+  /// No description provided for @notifOrderStatusBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{code} status updated to {status}'**
+  String notifOrderStatusBody(String code, String status);
+
+  /// No description provided for @notifPaymentReceivedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Received'**
+  String get notifPaymentReceivedTitle;
+
+  /// No description provided for @notifPaymentReceivedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment received: {amount}'**
+  String notifPaymentReceivedBody(String amount);
+
+  /// No description provided for @notifSosAlertTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'EMERGENCY SOS ALERT'**
+  String get notifSosAlertTitle;
+
+  /// No description provided for @notifSosAlertBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency SOS incident registered. Safety team alerted.'**
+  String get notifSosAlertBody;
+
+  /// No description provided for @notifClaimSubmittedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Protection Claim'**
+  String get notifClaimSubmittedTitle;
+
+  /// No description provided for @notifClaimSubmittedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your claim for {type} was registered for review.'**
+  String notifClaimSubmittedBody(String type);
+
+  /// No description provided for @notifGeneralTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification'**
+  String get notifGeneralTitle;
+
+  /// No description provided for @notifGeneralBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You have a new update in UdyogaSethu.'**
+  String get notifGeneralBody;
 }
 
 class _AppLocalizationsDelegate

@@ -1168,10 +1168,44 @@
   - `tool/check_overflow.bat`: All 3 suites passed with 0 overflows across 320-600dp and text scale 1.0-2.0.
   - Security grep: Confirmed `GEMINI_API_KEY` appears nowhere in code, app bundle, or git commits.
 
+### Phase 7.3 & 7.4: Safety Hub, SOS Escalation, Job Protection Claims & Push Notification Centre
+- **Status**: Completed (2026-10-12)
+- **Files created / updated**:
+  - `supabase/migrations/0730_sos_safety_and_claims.sql`: Database tables `sos_incidents`, `emergency_contacts`, `job_protection_claims`, with SECURITY DEFINER RPCs `add_emergency_contact`, `check_claim_eligibility`, `submit_protection_claim`.
+  - `supabase/migrations/0731_notifications_triggers_and_push.sql`: Device token table `user_device_tokens`, push notification triggers across `job_applications`, `job_assignments`, `orders`, and `payments`, plus RPCs `register_device_token`, `remove_device_token`, `mark_notification_read`, `mark_all_notifications_read`, `get_unread_notification_count`.
+  - `supabase/migrations/0732_fix_claim_eligibility_enum.sql` to `0734_fix_disputes_ref_id.sql`: Patches for claim eligibility enum types, provider ID lookup, and dispute reference ID consistency.
+  - `supabase/functions/sos-trigger/index.ts`: Authenticated Edge Function with rate limiting (max 3/hr), GPS coordinate logging, realtime admin escalation via notifications, and transparent reporting when SMS provider is unconfigured.
+  - `supabase/functions/send-push/index.ts` & `supabase/functions/_shared/fcm.ts`: FCM HTTP v1 message delivery with localized templates based on user profile language (`kn`, `hi`, `en`, `te`, `ta`), automatic dead token cleanup, and honest reporting of unconfigured credentials.
+  - `lib/features/safety/domain/`: `emergency_contact.dart`, `protection_claim.dart`, `sos_incident.dart`.
+  - `lib/features/safety/data/safety_repository.dart`: Supabase data repository with demo fallbacks and Edge Function integration.
+  - `lib/core/services/live_location_service.dart`: Riverpod 3 `Notifier<LiveLocationState>` for live GPS tracking during active assignments/incidents with 20m distance filter.
+  - `lib/features/safety/presentation/`:
+    - `safety_hub_screen.dart`: Safety & Emergency Hub screen with quick SOS trigger, emergency contacts card, live location sharing toggle, protection claims banner, and 24/7 helplines (112, 1091, 108, 14449).
+    - `emergency_contacts_screen.dart`: Management screen for up to 5 emergency contacts with relationship selection, instant validation, test alert modal, and delete support.
+    - `job_protection_claim_screen.dart`: Simulated claim submission with prominent Demo Mode disclaimer, real 4-point eligibility checklist fetched from active assignments, and submitted claims history.
+    - `widgets/sos_confirmation_dialog.dart`: Header pill popup with heavy haptic feedback, booking code display, safety disclaimer, one-tap trigger, and honest SMS status reporting.
+  - `lib/features/notifications/domain/app_notification.dart`: Localized notification model mapping `targetRoute` across job, assignment, wallet, orders, claims, and safety screens.
+  - `lib/features/notifications/data/notification_repository.dart`: Notification repository with Realtime streams and count badges.
+  - `lib/core/notifications/notification_service.dart`: FCM & Local Notifications service with token lifecycle, heads-up local alerts, and background/terminated deep link routing.
+  - `lib/features/notifications/presentation/notification_centre_screen.dart`: Notification Centre screen with day grouping (*Today*, *Yesterday*, *Earlier*), category filters (*All*, *Jobs*, *Orders*, *Payments*, *Safety*), mark all as read, and deep linking.
+  - `lib/features/notifications/presentation/widgets/notification_bell_badge.dart`: Reusable header bell widget with unread count badge.
+  - `lib/core/router/routes.dart` & `lib/core/router/app_router.dart`: Added routes `/safety/hub`, `/safety/emergency-contacts`, `/safety/job-protection-claim`, `/notifications`.
+  - Headers wired with `NotificationBellBadge` and SOS dialog: `SeekerHomeScreen`, `FarmerHomeScreen`, `FarmerHeaderCard`, `ProviderHomeScreen`.
+  - `lib/l10n/app_en.arb`, `app_kn.arb`, `app_hi.arb`, `app_te.arb`, `app_ta.arb`: Added 22 localized notification and safety keys.
+  - `test/safety_and_notifications_test.dart`: Complete unit & domain test suite covering SOS models, claim eligibility, and notification routing (6/6 passed).
+- **Verification**:
+  - `flutter analyze`: 0 issues found (clean).
+  - `tool/check_overflow.bat`: All 3 suites passed with 0 overflows across 320-600dp and text scale 1.0-2.0.
+  - `flutter test`: 561/561 tests passed across entire test suite.
+  - Supabase Edge Functions deployed and verified live:
+    - `sos-trigger`: healthy, returns `sms_configured: false`.
+    - `send-push`: healthy, returns `fcm_configured: false`.
+
 ## Known issues
 - **Profile & Auth Foreign Key Cascade vs D11 Retention**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`. The financial retention refactor will decouple `auth.users` deletion from audit records in an upcoming migration.
 - **Phase 6.3 - 6.5**: Farm equipment rental/labour hiring, buyer produce marketplace, and carts & checkout are upcoming phases (P6.7 & P6.8 completed).
 - **Phase 9 (Admin Console)**: Admin console is built in a separate web/desktop project and is out of scope for this Flutter app.
+
 
 
 

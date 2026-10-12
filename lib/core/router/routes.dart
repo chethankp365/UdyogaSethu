@@ -70,6 +70,9 @@ class AppRoutes {
   static const String privacyCentre = '/privacy-centre';
   static const String termsAndPrivacy = '/terms-privacy';
   static const String safetyHub = '/safety';
+  static const String emergencyContacts = '/safety/contacts';
+  static const String jobProtectionClaim = '/safety/claim';
+  static const String notifications = '/notifications';
   static const String wallet = '/wallet';
   static const String jobDetail = '/job/:id';
   static const String produceDetail = '/produce/:id';

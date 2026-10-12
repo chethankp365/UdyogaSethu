@@ -35,7 +35,171 @@ import 'package:udyogasethu/features/chat/data/chat_repository.dart';
 import 'package:udyogasethu/features/chat/domain/call_session.dart';
 import 'package:udyogasethu/features/chat/domain/chat_message.dart';
 import 'package:udyogasethu/features/chat/domain/chat_thread.dart';
+import 'package:udyogasethu/features/safety/presentation/safety_hub_screen.dart';
+import 'package:udyogasethu/features/safety/presentation/emergency_contacts_screen.dart';
+import 'package:udyogasethu/features/safety/presentation/job_protection_claim_screen.dart';
+import 'package:udyogasethu/features/safety/presentation/widgets/sos_confirmation_dialog.dart';
+import 'package:udyogasethu/features/safety/data/safety_repository.dart';
+import 'package:udyogasethu/features/safety/domain/emergency_contact.dart';
+import 'package:udyogasethu/features/safety/domain/protection_claim.dart';
+import 'package:udyogasethu/features/safety/domain/sos_incident.dart';
+import 'package:udyogasethu/features/notifications/presentation/notification_centre_screen.dart';
+import 'package:udyogasethu/features/notifications/data/notification_repository.dart';
+import 'package:udyogasethu/features/notifications/domain/app_notification.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
+
+class FakeSafetyRepository implements SafetyRepository {
+  @override
+  Future<SosIncident> triggerSos({
+    required double lat,
+    required double lng,
+    String? assignmentId,
+    String? bookingCode,
+  }) async {
+    return SosIncident(
+      id: 'fake_sos_01',
+      latitude: lat,
+      longitude: lng,
+      status: 'active',
+      emergencyContactsCount: 2,
+      smsConfigured: false,
+      smsSent: false,
+      message: 'SOS incident triggered',
+      createdAt: DateTime.now(),
+    );
+  }
+
+  @override
+  Future<List<EmergencyContact>> getEmergencyContacts() async {
+    return [
+      EmergencyContact(
+        id: 'contact_01',
+        name: 'Ramesh Patel',
+        phone: '+919845012345',
+        relation: 'Brother',
+        createdAt: DateTime.now(),
+      ),
+      EmergencyContact(
+        id: 'contact_02',
+        name: 'Sunita Sharma',
+        phone: '+919845054321',
+        relation: 'Spouse',
+        createdAt: DateTime.now(),
+      ),
+    ];
+  }
+
+  @override
+  Future<EmergencyContact> addEmergencyContact({
+    required String name,
+    required String phone,
+    String relation = 'Family',
+  }) async {
+    return EmergencyContact(
+      id: 'contact_new',
+      name: name,
+      phone: phone,
+      relation: relation,
+      createdAt: DateTime.now(),
+    );
+  }
+
+  @override
+  Future<void> deleteEmergencyContact(String id) async {}
+
+  @override
+  Future<ClaimEligibilityResult> checkClaimEligibility(String assignmentId) async {
+    return const ClaimEligibilityResult(
+      eligible: true,
+      qrOk: true,
+      selfieGpsOk: true,
+      timerOk: true,
+      evidenceOk: true,
+      durationMinutes: 120,
+      evidenceCount: 2,
+    );
+  }
+
+  @override
+  Future<ProtectionClaim> submitProtectionClaim({
+    required String assignmentId,
+    required String claimType,
+    required int amountPaise,
+    required String details,
+  }) async {
+    return ProtectionClaim(
+      id: 'claim_new',
+      claimCode: 'CLM-9821',
+      assignmentId: assignmentId,
+      claimType: claimType,
+      amountPaise: amountPaise,
+      details: details,
+      status: 'submitted',
+      isSimulated: true,
+      createdAt: DateTime.now(),
+    );
+  }
+
+  @override
+  Future<List<ProtectionClaim>> getSubmittedClaims() async {
+    return [];
+  }
+}
+
+class FakeNotificationRepository implements NotificationRepository {
+  final List<AppNotification> _demo = [
+    AppNotification(
+      id: 'notif_01',
+      userId: 'test_user_01',
+      type: 'assignment_status',
+      titleKey: 'notif_assignment_status_title',
+      bodyKey: 'notif_assignment_status_body',
+      params: const {'booking_code': 'BOOK-9842', 'status': 'confirmed'},
+      createdAt: DateTime.now(),
+    ),
+    AppNotification(
+      id: 'notif_02',
+      userId: 'test_user_01',
+      type: 'payment_update',
+      titleKey: 'notif_payment_received_title',
+      bodyKey: 'notif_payment_received_body',
+      params: const {'amount': '₹850'},
+      readAt: DateTime.now().subtract(const Duration(days: 1)),
+      createdAt: DateTime.now().subtract(const Duration(days: 1)),
+    ),
+    AppNotification(
+      id: 'notif_03',
+      userId: 'test_user_01',
+      type: 'sos_alert',
+      titleKey: 'notif_sos_alert_title',
+      bodyKey: 'notif_sos_alert_body',
+      params: const {'sos_id': 'sos-606'},
+      readAt: DateTime.now().subtract(const Duration(days: 3)),
+      createdAt: DateTime.now().subtract(const Duration(days: 3)),
+    ),
+  ];
+
+  @override
+  Stream<List<AppNotification>> streamNotifications() => Stream.value(_demo);
+
+  @override
+  Future<List<AppNotification>> getNotifications() async => _demo;
+
+  @override
+  Future<void> markRead(String notificationId) async {}
+
+  @override
+  Future<void> markAllRead() async {}
+
+  @override
+  Future<int> getUnreadCount() async => 1;
+
+  @override
+  Future<void> registerDeviceToken(String token, {String platform = 'android'}) async {}
+
+  @override
+  Future<void> removeDeviceToken(String token) async {}
+}
 
 class FakeChatRepository implements ChatRepository {
   @override
@@ -1186,6 +1350,61 @@ void main() {
           bookingCode: 'BOOK-9842',
         ),
         overrides: [chatRepositoryProvider.overrideWithValue(FakeChatRepository())],
+      );
+    });
+
+    testWidgets('SafetyHubScreen layout overflow check', (tester) async {
+      await runOverflowMatrix(
+        tester: tester,
+        testName: 'SafetyHubScreen',
+        builder: (ctx, l10n) => const SafetyHubScreen(),
+        overrides: [
+          safetyRepositoryProvider.overrideWithValue(FakeSafetyRepository()),
+        ],
+      );
+    });
+
+    testWidgets('EmergencyContactsScreen layout overflow check', (tester) async {
+      await runOverflowMatrix(
+        tester: tester,
+        testName: 'EmergencyContactsScreen',
+        builder: (ctx, l10n) => const EmergencyContactsScreen(),
+        overrides: [
+          safetyRepositoryProvider.overrideWithValue(FakeSafetyRepository()),
+        ],
+      );
+    });
+
+    testWidgets('JobProtectionClaimScreen layout overflow check', (tester) async {
+      await runOverflowMatrix(
+        tester: tester,
+        testName: 'JobProtectionClaimScreen',
+        builder: (ctx, l10n) => const JobProtectionClaimScreen(),
+        overrides: [
+          safetyRepositoryProvider.overrideWithValue(FakeSafetyRepository()),
+        ],
+      );
+    });
+
+    testWidgets('NotificationCentreScreen layout overflow check', (tester) async {
+      await runOverflowMatrix(
+        tester: tester,
+        testName: 'NotificationCentreScreen',
+        builder: (ctx, l10n) => const NotificationCentreScreen(),
+        overrides: [
+          notificationRepositoryProvider.overrideWithValue(FakeNotificationRepository()),
+        ],
+      );
+    });
+
+    testWidgets('SosConfirmationDialog layout overflow check', (tester) async {
+      await runOverflowMatrix(
+        tester: tester,
+        testName: 'dialog_sos_confirmation_dialog',
+        builder: (ctx, l10n) => const SosConfirmationDialog(bookingCode: 'BOOK-9842'),
+        overrides: [
+          safetyRepositoryProvider.overrideWithValue(FakeSafetyRepository()),
+        ],
       );
     });
   });

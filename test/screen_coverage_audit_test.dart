@@ -70,6 +70,9 @@ void main() {
       AppRoutes.privacyCentre,
       AppRoutes.termsAndPrivacy,
       AppRoutes.safetyHub,
+      AppRoutes.emergencyContacts,
+      AppRoutes.jobProtectionClaim,
+      AppRoutes.notifications,
       AppRoutes.wallet,
       AppRoutes.jobDetail,
       AppRoutes.produceDetail,
@@ -155,6 +158,7 @@ void main() {
       'dialog_create_subscription_modal',
       'dialog_create_group_order_modal',
       'dialog_join_group_order_modal',
+      'dialog_sos_confirmation_dialog',
     ];
 
     /// Explicitly documented exemptions with valid rationales.
@@ -176,8 +180,6 @@ void main() {
           'Debug-only thumbnail gallery viewer with multilingual lettering preview gated under kDebugMode',
       AppRoutes.devJobVisibility:
           'Debug-only SQL audience visibility and diagnostic inspector gated under kDebugMode',
-      AppRoutes.safetyHub:
-          'Placeholder screen awaiting emergency SOS and Safety Hub implementation in Phase P7.3',
     };
 
     /// Screens, shells, and dialogs covered in the comprehensive overflow matrix suite
@@ -255,6 +257,10 @@ void main() {
       AppRoutes.trustGovernanceRights,
       AppRoutes.privacyCentre,
       AppRoutes.termsAndPrivacy,
+      AppRoutes.safetyHub,
+      AppRoutes.emergencyContacts,
+      AppRoutes.jobProtectionClaim,
+      AppRoutes.notifications,
 
       // Money & Marketplace
       AppRoutes.wallet,
@@ -316,6 +322,7 @@ void main() {
       'dialog_create_subscription_modal',
       'dialog_create_group_order_modal',
       'dialog_join_group_order_modal',
+      'dialog_sos_confirmation_dialog',
     };
 
     test('All AppRoutes must be covered by overflow tests or have explicit exemptions', () {

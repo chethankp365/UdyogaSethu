@@ -3775,4 +3775,85 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get locationPinNotice =>
       'जीपीएस पिन के बिना साइट का पता प्रदान किया गया है';
+
+  @override
+  String get safetyHubTitle => 'सुरक्षा और आपातकालीन केंद्र';
+
+  @override
+  String get emergencyContactsTitle => 'आपातकालीन संपर्क';
+
+  @override
+  String get jobProtectionClaimTitle => 'कार्य सुरक्षा दावा';
+
+  @override
+  String get notificationCentreTitle => 'सूचना केंद्र';
+
+  @override
+  String get notifNewApplicantTitle => 'नया नौकरी आवेदक';
+
+  @override
+  String notifNewApplicantBody(String worker, String job) {
+    return '$worker ने $job के लिए आवेदन किया है';
+  }
+
+  @override
+  String get notifApplicationStatusTitle => 'आवेदन अपडेट';
+
+  @override
+  String notifApplicationStatusBody(String job, String status) {
+    return '$job के लिए आपका आवेदन $status में अपडेट किया गया है';
+  }
+
+  @override
+  String get notifAssignmentStatusTitle => 'बुकिंग स्थिति अपडेट';
+
+  @override
+  String notifAssignmentStatusBody(String code, String status) {
+    return '$code अब $status है';
+  }
+
+  @override
+  String get notifNewOrderTitle => 'नया कृषि उत्पाद ऑर्डर';
+
+  @override
+  String notifNewOrderBody(String code) {
+    return 'नया कृषि उत्पाद ऑर्डर $code प्राप्त हुआ';
+  }
+
+  @override
+  String get notifOrderStatusTitle => 'उत्पाद ऑर्डर अपडेट';
+
+  @override
+  String notifOrderStatusBody(String code, String status) {
+    return '$code स्थिति $status में अपडेट की गई';
+  }
+
+  @override
+  String get notifPaymentReceivedTitle => 'भुगतान प्राप्त हुआ';
+
+  @override
+  String notifPaymentReceivedBody(String amount) {
+    return 'भुगतान प्राप्त हुआ: $amount';
+  }
+
+  @override
+  String get notifSosAlertTitle => 'आपातकालीन एसओएस अलर्ट';
+
+  @override
+  String get notifSosAlertBody =>
+      'आपातकालीन एसओएस घटना दर्ज की गई। सुरक्षा दल को सतर्क कर दिया गया है।';
+
+  @override
+  String get notifClaimSubmittedTitle => 'कार्य सुरक्षा दावा';
+
+  @override
+  String notifClaimSubmittedBody(String type) {
+    return '$type के लिए आपका दावा समीक्षा के लिए दर्ज किया गया है।';
+  }
+
+  @override
+  String get notifGeneralTitle => 'सूचना';
+
+  @override
+  String get notifGeneralBody => 'उद्योगसेतु में आपके लिए नया अपडेट है।';
 }

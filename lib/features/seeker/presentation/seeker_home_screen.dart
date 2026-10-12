@@ -14,6 +14,9 @@ import 'package:udyogasethu/features/seeker/domain/seeker_profile_draft.dart';
 import 'package:udyogasethu/features/seeker/presentation/my_applications_controller.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_home_controller.dart';
 import 'package:udyogasethu/features/earnings/data/earnings_repository.dart';
+import 'package:udyogasethu/core/services/live_location_service.dart';
+import 'package:udyogasethu/features/safety/presentation/widgets/sos_confirmation_dialog.dart';
+import 'package:udyogasethu/features/notifications/presentation/widgets/notification_bell_badge.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class SeekerHomeScreen extends ConsumerStatefulWidget {
@@ -258,40 +261,7 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> with Widget
   }
 
   void _showSosDialog() {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Row(
-          children: [
-            Icon(Icons.shield_rounded, color: Colors.red),
-            SizedBox(width: 8),
-            Text('Emergency SOS', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
-          ],
-        ),
-        content: const Text(
-          'Do you need immediate assistance? This will alert your emergency contacts and share your live GPS location.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
-            onPressed: () {
-              Navigator.pop(ctx);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('SOS Alert sent to Emergency Network!'),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            },
-            child: const Text('Trigger SOS'),
-          ),
-        ],
-      ),
-    );
+    SosConfirmationDialog.show(context);
   }
 
   void _showDailyGoalDialog(BuildContext context, int currentGoalPaise) {
@@ -776,26 +746,8 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> with Widget
 
               const SizedBox(width: 10),
 
-              // Notification bell with unread dot
-              Stack(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.notifications_none_rounded, color: Colors.white, size: 22),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
-                    onPressed: () => context.push(AppRoutes.kycSafetyOnboarding),
-                  ),
-                  Positioned(
-                    right: 2,
-                    top: 2,
-                    child: Container(
-                      width: 7,
-                      height: 7,
-                      decoration: const BoxDecoration(color: Colors.orangeAccent, shape: BoxShape.circle),
-                    ),
-                  ),
-                ],
-              ),
+              // Notification bell with unread badge
+              const NotificationBellBadge(iconColor: Colors.white),
 
               const SizedBox(width: 10),
 
@@ -885,6 +837,31 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> with Widget
               ],
             ),
           ),
+
+          // Live Location Sharing Active Banner (Step P7.3)
+          if (ref.watch(liveLocationProvider).isSharing) ...[
+            Container(
+              margin: const EdgeInsets.only(top: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF10B981).withAlpha(40),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: const Color(0xFF34D399)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.location_searching, color: Color(0xFF34D399), size: 18),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Live location sharing active for safety on assignment #${ref.watch(liveLocationProvider).activeBookingCode ?? 'ACTIVE'}',
+                      style: const TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
 
           const SizedBox(height: 14),
 
@@ -1201,7 +1178,7 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> with Widget
                 iconColor: const Color(0xFFF97316),
                 bgColor: const Color(0xFFFFF3E0),
                 label: 'Safety Hub',
-                onTap: () => context.push(AppRoutes.trustSafetyCentre),
+                onTap: () => context.push(AppRoutes.safetyHub),
               ),
             ),
           ],

@@ -10,6 +10,8 @@ import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/theme/app_theme.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
+import 'package:udyogasethu/core/notifications/notification_service.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -55,11 +57,31 @@ void main() async {
   );
 }
 
-class UdyogaSethuApp extends ConsumerWidget {
+class UdyogaSethuApp extends ConsumerStatefulWidget {
   const UdyogaSethuApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<UdyogaSethuApp> createState() => _UdyogaSethuAppState();
+}
+
+class _UdyogaSethuAppState extends ConsumerState<UdyogaSethuApp> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (Env.isConfigured) {
+        ref.read(notificationServiceProvider).initialize(
+          onNavigate: (route) {
+            ref.read(appRouterProvider).push(route);
+          },
+        );
+        ref.read(notificationServiceProvider).requestPermissionAndRegister();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     if (!Env.isConfigured) {
       return const MissingEnvScreen();
     }

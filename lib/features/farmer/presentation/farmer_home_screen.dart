@@ -20,6 +20,8 @@ import 'package:udyogasethu/features/farmer/presentation/widgets/mandi_prices_se
 import 'package:udyogasethu/features/farmer/presentation/widgets/weather_advisory_card.dart';
 import 'package:udyogasethu/features/provider/data/provider_jobs_repository.dart';
 import 'package:udyogasethu/features/provider/domain/job_post_draft.dart';
+import 'package:udyogasethu/features/safety/presentation/widgets/sos_confirmation_dialog.dart';
+import 'package:udyogasethu/features/notifications/presentation/widgets/notification_bell_badge.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 final nearbyEquipmentProvider = FutureProvider<List<FarmResource>>((ref) async {
@@ -445,12 +447,22 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
           ],
         ),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.health_and_safety_rounded),
+            tooltip: 'Safety & Protection Hub',
+            onPressed: () => context.push(AppRoutes.safetyHub),
+          ),
+          const NotificationBellBadge(),
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert_rounded),
             tooltip: 'Options',
             onSelected: (val) {
               if (val == 'language') {
                 context.push(AppRoutes.language);
+              } else if (val == 'safety_hub') {
+                context.push(AppRoutes.safetyHub);
+              } else if (val == 'emergency_sos') {
+                SosConfirmationDialog.show(context);
               } else if (val == 'simulate_rain') {
                 ref.read(simulatedRainForecastProvider.notifier).toggle();
                 ref.invalidate(farmerWeatherAdvisoryProvider);
@@ -477,6 +489,26 @@ class _FarmerHomeScreenState extends ConsumerState<FarmerHomeScreen> {
                     const Icon(Icons.language_rounded, size: 20, color: Color(0xFF0D6548)),
                     const SizedBox(width: 8),
                     Text(l10n?.languageScreenTitle ?? 'Language'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'safety_hub',
+                child: Row(
+                  children: [
+                    Icon(Icons.health_and_safety_rounded, size: 20, color: Color(0xFF0D6548)),
+                    SizedBox(width: 8),
+                    Text('Safety & Protection Hub'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'emergency_sos',
+                child: Row(
+                  children: [
+                    Icon(Icons.emergency_rounded, size: 20, color: Color(0xFFDC2626)),
+                    SizedBox(width: 8),
+                    Text('Emergency SOS', style: TextStyle(color: Color(0xFFDC2626), fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),

@@ -6,6 +6,7 @@ import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/widgets/user_avatar.dart';
 import 'package:udyogasethu/features/farmer/data/farmer_home_repository.dart';
 import 'package:udyogasethu/features/farmer/domain/farmer_profile_draft.dart';
+import 'package:udyogasethu/features/safety/presentation/widgets/sos_confirmation_dialog.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class FarmerHeaderCard extends StatelessWidget {
@@ -93,6 +94,34 @@ class FarmerHeaderCard extends StatelessWidget {
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                           color: Colors.white.withValues(alpha: 0.85),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () => SosConfirmationDialog.show(context),
+                      borderRadius: BorderRadius.circular(16),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFDC2626),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.emergency_rounded, color: Colors.white, size: 10),
+                            SizedBox(width: 3),
+                            Text(
+                              'SOS',
+                              style: TextStyle(
+                                fontSize: 9.5,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0.5,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),

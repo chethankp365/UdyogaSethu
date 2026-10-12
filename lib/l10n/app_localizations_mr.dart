@@ -3771,4 +3771,85 @@ class AppLocalizationsMr extends AppLocalizations {
   @override
   String get locationPinNotice =>
       'जीपीएस पिन शिवाय कामाचे ठिकाण पत्ता दिला आहे';
+
+  @override
+  String get safetyHubTitle => 'Safety & Emergency Hub';
+
+  @override
+  String get emergencyContactsTitle => 'Emergency Contacts';
+
+  @override
+  String get jobProtectionClaimTitle => 'Job Protection Claim';
+
+  @override
+  String get notificationCentreTitle => 'Notification Centre';
+
+  @override
+  String get notifNewApplicantTitle => 'New Job Applicant';
+
+  @override
+  String notifNewApplicantBody(String worker, String job) {
+    return '$worker applied for $job';
+  }
+
+  @override
+  String get notifApplicationStatusTitle => 'Application Update';
+
+  @override
+  String notifApplicationStatusBody(String job, String status) {
+    return 'Your application for $job was updated to $status';
+  }
+
+  @override
+  String get notifAssignmentStatusTitle => 'Booking Status Update';
+
+  @override
+  String notifAssignmentStatusBody(String code, String status) {
+    return '$code is now $status';
+  }
+
+  @override
+  String get notifNewOrderTitle => 'New Farm Produce Order';
+
+  @override
+  String notifNewOrderBody(String code) {
+    return 'New farm produce order $code received';
+  }
+
+  @override
+  String get notifOrderStatusTitle => 'Produce Order Update';
+
+  @override
+  String notifOrderStatusBody(String code, String status) {
+    return '$code status updated to $status';
+  }
+
+  @override
+  String get notifPaymentReceivedTitle => 'Payment Received';
+
+  @override
+  String notifPaymentReceivedBody(String amount) {
+    return 'Payment received: $amount';
+  }
+
+  @override
+  String get notifSosAlertTitle => 'EMERGENCY SOS ALERT';
+
+  @override
+  String get notifSosAlertBody =>
+      'Emergency SOS incident registered. Safety team alerted.';
+
+  @override
+  String get notifClaimSubmittedTitle => 'Job Protection Claim';
+
+  @override
+  String notifClaimSubmittedBody(String type) {
+    return 'Your claim for $type was registered for review.';
+  }
+
+  @override
+  String get notifGeneralTitle => 'Notification';
+
+  @override
+  String get notifGeneralBody => 'You have a new update in UdyogaSethu.';
 }

@@ -1399,5 +1399,66 @@
   "apmcMandiLabel": "Registered APMC Mandi",
   "farmDetailsUpdatedSuccess": "Farm details updated successfully",
   "selfDeclaredProfile": "SELF-DECLARED PROFILE",
-  "locationPinNotice": "Site address provided without GPS pin"
+  "locationPinNotice": "Site address provided without GPS pin",
+  "safetyHubTitle": "Safety & Emergency Hub",
+  "emergencyContactsTitle": "Emergency Contacts",
+  "jobProtectionClaimTitle": "Job Protection Claim",
+  "notificationCentreTitle": "Notification Centre",
+  "notifNewApplicantTitle": "New Job Applicant",
+  "notifNewApplicantBody": "{worker} applied for {job}",
+  "@notifNewApplicantBody": {
+    "placeholders": {
+      "worker": { "type": "String" },
+      "job": { "type": "String" }
+    }
+  },
+  "notifApplicationStatusTitle": "Application Update",
+  "notifApplicationStatusBody": "Your application for {job} was updated to {status}",
+  "@notifApplicationStatusBody": {
+    "placeholders": {
+      "job": { "type": "String" },
+      "status": { "type": "String" }
+    }
+  },
+  "notifAssignmentStatusTitle": "Booking Status Update",
+  "notifAssignmentStatusBody": "{code} is now {status}",
+  "@notifAssignmentStatusBody": {
+    "placeholders": {
+      "code": { "type": "String" },
+      "status": { "type": "String" }
+    }
+  },
+  "notifNewOrderTitle": "New Farm Produce Order",
+  "notifNewOrderBody": "New farm produce order {code} received",
+  "@notifNewOrderBody": {
+    "placeholders": {
+      "code": { "type": "String" }
+    }
+  },
+  "notifOrderStatusTitle": "Produce Order Update",
+  "notifOrderStatusBody": "{code} status updated to {status}",
+  "@notifOrderStatusBody": {
+    "placeholders": {
+      "code": { "type": "String" },
+      "status": { "type": "String" }
+    }
+  },
+  "notifPaymentReceivedTitle": "Payment Received",
+  "notifPaymentReceivedBody": "Payment received: {amount}",
+  "@notifPaymentReceivedBody": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "notifSosAlertTitle": "EMERGENCY SOS ALERT",
+  "notifSosAlertBody": "Emergency SOS incident registered. Safety team alerted.",
+  "notifClaimSubmittedTitle": "Job Protection Claim",
+  "notifClaimSubmittedBody": "Your claim for {type} was registered for review.",
+  "@notifClaimSubmittedBody": {
+    "placeholders": {
+      "type": { "type": "String" }
+    }
+  },
+  "notifGeneralTitle": "Notification",
+  "notifGeneralBody": "You have a new update in UdyogaSethu."
 }

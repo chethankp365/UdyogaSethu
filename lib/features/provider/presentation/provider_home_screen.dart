@@ -18,8 +18,10 @@ import 'package:udyogasethu/features/provider/presentation/provider_jobs_control
 import 'package:udyogasethu/features/provider/presentation/provider_wizard_controller.dart';
 import 'package:udyogasethu/features/provider/presentation/worker_search_controller.dart';
 import 'package:udyogasethu/features/marketplace/presentation/subscriptions_hub_tab.dart';
-import 'package:udyogasethu/features/chat/data/chat_repository.dart';
 import 'package:udyogasethu/features/provider/presentation/widgets/buyer_produce_tab.dart';
+import 'package:udyogasethu/features/chat/data/chat_repository.dart';
+import 'package:udyogasethu/features/safety/presentation/widgets/sos_confirmation_dialog.dart';
+import 'package:udyogasethu/features/notifications/presentation/widgets/notification_bell_badge.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 final providerHomeProfileProvider = FutureProvider<ProviderProfileDraft>((ref) async {
@@ -134,6 +136,12 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
         elevation: 0,
         title: const Text('Provider Home', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.health_and_safety_rounded),
+            tooltip: 'Safety & Protection Hub',
+            onPressed: () => context.push(AppRoutes.safetyHub),
+          ),
+          const NotificationBellBadge(),
           IconButton(
             icon: const Icon(Icons.translate_rounded),
             tooltip: 'Language',
@@ -315,6 +323,33 @@ class _ProviderHomeScreenState extends ConsumerState<ProviderHomeScreen> with Ti
                       style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
                     ),
                   ],
+                ),
+              ),
+              InkWell(
+                onTap: () => SosConfirmationDialog.show(context),
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFDC2626),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.emergency_rounded, size: 14, color: Colors.white),
+                      SizedBox(width: 4),
+                      Text(
+                        'SOS',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

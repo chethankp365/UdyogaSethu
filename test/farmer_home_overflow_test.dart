@@ -8,6 +8,8 @@ import 'package:udyogasethu/features/farmer/domain/farmer_profile_draft.dart';
 import 'package:udyogasethu/features/farmer/domain/mandi_price_model.dart';
 import 'package:udyogasethu/features/farmer/domain/weather_advisory_model.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_home_screen.dart';
+import 'package:udyogasethu/features/notifications/data/notification_repository.dart';
+import 'package:udyogasethu/features/notifications/domain/app_notification.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 void main() {
@@ -206,6 +208,7 @@ void main() {
                   mandiPricesProvider.overrideWith((ref) => Future.value(sampleMandiPrices)),
                   farmerWeatherAdvisoryProvider.overrideWith((ref) => Future.value(sampleWeather)),
                   nearbyEquipmentProvider.overrideWith((ref) => Future.value(sampleResources)),
+                  notificationsStreamProvider.overrideWith((ref) => Stream.value(<AppNotification>[])),
                 ],
                 child: MaterialApp(
                   locale: loc,
