@@ -1359,5 +1359,12 @@
   "notifClaimSubmittedTitle": "ఉద్యోగ రక్షణ క్లెయిమ్",
   "notifClaimSubmittedBody": "{type} కోసం మీ క్లెయిమ్ సమీక్ష కోసం నమోదు చేయబడింది.",
   "notifGeneralTitle": "నోటిఫికేషన్",
-  "notifGeneralBody": "ఉద్యోగసేతులో మీకు కొత్త అప్‌డేట్ ఉంది."
+  "notifGeneralBody": "ఉద్యోగసేతులో మీకు కొత్త అప్‌డేట్ ఉంది.",
+  "voiceAssistantTitle": "AI బహుభాషా వాయిస్ అసిస్టెంట్",
+  "voiceExampleCommandsTitle": "నేరుగా శోధించడానికి ఉదాహరణ ఆదేశాన్ని నొక్కండి",
+  "voiceListening": "మీ వాయిస్ వినబడుతోంది...",
+  "voiceInstruction": "మైక్ నొక్కి కన్నడ, హిందీ, తెలుగు, తమిళం లేదా ఇంగ్లీషులో మాట్లాడండి",
+  "voiceProcessing": "ఆదేశాన్ని అర్థం చేసుకుంటోంది...",
+  "voiceListeningStop": "🎙 వినబడుతోంది... (ఆపడానికి నొక్కండి)",
+  "voiceTapToSpeak": "🎙 మాట్లాడటానికి నొక్కండి"
 }

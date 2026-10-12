@@ -3852,4 +3852,27 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get notifGeneralBody => 'You have a new update in UdyogaSethu.';
+
+  @override
+  String get voiceAssistantTitle => 'AI MULTILINGUAL VOICE ASSISTANT';
+
+  @override
+  String get voiceExampleCommandsTitle =>
+      'TAP EXAMPLE COMMAND TO DIRECT SEARCH';
+
+  @override
+  String get voiceListening => 'Listening to your voice...';
+
+  @override
+  String get voiceInstruction =>
+      'Tap mic and speak in Kannada, Hindi, Telugu, Tamil or English';
+
+  @override
+  String get voiceProcessing => 'Understanding command...';
+
+  @override
+  String get voiceListeningStop => '🎙 Listening... (Tap to stop)';
+
+  @override
+  String get voiceTapToSpeak => '🎙 Tap to Speak';
 }

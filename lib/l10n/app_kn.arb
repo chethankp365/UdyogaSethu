@@ -1359,5 +1359,12 @@
   "notifClaimSubmittedTitle": "ಕೆಲಸ ರಕ್ಷಣೆ ಕ್ಲೈಮ್",
   "notifClaimSubmittedBody": "{type} ಗಾಗಿ ನಿಮ್ಮ ಕ್ಲೈಮ್ ಪರಿಶೀಲನೆಗೆ ನೋಂದಾಯಿಸಲಾಗಿದೆ.",
   "notifGeneralTitle": "ಸೂಚನೆ",
-  "notifGeneralBody": "ಉದ್ಯೋಗ ಸೇತುವಿನಲ್ಲಿ ನಿಮಗೆ ಹೊಸ ನವೀಕರಣವಿದೆ."
+  "notifGeneralBody": "ಉದ್ಯೋಗ ಸೇತುವಿನಲ್ಲಿ ನಿಮಗೆ ಹೊಸ ನವೀಕರಣವಿದೆ.",
+  "voiceAssistantTitle": "ಎಐ ಬಹುಭಾಷಾ ಧ್ವನಿ ಸಹಾಯಕ",
+  "voiceExampleCommandsTitle": "ನೇರ ಹುಡುಕಾಟಕ್ಕಾಗಿ ಉದಾಹರಣೆ ಆಜ್ಞೆಯನ್ನು ಒತ್ತಿ",
+  "voiceListening": "ನಿಮ್ಮ ಧ್ವನಿಯನ್ನು ಆಲಿಸಲಾಗುತ್ತಿದೆ...",
+  "voiceInstruction": "ಮೈಕ್ ಒತ್ತಿ ಕನ್ನಡ, ಹಿಂದಿ, ತೆಲುಗು, ತಮಿಳು ಅಥವಾ ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿ ಮಾತನಾಡಿ",
+  "voiceProcessing": "ಆಜ್ಞೆಯನ್ನು ಗ್ರಹಿಸಲಾಗುತ್ತಿದೆ...",
+  "voiceListeningStop": "🎙 ಆಲಿಸಲಾಗುತ್ತಿದೆ... (ನಿಲ್ಲಿಸಲು ಒತ್ತಿ)",
+  "voiceTapToSpeak": "🎙 ಮಾತನಾಡಲು ಒತ್ತಿ"
 }

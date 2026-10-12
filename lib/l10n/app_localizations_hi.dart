@@ -3856,4 +3856,28 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get notifGeneralBody => 'उद्योगसेतु में आपके लिए नया अपडेट है।';
+
+  @override
+  String get voiceAssistantTitle => 'एआई बहुभाषी वॉयस सहायक';
+
+  @override
+  String get voiceExampleCommandsTitle =>
+      'सीधी खोज के लिए उदाहरण आदेश पर टैप करें';
+
+  @override
+  String get voiceListening => 'आपकी आवाज़ सुनी जा रही है...';
+
+  @override
+  String get voiceInstruction =>
+      'माइक दबाएं और कन्नड़, हिंदी, तेलुगु, तमिल या अंग्रेजी में बोलें';
+
+  @override
+  String get voiceProcessing => 'आदेश समझा जा रहा है...';
+
+  @override
+  String get voiceListeningStop =>
+      '🎙 सुना जा रहा है... (रोकने के लिए टैप करें)';
+
+  @override
+  String get voiceTapToSpeak => '🎙 बोलने के लिए टैप करें';
 }

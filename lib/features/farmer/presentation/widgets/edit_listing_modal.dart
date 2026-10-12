@@ -747,6 +747,21 @@ class _EditListingModalState extends ConsumerState<EditListingModal> {
                   ),
                 ),
               ),
+              InkWell(
+                onTap: () => _showPriceExplainerDialog(context, sug),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  child: Text(
+                    'Why?',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF047857),
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 4),
@@ -772,6 +787,57 @@ class _EditListingModalState extends ConsumerState<EditListingModal> {
                 style: const TextStyle(color: Colors.white, fontSize: 10.5, fontWeight: FontWeight.bold),
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showPriceExplainerDialog(BuildContext context, PriceSuggestion sug) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Row(
+          children: [
+            Icon(Icons.analytics_rounded, color: Color(0xFF047857)),
+            SizedBox(width: 8),
+            Expanded(
+              child: Text('Price Suggestion Explained', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Commodity: ${sug.commodity.toUpperCase()}',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              sug.explanation,
+              style: const TextStyle(fontSize: 13, color: Color(0xFF1E293B), height: 1.35),
+            ),
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: const Color(0xFFECFDF5),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Text(
+                'Farmers retain 100% control of their pricing. This rule-based suggestion acts only as an advisory guideline based on current APMC wholesale trends.',
+                style: TextStyle(fontSize: 11.5, color: Color(0xFF064E3B)),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Close', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF047857))),
           ),
         ],
       ),

@@ -159,6 +159,8 @@ void main() {
       'dialog_create_group_order_modal',
       'dialog_join_group_order_modal',
       'dialog_sos_confirmation_dialog',
+      'dialog_voice_assistant_modal',
+      'dialog_why_this_job_sheet',
     ];
 
     /// Explicitly documented exemptions with valid rationales.
@@ -323,6 +325,8 @@ void main() {
       'dialog_create_group_order_modal',
       'dialog_join_group_order_modal',
       'dialog_sos_confirmation_dialog',
+      'dialog_voice_assistant_modal',
+      'dialog_why_this_job_sheet',
     };
 
     test('All AppRoutes must be covered by overflow tests or have explicit exemptions', () {

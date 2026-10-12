@@ -19,6 +19,8 @@ import 'package:udyogasethu/core/services/job_thumbnail_service.dart';
 import 'package:udyogasethu/core/services/thumbnail_library.dart';
 import 'package:udyogasethu/core/widgets/app_thumbnail.dart' as ui;
 import 'package:udyogasethu/core/widgets/thumbnail_picker_sheet.dart';
+import 'package:udyogasethu/features/matching/data/recommendation_pricing_service.dart';
+import 'package:udyogasethu/features/matching/presentation/widgets/fair_wage_card.dart';
 import 'package:udyogasethu/features/seeker/domain/seeker_profile_draft.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
@@ -1096,57 +1098,24 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
           ],
         ),
 
-        // FAIR WAGE BAND HINT
+        // FAIR WAGE CARD (Benchmark, multipliers, explanation sheet & warning)
         if (draft.minWagePaiseHint != null && draft.maxWagePaiseHint != null) ...[
           const SizedBox(height: 12),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-            decoration: BoxDecoration(
-              color: AppColors.paleMint.withValues(alpha: 0.6),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.cardBorderGreen),
-            ),
-            child: Row(
-              children: [
-                const Icon(Icons.analytics_outlined, color: AppColors.headerGreenDark, size: 20),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    '${l10n.postJobFairWageBandTitle} ${l10n.postJobFairWageBandRange((draft.minWagePaiseHint! / 100).round(), (draft.maxWagePaiseHint! / 100).round(), draft.wageBandUnit)}',
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.headerGreenDark),
-                  ),
+          FairWageCard(
+            suggestion: ref.watch(recommendationPricingServiceProvider).calculateWageSuggestion(
+                  benchmarkMinPaise: draft.minWagePaiseHint!,
+                  benchmarkMaxPaise: draft.maxWagePaiseHint!,
+                  unit: draft.wageBandUnit,
+                  yearsOfExperience: 2,
+                  isUrgent: false,
+                  isHighDemand: true,
                 ),
-              ],
-            ),
-          ),
-        ],
-
-        // BELOW FAIR WAGE WARNING (Warn, never block)
-        if (draft.isBelowFairWage) ...[
-          const SizedBox(height: 10),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: AppColors.amberOrange.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.amberOrange),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(Icons.warning_amber_rounded, color: AppColors.amberOrange, size: 22),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    l10n.postJobBelowFairWageWarning(
-                      (draft.minWagePaiseHint! / 100).round(),
-                      (draft.maxWagePaiseHint! / 100).round(),
-                    ),
-                    style: const TextStyle(fontSize: 12.5, color: Color(0xFF92400E), height: 1.3),
-                  ),
-                ),
-              ],
-            ),
+            offeredWagePaise: draft.wagePaise,
+            onApplySuggested: () {
+              final suggested = (draft.minWagePaiseHint! / 100).round();
+              _wageController.text = suggested.toString();
+              notifier.setWageRupees(suggested);
+            },
           ),
         ],
 

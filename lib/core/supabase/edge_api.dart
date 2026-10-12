@@ -339,6 +339,19 @@ class EdgeApiClient {
   Future<Map<String, dynamic>> checkNoShow() async {
     return _invoke('no-show-check');
   }
+
+  /// Classify spoken voice command using Gemini Edge Function fallback.
+  Future<Map<String, dynamic>> classifyVoiceIntent({
+    required String spokenText,
+    required String language,
+  }) async {
+    final body = <String, dynamic>{
+      'task': 'voice_intent',
+      'spoken_text': spokenText,
+      'language': language,
+    };
+    return _invoke('ai-assist', body: body);
+  }
 }
 
 /// Riverpod provider for [EdgeApiClient].

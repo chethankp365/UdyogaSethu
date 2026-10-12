@@ -1460,5 +1460,12 @@
     }
   },
   "notifGeneralTitle": "Notification",
-  "notifGeneralBody": "You have a new update in UdyogaSethu."
+  "notifGeneralBody": "You have a new update in UdyogaSethu.",
+  "voiceAssistantTitle": "AI MULTILINGUAL VOICE ASSISTANT",
+  "voiceExampleCommandsTitle": "TAP EXAMPLE COMMAND TO DIRECT SEARCH",
+  "voiceListening": "Listening to your voice...",
+  "voiceInstruction": "Tap mic and speak in Kannada, Hindi, Telugu, Tamil or English",
+  "voiceProcessing": "Understanding command...",
+  "voiceListeningStop": "🎙 Listening... (Tap to stop)",
+  "voiceTapToSpeak": "🎙 Tap to Speak"
 }

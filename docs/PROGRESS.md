@@ -1201,6 +1201,46 @@
     - `sos-trigger`: healthy, returns `sms_configured: false`.
     - `send-push`: healthy, returns `fcm_configured: false`.
 
+### Phase 8.1 & 8.2: Multilingual Voice Assistant, Smart Recommendations, Fair Wage & Route Optimization
+- **Status**: Completed (2026-10-12)
+- **Files created / updated**:
+  - `lib/features/voice/domain/voice_intent.dart`: Typed enum `VoiceIntentType`, `VoiceIntentParameters`, and `VoiceIntentResult`.
+  - `lib/features/voice/intent/intent_engine.dart`: Pure-Dart offline intent engine with dictionaries, category synonyms (plumber, electrician, mason, etc.), agricultural commodities (tomatoes, onions, etc.), numbers, price limits, distance extraction, and localized spoken reply generation across 5 languages (`kn`, `hi`, `te`, `ta`, `en`).
+  - `lib/features/voice/data/voice_service.dart`: Wraps `SpeechToText` (using `SpeechListenOptions`), `FlutterTts`, locale detection (`kn_IN`, `hi_IN`, `te_IN`, `ta_IN`, `en_IN`), missing speech pack detection, and online Gemini fallback via `classifyVoiceIntent` with strict enum validation.
+  - `lib/features/voice/presentation/voice_assistant_modal.dart`: Screen 9 dark navy modal (`#0F172A`) with pulsing mic animation, selected language indicator pill, 4 localized example command chips, recognition card with "Open Result Screen" route action, missing speech pack helper instructions, and responsive listening/stop controls.
+  - `lib/features/matching/domain/`:
+    - `wage_suggestion.dart`: `WageSuggestion` domain entity with base benchmarks, multipliers, and below-range warning predicate.
+    - `route_order_plan.dart`: `RouteOrderPlan` and `RouteStop` entities.
+    - `customer_recommendation.dart`: `RecommendedWorker`, `RecommendedBundle`, `SeasonalProduceItem`, `CustomerRecommendationsState`.
+  - `lib/features/matching/data/recommendation_pricing_service.dart`: Rule-based fair wage calculation (experience +5%/yr up to 25%, urgency +15%, demand +10%), farmer mandi price bands (season off-season +15%/harvest -5%, stock -5%, orders +5%), nearest-neighbour route ordering respecting `startAt` windows and time saved calculation (3.5 mins/km), and curated customer recommendations.
+  - `lib/features/matching/presentation/widgets/`:
+    - `why_this_job_sheet.dart`: Explains skill match, nearby panchayat, fair wage compliance, shift hours fit, and verified employer rating.
+    - `fair_wage_card.dart`: Reusable card with suggested range, "Why this wage?" explainer sheet, non-blocking below-range warning.
+    - `route_order_card.dart`: Sequenced stops (1, 2, 3), address, travel time to next stop, time/km saved banner.
+    - `customer_recommendations_section.dart`: Curated workers, repeat rebook shortcuts, produce bundles, seasonal harvest items.
+  - Wired into screens:
+    - `lib/core/widgets/role_bottom_nav_bar.dart`: Centre mic FAB opens `VoiceAssistantModal`.
+    - `lib/core/widgets/search_bar_with_mic.dart`: Search mic button opens `VoiceAssistantModal`.
+    - `lib/core/widgets/job_row.dart`: Interactive "Why this job?" chip opening `WhyThisJobSheet`.
+    - `lib/features/provider/presentation/post_job_wizard_screen.dart`: Embedded `FairWageCard` in Step 2.
+    - `lib/features/booking/presentation/guided_booking_screen.dart`: Embedded `FairWageCard` in Step 4.
+    - `lib/features/farmer/presentation/widgets/edit_listing_modal.dart`: Mandi price band with "Why?" explainer dialog.
+    - `lib/features/job_execution/presentation/worker_schedule_screen.dart`: Embedded `RouteOrderCard` when worker has multiple jobs on selected date.
+  - Edge Function & Supabase client:
+    - `supabase/functions/ai-assist/index.ts`: Added `voice_intent` task type, sanitized input, offline fallback, and Gemini prompt with strict JSON schema.
+    - `lib/core/supabase/edge_api.dart`: Added `classifyVoiceIntent` method.
+  - Localization & Android Permissions:
+    - `android/app/src/main/AndroidManifest.xml`: Added `<action android:name="android.speech.RecognitionService" />` to `<queries>`.
+    - `lib/l10n/app_en.arb`, `app_kn.arb`, `app_hi.arb`, `app_te.arb`, `app_ta.arb`: Added localized voice assistant keys and regenerated via `flutter gen-l10n`.
+  - Test suites:
+    - `test/voice_intent_test.dart`: 43/43 tests passing (8 phrases each for kn, hi, te, ta, en, price/distance extraction, empty speech, unrecognized commands).
+    - `test/recommendation_pricing_test.dart`: 10/10 tests passing (wage calculations, farmer price bands, route ordering with time savings, customer recommendations, job recommendation reasons).
+    - `test/screen_coverage_audit_test.dart` & `test/comprehensive_overflow_finder_test.dart`: Added `dialog_voice_assistant_modal`, `dialog_why_this_job_sheet`, `FairWageCard`, `RouteOrderCard`, `WhyThisJobSheet`, `CustomerRecommendationsSection`, `VoiceAssistantModal`.
+- **Verification**:
+  - `flutter analyze`: 0 issues found (clean).
+  - `tool/check_overflow.bat`: All 3 suites passed with 0 overflows across 320-600dp and text scale 1.0-2.0.
+  - Tests: 53/53 Phase 8 tests passed cleanly.
+
 ## Known issues
 - **Profile & Auth Foreign Key Cascade vs D11 Retention**: Live DB schema has `profiles.id` referencing `auth.users(id)` with `ON DELETE CASCADE`. The financial retention refactor will decouple `auth.users` deletion from audit records in an upcoming migration.
 - **Phase 6.3 - 6.5**: Farm equipment rental/labour hiring, buyer produce marketplace, and carts & checkout are upcoming phases (P6.7 & P6.8 completed).

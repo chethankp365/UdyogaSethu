@@ -3895,4 +3895,27 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get notifGeneralBody => 'ಉದ್ಯೋಗ ಸೇತುವಿನಲ್ಲಿ ನಿಮಗೆ ಹೊಸ ನವೀಕರಣವಿದೆ.';
+
+  @override
+  String get voiceAssistantTitle => 'ಎಐ ಬಹುಭಾಷಾ ಧ್ವನಿ ಸಹಾಯಕ';
+
+  @override
+  String get voiceExampleCommandsTitle =>
+      'ನೇರ ಹುಡುಕಾಟಕ್ಕಾಗಿ ಉದಾಹರಣೆ ಆಜ್ಞೆಯನ್ನು ಒತ್ತಿ';
+
+  @override
+  String get voiceListening => 'ನಿಮ್ಮ ಧ್ವನಿಯನ್ನು ಆಲಿಸಲಾಗುತ್ತಿದೆ...';
+
+  @override
+  String get voiceInstruction =>
+      'ಮೈಕ್ ಒತ್ತಿ ಕನ್ನಡ, ಹಿಂದಿ, ತೆಲುಗು, ತಮಿಳು ಅಥವಾ ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿ ಮಾತನಾಡಿ';
+
+  @override
+  String get voiceProcessing => 'ಆಜ್ಞೆಯನ್ನು ಗ್ರಹಿಸಲಾಗುತ್ತಿದೆ...';
+
+  @override
+  String get voiceListeningStop => '🎙 ಆಲಿಸಲಾಗುತ್ತಿದೆ... (ನಿಲ್ಲಿಸಲು ಒತ್ತಿ)';
+
+  @override
+  String get voiceTapToSpeak => '🎙 ಮಾತನಾಡಲು ಒತ್ತಿ';
 }

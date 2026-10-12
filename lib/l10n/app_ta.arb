@@ -1359,5 +1359,12 @@
   "notifClaimSubmittedTitle": "வேலை பாதுகாப்பு கோரிக்கை",
   "notifClaimSubmittedBody": "{type} க்கான உங்கள் கோரிக்கை மதிப்பாய்வுக்கு பதிவு செய்யப்பட்டது.",
   "notifGeneralTitle": "அறிவிப்பு",
-  "notifGeneralBody": "உத்யோக சேதுவில் உங்களுக்கு புதிய புதுப்பிப்பு உள்ளது."
+  "notifGeneralBody": "உத்யோக சேதுவில் உங்களுக்கு புதிய புதுப்பிப்பு உள்ளது.",
+  "voiceAssistantTitle": "AI பன்மொழி குரல் உதவியாளர்",
+  "voiceExampleCommandsTitle": "நேரடி தேடலுக்கு மாதிரி கட்டளையைத் தொடவும்",
+  "voiceListening": "உங்கள் குரலைக் கேட்கிறது...",
+  "voiceInstruction": "மைக்கைத் தொட்டு கன்னடம், இந்தி, தெலுங்கு, தமிழ் அல்லது ஆங்கிலத்தில் பேசுங்கள்",
+  "voiceProcessing": "கட்டளையைப் புரிந்துகொள்கிறது...",
+  "voiceListeningStop": "🎙 கேட்கிறது... (நிறுத்த தட்டவும்)",
+  "voiceTapToSpeak": "🎙 பேச தட்டவும்"
 }

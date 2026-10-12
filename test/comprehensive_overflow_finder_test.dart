@@ -46,6 +46,14 @@ import 'package:udyogasethu/features/safety/domain/sos_incident.dart';
 import 'package:udyogasethu/features/notifications/presentation/notification_centre_screen.dart';
 import 'package:udyogasethu/features/notifications/data/notification_repository.dart';
 import 'package:udyogasethu/features/notifications/domain/app_notification.dart';
+import 'package:udyogasethu/features/voice/presentation/voice_assistant_modal.dart';
+import 'package:udyogasethu/features/matching/presentation/widgets/fair_wage_card.dart';
+import 'package:udyogasethu/features/matching/presentation/widgets/route_order_card.dart';
+import 'package:udyogasethu/features/matching/presentation/widgets/why_this_job_sheet.dart';
+import 'package:udyogasethu/features/matching/presentation/widgets/customer_recommendations_section.dart';
+import 'package:udyogasethu/features/matching/domain/wage_suggestion.dart';
+import 'package:udyogasethu/features/matching/domain/route_order_plan.dart';
+import 'package:udyogasethu/features/job_execution/domain/worker_schedule_item.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class FakeSafetyRepository implements SafetyRepository {
@@ -1405,6 +1413,123 @@ void main() {
         overrides: [
           safetyRepositoryProvider.overrideWithValue(FakeSafetyRepository()),
         ],
+      );
+    });
+
+    testWidgets('FairWageCard layout overflow check', (tester) async {
+      const sampleSuggestion = WageSuggestion(
+        benchmarkMinPaise: 65000,
+        benchmarkMaxPaise: 85000,
+        unit: 'daily',
+        yearsOfExperience: 3,
+        isUrgent: true,
+        isHighDemand: true,
+        suggestedMinPaise: 70000,
+        suggestedMaxPaise: 90000,
+        explanationFactors: [
+          'Worker experience (+15%)',
+          'Urgent same-day booking (+15%)',
+          'High demand in area (+10%)',
+        ],
+      );
+
+      await runOverflowMatrix(
+        tester: tester,
+        testName: 'FairWageCard',
+        builder: (ctx, l10n) => const FairWageCard(
+          suggestion: sampleSuggestion,
+          offeredWagePaise: 50000,
+        ),
+      );
+    });
+
+    testWidgets('RouteOrderCard layout overflow check', (tester) async {
+      final now = DateTime.now();
+      final item1 = WorkerScheduleItem(
+        assignmentId: 'asg-1',
+        jobId: 'job-1',
+        title: 'Morning Plumbing Repair',
+        status: 'confirmed',
+        bookingCode: 'BK-101',
+        agreedWagePaise: 80000,
+        startAt: now,
+        endAt: now.add(const Duration(hours: 2)),
+        estDurationMinutes: 120,
+        addressText: '12th Main, Indiranagar, Bengaluru',
+        jobLat: 12.9716,
+        jobLng: 77.5946,
+        categorySlug: 'plumber',
+        categoryIcon: '🔧',
+        providerName: 'Sunil Rao',
+      );
+      final item2 = WorkerScheduleItem(
+        assignmentId: 'asg-2',
+        jobId: 'job-2',
+        title: 'Pipe Leakage Fix',
+        status: 'confirmed',
+        bookingCode: 'BK-102',
+        agreedWagePaise: 65000,
+        startAt: now.add(const Duration(hours: 3)),
+        endAt: now.add(const Duration(hours: 5)),
+        estDurationMinutes: 120,
+        addressText: '80 Feet Road, Koramangala, Bengaluru',
+        jobLat: 12.9352,
+        jobLng: 77.6245,
+        categorySlug: 'plumber',
+        categoryIcon: '🔧',
+        providerName: 'Deepa Hegde',
+      );
+
+      final samplePlan = RouteOrderPlan(
+        date: now,
+        stops: [
+          RouteStop(
+            sequence: 1,
+            item: item1,
+            distanceToNextKm: 5.2,
+            travelMinutesToNext: 18,
+          ),
+          RouteStop(
+            sequence: 2,
+            item: item2,
+            distanceToNextKm: 0,
+            travelMinutesToNext: 0,
+          ),
+        ],
+        totalDistanceKm: 5.2,
+        totalTravelMinutes: 18,
+        timeSavedMinutes: 15,
+        originalDistanceKm: 9.8,
+      );
+
+      await runOverflowMatrix(
+        tester: tester,
+        testName: 'RouteOrderCard',
+        builder: (ctx, l10n) => RouteOrderCard(plan: samplePlan),
+      );
+    });
+
+    testWidgets('WhyThisJobSheet layout overflow check', (tester) async {
+      await runOverflowMatrix(
+        tester: tester,
+        testName: 'dialog_why_this_job_sheet',
+        builder: (ctx, l10n) => WhyThisJobSheet(job: longJob),
+      );
+    });
+
+    testWidgets('CustomerRecommendationsSection layout overflow check', (tester) async {
+      await runOverflowMatrix(
+        tester: tester,
+        testName: 'CustomerRecommendationsSection',
+        builder: (ctx, l10n) => const CustomerRecommendationsSection(),
+      );
+    });
+
+    testWidgets('VoiceAssistantModal layout overflow check', (tester) async {
+      await runOverflowMatrix(
+        tester: tester,
+        testName: 'dialog_voice_assistant_modal',
+        builder: (ctx, l10n) => const VoiceAssistantModal(),
       );
     });
   });

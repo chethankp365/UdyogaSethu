@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/theme/app_spacing.dart';
 import 'package:udyogasethu/core/theme/app_typography.dart';
+import 'package:udyogasethu/features/voice/presentation/voice_assistant_modal.dart';
 
 class SearchBarWithMic extends StatelessWidget {
   final String hintText;
@@ -63,7 +64,7 @@ class SearchBarWithMic extends StatelessWidget {
               ),
             ),
           IconButton(
-            onPressed: onMicTap,
+            onPressed: onMicTap ?? () => VoiceAssistantModal.show(context),
             icon: const Icon(Icons.mic, color: AppColors.primaryTeal, size: 22),
             tooltip: 'Voice Search',
             constraints: const BoxConstraints(

@@ -3885,4 +3885,27 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get notifGeneralBody => 'ఉద్యోగసేతులో మీకు కొత్త అప్‌డేట్ ఉంది.';
+
+  @override
+  String get voiceAssistantTitle => 'AI బహుభాషా వాయిస్ అసిస్టెంట్';
+
+  @override
+  String get voiceExampleCommandsTitle =>
+      'నేరుగా శోధించడానికి ఉదాహరణ ఆదేశాన్ని నొక్కండి';
+
+  @override
+  String get voiceListening => 'మీ వాయిస్ వినబడుతోంది...';
+
+  @override
+  String get voiceInstruction =>
+      'మైక్ నొక్కి కన్నడ, హిందీ, తెలుగు, తమిళం లేదా ఇంగ్లీషులో మాట్లాడండి';
+
+  @override
+  String get voiceProcessing => 'ఆదేశాన్ని అర్థం చేసుకుంటోంది...';
+
+  @override
+  String get voiceListeningStop => '🎙 వినబడుతోంది... (ఆపడానికి నొక్కండి)';
+
+  @override
+  String get voiceTapToSpeak => '🎙 మాట్లాడటానికి నొక్కండి';
 }

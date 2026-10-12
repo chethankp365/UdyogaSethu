@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
-import 'package:udyogasethu/core/theme/app_spacing.dart';
-import 'package:udyogasethu/core/widgets/app_bottom_sheet.dart';
 import 'package:udyogasethu/core/widgets/mic_fab.dart';
+import 'package:udyogasethu/features/voice/presentation/voice_assistant_modal.dart';
 
 class RoleBottomNavBar extends StatelessWidget {
   final int selectedIndex;
@@ -18,40 +17,7 @@ class RoleBottomNavBar extends StatelessWidget {
   });
 
   void _showMicBottomSheet(BuildContext context) {
-    AppBottomSheet.show(
-      context: context,
-      title: 'Multilingual Voice Assistant',
-      child: const Padding(
-        padding: EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.mic_rounded,
-              size: 56,
-              color: AppColors.primaryTeal,
-            ),
-            SizedBox(height: AppSpacing.md),
-            Text(
-              'Voice assistant coming in P8.1',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: AppColors.headerGreenDark,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: AppSpacing.sm),
-            Text(
-              'Speak in Kannada, Hindi, Telugu, Tamil, Bengali or Oriya to search jobs, mandi prices, or log daily work.',
-              style: TextStyle(fontSize: 14, color: AppColors.textMuted),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: AppSpacing.lg),
-          ],
-        ),
-      ),
-    );
+    VoiceAssistantModal.show(context);
   }
 
   @override

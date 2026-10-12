@@ -11,6 +11,8 @@ import 'package:udyogasethu/features/booking/domain/booking_draft.dart';
 import 'package:udyogasethu/features/booking/domain/booking_result.dart';
 import 'package:udyogasethu/features/booking/domain/user_address.dart';
 import 'package:udyogasethu/features/booking/presentation/booking_controller.dart';
+import 'package:udyogasethu/features/matching/data/recommendation_pricing_service.dart';
+import 'package:udyogasethu/features/matching/presentation/widgets/fair_wage_card.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 /// 7-step guided direct booking sequence:
@@ -1141,38 +1143,23 @@ class _GuidedBookingScreenState extends ConsumerState<GuidedBookingScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        // Fair Wage Indicator Banner
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: _draft.isBelowFairWage ? Colors.amber.shade50 : Colors.green.shade50,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: _draft.isBelowFairWage ? Colors.amber.shade300 : Colors.green.shade300,
-            ),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                _draft.isBelowFairWage ? Icons.info_outline : Icons.thumb_up_alt_rounded,
-                size: 20,
-                color: _draft.isBelowFairWage ? Colors.amber.shade900 : Colors.green.shade800,
+        // Fair Wage Suggestion Card
+        FairWageCard(
+          suggestion: ref.watch(recommendationPricingServiceProvider).calculateWageSuggestion(
+                benchmarkMinPaise: 70000,
+                benchmarkMaxPaise: 100000,
+                unit: 'day',
+                yearsOfExperience: 3,
+                isUrgent: false,
+                isHighDemand: true,
               ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  _draft.isBelowFairWage
-                      ? '${l10n.bookingFairWageBelow} (Market benchmark ₹700 - ₹1000/day)'
-                      : '${l10n.bookingFairWageVerified} (Market benchmark ₹700 - ₹1000/day)',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: _draft.isBelowFairWage ? Colors.amber.shade900 : Colors.green.shade900,
-                  ),
-                ),
-              ),
-            ],
-          ),
+          offeredWagePaise: _draft.wagePaise,
+          onApplySuggested: () {
+            setState(() {
+              _draft = _draft.copyWith(wagePaise: 70000);
+              _wageController.text = '700';
+            });
+          },
         ),
       ],
     );

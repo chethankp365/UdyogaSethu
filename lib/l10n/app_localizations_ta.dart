@@ -3901,4 +3901,27 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get notifGeneralBody =>
       'உத்யோக சேதுவில் உங்களுக்கு புதிய புதுப்பிப்பு உள்ளது.';
+
+  @override
+  String get voiceAssistantTitle => 'AI பன்மொழி குரல் உதவியாளர்';
+
+  @override
+  String get voiceExampleCommandsTitle =>
+      'நேரடி தேடலுக்கு மாதிரி கட்டளையைத் தொடவும்';
+
+  @override
+  String get voiceListening => 'உங்கள் குரலைக் கேட்கிறது...';
+
+  @override
+  String get voiceInstruction =>
+      'மைக்கைத் தொட்டு கன்னடம், இந்தி, தெலுங்கு, தமிழ் அல்லது ஆங்கிலத்தில் பேசுங்கள்';
+
+  @override
+  String get voiceProcessing => 'கட்டளையைப் புரிந்துகொள்கிறது...';
+
+  @override
+  String get voiceListeningStop => '🎙 கேட்கிறது... (நிறுத்த தட்டவும்)';
+
+  @override
+  String get voiceTapToSpeak => '🎙 பேச தட்டவும்';
 }

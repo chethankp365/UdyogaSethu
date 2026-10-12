@@ -7,6 +7,8 @@ import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/widgets/job_row.dart';
 import 'package:udyogasethu/features/job_execution/data/job_execution_repository.dart';
 import 'package:udyogasethu/features/job_execution/domain/worker_schedule_item.dart';
+import 'package:udyogasethu/features/matching/data/recommendation_pricing_service.dart';
+import 'package:udyogasethu/features/matching/presentation/widgets/route_order_card.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 enum ScheduleViewMode { day, week }
@@ -226,23 +228,32 @@ class _WorkerScheduleScreenState extends ConsumerState<WorkerScheduleScreen> {
       );
     }
 
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: dayItems.length,
-      itemBuilder: (context, index) {
-        final item = dayItems[index];
-        return Column(
-          children: [
-            // Travel Warning Chip between consecutive jobs
-            if (item.hasTravelWarning) ...[
-              _buildTravelWarningChip(item, l10n),
-              const SizedBox(height: 12),
-            ],
-            _buildScheduleCard(context, item, l10n),
-            const SizedBox(height: 12),
-          ],
-        );
-      },
+    final routePlan = dayItems.length > 1
+        ? ref.watch(recommendationPricingServiceProvider).optimizeRouteOrder(jobs: dayItems)
+        : null;
+
+    return ListView(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      children: [
+        if (routePlan != null && routePlan.hasMultipleStops)
+          RouteOrderCard(plan: routePlan),
+        ...dayItems.map((item) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              children: [
+                // Travel Warning Chip between consecutive jobs
+                if (item.hasTravelWarning) ...[
+                  _buildTravelWarningChip(item, l10n),
+                  const SizedBox(height: 12),
+                ],
+                _buildScheduleCard(context, item, l10n),
+                const SizedBox(height: 12),
+              ],
+            ),
+          );
+        }),
+      ],
     );
   }
 

@@ -7199,6 +7199,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You have a new update in UdyogaSethu.'**
   String get notifGeneralBody;
+
+  /// No description provided for @voiceAssistantTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'AI MULTILINGUAL VOICE ASSISTANT'**
+  String get voiceAssistantTitle;
+
+  /// No description provided for @voiceExampleCommandsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'TAP EXAMPLE COMMAND TO DIRECT SEARCH'**
+  String get voiceExampleCommandsTitle;
+
+  /// No description provided for @voiceListening.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening to your voice...'**
+  String get voiceListening;
+
+  /// No description provided for @voiceInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap mic and speak in Kannada, Hindi, Telugu, Tamil or English'**
+  String get voiceInstruction;
+
+  /// No description provided for @voiceProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Understanding command...'**
+  String get voiceProcessing;
+
+  /// No description provided for @voiceListeningStop.
+  ///
+  /// In en, this message translates to:
+  /// **'🎙 Listening... (Tap to stop)'**
+  String get voiceListeningStop;
+
+  /// No description provided for @voiceTapToSpeak.
+  ///
+  /// In en, this message translates to:
+  /// **'🎙 Tap to Speak'**
+  String get voiceTapToSpeak;
 }
 
 class _AppLocalizationsDelegate

@@ -9,11 +9,13 @@ export type AiTaskType =
   | 'soil_advice'
   | 'irrigation_plan'
   | 'scheme_finder'
-  | 'price_advice';
+  | 'price_advice'
+  | 'voice_intent';
 
 export interface AiAssistRequest {
   task: AiTaskType;
   language?: 'en' | 'kn' | 'hi' | 'te' | 'ta';
+  spoken_text?: string;
   crop?: string;
   district?: string;
   symptoms?: string;
@@ -179,6 +181,16 @@ function getBasicFallback(payload: AiAssistRequest, curatedSchemes?: Array<Recor
         expert_note: 'Market prices fluctuate daily based on APMC arrivals and seasonal harvest volume.',
       };
     }
+
+    case 'voice_intent': {
+      return {
+        mode: 'basic',
+        task: 'voice_intent',
+        intent: 'unknown',
+        confidence: 0.0,
+        explanation: 'Fallback rule mode: spoken command could not be matched.',
+      };
+    }
   }
 }
 
@@ -321,6 +333,41 @@ Provide pricing guidance, bulk sale vs mandi comparison, and grading recommendat
       };
       break;
     }
+
+    case 'voice_intent': {
+      prompt = `Task: Classify voice command into one of the allowed intents for UdyogaSethu app.
+Spoken Text: "${payload.spoken_text || ''}"
+Language Code: "${langCode}"
+
+Allowed Intents strictly:
+- "find_jobs": looking for daily wage, jobs, plumber work, construction work, etc.
+- "find_workers": hiring workers, booking plumber/electrician/etc.
+- "search_produce": buying vegetables, fruits, crops, asking for mandi produce.
+- "check_earnings": checking how much earned today or recently.
+- "view_orders": viewing produce orders or booking requests.
+- "open_wallet": opening wallet balance, payments, or escrow.
+- "open_safety": safety hub, emergency SOS, danger, help.
+- "open_settings": settings, change language, preferences.
+- "unknown": none of the above.
+
+Extract category (e.g. plumber, electrician, carpenter, construction, painter, driver, cleaner, agri_labour) if present.
+Extract produce (e.g. tomato, onion, potato, chilli) if present.
+Target Route must be one of: "/jobs", "/provider/workers", "/marketplace", "/wallet", "/safety/hub", "/settings".`;
+
+      jsonSchema = {
+        type: 'OBJECT',
+        properties: {
+          intent: { type: 'STRING' },
+          category: { type: 'STRING' },
+          produce: { type: 'STRING' },
+          target_route: { type: 'STRING' },
+          spoken_reply: { type: 'STRING' },
+          confidence: { type: 'NUMBER' },
+        },
+        required: ['intent', 'target_route'],
+      };
+      break;
+    }
   }
 
   return { baseInstructions, prompt, jsonSchema };
@@ -370,6 +417,7 @@ Deno.serve(async (req: Request) => {
       crop_stage: body.crop_stage ? String(body.crop_stage).substring(0, 80) : undefined,
       irrigation_source: body.irrigation_source ? String(body.irrigation_source).substring(0, 80) : undefined,
       farmer_query: body.farmer_query ? String(body.farmer_query).substring(0, 500) : undefined,
+      spoken_text: body.spoken_text ? String(body.spoken_text).substring(0, 300) : undefined,
       image_base64: body.image_base64,
       image_mime: body.image_mime || 'image/jpeg',
     };

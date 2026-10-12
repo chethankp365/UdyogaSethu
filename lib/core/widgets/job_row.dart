@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:udyogasethu/core/services/job_thumbnail_service.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/widgets/job_action_button.dart';
+import 'package:udyogasethu/features/matching/presentation/widgets/why_this_job_sheet.dart';
 import 'package:udyogasethu/features/seeker/domain/job_recommendation.dart';
 
 class JobRow extends StatelessWidget {
@@ -320,14 +321,35 @@ class JobRow extends StatelessWidget {
                             ),
                           ),
                         if (job.reasons.isNotEmpty)
-                          Text(
-                            job.reasons.first,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.green.shade700,
+                          InkWell(
+                            onTap: () => WhyThisJobSheet.show(context, job),
+                            borderRadius: BorderRadius.circular(4),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFE6F4EA),
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(color: const Color(0xFF10B981), width: 0.8),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.auto_awesome_rounded, size: 10, color: Color(0xFF047857)),
+                                  const SizedBox(width: 3),
+                                  Flexible(
+                                    child: Text(
+                                      job.reasons.first,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 9.5,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xFF064E3B),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                       ],

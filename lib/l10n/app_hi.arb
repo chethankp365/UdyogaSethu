@@ -1359,5 +1359,12 @@
   "notifClaimSubmittedTitle": "कार्य सुरक्षा दावा",
   "notifClaimSubmittedBody": "{type} के लिए आपका दावा समीक्षा के लिए दर्ज किया गया है।",
   "notifGeneralTitle": "सूचना",
-  "notifGeneralBody": "उद्योगसेतु में आपके लिए नया अपडेट है।"
+  "notifGeneralBody": "उद्योगसेतु में आपके लिए नया अपडेट है।",
+  "voiceAssistantTitle": "एआई बहुभाषी वॉयस सहायक",
+  "voiceExampleCommandsTitle": "सीधी खोज के लिए उदाहरण आदेश पर टैप करें",
+  "voiceListening": "आपकी आवाज़ सुनी जा रही है...",
+  "voiceInstruction": "माइक दबाएं और कन्नड़, हिंदी, तेलुगु, तमिल या अंग्रेजी में बोलें",
+  "voiceProcessing": "आदेश समझा जा रहा है...",
+  "voiceListeningStop": "🎙 सुना जा रहा है... (रोकने के लिए टैप करें)",
+  "voiceTapToSpeak": "🎙 बोलने के लिए टैप करें"
 }
