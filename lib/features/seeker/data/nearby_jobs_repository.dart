@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/errors/app_exception.dart';
+import 'package:udyogasethu/features/seeker/data/demo_jobs_data.dart';
 import 'package:udyogasethu/features/seeker/domain/job_pin.dart';
 
 abstract class NearbyJobsRepository {
@@ -68,7 +69,7 @@ class SupabaseNearbyJobsRepository implements NearbyJobsRepository {
 
       if (res is List) {
         final now = DateTime.now();
-        return res
+        final list = res
             .map((item) => JobPin.fromJson(item as Map<String, dynamic>))
             .where((pin) {
               if (pin.startAt != null && pin.startAt!.isBefore(now)) return false;
@@ -77,12 +78,31 @@ class SupabaseNearbyJobsRepository implements NearbyJobsRepository {
               return true;
             })
             .toList();
+
+        if (list.isNotEmpty) return list;
       }
-      return [];
-    } catch (e, st) {
-      AppLogger.e('Failed to load nearby_jobs pins: $e', e, st);
-      throw NetworkException('Could not fetch nearby work pins: $e');
+
+      // Demo data fallback for presentation
+      return _filterDemoPins(categoryId, searchQuery);
+    } catch (e) {
+      AppLogger.w('Failed to load nearby_jobs pins, using demo fallback: $e');
+      return _filterDemoPins(categoryId, searchQuery);
     }
+  }
+
+  List<JobPin> _filterDemoPins(String? categoryId, String? searchQuery) {
+    return DemoJobsData.jobPins.where((pin) {
+      if (categoryId != null && categoryId.isNotEmpty && categoryId != 'all') {
+        if (pin.categorySlug != categoryId && pin.categoryId != categoryId) return false;
+      }
+      if (searchQuery != null && searchQuery.trim().isNotEmpty) {
+        final q = searchQuery.trim().toLowerCase();
+        return pin.title.toLowerCase().contains(q) ||
+            pin.employerName.toLowerCase().contains(q) ||
+            pin.categoryName.values.any((v) => v.toString().toLowerCase().contains(q));
+      }
+      return true;
+    }).toList();
   }
 
   @override

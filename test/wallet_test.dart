@@ -89,6 +89,45 @@ class MockWalletRepository implements WalletRepository {
       isDemo: true,
     );
   }
+
+  @override
+  Future<Map<String, dynamic>> topupWallet({
+    required int amountPaise,
+    String? paymentRef,
+  }) async {
+    mockBalance = WalletBalance(
+      walletId: mockBalance.walletId,
+      availablePaise: mockBalance.availablePaise + amountPaise,
+      pendingPaise: mockBalance.pendingPaise,
+      escrowPaise: mockBalance.escrowPaise,
+      rewardPaise: mockBalance.rewardPaise,
+      totalBalancePaise: mockBalance.totalBalancePaise + amountPaise,
+      todayCreditPaise: mockBalance.todayCreditPaise,
+    );
+    return {'success': true, 'amount_paise': amountPaise};
+  }
+
+  @override
+  Future<Map<String, dynamic>> payVpaFromWallet({
+    required String payeeVpa,
+    required String payeeName,
+    required int amountPaise,
+    String? note,
+  }) async {
+    if (amountPaise > mockBalance.availablePaise) {
+      throw Exception('Insufficient wallet balance');
+    }
+    mockBalance = WalletBalance(
+      walletId: mockBalance.walletId,
+      availablePaise: mockBalance.availablePaise - amountPaise,
+      pendingPaise: mockBalance.pendingPaise,
+      escrowPaise: mockBalance.escrowPaise,
+      rewardPaise: mockBalance.rewardPaise,
+      totalBalancePaise: mockBalance.totalBalancePaise - amountPaise,
+      todayCreditPaise: mockBalance.todayCreditPaise,
+    );
+    return {'success': true, 'amount_paise': amountPaise};
+  }
 }
 
 void main() {
@@ -320,11 +359,13 @@ void main() {
     testWidgets('ScanUpiDialog renders camera scanner and scanner frame',
         (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: Scaffold(
-            body: ScanUpiDialog(),
+        const ProviderScope(
+          child: MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: ScanUpiDialog(),
+            ),
           ),
         ),
       );
@@ -332,7 +373,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Scan UPI QR'), findsOneWidget);
-      expect(find.textContaining('Test mode: no money is moved'), findsOneWidget);
+      expect(find.textContaining('Instant UPI & Payment Gateway'), findsOneWidget);
     });
   });
 }

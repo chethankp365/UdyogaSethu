@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/errors/app_exception.dart';
@@ -133,6 +134,8 @@ class MyApplicationsNotifier extends Notifier<Map<String, WorkerJobStatus>> {
       };
       return (success: true, error: null, applicationId: appId);
     } catch (e) {
+      debugPrint('[MyApplicationsNotifier] applyToJob raw database error: $e');
+
       // Rollback on failure
       if (previous != null) {
         state = {...state, jobId: previous};
@@ -142,20 +145,35 @@ class MyApplicationsNotifier extends Notifier<Map<String, WorkerJobStatus>> {
       }
 
       String userMsg = 'Unable to submit application. Please try again.';
-      final errStr = e.toString();
-      if (errStr.contains('ALREADY_APPLIED')) {
+      final errUpper = e.toString().toUpperCase();
+
+      if (errUpper.contains('ALREADY_APPLIED') || errUpper.contains('ALREADY APPLIED') || errUpper.contains('DUPLICATE KEY')) {
         // If server says already applied, reflect applied state!
         state = {
           ...state,
           jobId: optimistic,
         };
         return (success: true, error: null, applicationId: previous?.applicationId);
-      } else if (errStr.contains('Ineligible to apply:')) {
-        final match = RegExp(r'Ineligible to apply:\s*\[(.*?)\]').firstMatch(errStr);
+      } else if (errUpper.contains('SLOTS_FILLED') || errUpper.contains('SLOTS FULL') || errUpper.contains('ALREADY FILLED')) {
+        userMsg = 'This job is already full. No more positions available.';
+      } else if (errUpper.contains('EXPIRED') || errUpper.contains('JOB CLOSED') || errUpper.contains('PAST_START')) {
+        userMsg = 'This job is closed or its scheduled start time has passed.';
+      } else if (errUpper.contains('AUDIENCE_MISMATCH') || errUpper.contains('STUDENT_GATED') || errUpper.contains('NOT ELIGIBLE')) {
+        userMsg = 'You are not eligible for this job category.';
+      } else if (errUpper.contains('OWN_JOB')) {
+        userMsg = 'You cannot apply to your own job.';
+      } else if (errUpper.contains('NOT_AUTHENTICATED') || errUpper.contains('AUTHENTICATION REQUIRED')) {
+        userMsg = 'Please sign in to apply for this job.';
+      } else if (errUpper.contains('LICENCE_REQUIRED')) {
+        userMsg = 'A valid driving licence is required for this role.';
+      } else if (errUpper.contains('VERIFIED_REQUIRED')) {
+        userMsg = 'A verified profile badge is required for this role.';
+      } else if (errUpper.contains('SCHEDULE_CLASH')) {
+        userMsg = 'You have a schedule clash with another active booking.';
+      } else if (errUpper.contains('INELIGIBLE TO APPLY:')) {
+        final match = RegExp(r'Ineligible to apply:\s*\[(.*?)\]', caseSensitive: false).firstMatch(e.toString());
         if (match != null && match.group(1) != null) {
           userMsg = match.group(1)!.replaceAll('"', '').trim();
-        } else {
-          userMsg = errStr.replaceAll('Exception: ', '').trim();
         }
       }
 

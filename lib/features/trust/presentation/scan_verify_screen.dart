@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -94,7 +93,15 @@ class _ScanVerifyScreenState extends ConsumerState<ScanVerifyScreen> with Widget
       }
 
       // 2. Check if token represents a job ticket
-      if (rawCode.startsWith('TK-') || rawCode.startsWith('TICKET-') || payload?['pur'] == 'ticket') {
+      final isTicketCandidate = rawCode.startsWith('TKT-') ||
+          rawCode.startsWith('TK-') ||
+          rawCode.startsWith('TICKET-') ||
+          rawCode.startsWith('BOOK-') ||
+          rawCode.contains('TKT-') ||
+          rawCode.contains('BOOK-') ||
+          payload?['pur'] == 'ticket';
+
+      if (isTicketCandidate) {
         final jobRepo = ref.read(jobExecutionRepositoryProvider);
         final ticketRes = await jobRepo.verifyAttendanceScan(qrToken: rawCode);
         if (mounted) {
@@ -129,7 +136,32 @@ class _ScanVerifyScreenState extends ConsumerState<ScanVerifyScreen> with Widget
 
       // 3. Otherwise verify through digitalId repository
       final repo = ref.read(digitalIdRepositoryProvider);
-      final result = await repo.verifyQrToken(rawCode);
+      var result = await repo.verifyQrToken(rawCode);
+
+      // If digitalId verification rejected format, try ticket scan as fallback
+      if (!result.valid && (result.errorCode == 'INVALID_FORMAT' || result.errorCode == 'token_expired' || result.errorCode == 'invalid_token')) {
+        try {
+          final jobRepo = ref.read(jobExecutionRepositoryProvider);
+          final ticketRes = await jobRepo.verifyAttendanceScan(qrToken: rawCode);
+          if (ticketRes.valid) {
+            result = PublicVerificationResult(
+              valid: true,
+              nameInitial: ticketRes.workerName != null && ticketRes.workerName!.isNotEmpty
+                  ? '${ticketRes.workerName![0].toUpperCase()}.'
+                  : 'W.',
+              displayId: ticketRes.bookingCode ?? 'TICKET',
+              isVerifiedBadge: ticketRes.isVerifiedBadge,
+              level: 1,
+              levelName: 'Verified Worker',
+              purpose: 'ticket',
+              assignmentId: ticketRes.assignmentId,
+              bookingCode: ticketRes.bookingCode,
+              workerName: ticketRes.workerName,
+              jobTitle: ticketRes.jobTitle,
+            );
+          }
+        } catch (_) {}
+      }
 
       // If backend returned produce_lot verification:
       if (result.purpose == 'produce_lot') {
@@ -168,103 +200,6 @@ class _ScanVerifyScreenState extends ConsumerState<ScanVerifyScreen> with Widget
       _verificationResult = null;
       _isProcessing = false;
     });
-  }
-
-  // Debug Helper for Single-Phone Testing (kDebugMode only)
-  Future<void> _simulateSelfScan() async {
-    setState(() => _isProcessing = true);
-    try {
-      final repo = ref.read(digitalIdRepositoryProvider);
-      final res = await repo.issueFreshQrToken();
-      final token = res['qr_token'] as String?;
-      if (token != null) {
-        await _processQrCode(token);
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isProcessing = false;
-          _verificationResult = PublicVerificationResult.error(
-            code: 'self_scan_failed',
-            message: e.toString(),
-          );
-        });
-      }
-    }
-  }
-
-  Future<void> _simulateExpiredScan() async {
-    setState(() => _isProcessing = true);
-    // Construct an intentionally expired token payload
-    const expiredToken = 'eyJ0aWQiOiJleHBpcmVkLXRlc3QtMSIsInB1ciI6InByb2ZpbGUiLCJpYXQiOjE2MDAwMDAwMDAsImV4cCI6MTYwMDAwMDMwMH0.fake_sig';
-    await _processQrCode(expiredToken);
-  }
-
-  Future<void> _simulateTamperedScan() async {
-    setState(() => _isProcessing = true);
-    // Take a fresh token and tamper with the payload part
-    try {
-      final repo = ref.read(digitalIdRepositoryProvider);
-      final res = await repo.issueFreshQrToken();
-      final token = res['qr_token'] as String?;
-      if (token != null) {
-        final tampered = 'eyAidGlkIjogInRhbXBlcmVkIiB9.${token.split('.').last}';
-        await _processQrCode(tampered);
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isProcessing = false;
-          _verificationResult = PublicVerificationResult.error(
-            code: 'tamper_test_failed',
-            message: e.toString(),
-          );
-        });
-      }
-    }
-  }
-
-  Future<void> _simulateProduceLotScan() async {
-    // Generates signed lot token for Organic Red Tomatoes
-    final token = LotTraceabilityData.createSignedLotToken(
-      lotNumber: 'LOT-KA-2026-TOM-01',
-      listingId: 'a1111111-3333-4333-8333-111111111111',
-    );
-    await _processQrCode(token);
-  }
-
-  void _showPasteTokenDialog() {
-    final textController = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Paste QR Token (Debug Mode)'),
-        content: TextField(
-          controller: textController,
-          maxLines: 3,
-          decoration: const InputDecoration(
-            hintText: 'Paste signed QR token or LOT-XXXX code here...',
-            border: OutlineInputBorder(),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final text = textController.text.trim();
-              Navigator.of(ctx).pop();
-              if (text.isNotEmpty) {
-                _processQrCode(text);
-              }
-            },
-            child: const Text('Verify Token'),
-          ),
-        ],
-      ),
-    );
   }
 
   @override
@@ -333,20 +268,14 @@ class _ScanVerifyScreenState extends ConsumerState<ScanVerifyScreen> with Widget
             Container(
               padding: const EdgeInsets.all(16),
               color: Colors.white,
-              child: Column(
+              child: const Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
+                  Text(
                     'Point camera at the worker\'s Digital ID QR code on their phone screen.',
                     style: TextStyle(fontSize: 13, color: AppColors.textMuted),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 12),
-
-                  // Debug Helper Panel (kDebugMode only)
-                  if (kDebugMode) ...[
-                    _buildDebugOnePhoneTestingPanel(),
-                  ],
                 ],
               ),
             ),
@@ -605,84 +534,6 @@ class _ScanVerifyScreenState extends ConsumerState<ScanVerifyScreen> with Widget
               fontWeight: FontWeight.bold,
               color: color ?? AppColors.textDark,
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDebugOnePhoneTestingPanel() {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.amber.shade50,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.amber.shade300),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.bug_report_rounded, size: 16, color: AppColors.amberOrange),
-              const SizedBox(width: 6),
-              Text(
-                'Demo Mode: Single-Phone Test Controls (Debug Only)',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.amber.shade900),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              ElevatedButton(
-                onPressed: _isProcessing ? null : _simulateSelfScan,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.headerGreenDark,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                ),
-                child: const Text('1. Scan My Own Active ID', style: TextStyle(fontSize: 11)),
-              ),
-              ElevatedButton(
-                onPressed: _isProcessing ? null : _simulateExpiredScan,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepOrange,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                ),
-                child: const Text('2. Test Expired Token', style: TextStyle(fontSize: 11)),
-              ),
-              ElevatedButton(
-                onPressed: _isProcessing ? null : _simulateTamperedScan,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red.shade700,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                ),
-                child: const Text('3. Test Tampered Token', style: TextStyle(fontSize: 11)),
-              ),
-              ElevatedButton(
-                onPressed: _isProcessing ? null : _simulateProduceLotScan,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF00875A),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                ),
-                child: const Text('4. Test Scan Produce Lot QR', style: TextStyle(fontSize: 11)),
-              ),
-              ElevatedButton(
-                onPressed: _isProcessing ? null : _showPasteTokenDialog,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF334155),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                ),
-                child: const Text('5. Paste QR Token', style: TextStyle(fontSize: 11)),
-              ),
-            ],
           ),
         ],
       ),

@@ -11,6 +11,7 @@ import 'package:udyogasethu/features/profile/presentation/seeker_type_change_dia
 import 'package:udyogasethu/features/profile/presentation/skills_picker_dialog.dart';
 import 'package:udyogasethu/features/seeker/domain/job_recommendation.dart';
 import 'package:udyogasethu/features/seeker/presentation/seeker_home_controller.dart';
+import 'package:udyogasethu/features/trust/data/face_embedding_service.dart';
 import 'package:udyogasethu/features/trust/data/kyc_repository.dart';
 import 'package:udyogasethu/features/trust/domain/kyc_record.dart';
 import 'package:udyogasethu/features/trust/domain/verification_visibility.dart';
@@ -55,6 +56,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
   List<String> _skills = [];
   String? _collegeName;
   String? _courseName;
+  bool _hasEnrolledFace = false;
   TabController? _tabController;
 
   @override
@@ -124,6 +126,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
               ref.read(appSessionProvider.notifier).setSeekerType(_seekerType);
             }
           }
+
+          try {
+            final fp = await client
+                .from('face_profiles')
+                .select('id, status')
+                .eq('user_id', user.id)
+                .maybeSingle();
+            final hasLocalFace = await ref.read(faceEmbeddingServiceProvider).hasEnrolledFace();
+            final isEnrolled = (fp != null && fp['status'] == 'verified') || hasLocalFace;
+            if (isEnrolled && mounted) {
+              ref.read(appSessionProvider.notifier).setHasEnrolledFace(true);
+              setState(() {
+                _hasEnrolledFace = true;
+              });
+            }
+          } catch (_) {}
         } catch (_) {}
       }
     } catch (_) {}
@@ -793,9 +811,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with SingleTicker
                   const Divider(height: 16),
                   _buildStatusRow(
                     title: 'Face Enrolment & Liveness',
-                    detail: 'On-device template active',
-                    isComplete: true,
-                    onTap: () => context.push(AppRoutes.kycFace),
+                    detail: (ref.watch(appSessionProvider).hasEnrolledFace || _hasEnrolledFace)
+                        ? 'Biometric profile active'
+                        : 'Not enrolled (Tap to enroll)',
+                    isComplete: ref.watch(appSessionProvider).hasEnrolledFace || _hasEnrolledFace,
+                    onTap: () async {
+                      await context.push(AppRoutes.kycFace);
+                      if (mounted) {
+                        _loadProfileData();
+                      }
+                    },
                   ),
                   const Divider(height: 16),
                   _buildStatusRow(

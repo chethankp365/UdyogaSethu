@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:udyogasethu/core/services/job_thumbnail_service.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
+import 'package:udyogasethu/core/theme/app_motion.dart';
 import 'package:udyogasethu/core/widgets/job_action_button.dart';
 import 'package:udyogasethu/features/matching/presentation/widgets/why_this_job_sheet.dart';
 import 'package:udyogasethu/features/seeker/domain/job_recommendation.dart';
@@ -97,8 +98,10 @@ class JobRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap ??
+    return BouncingPressable(
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        onTap: onTap ??
           () {
             // Placeholder dialog for Job Detail until P4.3
             showModalBottomSheet(
@@ -392,6 +395,7 @@ class JobRow extends StatelessWidget {
           ],
         ),
       ),
+    ),
     );
   }
 }

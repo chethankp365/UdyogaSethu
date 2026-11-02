@@ -445,7 +445,7 @@ class SafetyHubScreen extends ConsumerWidget {
           const Divider(),
           const SizedBox(height: AppSpacing.xs),
           const Text(
-            'Udyoga Escrow Protection (Demo Mode)',
+            'Udyoga Escrow Protection',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
           ),
           const SizedBox(height: 4),

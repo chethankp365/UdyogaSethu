@@ -37,11 +37,20 @@ DECLARE
   v_j3 UUID := '55555555-5555-4555-8555-555555555503';
   v_j4 UUID := '55555555-5555-4555-8555-555555555504';
   v_j5 UUID := '55555555-5555-4555-8555-555555555505';
+  v_j6 UUID := '55555555-5555-4555-8555-555555555506';
+  v_j7 UUID := '55555555-5555-4555-8555-555555555507';
+  v_j8 UUID := '55555555-5555-4555-8555-555555555508';
+  v_j9 UUID := '55555555-5555-4555-8555-555555555509';
+  v_j10 UUID := '55555555-5555-4555-8555-555555555510';
+  v_j11 UUID := '55555555-5555-4555-8555-555555555511';
+  v_j12 UUID := '55555555-5555-4555-8555-555555555512';
+  v_j13 UUID := '55555555-5555-4555-8555-555555555513';
+  v_j14 UUID := '55555555-5555-4555-8555-555555555514';
 
   v_as1 UUID := '66666666-6666-4666-8666-666666666601';
 
   v_w_s1 UUID; v_w_p3 UUID;
-  v_seed_demo_jobs BOOLEAN := false; -- Explicit flag required to create demo jobs
+  v_seed_demo_jobs BOOLEAN := true; -- Enabled for presentation demo listings
 BEGIN
   -- 1. Create tracking table demo_users
   CREATE TABLE IF NOT EXISTS public.demo_users (
@@ -172,11 +181,20 @@ BEGIN
   -- 5. Seed Open Jobs (Only created if v_seed_demo_jobs is explicitly true; flagged as is_demo = true)
   IF v_seed_demo_jobs THEN
     INSERT INTO public.jobs (id, provider_id, category_id, title, description, wage_type, wage_paise, est_duration_minutes, start_at, slots_total, slots_filled, materials_provided, payment_mode, location, address_text, suitable_for, is_demo, status) VALUES
-      (v_j1, v_p3, v_c_elec,  'Commercial Electrician Helper', 'Sai Electricals requires an experienced electrician for wiring installation at HSR commercial complex.', 'daily', 88000, 480, NOW() + INTERVAL '1 day', 2, 0, true, 'escrow', 'POINT(77.6446 12.9121)'::geography, 'Sai Electricals Shop 12, HSR Sector 1', ARRAY['informal']::public.seeker_type[], true, 'open'),
-      (v_j2, v_p3, v_c_const, 'Construction Helper', 'Sharma Builders site helper needed for concrete mixing and material transport at Koramangala site.', 'daily', 70000, 480, NOW() + INTERVAL '1 day', 4, 1, true, 'escrow', 'POINT(77.6245 12.9352)'::geography, 'Sharma Builders Site #45, Koramangala 4th Block', ARRAY['informal']::public.seeker_type[], true, 'open'),
-      (v_j3, v_p1, v_c_plumb, 'Home Plumbing Leakage Repair', 'Dr. Anand Sharma residence needs leak repair and bathroom fixture installation.', 'daily', 91000, 360, NOW() + INTERVAL '2 days', 1, 0, false, 'escrow', 'POINT(77.5938 12.9250)'::geography, 'Residence #102, 4th Main, Jayanagar 4th Block', ARRAY['informal']::public.seeker_type[], true, 'open'),
-      (v_j4, v_p2, v_c_paint, 'Interior Wall Painting Assistant', 'Reddy Villa interior painting assistant needed for 2-day home refresh project.', 'daily', 75000, 480, NOW() + INTERVAL '3 days', 2, 0, true, 'escrow', 'POINT(77.6245 12.9352)'::geography, 'Reddy Villa #88, 5th Block, Koramangala', ARRAY['informal']::public.seeker_type[], true, 'open'),
-      (v_j5, v_p3, v_c_deliv, 'E-Commerce Delivery Assistant', 'Express delivery assistant required for local parcel dispatch and package sorting in Koramangala.', 'daily', 60000, 480, NOW() + INTERVAL '1 day', 3, 0, true, 'upi', 'POINT(77.6245 12.9352)'::geography, 'Express Hub, 80 Feet Road, Koramangala', ARRAY['informal', 'student', 'part_time']::public.seeker_type[], true, 'open')
+      (v_j1,  v_p3, v_c_elec,  'Commercial Electrician Helper', 'Sai Electricals requires an experienced electrician for wiring installation at HSR commercial complex.', 'daily', 88000, 480, NOW() + INTERVAL '1 day', 2, 0, true, 'escrow', 'POINT(77.6446 12.9121)'::geography, 'Sai Electricals Shop 12, HSR Sector 1', ARRAY['informal']::public.seeker_type[], true, 'open'),
+      (v_j2,  v_p3, v_c_const, 'Construction Site Helper & Mixer', 'Sharma Builders site helper needed for concrete mixing and material transport at Koramangala site.', 'daily', 70000, 480, NOW() + INTERVAL '1 day', 4, 1, true, 'escrow', 'POINT(77.6245 12.9352)'::geography, 'Sharma Builders Site #45, Koramangala 4th Block', ARRAY['informal', 'part_time']::public.seeker_type[], true, 'open'),
+      (v_j3,  v_p1, v_c_plumb, 'Residential Plumbing & Pipe Repair', 'Dr. Anand Sharma residence needs leak repair and bathroom fixture installation.', 'daily', 90000, 360, NOW() + INTERVAL '2 days', 1, 0, false, 'escrow', 'POINT(77.5938 12.9250)'::geography, 'Residence #102, 4th Main, Jayanagar 4th Block', ARRAY['informal']::public.seeker_type[], true, 'open'),
+      (v_j4,  v_p2, v_c_paint, 'Interior Wall Painting Assistant', 'Reddy Villa interior painting assistant needed for 2-day home refresh project.', 'daily', 80000, 480, NOW() + INTERVAL '3 days', 2, 0, true, 'escrow', 'POINT(77.6245 12.9352)'::geography, 'Reddy Villa #88, 5th Block, Koramangala', ARRAY['informal']::public.seeker_type[], true, 'open'),
+      (v_j5,  v_p3, v_c_deliv, 'E-Commerce Parcel Delivery Executive', 'Express delivery assistant required for local parcel dispatch and package sorting in Koramangala.', 'daily', 70000, 480, NOW() + INTERVAL '1 day', 3, 1, true, 'upi', 'POINT(77.6245 12.9352)'::geography, 'Express Hub, 80 Feet Road, Koramangala', ARRAY['informal', 'student', 'part_time']::public.seeker_type[], true, 'open'),
+      (v_j6,  v_p2, v_c_clean, 'Apartment Deep Cleaning Helper', 'CleanPro Services requires 2 cleaners for post-renovation 3BHK flat deep cleaning.', 'daily', 65000, 360, NOW() + INTERVAL '1 day', 2, 0, true, 'escrow', 'POINT(77.6408 12.9784)'::geography, 'Sobha Sunbeam, 100 Feet Road, Indiranagar', ARRAY['informal', 'part_time']::public.seeker_type[], true, 'open'),
+      (v_j7,  v_p1, v_c_dom,   'Weekend Event Assistant Cook & Prep', 'Anand Catering needs assistant cook for family gathering. Vegetable chopping and food counter maintenance.', 'daily', 100000, 480, NOW() + INTERVAL '2 days', 2, 0, true, 'escrow', 'POINT(77.6280 12.9300)'::geography, 'Anand Party Hall, 12th Main, Koramangala 3rd Block', ARRAY['informal', 'part_time']::public.seeker_type[], true, 'open'),
+      (v_j8,  v_f1, v_c_agri,  'Tomato Harvesting & Crate Sorting', 'Gowda Organic Farms requires farm workers for picking ripe tomatoes and packing into wooden crates.', 'daily', 65000, 420, NOW() + INTERVAL '1 day', 5, 1, true, 'escrow', 'POINT(77.7127 13.2483)'::geography, 'Gowda Farms Survey #42, Devanahalli Rural', ARRAY['informal']::public.seeker_type[], true, 'open'),
+      (v_j9,  v_f3, v_c_agri,  'Drip Irrigation Pipeline Laying', 'Assistance required for unrolling drip tubes and connecting sub-main valve pipes across 4-acre field.', 'daily', 70000, 480, NOW() + INTERVAL '2 days', 3, 0, true, 'escrow', 'POINT(77.7981 13.0722)'::geography, 'Ramakrishnappa Agro Field, NH-75, Hoskote', ARRAY['informal']::public.seeker_type[], true, 'open'),
+      (v_j10, v_p3, v_c_driv,  'Part-Time Pickup Van Driver (LMV)', 'Driver needed for morning goods transport (Tata Ace) between city wholesale mandi and local distribution.', 'daily', 85000, 360, NOW() + INTERVAL '1 day', 1, 0, true, 'escrow', 'POINT(77.5963 13.1007)'::geography, 'Major Unnikrishnan Road, Yelahanka', ARRAY['informal', 'part_time']::public.seeker_type[], true, 'open'),
+      (v_j11, v_p1, v_c_dom,   'Supermarket Inventory & Billing Assistant', 'Supermarket shelf stocking, barcode scanning, and customer checkout assistance.', 'daily', 60000, 420, NOW() + INTERVAL '1 day', 2, 0, true, 'escrow', 'POINT(77.5938 12.9250)'::geography, 'Anand Supermart, 9th Main, Jayanagar 4th Block', ARRAY['student', 'part_time']::public.seeker_type[], true, 'open'),
+      (v_j12, v_p3, v_c_load,  'Warehouse Goods Loading & Stacking', 'Daily wage loaders required for unloading FMCG shipment trucks and stacking cartons on pallets.', 'daily', 75000, 480, NOW() + INTERVAL '1 day', 6, 2, true, 'escrow', 'POINT(77.5650 12.9650)'::geography, 'Binny Mill Goods Shed, Binny Mill Road', ARRAY['informal']::public.seeker_type[], true, 'open'),
+      (v_j13, v_p2, v_c_dom,   'Morning Housekeeping & Kitchen Helper', 'Morning 3-hour household assistance: floor mopping, kitchen vessel cleaning, and dusting.', 'daily', 40000, 180, NOW() + INTERVAL '1 day', 1, 0, true, 'escrow', 'POINT(77.6446 12.9121)'::geography, 'Apartment #204, 19th Main, HSR Layout Sector 2', ARRAY['informal', 'part_time']::public.seeker_type[], true, 'open'),
+      (v_j14, v_p1, v_c_deliv, 'Evening Pharmacy Medicine Home Delivery', 'Local medicine delivery within 4km radius of clinic. Bicycle or two-wheeler required.', 'daily', 50000, 240, NOW() + INTERVAL '1 day', 2, 0, true, 'upi', 'POINT(77.5938 12.9250)'::geography, 'Sharma Medicos, 11th Main, Jayanagar 3rd Block', ARRAY['student', 'part_time']::public.seeker_type[], true, 'open')
     ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, wage_paise = EXCLUDED.wage_paise, is_demo = true;
   END IF;
 

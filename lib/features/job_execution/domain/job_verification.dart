@@ -107,7 +107,11 @@ class JobVerificationResult {
     final lower = code.toLowerCase();
     final isMock = isMockedRejected ?? (lower == 'mock_location_rejected' || lower == 'mock_location');
     final isGeo = isGeofenceRejected ?? (lower == 'out_of_geofence' || lower == 'outside_geofence');
-    final isFace = isFaceRejected ?? (lower == 'face_mismatch' || lower == 'face_verify_failed');
+    final isFace = isFaceRejected ??
+        (lower == 'face_mismatch' ||
+            lower == 'face_verify_failed' ||
+            lower == 'face_not_detected' ||
+            lower == 'not_enrolled');
     final isDark = isTooDarkRejected ?? (lower == 'image_too_dark' || lower == 'too_dark');
     final isManual = isManualReviewRequired ?? (lower == 'manual_review_required' || lower == 'repeated_face_fail');
 

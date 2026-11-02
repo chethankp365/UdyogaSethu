@@ -6,6 +6,7 @@ import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/features/payments/data/payment_repository.dart';
 import 'package:udyogasethu/features/payments/domain/payment_models.dart';
 import 'package:udyogasethu/features/payments/domain/payment_receipt_pdf.dart';
+import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class PaymentStatusScreen extends ConsumerStatefulWidget {
   final String paymentId;
@@ -21,6 +22,7 @@ class PaymentStatusScreen extends ConsumerStatefulWidget {
 
 class _PaymentStatusScreenState extends ConsumerState<PaymentStatusScreen> {
   bool _isSharing = false;
+  bool _isReconciling = false;
 
   Future<void> _shareReceipt(PaymentRecord payment) async {
     setState(() => _isSharing = true);
@@ -37,17 +39,49 @@ class _PaymentStatusScreenState extends ConsumerState<PaymentStatusScreen> {
     }
   }
 
+  Future<void> _triggerReconciliation() async {
+    if (_isReconciling) return;
+    setState(() => _isReconciling = true);
+    try {
+      final repo = ref.read(paymentRepositoryProvider);
+      final res = await repo.reconcilePayment(widget.paymentId);
+      if (!mounted) return;
+      if (res['status'] == 'captured' || res['status'] == 'held') {
+        ref.invalidate(paymentStreamProvider(widget.paymentId));
+      } else {
+        final l10n = AppLocalizations.of(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              l10n?.paymentReconcileFailed ??
+                  'Payment verification pending with bank. Please retry in a few moments.',
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Reconciliation error: $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isReconciling = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context);
 
     final paymentStream = ref.watch(paymentStreamProvider(widget.paymentId));
 
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC),
       appBar: AppBar(
-        title: const Text('Payment Status'),
+        title: Text(l10n?.paymentStatusTitle ?? 'Payment Status'),
         centerTitle: true,
         automaticallyImplyLeading: false,
         elevation: 0,
@@ -76,7 +110,9 @@ class _PaymentStatusScreenState extends ConsumerState<PaymentStatusScreen> {
 
   Widget _buildSuccessState(BuildContext context, PaymentRecord payment, bool isDark) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final dateStr = DateFormat('dd MMM yyyy, hh:mm a').format(payment.createdAt.toLocal());
+    final amountFormatted = PaymentRecord.formatIndianCurrency(payment.amountPaise);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
@@ -100,7 +136,7 @@ class _PaymentStatusScreenState extends ConsumerState<PaymentStatusScreen> {
           const SizedBox(height: 18),
 
           Text(
-            'Payment Successful and Confirmed',
+            l10n?.paymentStatusSuccess ?? 'Payment Successful and Confirmed',
             style: theme.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
               color: const Color(0xFF0D6548),
@@ -110,7 +146,8 @@ class _PaymentStatusScreenState extends ConsumerState<PaymentStatusScreen> {
           const SizedBox(height: 8),
 
           Text(
-            'Your payment of ${PaymentRecord.formatIndianCurrency(payment.amountPaise)} is confirmed.',
+            l10n?.paymentStatusSuccessDesc(amountFormatted) ??
+                'Your payment of $amountFormatted is confirmed.',
             style: theme.textTheme.bodyMedium?.copyWith(
               color: isDark ? Colors.grey[400] : Colors.grey[600],
             ),
@@ -143,7 +180,7 @@ class _PaymentStatusScreenState extends ConsumerState<PaymentStatusScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Receipt No',
+                      l10n?.paymentReceiptNo ?? 'Receipt No',
                       style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                     ),
                     Text(
@@ -157,7 +194,7 @@ class _PaymentStatusScreenState extends ConsumerState<PaymentStatusScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Payment Method',
+                      l10n?.paymentChooseMethod ?? 'Payment Method',
                       style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                     ),
                     Row(
@@ -207,11 +244,11 @@ class _PaymentStatusScreenState extends ConsumerState<PaymentStatusScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Total Amount Paid',
+                      l10n?.paymentTotalAmountPaid ?? 'Total Amount Paid',
                       style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      PaymentRecord.formatIndianCurrency(payment.amountPaise),
+                      amountFormatted,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: const Color(0xFF0D6548),
@@ -234,7 +271,8 @@ class _PaymentStatusScreenState extends ConsumerState<PaymentStatusScreen> {
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
-                            'Escrow Protected: Money will only be released to the worker once verified job completion is recorded.',
+                            l10n?.paymentEscrowProtectedNotice ??
+                                'Escrow Protected: Money will only be released to the worker once verified job completion is recorded.',
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: const Color(0xFF0D6548),
                               fontWeight: FontWeight.w600,
@@ -266,7 +304,9 @@ class _PaymentStatusScreenState extends ConsumerState<PaymentStatusScreen> {
                     )
                   : const Icon(Icons.picture_as_pdf, color: Color(0xFF0D6548)),
               label: Text(
-                _isSharing ? 'Generating PDF...' : 'Share / Download PDF Receipt',
+                _isSharing
+                    ? 'Generating PDF...'
+                    : (l10n?.paymentShareReceipt ?? 'Share / Download PDF Receipt'),
                 style: const TextStyle(
                   color: Color(0xFF0D6548),
                   fontWeight: FontWeight.bold,
@@ -298,9 +338,9 @@ class _PaymentStatusScreenState extends ConsumerState<PaymentStatusScreen> {
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              child: const Text(
-                'Continue to Job / Order',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              child: Text(
+                l10n?.paymentContinueAction ?? 'Continue to Job / Order',
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ),
           ),
@@ -311,9 +351,10 @@ class _PaymentStatusScreenState extends ConsumerState<PaymentStatusScreen> {
 
   Widget _buildPendingState(BuildContext context, bool isDark) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return Center(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(32.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -328,15 +369,43 @@ class _PaymentStatusScreenState extends ConsumerState<PaymentStatusScreen> {
             ),
             const SizedBox(height: 24),
             Text(
-              'Confirming with Bank...',
+              l10n?.paymentStatusPending ?? 'Confirming with Bank...',
               style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
-              'Awaiting confirmation from Razorpay and banking network. Your screen will update automatically.',
+              l10n?.paymentStatusPendingDesc ??
+                  'Awaiting confirmation from Razorpay and banking network. Your screen will update automatically.',
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: isDark ? Colors.grey[400] : Colors.grey[600],
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // Reconcile status button
+            SizedBox(
+              width: 220,
+              height: 46,
+              child: OutlinedButton.icon(
+                onPressed: _isReconciling ? null : _triggerReconciliation,
+                icon: _isReconciling
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF0D6548)),
+                      )
+                    : const Icon(Icons.sync, color: Color(0xFF0D6548)),
+                label: Text(
+                  _isReconciling
+                      ? (l10n?.paymentReconciling ?? 'Verifying with Bank...')
+                      : (l10n?.paymentRefreshStatus ?? 'Check Bank Status'),
+                  style: const TextStyle(color: Color(0xFF0D6548), fontWeight: FontWeight.bold),
+                ),
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: Color(0xFF0D6548), width: 1.5),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                ),
               ),
             ),
           ],
@@ -347,9 +416,10 @@ class _PaymentStatusScreenState extends ConsumerState<PaymentStatusScreen> {
 
   Widget _buildFailedState(BuildContext context, PaymentRecord payment, bool isDark) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return Center(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(32.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -364,7 +434,7 @@ class _PaymentStatusScreenState extends ConsumerState<PaymentStatusScreen> {
             ),
             const SizedBox(height: 20),
             Text(
-              'Payment Failed',
+              l10n?.paymentStatusFailed ?? 'Payment Failed',
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Colors.red[800],
@@ -372,7 +442,8 @@ class _PaymentStatusScreenState extends ConsumerState<PaymentStatusScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Your transaction could not be completed by the bank. No money was deducted.',
+              l10n?.paymentStatusFailedDesc ??
+                  'Your transaction could not be completed by the bank. No money was deducted.',
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: isDark ? Colors.grey[400] : Colors.grey[600],
@@ -393,7 +464,10 @@ class _PaymentStatusScreenState extends ConsumerState<PaymentStatusScreen> {
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: const Text('Try Again', style: TextStyle(fontWeight: FontWeight.bold)),
+                child: Text(
+                  l10n?.paymentTryAgain ?? 'Try Again',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ],
@@ -403,6 +477,7 @@ class _PaymentStatusScreenState extends ConsumerState<PaymentStatusScreen> {
   }
 
   Widget _buildErrorState(BuildContext context, String message) {
+    final l10n = AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -417,7 +492,7 @@ class _PaymentStatusScreenState extends ConsumerState<PaymentStatusScreen> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () => ref.refresh(paymentStreamProvider(widget.paymentId)),
-              child: const Text('Retry'),
+              child: Text(l10n?.retry ?? 'Retry'),
             ),
           ],
         ),

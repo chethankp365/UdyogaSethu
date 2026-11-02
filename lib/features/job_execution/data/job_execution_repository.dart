@@ -72,6 +72,7 @@ abstract class JobExecutionRepository {
     required double lng,
     double? faceScore,
   });
+  Future<bool> cancelAssignment(String assignmentId, {String? reason}) async => true;
 }
 
 class SupabaseJobExecutionRepository implements JobExecutionRepository {
@@ -82,83 +83,171 @@ class SupabaseJobExecutionRepository implements JobExecutionRepository {
 
   @override
   Future<ActiveJobDetail> fetchActiveJob(String assignmentId) async {
+    // 1. Attempt to fetch details via RPC
     try {
       final res = await _client.rpc('get_active_job_details', params: {
         'p_assignment_id': assignmentId,
       });
 
-      if (res != null && res is Map) {
+      if (res != null && res is Map && res.isNotEmpty) {
         return ActiveJobDetail.fromJson(Map<String, dynamic>.from(res));
       }
     } catch (e) {
       if (kDebugMode) {
         debugPrint('[JobExecutionRepository] fetchActiveJob RPC failed: $e, falling back to query');
       }
-      try {
-        final row = await _client
+    }
+
+    // 2. Direct fallback queries across assignment, application, and job tables
+    try {
+      Map<String, dynamic>? row;
+
+      // Attempt 1: Direct match on job_assignments.id
+      row = await _client
+          .from('job_assignments')
+          .select('*, jobs(*, service_categories(*)), profiles!job_assignments_worker_id_fkey(*)')
+          .eq('id', assignmentId)
+          .maybeSingle();
+
+      // Attempt 2: Match on jobs.id (caller passed a job ID)
+      if (row == null) {
+        final asgRows = await _client
             .from('job_assignments')
             .select('*, jobs(*, service_categories(*)), profiles!job_assignments_worker_id_fkey(*)')
+            .eq('job_id', assignmentId)
+            .order('created_at', ascending: false)
+            .limit(1);
+        if (asgRows.isNotEmpty) {
+          row = asgRows.first;
+        }
+      }
+
+      // Attempt 3: Match on job_applications.id (caller passed an application ID)
+      if (row == null) {
+        final appRow = await _client
+            .from('job_applications')
+            .select('*, jobs(*, service_categories(*)), profiles!job_applications_worker_id_fkey(*)')
             .eq('id', assignmentId)
             .maybeSingle();
 
-        if (row != null) {
-          final job = row['jobs'] as Map<String, dynamic>? ?? {};
-          final cat = job['service_categories'] as Map<String, dynamic>? ?? {};
-          final worker = row['profiles'] as Map<String, dynamic>? ?? {};
-          final provRow = await _client.from('profiles').select().eq('id', job['provider_id']).maybeSingle();
-          final statusStr = row['status'] as String? ?? 'requested';
-          final startedAt = row['started_at'] != null ? DateTime.tryParse(row['started_at'].toString()) : null;
-          final endedAt = row['ended_at'] != null ? DateTime.tryParse(row['ended_at'].toString()) : null;
-          int? elapsed;
-          if (startedAt != null) {
-            elapsed = (endedAt ?? DateTime.now()).difference(startedAt).inSeconds;
-            if (elapsed < 0) elapsed = 0;
-          }
+        if (appRow != null && appRow['job_id'] != null) {
+          final asgRows = await _client
+              .from('job_assignments')
+              .select('*, jobs(*, service_categories(*)), profiles!job_assignments_worker_id_fkey(*)')
+              .eq('job_id', appRow['job_id'])
+              .eq('worker_id', appRow['worker_id'])
+              .order('created_at', ascending: false)
+              .limit(1);
 
-          return ActiveJobDetail(
-            assignmentId: assignmentId,
-            jobId: row['job_id'] as String? ?? job['id'] as String? ?? '',
-            bookingCode: row['booking_code'] as String? ?? 'BOOK-UNKNOWN',
-            status: statusStr,
-            stage: AssignmentStage.fromString(statusStr),
-            agreedWagePaise: (row['agreed_wage_paise'] as num?)?.toInt() ?? (job['wage_amount_paise'] as num?)?.toInt() ?? 0,
-            protectionSelected: row['protection_selected'] as bool? ?? false,
-            arrivedAt: row['arrived_at'] != null ? DateTime.tryParse(row['arrived_at'].toString()) : null,
-            startedAt: startedAt,
-            endedAt: endedAt,
-            elapsedSeconds: elapsed,
-            midjobVerifiedAt: row['midjob_verified_at'] != null
-                ? DateTime.tryParse(row['midjob_verified_at'].toString())
-                : null,
-            paymentEligible: row['payment_eligible'] as bool? ?? false,
-            jobTitle: job['title'] as String? ?? 'General Work',
-            jobDescription: job['description'] as String?,
-            startAt: job['start_at'] != null
-                ? DateTime.tryParse(job['start_at'].toString()) ?? DateTime.now()
-                : DateTime.now(),
-            estDurationMinutes: (job['est_duration_minutes'] as num?)?.toInt() ?? 240,
-            addressText: job['address_text'] as String? ?? '',
-            jobLat: (job['lat'] as num?)?.toDouble() ?? 0.0,
-            jobLng: (job['lng'] as num?)?.toDouble() ?? 0.0,
-            categoryName: cat['name'] is Map ? (cat['name']['en'] ?? 'General') : (cat['name'] as String? ?? 'General'),
-            categorySlug: cat['slug'] as String? ?? 'general',
-            categoryIcon: cat['icon'] as String? ?? 'handyman',
-            providerId: job['provider_id'] as String? ?? '',
-            providerName: provRow?['full_name'] as String? ?? 'Job Provider',
-            providerPhone: provRow?['phone_number'] as String?,
-            providerAvatar: provRow?['avatar_path'] as String?,
-            providerVerified: true,
-            workerId: row['worker_id'] as String? ?? '',
-            workerName: worker['full_name'] as String? ?? 'Assigned Worker',
-            workerPhone: worker['phone_number'] as String?,
-            workerAvatar: worker['avatar_path'] as String?,
-            workerVerified: true,
-          );
+          if (asgRows.isNotEmpty) {
+            row = asgRows.first;
+          } else {
+            // Construct synthetic row from application + job if assignment table record was missing
+            final job = appRow['jobs'] as Map<String, dynamic>? ?? {};
+            row = {
+              'id': appRow['id'],
+              'job_id': appRow['job_id'],
+              'worker_id': appRow['worker_id'],
+              'booking_code': 'BOOK-${(appRow['job_id'].toString()).substring(0, 6).toUpperCase()}',
+              'status': (appRow['status'] == 'hired' || appRow['status'] == 'accepted') ? 'accepted' : appRow['status'],
+              'agreed_wage_paise': job['wage_paise'] ?? 60000,
+              'protection_selected': false,
+              'created_at': appRow['created_at'],
+              'jobs': job,
+              'profiles': appRow['profiles'],
+            };
+          }
         }
-      } catch (err) {
-        if (kDebugMode) {
-          debugPrint('[JobExecutionRepository] fallback query failed: $err');
+      }
+
+      // Attempt 4: Match directly on jobs.id if job exists without assignment yet
+      if (row == null) {
+        final jobRow = await _client
+            .from('jobs')
+            .select('*, service_categories(*), profiles!jobs_provider_id_fkey(*)')
+            .eq('id', assignmentId)
+            .maybeSingle();
+
+        if (jobRow != null) {
+          row = {
+            'id': jobRow['id'],
+            'job_id': jobRow['id'],
+            'worker_id': _client.auth.currentUser?.id ?? '',
+            'booking_code': 'BOOK-${jobRow['id'].toString().substring(0, 6).toUpperCase()}',
+            'status': jobRow['status'] == 'completed' ? 'completed' : 'accepted',
+            'agreed_wage_paise': jobRow['wage_paise'] ?? 60000,
+            'protection_selected': false,
+            'created_at': jobRow['created_at'],
+            'jobs': jobRow,
+            'profiles': null,
+          };
         }
+      }
+
+      if (row != null) {
+        final job = row['jobs'] as Map<String, dynamic>? ?? {};
+        final cat = job['service_categories'] as Map<String, dynamic>? ?? {};
+        final worker = row['profiles'] as Map<String, dynamic>? ?? {};
+        final provRow = job['provider_id'] != null
+            ? await _client.from('profiles').select().eq('id', job['provider_id']).maybeSingle()
+            : null;
+        final statusStr = row['status'] as String? ?? 'requested';
+        final startedAt = row['started_at'] != null ? DateTime.tryParse(row['started_at'].toString()) : null;
+        final endedAt = row['ended_at'] != null ? DateTime.tryParse(row['ended_at'].toString()) : null;
+        int? elapsed;
+        if (startedAt != null) {
+          elapsed = (endedAt ?? DateTime.now()).difference(startedAt).inSeconds;
+          if (elapsed < 0) elapsed = 0;
+        }
+
+        return ActiveJobDetail(
+          assignmentId: row['id'] as String? ?? assignmentId,
+          jobId: row['job_id'] as String? ?? job['id'] as String? ?? '',
+          bookingCode: row['booking_code'] as String? ?? 'BOOK-UNKNOWN',
+          status: statusStr,
+          stage: AssignmentStage.fromString(statusStr),
+          agreedWagePaise: (row['agreed_wage_paise'] as num?)?.toInt() ??
+              (job['wage_amount_paise'] as num?)?.toInt() ??
+              (job['wage_paise'] as num?)?.toInt() ??
+              0,
+          protectionSelected: row['protection_selected'] as bool? ?? false,
+          arrivedAt: row['arrived_at'] != null ? DateTime.tryParse(row['arrived_at'].toString()) : null,
+          startedAt: startedAt,
+          endedAt: endedAt,
+          elapsedSeconds: elapsed,
+          midjobVerifiedAt: row['midjob_verified_at'] != null
+              ? DateTime.tryParse(row['midjob_verified_at'].toString())
+              : null,
+          paymentEligible: row['payment_eligible'] as bool? ?? false,
+          jobTitle: job['title'] as String? ?? 'General Work',
+          jobDescription: job['description'] as String?,
+          startAt: job['start_at'] != null
+              ? DateTime.tryParse(job['start_at'].toString()) ?? DateTime.now()
+              : DateTime.now(),
+          estDurationMinutes: (job['est_duration_minutes'] as num?)?.toInt() ?? 240,
+          addressText: job['address_text'] as String? ?? '',
+          jobLat: (job['lat'] as num?)?.toDouble() ?? 0.0,
+          jobLng: (job['lng'] as num?)?.toDouble() ?? 0.0,
+          categoryName: cat['name'] is Map
+              ? (cat['name']['en'] ?? 'General')
+              : (cat['name'] as String? ?? 'General'),
+          categorySlug: cat['slug'] as String? ?? 'general',
+          categoryIcon: cat['icon'] as String? ?? 'handyman',
+          providerId: job['provider_id'] as String? ?? '',
+          providerName: provRow?['full_name'] as String? ?? 'Job Provider',
+          providerPhone: provRow?['phone_number'] as String?,
+          providerAvatar: provRow?['avatar_path'] as String?,
+          providerVerified: true,
+          workerId: row['worker_id'] as String? ?? '',
+          workerName: worker['full_name'] as String? ?? 'Assigned Worker',
+          workerPhone: worker['phone_number'] as String?,
+          workerAvatar: worker['avatar_path'] as String?,
+          workerVerified: true,
+        );
+      }
+    } catch (err) {
+      if (kDebugMode) {
+        debugPrint('[JobExecutionRepository] fallback query failed: $err');
       }
     }
 
@@ -681,6 +770,33 @@ class SupabaseJobExecutionRepository implements JobExecutionRepository {
     List<String>? workPhotos,
     bool isCustomerConfirmed = false,
   }) async {
+    // 1. Try direct RPC first for maximum speed and zero edge-dependency
+    try {
+      final rpcRes = await _client.rpc('record_verified_completion', params: {
+        'p_assignment_id': assignmentId,
+        'p_selfie_path': selfiePath,
+        'p_lat': lat,
+        'p_lng': lng,
+        'p_work_photos': workPhotos,
+        'p_actor_id': _client.auth.currentUser?.id,
+      });
+      if (rpcRes != null && rpcRes is Map) {
+        final d = Map<String, dynamic>.from(rpcRes);
+        if (d['success'] == true) {
+          return JobVerificationResult.successCompletion(
+            status: d['status'] as String? ?? 'completed',
+            elapsedSeconds: (d['elapsed_seconds'] as num?)?.toInt() ?? 0,
+            paymentEligible: d['payment_eligible'] as bool? ?? true,
+          );
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[JobExecutionRepository] record_verified_completion RPC failed: $e, falling back to Edge function');
+      }
+    }
+
+    // 2. Fall back to Edge function
     try {
       final res = await _edgeApi.assignmentVerify(
         assignmentId: assignmentId,
@@ -819,6 +935,22 @@ class SupabaseJobExecutionRepository implements JobExecutionRepository {
     } catch (e) {
       if (kDebugMode) {
         debugPrint('[JobExecutionRepository] confirmReplacement error: $e');
+      }
+      rethrow;
+    }
+  }
+
+  @override
+  Future<bool> cancelAssignment(String assignmentId, {String? reason}) async {
+    try {
+      final res = await _client.rpc('cancel_assignment', params: {
+        'p_assignment_id': assignmentId,
+        'p_reason': reason ?? 'user_cancelled',
+      });
+      return res == true;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[JobExecutionRepository] cancelAssignment error: $e');
       }
       rethrow;
     }

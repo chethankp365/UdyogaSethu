@@ -46,7 +46,8 @@ class _ApplyBottomSheetState extends ConsumerState<ApplyBottomSheet> {
 
     final bool isOwnJob = serverEligibility.isOwnJob ||
         (currentUserId != null && widget.job.providerId.isNotEmpty && widget.job.providerId == currentUserId);
-    final bool isPastStart = serverEligibility.isPastStart || widget.job.startAt.isBefore(DateTime.now());
+    final bool isPastStart = serverEligibility.isPastStart ||
+        (widget.job.status != 'open' && widget.job.startAt.isBefore(DateTime.now()));
     final bool isSlotsFilled = serverEligibility.isSlotsFilled || (widget.job.slotsFilled >= widget.job.slotsTotal);
 
     final bool isEligible = serverEligibility.isEligible &&
@@ -363,7 +364,8 @@ class _ApplyBottomSheetState extends ConsumerState<ApplyBottomSheet> {
                                           ref.read(seekerJobsControllerProvider.notifier).loadJobs();
                                           setState(() => _isSubmitted = true);
                                         } else {
-                                          final err = _parseApplyErrorMessage(applyState.error);
+                                          final lastErr = ref.read(jobApplyControllerProvider).error;
+                                          final err = _parseApplyErrorMessage(lastErr);
                                           if (context.mounted) {
                                             ScaffoldMessenger.of(context).showSnackBar(
                                               SnackBar(

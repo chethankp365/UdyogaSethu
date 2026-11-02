@@ -110,13 +110,28 @@ class SupabaseSeekerJobsRepository implements SeekerJobsRepository {
           continue;
         }
 
+        String itemId = a['id'] as String;
+        if (isAccepted) {
+          try {
+            final existingAsg = await _client
+                .from('job_assignments')
+                .select('id')
+                .eq('job_id', jId)
+                .eq('worker_id', uid)
+                .maybeSingle();
+            if (existingAsg != null && existingAsg['id'] != null) {
+              itemId = existingAsg['id'].toString();
+            }
+          } catch (_) {}
+        }
+
         final job = a['jobs'] as Map<String, dynamic>? ?? {};
         final provider = job['profiles'] as Map<String, dynamic>?;
         final cat = job['service_categories'] as Map<String, dynamic>?;
         final segment = isAccepted ? SeekerJobSegment.accepted : SeekerJobSegment.applied;
 
         result[segment]!.add(SeekerJobItem(
-          id: a['id'] as String,
+          id: itemId,
           jobId: jId,
           title: job['title'] as String? ?? 'Work',
           providerName: provider?['full_name'] as String? ?? 'Employer',

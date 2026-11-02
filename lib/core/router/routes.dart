@@ -54,6 +54,7 @@ class AppRoutes {
   static const String farmerGovtSchemes = '/farmer/govt-schemes';
 
   // Shared Feature Screens
+  static const String aiAssistant = '/ai-assistant';
   static const String settings = '/settings';
   static const String kyc = '/kyc';
   static const String kycDl = '/kyc/dl';
@@ -108,10 +109,6 @@ class AppRoutes {
   static const String creditReadiness = '/credit-readiness';
   static const String wellness = '/wellness';
 
-  // Guided Demo Routes (gated under Env.isDemoBuild)
-  static const String demo = '/demo';
-  static const String demoAccounts = '/demo/accounts';
-  static const String demoAdminReview = '/demo/admin-review';
 
   // Debug Routes (gated under kDebugMode)
   static const String devGallery = '/dev/gallery';

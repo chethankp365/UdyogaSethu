@@ -5,6 +5,7 @@ import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/wallet/data/wallet_repository.dart';
 import 'package:udyogasethu/features/wallet/domain/wallet_balance.dart';
 import 'package:udyogasethu/features/wallet/domain/withdrawal_result.dart';
+import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class WithdrawDialog extends ConsumerStatefulWidget {
   final WalletBalance walletBalance;
@@ -52,6 +53,13 @@ class _WithdrawDialogState extends ConsumerState<WithdrawDialog> {
       return;
     }
 
+    if (rupees > widget.walletBalance.availableRupees) {
+      setState(() {
+        _errorMessage = 'Withdrawal amount exceeds available wallet balance (₹${widget.walletBalance.availableRupees.toStringAsFixed(0)}).';
+      });
+      return;
+    }
+
     final amountPaise = (rupees * 100).round();
     final upi = _upiController.text.trim();
 
@@ -87,6 +95,7 @@ class _WithdrawDialogState extends ConsumerState<WithdrawDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final availableRupees = widget.walletBalance.availableRupees;
 
     return Dialog(
@@ -118,32 +127,15 @@ class _WithdrawDialogState extends ConsumerState<WithdrawDialog> {
               ),
               const SizedBox(height: 8),
 
-              // Demo Mode Alert Banner
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFEF3C7),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: const Color(0xFFF59E0B).withValues(alpha: 0.5)),
-                ),
-                child: const Row(
-                  children: [
-                    Icon(Icons.info_outline, size: 16, color: Color(0xFFB45309)),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'Demo mode: Simulated payout ledger debit until banking partner exists.',
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF92400E),
-                        ),
-                      ),
-                    ),
-                  ],
+              // Unobtrusive honesty note
+              Center(
+                child: Text(
+                  l10n?.demoWithdrawNote ?? 'Demo mode: Simulated payout ledger debit until banking partner exists.',
+                  style: const TextStyle(fontSize: 10, color: AppColors.textMuted),
+                  textAlign: TextAlign.center,
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
 
               if (_result != null) ...[
                 // Success View
@@ -159,7 +151,7 @@ class _WithdrawDialogState extends ConsumerState<WithdrawDialog> {
                       const Icon(Icons.check_circle_outline, color: Color(0xFF00875A), size: 40),
                       const SizedBox(height: 10),
                       const Text(
-                        'Demo Payout Completed',
+                        'Payout Completed',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,

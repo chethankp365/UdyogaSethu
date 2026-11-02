@@ -2757,7 +2757,9 @@ class AppLocalizationsTa extends AppLocalizations {
   String get paymentCash => 'வேலை முடிந்ததும் ரொக்கம்';
 
   @override
-  String get paymentPaySecurely => 'பாதுகாப்பாக பணம் செலுத்துங்கள்';
+  String paymentPaySecurely(String amount) {
+    return 'பாதுகாப்பாக பணம் செலுத்துங்கள்';
+  }
 
   @override
   String get paymentConfirmCash => 'ரொக்க முன்பதிவை உறுதிப்படுத்தவும்';
@@ -4230,4 +4232,304 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get disclaimerCreditGuidance =>
       'இது வழிகாட்டுதல் மட்டுமே. இது எந்தவொரு கடனுக்கும் உத்தரவாதம் அளிக்காது. ஒழுங்குபடுத்தப்பட்ட நிதி கூட்டாளர்களுடன் எதிர்கால இணைப்புகளுக்கு உங்கள் ஒப்புதல் தேவைப்படும்.';
+
+  @override
+  String get paymentUpiApps => 'UPI செயலிகள் (GPay, PhonePe, Paytm)';
+
+  @override
+  String get paymentUpiQr => 'டைனமிக் UPI QR குறியீடு';
+
+  @override
+  String get paymentUpiCollect => 'UPI ID / VPA-ஐ உள்ளிடவும்';
+
+  @override
+  String get paymentUpiVpaHint => 'எ.கா. mobile@upi அல்லது username@okhdfcbank';
+
+  @override
+  String get paymentUpiVpaInvalid =>
+      'சரியான UPI ID-ஐ உள்ளிடவும் (எ.கா. name@bank)';
+
+  @override
+  String get paymentUpiQrScanPrompt =>
+      'பணம் செலுத்த எந்தவொரு UPI செயலியையும் பயன்படுத்தி இந்த QR-ஐ ஸ்கேன் செய்யவும்';
+
+  @override
+  String paymentUpiQrExpiresIn(String time) {
+    return '$time இல் காலாவதியாகிறது';
+  }
+
+  @override
+  String get paymentRefreshStatus => 'வங்கி நிலையைச் சரிபார்க்கவும்';
+
+  @override
+  String get paymentReconciling => 'வங்கியுடன் சரிபார்க்கப்படுகிறது...';
+
+  @override
+  String get paymentReconcileFailed =>
+      'வங்கியுடன் பணம் செலுத்துதல் சரிபார்ப்பு நிலுவையில் உள்ளது. சிறிது நேரம் கழித்து மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get paymentStatusTitle => 'பணம் செலுத்திய நிலை';
+
+  @override
+  String get paymentStatusSuccess =>
+      'பணம் செலுத்துதல் வெற்றியடைந்தது மற்றும் உறுதிப்படுத்தப்பட்டது';
+
+  @override
+  String paymentStatusSuccessDesc(String amount) {
+    return 'உங்கள் $amount கட்டணம் உறுதிப்படுத்தப்பட்டது.';
+  }
+
+  @override
+  String get paymentStatusPending => 'வங்கியுடன் உறுதிப்படுத்தப்படுகிறது...';
+
+  @override
+  String get paymentStatusPendingDesc =>
+      'ரேஸர்பே மற்றும் வங்கி நெட்வொர்க்கிலிருந்து உறுதிப்படுத்தலுக்காக காத்திருக்கிறது. திரை தானாகவே புதுப்பிக்கப்படும்.';
+
+  @override
+  String get paymentStatusFailed => 'பணம் செலுத்துதல் தோல்வியடைந்தது';
+
+  @override
+  String get paymentStatusFailedDesc =>
+      'வங்கியால் உங்கள் பரிவர்த்தனையை முடிக்க முடியவில்லை. பணம் கழிக்கப்படவில்லை.';
+
+  @override
+  String get paymentTotalAmountPaid => 'செலுத்தப்பட்ட மொத்தத் தொகை';
+
+  @override
+  String get paymentEscrowProtectedNotice =>
+      'எஸ்க்ரோ பாதுகாக்கப்பட்டது: சரிபார்க்கப்பட்ட வேலை முடிந்ததும் மட்டுமே தொழிலாளிக்கு பணம் விடுவிக்கப்படும்.';
+
+  @override
+  String get paymentShareReceipt => 'PDF ரசீதைப் பகிரவும் / பதிவிறக்கவும்';
+
+  @override
+  String get paymentContinueAction => 'வேலை / ஆர்டருக்கு தொடரவும்';
+
+  @override
+  String get chatReportUser => 'பயனரைப் புகாரளிக்கவும்';
+
+  @override
+  String get chatBlockUser => 'பயனரை முடக்கு';
+
+  @override
+  String get chatUserBlocked =>
+      'இந்தப் பயனர் முடக்கப்பட்டுள்ளார். செய்திகள் முடக்கப்பட்டுள்ளன.';
+
+  @override
+  String get chatReportSubmitted =>
+      'நிர்வாகி மதிப்பாய்வுக்கு அறிக்கை சமர்ப்பிக்கப்பட்டது.';
+
+  @override
+  String get chatFilterAll => 'அனைத்தும்';
+
+  @override
+  String get chatFilterJobs => 'வேலைகள்';
+
+  @override
+  String get chatFilterBookings => 'முன்பதிவுகள்';
+
+  @override
+  String get chatFilterOrders => 'பண்ணை ஆர்டர்கள்';
+
+  @override
+  String get whatsappNotifyOptIn => 'WhatsApp அறிவிப்புகள்';
+
+  @override
+  String get whatsappNotifyDesc =>
+      'WhatsApp வழியாக முக்கியமான வேலை புதுப்பிப்புகள், முன்பதிவு நிலை மற்றும் கட்டண ரசீதுகளைப் பெறுங்கள்';
+
+  @override
+  String get whatsappConsentNote =>
+      'இயக்குவதன் மூலம், உங்கள் பதிவுசெய்த மொபைல் எண்ணில் உத்யோகசேதுவிலிருந்து பரிவர்த்தனை விழிப்பூட்டல்களைப் பெற ஒப்புக்கொள்கிறீர்கள்.';
+
+  @override
+  String get voiceModalTitle => 'AI குரல் உதவியாளர்';
+
+  @override
+  String get voiceGreetingMorning => 'காலை வணக்கம்';
+
+  @override
+  String get voiceGreetingAfternoon => 'மதிய வணக்கம்';
+
+  @override
+  String get voiceGreetingEvening => 'மாலை வணக்கம்';
+
+  @override
+  String get voiceAskAnything => 'இன்று நான் உங்களுக்கு எவ்வாறு உதவலாம்?';
+
+  @override
+  String get voiceTapOrbToSpeak => 'பேச பொத்தானை அழுத்தவும்';
+
+  @override
+  String get voiceListeningNow => 'கேட்கிறது... இப்போது பேசுங்கள்';
+
+  @override
+  String get voiceThinking => 'சரியான தகவலைத் தேடுகிறது...';
+
+  @override
+  String get voiceSpeaking => 'பதிலளிக்கிறது (நிறுத்த தட்டவும்)';
+
+  @override
+  String get voiceHearError =>
+      'தெளிவாகக் கேட்கவில்லை. மீண்டும் முயற்சிக்க தட்டவும்';
+
+  @override
+  String get voiceMicRequired => 'மைக்ரோஃபோன் அனுமதி தேவை';
+
+  @override
+  String get voiceMicDeniedDesc =>
+      'குரல் கட்டளைகளை இயக்க அனுமதி வழங்க தட்டவும்.';
+
+  @override
+  String get voiceMicPermanentDesc =>
+      'மைக்ரோஃபோன் அணுகலை அனுமதிக்க ஆப் அமைப்புகளைத் திறக்கவும்.';
+
+  @override
+  String get voiceGrantPermission => 'அனுமதி கொடுங்கள்';
+
+  @override
+  String get voiceOpenSettings => 'அமைப்புகளைத் திற';
+
+  @override
+  String get voiceTypeInstead => 'டைப் செய்யவும்';
+
+  @override
+  String get voiceTypeHint => 'உங்கள் கேள்வியை இங்கே தட்டச்சு செய்யவும்...';
+
+  @override
+  String get voiceListenAgain => 'மீண்டும் கேளுங்கள்';
+
+  @override
+  String get voiceStopAudio => 'ஆடியோவை நிறுத்துங்கள்';
+
+  @override
+  String get voiceResetConversation => 'உரையாடலை மீட்டமைக்கவும்';
+
+  @override
+  String get voiceMuteTooltip => 'குரலை முடக்கு';
+
+  @override
+  String get voiceUnmuteTooltip => 'குரலை இயக்கு';
+
+  @override
+  String get voiceYouSaid => 'நீங்கள் கூறியது:';
+
+  @override
+  String get voiceAssistantReply => 'உதவியாளர்:';
+
+  @override
+  String get voicePromptNearbyJobs => 'அருகிலுள்ள வேலைகளைக் கண்டறியவும்';
+
+  @override
+  String get voicePromptCheckWallet => 'எனது பணப்பை இருப்பைச் சரிபார்க்கவும்';
+
+  @override
+  String get voicePromptOpenProfile => 'எனது சுயவிவரத்தைத் திறக்கவும்';
+
+  @override
+  String get voicePromptActiveJobs => 'எனது செயலில் உள்ள வேலைகளைக் காட்டு';
+
+  @override
+  String get voicePromptFindWorkers =>
+      'எனக்கு அருகில் உள்ள பணியாளர்களைக் கண்டறியவும்';
+
+  @override
+  String get voicePromptPostJob => 'புதிய வேலையை இடுகையிடவும்';
+
+  @override
+  String get voicePromptApplicants => 'விண்ணப்பதாரர்களைக் காட்டு';
+
+  @override
+  String get voicePromptCheckEarnings => 'எனது வருமானத்தை சரிபார்க்கவும்';
+
+  @override
+  String get voicePromptMandiPrices => 'இன்றைய தக்காளி விலை என்ன?';
+
+  @override
+  String get voicePromptMarketplace => 'விளைபொருட்கள் சந்தையைத் திறக்கவும்';
+
+  @override
+  String get voicePromptFarmerOrders => 'எனது ஆர்டர்களைக் காட்டு';
+
+  @override
+  String get voicePromptCropHelp => 'பயிர் நோயைக் கண்டறிய உதவவும்';
+
+  @override
+  String get voiceLangNotInstalled =>
+      'இந்த மொழிக்கான குரல் வெளியீடு உங்கள் சாதனத்தில் நிறுவப்படவில்லை.';
+
+  @override
+  String get voiceCloudSttActive =>
+      'இந்த மொழிக்காக கிளவுட் குரல் அறிதல் பயன்படுத்தப்படுகிறது.';
+
+  @override
+  String get actionCancelJob => 'வேலை ஒதுக்கீட்டை ரத்துசெய்';
+
+  @override
+  String get actionCancelWorker => 'பணியாளர் முன்பதிவை ரத்துசெய்';
+
+  @override
+  String get cancelAssignmentTitle => 'ஒதுக்கீட்டை ரத்துசெய்ய வேண்டுமா?';
+
+  @override
+  String get cancelAssignmentPrompt =>
+      'இந்த ஒதுக்கீட்டை நிச்சயமாக ரத்துசெய்ய விரும்புகிறீர்களா? இந்த இடம் மீண்டும் தளத்திற்கு வெளியிடப்படும்.';
+
+  @override
+  String get cancelAssignmentConfirm => 'ரத்துசெய்வதை உறுதிப்படுத்து';
+
+  @override
+  String get cancelAssignmentSuccess =>
+      'ஒதுக்கீடு வெற்றிகரமாக ரத்துசெய்யப்பட்டது.';
+
+  @override
+  String get cancellationReasonPrompt =>
+      'தயவுசெய்து ரத்துசெய்வதற்கான காரணத்தைத் தேர்ந்தெடுக்கவும்:';
+
+  @override
+  String get reasonEmergency => 'தனிப்பட்ட அவசரநிலை';
+
+  @override
+  String get reasonScheduleConflict => 'நேர முரண்பாடு / அட்டவணைப் பிரச்சனை';
+
+  @override
+  String get reasonFoundAlternative => 'வேறு மாற்று கிடைத்தது';
+
+  @override
+  String get reasonMutualAgreement => 'பரஸ்பர உடன்பாடு';
+
+  @override
+  String get reasonOther => 'பிற காரணம்';
+
+  @override
+  String get voiceSelectLanguage => 'குரல் மொழி';
+
+  @override
+  String get voiceLangAuto => 'தானியங்கி கண்டறிதல்';
+
+  @override
+  String get chatClosedTitle => 'இந்த அரட்டை இனி கிடைக்காது';
+
+  @override
+  String get chatClosedDesc =>
+      'வேலை முடிந்தது. பாதுகாப்பு மற்றும் தனியுரிமைக்காக செய்தியிடல் மற்றும் அழைப்புகள் முடக்கப்பட்டுள்ளன.';
+
+  @override
+  String get chatCallingDisabled =>
+      'வேலை முடிந்ததால் குரல் அழைப்பு முடக்கப்பட்டுள்ளது.';
+
+  @override
+  String get chatFilterActive => 'செயலில் உள்ள அரட்டைகள்';
+
+  @override
+  String get chatFilterCompleted => 'முடிந்த வேலைகள்';
+
+  @override
+  String get chatDeleteAction => 'உரையாடலை நீக்கு';
+
+  @override
+  String get chatDeletedNotice =>
+      'உரையாடல் உங்கள் இன்பாக்ஸிலிருந்து அகற்றப்பட்டது.';
 }

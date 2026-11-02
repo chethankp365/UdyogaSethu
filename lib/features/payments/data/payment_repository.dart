@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:udyogasethu/core/supabase/edge_api.dart';
+import 'package:udyogasethu/core/supabase/supabase_service.dart';
 import 'package:udyogasethu/features/payments/domain/payment_bill_summary.dart';
 import 'package:udyogasethu/features/payments/domain/payment_models.dart';
 
@@ -16,6 +18,8 @@ abstract class PaymentRepository {
     required String refId,
     required PaymentMethod method,
     bool? protectionOverride,
+    String? upiFlow,
+    String? upiVpa,
   });
 
   Future<PaymentRecord> getPayment(String paymentId);
@@ -33,12 +37,17 @@ abstract class PaymentRepository {
   Future<bool> refundAssignmentEscrow(String assignmentId, {int? refundPaise, String? reason});
 
   Future<bool> releaseOrderEscrow(String orderId);
+
+  Future<Map<String, dynamic>> reconcilePayment(String paymentId);
+
+  Future<bool> validateVpa(String vpa);
 }
 
 class SupabasePaymentRepository implements PaymentRepository {
   final SupabaseClient _client;
+  final EdgeApiClient _edgeApi;
 
-  SupabasePaymentRepository(this._client);
+  SupabasePaymentRepository(this._client, this._edgeApi);
 
   @override
   Future<PaymentBillSummary> computeBill({
@@ -69,6 +78,8 @@ class SupabasePaymentRepository implements PaymentRepository {
     required String refId,
     required PaymentMethod method,
     bool? protectionOverride,
+    String? upiFlow,
+    String? upiVpa,
   }) async {
     final response = await _client.functions.invoke(
       'payment-create-order',
@@ -77,6 +88,8 @@ class SupabasePaymentRepository implements PaymentRepository {
         'ref_id': refId,
         'method': method.toDbString(),
         'protection_override': ?protectionOverride,
+        'upi_flow': ?upiFlow,
+        'upi_vpa': ?upiVpa,
       },
     );
 
@@ -171,11 +184,28 @@ class SupabasePaymentRepository implements PaymentRepository {
     });
     return res as bool? ?? false;
   }
+
+  @override
+  Future<Map<String, dynamic>> reconcilePayment(String paymentId) async {
+    return _edgeApi.reconcilePayment(paymentId);
+  }
+
+  @override
+  Future<bool> validateVpa(String vpa) async {
+    try {
+      final res = await _edgeApi.validateVpa(vpa);
+      return res['bank_verified'] == true || res['success'] == true;
+    } catch (_) {
+      return false;
+    }
+  }
 }
 
 // Providers
 final paymentRepositoryProvider = Provider<PaymentRepository>((ref) {
-  return SupabasePaymentRepository(Supabase.instance.client);
+  final client = ref.watch(supabaseClientProvider);
+  final edgeApi = ref.watch(edgeApiClientProvider);
+  return SupabasePaymentRepository(client, edgeApi);
 });
 
 final paymentBillProvider = FutureProvider.family<PaymentBillSummary, ({String refType, String refId, bool? protection})>(

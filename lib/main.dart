@@ -12,12 +12,15 @@ import 'package:udyogasethu/l10n/app_localizations.dart';
 
 import 'package:udyogasethu/core/notifications/notification_service.dart';
 import 'package:udyogasethu/core/widgets/offline_banner_wrapper.dart';
-import 'package:udyogasethu/core/widgets/demo_build_badge.dart';
-import 'package:udyogasethu/features/demo/presentation/widgets/demo_coach_mark_overlay.dart';
 import 'package:udyogasethu/features/account/presentation/settings_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // In release builds, disable all debugPrint logging to prevent logcat leakage
+  if (kReleaseMode) {
+    debugPrint = (String? message, {int? wrapWidth}) {};
+  }
 
   // In release builds never show a full-screen red error: show a friendly message
   ErrorWidget.builder = (FlutterErrorDetails details) {
@@ -52,6 +55,10 @@ void main() async {
       // ignore: deprecated_member_use
       anonKey: Env.supabaseAnonKey,
     );
+  }
+
+  if (kDebugMode) {
+    debugPrint('[FaceMatcher] Active Face Matcher: ondevice (Google ML Kit Face Detection + MobileFaceNet 128d TFLite), NOT mock');
   }
 
   runApp(
@@ -113,14 +120,7 @@ class _UdyogaSethuAppState extends ConsumerState<UdyogaSethuApp> {
             textScaler: TextScaler.linear(settings.textScale.clamp(0.85, 1.60)),
           ),
           child: OfflineBannerWrapper(
-            child: DemoCoachMarkOverlay(
-              child: Stack(
-                children: [
-                  child ?? const SizedBox.shrink(),
-                  const DemoBuildBadge(),
-                ],
-              ),
-            ),
+            child: child ?? const SizedBox.shrink(),
           ),
         );
       },

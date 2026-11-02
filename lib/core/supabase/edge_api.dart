@@ -44,11 +44,18 @@ class EdgeApiClient {
   EdgeApiClient(this._client);
 
   /// Helper to invoke edge function and map response/exceptions to [AppException].
-  Future<Map<String, dynamic>> _invoke(String functionName, {Map<String, dynamic>? body}) async {
+  Future<Map<String, dynamic>> _invoke(
+    String functionName, {
+    Map<String, dynamic>? body,
+    Map<String, String>? queryParameters,
+    HttpMethod method = HttpMethod.post,
+  }) async {
     try {
       final response = await _client.functions.invoke(
         functionName,
         body: body,
+        queryParameters: queryParameters,
+        method: method,
       );
 
       final status = response.status;
@@ -147,12 +154,15 @@ class EdgeApiClient {
     required List<double> embedding,
     required bool livenessPassed,
     List<String>? livenessChallenges,
+    String? imageBase64,
   }) async {
-    return _invoke('face-enroll', body: {
+    final body = <String, dynamic>{
       'embedding': embedding,
       'liveness_passed': livenessPassed,
       'liveness_challenges': livenessChallenges ?? [],
-    });
+    };
+    if (imageBase64 != null) body['image_base64'] = imageBase64;
+    return _invoke('face-enroll', body: body);
   }
 
   /// Verify user selfie against registered face embedding.
@@ -171,12 +181,14 @@ class EdgeApiClient {
     required List<double> embedding,
     required String context,
     String? assignmentId,
+    String? imageBase64,
   }) async {
     final body = <String, dynamic>{
       'embedding': embedding,
       'context': context,
     };
     if (assignmentId != null) body['assignment_id'] = assignmentId;
+    if (imageBase64 != null) body['image_base64'] = imageBase64;
     return _invoke('face-verify', body: body);
   }
 
@@ -344,13 +356,136 @@ class EdgeApiClient {
   Future<Map<String, dynamic>> classifyVoiceIntent({
     required String spokenText,
     required String language,
+    String? role,
   }) async {
     final body = <String, dynamic>{
       'task': 'voice_intent',
       'spoken_text': spokenText,
       'language': language,
+      ...? (role != null ? {'user_role': role} : null),
     };
     return _invoke('ai-assist', body: body);
+  }
+
+  /// Query 5-Provider Orchestrated AI Assistant (Groq fast LLM, Gemini reasoning, OpenRouter fallback).
+  Future<Map<String, dynamic>> queryAssistant({
+    required String query,
+    required String role,
+    required String language,
+    List<Map<String, String>>? conversationHistory,
+    Map<String, dynamic>? context,
+    String? preferredProvider,
+  }) async {
+    final body = <String, dynamic>{
+      'task': 'assistant_query',
+      'spoken_text': query,
+      'user_role': role,
+      'language': language,
+    };
+    if (conversationHistory != null) body['conversation_history'] = conversationHistory;
+    if (context != null) body['context'] = context;
+    if (preferredProvider != null) body['preferred_provider'] = preferredProvider;
+    return _invoke('ai-assist', body: body);
+  }
+
+  /// Synthesize text to natural-sounding speech via Deepgram Aura.
+  Future<Map<String, dynamic>> voiceSynthesize({
+    required String text,
+    String? voice,
+    String? language,
+  }) async {
+    final body = <String, dynamic>{
+      'task': 'voice_tts',
+      'tts_text': text,
+      ...? (voice != null ? {'tts_voice': voice} : null),
+      ...? (language != null ? {'language': language} : null),
+    };
+    return _invoke('ai-assist', body: body);
+  }
+
+  /// Transcribe speech audio to text via Deepgram Nova-2.
+  Future<Map<String, dynamic>> voiceTranscribe({
+    required String audioBase64,
+    String? mimeType,
+    String? language,
+  }) async {
+    final body = <String, dynamic>{
+      'task': 'voice_stt',
+      'audio_base64': audioBase64,
+      ...? (mimeType != null ? {'audio_mime': mimeType} : null),
+      ...? (language != null ? {'language': language} : null),
+    };
+    return _invoke('ai-assist', body: body);
+  }
+
+  /// Discover capabilities and status of all 5 configured AI providers.
+  Future<Map<String, dynamic>> getAiCapabilities() async {
+    return _invoke(
+      'ai-assist',
+      queryParameters: {'health': 'true'},
+      method: HttpMethod.get,
+    );
+  }
+
+  /// AI helper to generate job post title, description and requirements.
+  Future<Map<String, dynamic>> generateJobDescription({
+    required String category,
+    String? title,
+    String? notes,
+    required String language,
+  }) async {
+    final body = <String, dynamic>{
+      'task': 'job_description_helper',
+      'category': category,
+      'title': title,
+      'notes': notes,
+      'language': language,
+    };
+    return _invoke('ai-assist', body: body);
+  }
+
+  /// AI support chat query.
+  Future<Map<String, dynamic>> supportChat({
+    required String query,
+    required String role,
+    required String language,
+  }) async {
+    final body = <String, dynamic>{
+      'task': 'support_chat',
+      'query': query,
+      'user_role': role,
+      'language': language,
+    };
+    return _invoke('ai-assist', body: body);
+  }
+
+  /// Validate a Virtual Payment Address (UPI VPA).
+  Future<Map<String, dynamic>> validateVpa(String vpa) async {
+    return _invoke('validate-vpa', body: {'vpa': vpa});
+  }
+
+  /// Reconcile a payment order state against server & payment gateway.
+  Future<Map<String, dynamic>> reconcilePayment(String paymentId) async {
+    return _invoke('payment-reconcile', body: {'payment_id': paymentId});
+  }
+
+  /// Send or test a transactional WhatsApp notification via backend Edge Function.
+  Future<Map<String, dynamic>> sendWhatsAppNotification({
+    required String phone,
+    required String eventType,
+    String? recipientUserId,
+    String? templateName,
+    String? languageCode,
+    List<String>? parameters,
+  }) async {
+    return _invoke('whatsapp-notify', body: {
+      'recipient_phone': phone,
+      'event_type': eventType,
+      'recipient_user_id': ?recipientUserId,
+      'template_name': ?templateName,
+      'language_code': ?languageCode,
+      'parameters': ?parameters,
+    });
   }
 }
 

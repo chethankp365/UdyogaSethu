@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -472,14 +473,21 @@ class SupabaseKycRepository implements KycRepository {
         embedding: embedding,
         livenessPassed: livenessPassed,
         livenessChallenges: challenges,
+        imageBase64: photoBytes != null && photoBytes.isNotEmpty ? base64Encode(photoBytes) : null,
       );
+
+      final payload = res['data'] is Map<String, dynamic>
+          ? res['data'] as Map<String, dynamic>
+          : (res['data'] is Map ? Map<String, dynamic>.from(res['data'] as Map) : res);
 
       final record = KycRecord(
         id: 'face-rec-${DateTime.now().millisecondsSinceEpoch}',
         userId: userId,
         docType: 'face',
-        provider: res['mode'] == 'mock' ? 'mock_face_matcher' : 'ondevice_tflite_matcher',
-        providerRef: res['matcher_ref']?.toString() ?? 'ondevice-tflite-v1',
+        provider: payload['mode'] == 'mock'
+            ? 'mock_face_matcher'
+            : (payload['mode'] == 'eden_ai' ? 'eden_ai' : 'ondevice_tflite_matcher'),
+        providerRef: payload['matcher_ref']?.toString() ?? 'ondevice-tflite-v1',
         status: 'verified',
         maskedId: 'FACE-REF-${userId.length >= 4 ? userId.substring(0, 4).toUpperCase() : "OK"}',
         nameMasked: 'Enrolled Face Template',
@@ -489,22 +497,10 @@ class SupabaseKycRepository implements KycRepository {
 
       _mockStorage['${userId}_face'] = record;
       return record;
-    } catch (e) {
-      AppLogger.w('Edge function face-enroll unavailable, using local verified fallback: $e');
-      final record = KycRecord(
-        id: 'face-rec-fallback',
-        userId: userId,
-        docType: 'face',
-        provider: 'ondevice_tflite_matcher',
-        providerRef: 'ondevice-tflite-local-v1',
-        status: 'verified',
-        maskedId: 'FACE-REF-${userId.length >= 4 ? userId.substring(0, 4).toUpperCase() : "OK"}',
-        nameMasked: 'Enrolled Face Template',
-        verifiedAt: DateTime.now(),
-        createdAt: DateTime.now(),
-      );
-      _mockStorage['${userId}_face'] = record;
-      return record;
+    } catch (e, stack) {
+      AppLogger.e('Face enrollment failed: $e', e, stack);
+      if (e is AppException) rethrow;
+      throw AppException.unknown('Failed to enroll face profile: $e');
     }
   }
 }

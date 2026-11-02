@@ -10,6 +10,8 @@ export interface PaymentCreateOrderRequest {
   ref_id: string;
   method: 'upi' | 'card' | 'wallet' | 'cash';
   protection_override?: boolean;
+  upi_flow?: 'intent' | 'qr' | 'collect';
+  upi_vpa?: string;
 }
 
 Deno.serve(async (req: Request) => {
@@ -39,8 +41,14 @@ Deno.serve(async (req: Request) => {
     const validation = await validateBody<PaymentCreateOrderRequest>(req, ['ref_type', 'ref_id', 'method']);
     if (validation.errorResponse) return validation.errorResponse;
 
-    const { ref_type, ref_id, method, protection_override } = validation.data!;
+    const { ref_type, ref_id, method, protection_override, upi_flow, upi_vpa } = validation.data!;
     const serviceClient = getServiceClient();
+
+    if (method === 'upi' && upi_flow === 'collect') {
+      if (!upi_vpa || !/^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/.test(upi_vpa.trim())) {
+        return errorResponse('bad_request', 'Invalid UPI ID format. Expected format: username@bank', 400);
+      }
+    }
 
     // 1. Compute bill strictly on server from database (never trust client amounts)
     const { data: billRows, error: billError } = await serviceClient.rpc('compute_payment_bill', {
@@ -242,6 +250,8 @@ Deno.serve(async (req: Request) => {
         protected: isProtected,
         razorpay_order_id: razorpayOrderId,
         receipt_no: receiptNo,
+        upi_flow: method === 'upi' ? (upi_flow ?? 'intent') : null,
+        upi_vpa: method === 'upi' ? upi_vpa : null,
       })
       .select()
       .single();
@@ -251,6 +261,11 @@ Deno.serve(async (req: Request) => {
       return errorResponse('internal_error', 'Failed to create payment tracking record', 500, insertError?.message);
     }
 
+    const merchantVpa = Deno.env.get('MERCHANT_UPI_VPA') || 'razorpay@icici';
+    const upiString = method === 'upi'
+      ? `upi://pay?pa=${encodeURIComponent(merchantVpa)}&pn=UdyogaSethu&am=${(totalPaise / 100).toFixed(2)}&cu=INR&tn=${encodeURIComponent(receiptNo)}&tr=${payment.id}`
+      : null;
+
     return jsonResponse({
       order_id: razorpayOrderId,
       key_id: keyId,
@@ -259,6 +274,8 @@ Deno.serve(async (req: Request) => {
       amount_paise: totalPaise,
       currency: 'INR',
       status: 'created',
+      upi_string: upiString,
+      upi_flow: method === 'upi' ? (upi_flow ?? 'intent') : null,
       bill_summary: {
         base_amount_paise: basePaise,
         platform_fee_paise: platformFeePaise,

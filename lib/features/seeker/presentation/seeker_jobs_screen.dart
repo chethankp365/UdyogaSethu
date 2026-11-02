@@ -212,7 +212,9 @@ class _SeekerJobsScreenState extends ConsumerState<SeekerJobsScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
         onTap: () {
-          if (segment == SeekerJobSegment.active || segment == SeekerJobSegment.accepted) {
+          if (segment == SeekerJobSegment.active ||
+              segment == SeekerJobSegment.accepted ||
+              segment == SeekerJobSegment.completed) {
             context.push('/jobs/active/${item.id}');
           } else {
             context.push('/job/${item.jobId}');

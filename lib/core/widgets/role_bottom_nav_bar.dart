@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/widgets/mic_fab.dart';
+import 'package:udyogasethu/features/chat/presentation/protected_inbox_screen.dart';
 import 'package:udyogasethu/features/voice/presentation/voice_assistant_modal.dart';
 
-class RoleBottomNavBar extends StatelessWidget {
+class RoleBottomNavBar extends ConsumerWidget {
   final int selectedIndex;
   final ValueChanged<int> onTabSelected;
   final UserRole role;
@@ -21,12 +23,13 @@ class RoleBottomNavBar extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDark ? AppColors.navyCard : Colors.white;
     final activeColor = isDark ? AppColors.emerald : AppColors.primaryTeal;
     final inactiveColor = AppColors.textMuted;
 
+    final unreadChats = ref.watch(unreadChatCountProvider);
     final tabItems = _getTabItems(role);
 
     return Container(
@@ -74,13 +77,14 @@ class RoleBottomNavBar extends StatelessWidget {
                 ),
               ),
 
-              // Tab 2
+              // Tab 2 (Chat) with unread badge
               _NavBarItem(
                 icon: tabItems[2].icon,
                 label: tabItems[2].label,
                 isSelected: selectedIndex == 2,
                 activeColor: activeColor,
                 inactiveColor: inactiveColor,
+                badgeCount: unreadChats,
                 onTap: () => onTabSelected(2),
               ),
 
@@ -140,6 +144,7 @@ class _NavBarItem extends StatelessWidget {
   final bool isSelected;
   final Color activeColor;
   final Color inactiveColor;
+  final int badgeCount;
   final VoidCallback onTap;
 
   const _NavBarItem({
@@ -148,6 +153,7 @@ class _NavBarItem extends StatelessWidget {
     required this.isSelected,
     required this.activeColor,
     required this.inactiveColor,
+    this.badgeCount = 0,
     required this.onTap,
   });
 
@@ -160,7 +166,34 @@ class _NavBarItem extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: color, size: 24),
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Icon(icon, color: color, size: 24),
+                if (badgeCount > 0)
+                  Positioned(
+                    top: -4,
+                    right: -8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade600,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                      child: Text(
+                        badgeCount > 99 ? '99+' : '$badgeCount',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 9.5,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
             const SizedBox(height: 2),
             Text(
               label,

@@ -32,6 +32,7 @@ class JobDetail {
   final String? myAssignmentStatus;
   final String? myApplicationId;
   final String? myAssignmentId;
+  final bool isDemo;
 
   const JobDetail({
     required this.id,
@@ -67,6 +68,7 @@ class JobDetail {
     this.myAssignmentStatus,
     this.myApplicationId,
     this.myAssignmentId,
+    this.isDemo = false,
   });
 
   int get slotsOpen => (slotsTotal - slotsFilled).clamp(0, slotsTotal);
@@ -133,6 +135,7 @@ class JobDetail {
       myAssignmentStatus: (json['my_assignment_status'] ?? json['assignment_status'])?.toString(),
       myApplicationId: (json['my_application_id'] ?? json['application_id'])?.toString(),
       myAssignmentId: (json['my_assignment_id'] ?? json['assignment_id'])?.toString(),
+      isDemo: json['is_demo'] as bool? ?? false,
     );
   }
 
@@ -165,6 +168,7 @@ class JobDetail {
       'distance_km': distanceKm,
       'walking_minutes': walkingMinutes,
       'status': status,
+      'is_demo': isDemo,
     };
   }
 }

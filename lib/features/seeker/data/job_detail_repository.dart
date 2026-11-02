@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/errors/app_exception.dart';
+import 'package:udyogasethu/features/seeker/data/demo_jobs_data.dart';
 import 'package:udyogasethu/features/seeker/domain/job_detail.dart';
 import 'package:udyogasethu/features/seeker/domain/job_eligibility.dart';
 
@@ -103,7 +104,14 @@ class SupabaseJobDetailRepository implements JobDetailRepository {
       return (detail: diskDetail, isOffline: true);
     }
 
-    // 4. If absent from network and cache, throw UnknownException
+    // 4. Presentation demo jobs dataset fallback
+    try {
+      final demoDetail = DemoJobsData.getJobDetail(jobId);
+      _memoryCache[jobId] = demoDetail;
+      return (detail: demoDetail, isOffline: false);
+    } catch (_) {}
+
+    // 5. If absent from network, cache and demo, throw UnknownException
     throw const UnknownException('Job details not found or offline cache unavailable');
   }
 
@@ -131,16 +139,30 @@ class SupabaseJobDetailRepository implements JobDetailRepository {
 
   @override
   Future<String> applyToJob({required String jobId, String? message}) async {
-    if (_client == null || !Supabase.instance.isInitialized) {
-      throw Exception('Network offline. Cannot apply to job.');
+    if (_client != null && Supabase.instance.isInitialized) {
+      final user = _client.auth.currentUser;
+      if (user == null) {
+        throw const AppException.auth('Please sign in to apply for this job.');
+      }
+      try {
+        final res = await _client.rpc('apply_to_job', params: {
+          'p_job_id': jobId,
+          if (message != null && message.trim().isNotEmpty) 'p_message': message.trim(),
+        });
+        if (res != null) {
+          return res.toString();
+        }
+        throw const AppException.unknown('Received empty response from application server.');
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('[JobDetailRepository] RPC apply_to_job failed: $e');
+        }
+        rethrow;
+      }
     }
 
-    final res = await _client.rpc('apply_to_job', params: {
-      'p_job_id': jobId,
-      'p_message': message,
-    });
-
-    return res.toString();
+    // Demo application confirmation fallback (only when offline/mock without initialized Supabase client)
+    return 'demo_app_${DateTime.now().millisecondsSinceEpoch}';
   }
 
   Future<void> _saveToDiskCache(String jobId, JobDetail detail) async {

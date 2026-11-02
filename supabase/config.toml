@@ -416,3 +416,7 @@ enabled = true
 
 [functions.payment-webhook]
 verify_jwt = false
+
+[functions.ai-assist]
+verify_jwt = false
+

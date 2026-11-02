@@ -9,6 +9,9 @@ void main() {
     'supabase/migrations/0653_privacy_and_debug_lockdown.sql',
     'supabase/migrations/0654_earnings_and_farmer.sql',
     'supabase/migrations/0660_real_qr_ticket_flow.sql',
+    'supabase/migrations/0800_payments_upi_reconciliation.sql',
+    'supabase/migrations/0810_chat_unified_conversations.sql',
+    'supabase/migrations/0811_chat_rpc_and_storage.sql',
     'supabase/dev/seed_cleanup.sql',
   ];
 

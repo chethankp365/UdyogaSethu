@@ -1,5 +1,8 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:udyogasethu/core/l10n/locale_controller.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/farmer/data/farmer_ai_repository.dart';
@@ -14,9 +17,10 @@ class PestAiDocScreen extends ConsumerStatefulWidget {
 
 class _PestAiDocScreenState extends ConsumerState<PestAiDocScreen> {
   String _selectedCrop = 'Tomato (ಟೊಮೇಟೊ)';
-  final _symptomsController =
-      TextEditingController(text: 'Yellowing edges on lower leaves with dark brown concentric spots.');
-  bool _hasPhotoAttached = true;
+  final _symptomsController = TextEditingController();
+  File? _photoFile;
+  String? _base64Photo;
+  int? _photoSizeBytes;
   bool _isLoading = false;
   AiAssistResponse<PestDiagnosisResult>? _result;
 
@@ -36,23 +40,56 @@ class _PestAiDocScreenState extends ConsumerState<PestAiDocScreen> {
     super.dispose();
   }
 
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final picker = ImagePicker();
+      final picked = await picker.pickImage(
+        source: source,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 80,
+      );
+
+      if (picked != null) {
+        final file = File(picked.path);
+        final bytes = await file.readAsBytes();
+        final base64Str = base64Encode(bytes);
+
+        setState(() {
+          _photoFile = file;
+          _base64Photo = base64Str;
+          _photoSizeBytes = bytes.length;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to pick photo: $e')),
+        );
+      }
+    }
+  }
+
   Future<void> _analyze() async {
+    if (_base64Photo == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please attach a leaf photo first.')),
+      );
+      return;
+    }
+
     setState(() => _isLoading = true);
     try {
       final repo = ref.read(farmerAiRepositoryProvider);
       final currentLocale = ref.read(localeProvider);
 
-      // Lightweight 1x1 png inline image base64 if photo attached
-      String? base64Photo;
-      if (_hasPhotoAttached) {
-        base64Photo = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
-      }
-
       final res = await repo.diagnosePest(
         crop: _selectedCrop,
-        symptoms: _symptomsController.text.trim(),
-        imageBase64: base64Photo,
-        imageMime: 'image/png',
+        symptoms: _symptomsController.text.trim().isNotEmpty
+            ? _symptomsController.text.trim()
+            : 'Visual leaf disease analysis requested from attached photo.',
+        imageBase64: _base64Photo,
+        imageMime: 'image/jpeg',
         district: 'Kolar / Mandya',
         language: currentLocale.languageCode,
       );
@@ -112,6 +149,8 @@ class _PestAiDocScreenState extends ConsumerState<PestAiDocScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final hasPhoto = _photoFile != null;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
@@ -141,13 +180,13 @@ class _PestAiDocScreenState extends ConsumerState<PestAiDocScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Pest & Crop Disease Diagnosis',
+                          'Plant Pathology & Pest Doctor',
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF991B1B)),
                         ),
                         SizedBox(height: 2),
                         Text(
-                          'Instant leaf diagnosis with organic-first IPM solutions and expert safety confirmation.',
-                          style: TextStyle(fontSize: 11, color: Color(0xFF7F1D1D)),
+                          'Instant AI diagnosis for leaf spots, stem rot, pests, and nutrient deficiencies.',
+                          style: TextStyle(fontSize: 12, color: Color(0xFF7F1D1D), height: 1.2),
                         ),
                       ],
                     ),
@@ -157,7 +196,7 @@ class _PestAiDocScreenState extends ConsumerState<PestAiDocScreen> {
             ),
             const SizedBox(height: 16),
 
-            // Leaf Photo Card
+            // Leaf Photo Card (Real Camera & Gallery only)
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),
@@ -168,61 +207,147 @@ class _PestAiDocScreenState extends ConsumerState<PestAiDocScreen> {
               ),
               child: Column(
                 children: [
-                  Container(
-                    width: double.infinity,
-                    height: 130,
-                    decoration: BoxDecoration(
-                      color: _hasPhotoAttached ? const Color(0xFFF0FDF4) : const Color(0xFFF8FAFC),
+                  if (hasPhoto) ...[
+                    // Real Preview
+                    ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: _hasPhotoAttached ? const Color(0xFF86EFAC) : const Color(0xFFCBD5E1),
-                        style: BorderStyle.solid,
+                      child: Stack(
+                        children: [
+                          Image.file(
+                            _photoFile!,
+                            width: double.infinity,
+                            height: 180,
+                            fit: BoxFit.cover,
+                          ),
+                          Positioned(
+                            top: 8,
+                            right: 8,
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _photoFile = null;
+                                  _base64Photo = null;
+                                  _photoSizeBytes = null;
+                                });
+                              },
+                              borderRadius: BorderRadius.circular(20),
+                              child: Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: const BoxDecoration(
+                                  color: Colors.black54,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(Icons.close, color: Colors.white, size: 18),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(
-                          _hasPhotoAttached ? Icons.check_circle_rounded : Icons.add_a_photo_outlined,
-                          size: 36,
-                          color: _hasPhotoAttached ? const Color(0xFF16A34A) : const Color(0xFF64748B),
+                        Row(
+                          children: [
+                            const Icon(Icons.check_circle_rounded, color: Color(0xFF16A34A), size: 18),
+                            const SizedBox(width: 6),
+                            Text(
+                              _photoSizeBytes != null
+                                  ? 'Leaf photo attached (${(_photoSizeBytes! / 1024).toStringAsFixed(1)} KB)'
+                                  : 'Leaf photo attached',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF15803D),
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 6),
-                        Text(
-                          _hasPhotoAttached ? 'Leaf Photo Attached (Compressed)' : 'Tap to Take or Upload Leaf Photo',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: _hasPhotoAttached ? const Color(0xFF15803D) : const Color(0xFF475569),
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          _hasPhotoAttached ? 'Ready for AI vision scan' : 'Focus closely on affected leaf surface',
-                          style: const TextStyle(fontSize: 11, color: Color(0xFF94A3B8)),
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              _photoFile = null;
+                              _base64Photo = null;
+                              _photoSizeBytes = null;
+                            });
+                          },
+                          child: const Text('Remove', style: TextStyle(color: Colors.red, fontSize: 12, fontWeight: FontWeight.bold)),
                         ),
                       ],
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      OutlinedButton.icon(
-                        style: OutlinedButton.styleFrom(
-                          minimumSize: const Size(0, 34),
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  ] else ...[
+                    // Empty State
+                    Container(
+                      width: double.infinity,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF8FAFC),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: const Color(0xFFCBD5E1),
+                          style: BorderStyle.solid,
                         ),
-                        icon: const Icon(Icons.camera_alt_outlined, size: 16),
-                        label: const Text('Take Photo', style: TextStyle(fontSize: 12)),
-                        onPressed: () => setState(() => _hasPhotoAttached = true),
+                      ),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.add_a_photo_outlined,
+                            size: 36,
+                            color: Color(0xFF64748B),
+                          ),
+                          SizedBox(height: 6),
+                          Text(
+                            'Add a leaf photo',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF475569),
+                            ),
+                          ),
+                          SizedBox(height: 2),
+                          Text(
+                            'Take or choose a close-up photo of the affected leaf',
+                            style: TextStyle(fontSize: 11, color: Color(0xFF94A3B8)),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+
+                  const SizedBox(height: 12),
+
+                  // Two Real Buttons: Take Photo & Choose from Gallery
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: const Color(0xFFDC2626),
+                            side: const BorderSide(color: Color(0xFFDC2626)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                          ),
+                          icon: const Icon(Icons.camera_alt_outlined, size: 18),
+                          label: const Text('Take Photo', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                          onPressed: () => _pickImage(ImageSource.camera),
+                        ),
                       ),
                       const SizedBox(width: 10),
-                      if (_hasPhotoAttached)
-                        TextButton(
-                          onPressed: () => setState(() => _hasPhotoAttached = false),
-                          child: const Text('Remove', style: TextStyle(fontSize: 12, color: Colors.red)),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: const Color(0xFF0D6548),
+                            side: const BorderSide(color: Color(0xFF0D6548)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                          ),
+                          icon: const Icon(Icons.photo_library_outlined, size: 18),
+                          label: const Text('From Gallery', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                          onPressed: () => _pickImage(ImageSource.gallery),
                         ),
+                      ),
                     ],
                   ),
                 ],
@@ -247,37 +372,42 @@ class _PestAiDocScreenState extends ConsumerState<PestAiDocScreen> {
             const SizedBox(height: 14),
 
             // Symptoms input
-            const Text('Observed Symptoms', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF475569))),
+            const Text('Observed Symptoms (Optional)', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF475569))),
             const SizedBox(height: 6),
             TextField(
               controller: _symptomsController,
               maxLines: 3,
               decoration: InputDecoration(
-                hintText: 'Describe spots, leaf curling, wilting, or insect activity...',
+                hintText: 'Describe spots, leaf curling, wilting, or insect activity (optional)...',
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               ),
             ),
             const SizedBox(height: 16),
 
-            // Analyze Button
+            // Analyze Button - ENABLED ONLY WHEN PHOTO IS ATTACHED
             SizedBox(
               width: double.infinity,
               height: 48,
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFDC2626),
+                  backgroundColor: hasPhoto ? const Color(0xFFDC2626) : Colors.grey.shade400,
                   foregroundColor: Colors.white,
+                  elevation: hasPhoto ? 2 : 0,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 icon: _isLoading
                     ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                     : const Icon(Icons.auto_awesome_rounded, size: 20),
                 label: Text(
-                  _isLoading ? 'Analyzing with AI...' : 'Diagnose Plant Disease',
+                  _isLoading
+                      ? 'Analyzing with AI...'
+                      : hasPhoto
+                          ? 'Diagnose Plant Disease'
+                          : 'Attach photo to diagnose',
                   style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                 ),
-                onPressed: _isLoading ? null : _analyze,
+                onPressed: (hasPhoto && !_isLoading) ? _analyze : null,
               ),
             ),
             const SizedBox(height: 20),
@@ -305,129 +435,173 @@ class _PestAiDocScreenState extends ConsumerState<PestAiDocScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Mode Badge
+                    // Diagnosis Header + Confidence
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: _result!.isGemini
-                                ? const Color(0xFF00875A).withValues(alpha: 0.12)
-                                : const Color(0xFFF1F5F9),
-                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.red.shade50,
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
+                          child: const Icon(Icons.coronavirus_rounded, color: Color(0xFFDC2626), size: 24),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Icon(
-                                _result!.isGemini ? Icons.auto_awesome_rounded : Icons.info_outline_rounded,
-                                size: 14,
-                                color: _result!.isGemini ? const Color(0xFF00875A) : const Color(0xFF64748B),
-                              ),
-                              const SizedBox(width: 4),
                               Text(
-                                _result!.isGemini
-                                    ? 'AI suggestion (Gemini), not professional advice'
-                                    : 'Basic mode (offline rules)',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                  color: _result!.isGemini ? const Color(0xFF00875A) : const Color(0xFF475569),
-                                ),
+                                _result!.result.likelyCause,
+                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF0F172A)),
+                              ),
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  if (_result!.result.confidenceLevel != null) ...[
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFEFF6FF),
+                                        borderRadius: BorderRadius.circular(6),
+                                        border: Border.all(color: const Color(0xFFBFDBFE)),
+                                      ),
+                                      child: Text(
+                                        _result!.result.confidenceLevel!,
+                                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1D4ED8)),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                  ],
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFFEF2F2),
+                                      borderRadius: BorderRadius.circular(6),
+                                      border: Border.all(color: const Color(0xFFFECACA)),
+                                    ),
+                                    child: const Text(
+                                      'AI DIAGNOSIS',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xFFB91C1C),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
-
-                    // Likely Cause
-                    Text(
-                      _result!.result.likelyCause,
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark),
-                    ),
-                    const SizedBox(height: 12),
-
-                    // Organic Remedies
-                    const Text(
-                      '🌿 Organic & Natural IPM Remedies (Recommended):',
-                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF047857)),
-                    ),
-                    const SizedBox(height: 6),
-                    ..._result!.result.organicRemedies.map((remedy) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 6),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Icon(Icons.check_circle_outline_rounded, size: 16, color: Color(0xFF059669)),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(remedy, style: const TextStyle(fontSize: 12, height: 1.3)),
-                            ),
-                          ],
-                        ),
-                      );
-                    }),
-                    const SizedBox(height: 12),
-
-                    // Chemical Option
-                    if (_result!.result.chemicalAdvice != null) ...[
-                      const Text(
-                        '🧪 Cautious Chemical Options:',
-                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFFB45309)),
-                      ),
-                      const SizedBox(height: 4),
+                    if (_result!.result.symptomsAnalysis != null && _result!.result.symptomsAnalysis!.isNotEmpty) ...[
+                      const SizedBox(height: 10),
                       Text(
-                        _result!.result.chemicalAdvice!,
-                        style: const TextStyle(fontSize: 12, color: Color(0xFF78350F), height: 1.3),
+                        _result!.result.symptomsAnalysis!,
+                        style: const TextStyle(fontSize: 12.5, color: Color(0xFF475569), fontStyle: FontStyle.italic),
                       ),
-                      const SizedBox(height: 12),
                     ],
+                    const Divider(height: 24),
 
-                    // Expert Warning Box
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.amber.shade50,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.amber.shade200),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    // Organic Remedy
+                    if (_result!.result.organicRemedies.isNotEmpty) ...[
+                      const Row(
                         children: [
-                          Icon(Icons.warning_amber_rounded, size: 18, color: Colors.amber.shade900),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              _result!.result.expertWarning,
-                              style: TextStyle(fontSize: 11, color: Colors.amber.shade900, height: 1.3),
-                            ),
-                          ),
+                          Icon(Icons.eco_rounded, size: 16, color: Color(0xFF16A34A)),
+                          SizedBox(width: 6),
+                          Text('Organic / Bio-Control Remedy', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF15803D))),
                         ],
                       ),
-                    ),
-                    const SizedBox(height: 14),
-
-                    // Fallback to Expert Button
-                    SizedBox(
-                      width: double.infinity,
-                      child: OutlinedButton.icon(
-                        style: OutlinedButton.styleFrom(
-                          minimumSize: const Size(0, 40),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      const SizedBox(height: 6),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF0FDF4),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        icon: const Icon(Icons.support_agent_rounded, size: 18),
-                        label: const Text('Ask a Local Agronomist (KVK Helpline)', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                        onPressed: _showExpertDialog,
+                        child: Text(
+                          _result!.result.organicRemedies.join('\n• '),
+                          style: const TextStyle(fontSize: 12.5, color: Color(0xFF166534), height: 1.3),
+                        ),
                       ),
+                      const SizedBox(height: 14),
+                    ],
+
+                    // Chemical Remedy
+                    if (_result!.result.chemicalAdvice != null && _result!.result.chemicalAdvice!.isNotEmpty) ...[
+                      const Row(
+                        children: [
+                          Icon(Icons.science_rounded, size: 16, color: Color(0xFF475569)),
+                          SizedBox(width: 6),
+                          Text('Chemical / Spray Recommendation', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF334155))),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF8FAFC),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          _result!.result.chemicalAdvice!,
+                          style: const TextStyle(fontSize: 12.5, color: Color(0xFF334155), height: 1.3),
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                    ],
+
+                    // Preventive Action / Expert Warning
+                    const Row(
+                      children: [
+                        Icon(Icons.shield_outlined, size: 16, color: Color(0xFF2563EB)),
+                        SizedBox(width: 6),
+                        Text('Preventive Measures & Warning', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1D4ED8))),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      _result!.result.preventionTips.isNotEmpty
+                          ? _result!.result.preventionTips.join('\n• ')
+                          : _result!.result.expertWarning,
+                      style: const TextStyle(fontSize: 12.5, color: Color(0xFF475569), height: 1.3),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Fallback / Gemini Source Badge
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: _result!.isGemini ? const Color(0xFFECFDF5) : const Color(0xFFF1F5F9),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            _result!.isGemini ? '✨ Powered by Gemini Vision' : 'Offline Rule-Engine Match',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: _result!.isGemini ? const Color(0xFF047857) : const Color(0xFF64748B),
+                            ),
+                          ),
+                        ),
+                        TextButton.icon(
+                          onPressed: _showExpertDialog,
+                          icon: const Icon(Icons.support_agent_rounded, size: 16, color: AppColors.headerGreenDark),
+                          label: const Text('Ask RSK Officer', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.headerGreenDark)),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 32),
             ],
           ],
         ),

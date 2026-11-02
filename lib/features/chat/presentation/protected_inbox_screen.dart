@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
+import 'package:udyogasethu/core/theme/app_motion.dart';
 import 'package:udyogasethu/core/theme/app_spacing.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/features/chat/data/chat_repository.dart';
 import 'package:udyogasethu/features/chat/domain/chat_thread.dart';
+import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class _ChatFilterParams {
-  final String status;
+  final String lifecycle; // 'active', 'completed', 'all'
+  final String contextFilter; // 'all', 'job', 'booking', 'order'
   final String role;
   final String query;
+  final UserRole userRole;
 
   const _ChatFilterParams({
-    required this.status,
+    this.lifecycle = 'active',
+    this.contextFilter = 'all',
     required this.role,
     required this.query,
+    this.userRole = UserRole.seeker,
   });
 
   @override
@@ -23,21 +31,77 @@ class _ChatFilterParams {
       identical(this, other) ||
       other is _ChatFilterParams &&
           runtimeType == other.runtimeType &&
-          status == other.status &&
+          lifecycle == other.lifecycle &&
+          contextFilter == other.contextFilter &&
           role == other.role &&
-          query == other.query;
+          query == other.query &&
+          userRole == other.userRole;
 
   @override
-  int get hashCode => Object.hash(status, role, query);
+  int get hashCode => Object.hash(lifecycle, contextFilter, role, query, userRole);
 }
 
 final chatThreadsProvider = FutureProvider.family.autoDispose<List<ChatThread>, _ChatFilterParams>((ref, params) async {
   final repo = ref.watch(chatRepositoryProvider);
-  return repo.getThreads(
-    filter: params.status,
+
+  try {
+    final client = Supabase.instance.client;
+    final uid = client.auth.currentUser?.id;
+    if (uid != null) {
+      final channel = client
+          .channel('realtime_inbox_$uid')
+          .onPostgresChanges(
+            event: PostgresChangeEvent.all,
+            schema: 'public',
+            table: 'conversations',
+            callback: (_) => ref.invalidateSelf(),
+          )
+          .onPostgresChanges(
+            event: PostgresChangeEvent.all,
+            schema: 'public',
+            table: 'messages',
+            callback: (_) => ref.invalidateSelf(),
+          )
+          .subscribe();
+
+      ref.onDispose(() {
+        client.removeChannel(channel);
+      });
+    }
+  } catch (_) {}
+
+  final allThreads = await repo.getThreads(
+    filter: params.lifecycle,
     roleFilter: params.role,
     searchQuery: params.query,
+    activeRole: params.userRole,
   );
+
+  List<ChatThread> filtered = allThreads;
+  if (params.lifecycle == 'active') {
+    filtered = filtered.where((t) => !t.isReadOnly).toList();
+  } else if (params.lifecycle == 'completed') {
+    filtered = filtered.where((t) => t.isReadOnly).toList();
+  }
+
+  if (params.contextFilter != 'all' && ['job', 'booking', 'order'].contains(params.contextFilter)) {
+    filtered = filtered.where((t) => t.contextType == params.contextFilter).toList();
+  }
+
+  return filtered;
+});
+
+final unreadChatCountProvider = Provider.autoDispose<int>((ref) {
+  final session = ref.watch(appSessionProvider);
+  final defaultParams = _ChatFilterParams(
+    lifecycle: 'active',
+    contextFilter: 'all',
+    role: 'all',
+    query: '',
+    userRole: session.activeRole,
+  );
+  final threads = ref.watch(chatThreadsProvider(defaultParams)).asData?.value ?? [];
+  return threads.fold<int>(0, (sum, t) => sum + t.unreadCount);
 });
 
 class ProtectedInboxScreen extends ConsumerStatefulWidget {
@@ -49,8 +113,9 @@ class ProtectedInboxScreen extends ConsumerStatefulWidget {
 
 class _ProtectedInboxScreenState extends ConsumerState<ProtectedInboxScreen> {
   final TextEditingController _searchCtrl = TextEditingController();
-  String _statusFilter = 'all'; // 'all', 'active', 'completed'
-  String _roleFilter = 'all'; // 'all', 'worker', 'customer', 'farmer'
+  String _lifecycleFilter = 'active'; // 'active' (default) or 'completed'
+  String _contextFilter = 'all'; // 'all', 'job', 'booking', 'order'
+  final String _roleFilter = 'all'; // 'all', 'worker', 'customer', 'farmer'
   String _searchQuery = '';
 
   @override
@@ -61,10 +126,14 @@ class _ProtectedInboxScreenState extends ConsumerState<ProtectedInboxScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final activeRole = ref.watch(appSessionProvider.select((s) => s.activeRole));
     final filterParams = _ChatFilterParams(
-      status: _statusFilter,
+      lifecycle: _lifecycleFilter,
+      contextFilter: _contextFilter,
       role: _roleFilter,
       query: _searchQuery,
+      userRole: activeRole,
     );
     final threadsAsync = ref.watch(chatThreadsProvider(filterParams));
 
@@ -144,50 +213,64 @@ class _ProtectedInboxScreenState extends ConsumerState<ProtectedInboxScreen> {
                           ),
                           const SizedBox(height: 10),
 
-                          // Filter Chips (All, Active, Completed)
+                          // Lifecycle Toggle: [Active Chats] | [Completed Jobs]
+                          Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF1F5F9),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: _buildLifecycleToggleItem(
+                                    label: l10n?.chatFilterActive ?? 'Active',
+                                    icon: Icons.chat_bubble_outline_rounded,
+                                    isSelected: _lifecycleFilter == 'active',
+                                    onTap: () => setState(() => _lifecycleFilter = 'active'),
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: _buildLifecycleToggleItem(
+                                    label: l10n?.chatFilterCompleted ?? 'Completed Jobs',
+                                    icon: Icons.lock_clock_outlined,
+                                    isSelected: _lifecycleFilter == 'completed',
+                                    onTap: () => setState(() => _lifecycleFilter = 'completed'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+
+                          // Context Filter Chips (All, Jobs, Bookings, Farm Orders)
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Row(
                               children: [
                                 _buildFilterChip(
-                                  label: 'All',
-                                  isSelected: _statusFilter == 'all',
-                                  onTap: () => setState(() => _statusFilter = 'all'),
+                                  label: l10n?.chatFilterAll ?? 'All',
+                                  isSelected: _contextFilter == 'all',
+                                  onTap: () => setState(() => _contextFilter = 'all'),
                                 ),
-                                const SizedBox(width: 6),
+                                const SizedBox(width: 8),
                                 _buildFilterChip(
-                                  label: 'Active',
-                                  isSelected: _statusFilter == 'active',
-                                  onTap: () => setState(() => _statusFilter = 'active'),
+                                  label: l10n?.chatFilterJobs ?? 'Jobs',
+                                  isSelected: _contextFilter == 'job',
+                                  onTap: () => setState(() => _contextFilter = 'job'),
                                 ),
-                                const SizedBox(width: 6),
+                                const SizedBox(width: 8),
                                 _buildFilterChip(
-                                  label: 'Completed',
-                                  isSelected: _statusFilter == 'completed',
-                                  onTap: () => setState(() => _statusFilter = 'completed'),
+                                  label: l10n?.chatFilterBookings ?? 'Bookings',
+                                  isSelected: _contextFilter == 'booking',
+                                  onTap: () => setState(() => _contextFilter = 'booking'),
                                 ),
-                                const SizedBox(width: 12),
-                                Container(width: 1, height: 20, color: Colors.grey.shade300),
-                                const SizedBox(width: 12),
+                                const SizedBox(width: 8),
                                 _buildFilterChip(
-                                  label: 'Worker Chats',
-                                  isSelected: _roleFilter == 'worker',
-                                  onTap: () => setState(() =>
-                                      _roleFilter = _roleFilter == 'worker' ? 'all' : 'worker'),
-                                ),
-                                const SizedBox(width: 6),
-                                _buildFilterChip(
-                                  label: 'Customer Chats',
-                                  isSelected: _roleFilter == 'customer',
-                                  onTap: () => setState(() =>
-                                      _roleFilter = _roleFilter == 'customer' ? 'all' : 'customer'),
-                                ),
-                                const SizedBox(width: 6),
-                                _buildFilterChip(
-                                  label: 'Farmer Chats',
-                                  isSelected: _roleFilter == 'farmer',
-                                  onTap: () => setState(() =>
-                                      _roleFilter = _roleFilter == 'farmer' ? 'all' : 'farmer'),
+                                  label: l10n?.chatFilterOrders ?? 'Farm Orders',
+                                  isSelected: _contextFilter == 'order',
+                                  onTap: () => setState(() => _contextFilter = 'order'),
                                 ),
                               ],
                             ),
@@ -266,7 +349,10 @@ class _ProtectedInboxScreenState extends ConsumerState<ProtectedInboxScreen> {
                           final thread = threads[idx];
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 10),
-                            child: _buildThreadCard(context, thread),
+                            child: FadeSlideEntrance(
+                              index: idx,
+                              child: _buildThreadCard(context, thread),
+                            ),
                           );
                         },
                         childCount: threads.length,
@@ -379,148 +465,255 @@ class _ProtectedInboxScreenState extends ConsumerState<ProtectedInboxScreen> {
     );
   }
 
-  Widget _buildThreadCard(BuildContext context, ChatThread thread) {
-    final isReadOnly = thread.isReadOnly;
-    final timeStr = _formatTimestamp(thread.lastMessageAt);
-
+  Widget _buildLifecycleToggleItem({
+    required String label,
+    required IconData icon,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
     return InkWell(
-      onTap: () {
-        context.push('${AppRoutes.chatDetail}/${thread.id}');
-      },
-      borderRadius: BorderRadius.circular(14),
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
       child: Container(
-        padding: const EdgeInsets.all(14),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: thread.unreadCount > 0 ? AppColors.headerGreenDark.withValues(alpha: 0.4) : const Color(0xFFE2E8F0),
-            width: thread.unreadCount > 0 ? 1.5 : 1.0,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
+          color: isSelected ? Colors.white : Colors.transparent,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 4,
+                    offset: const Offset(0, 1),
+                  ),
+                ]
+              : null,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 14,
+              color: isSelected ? AppColors.headerGreenDark : AppColors.textMuted,
+            ),
+            const SizedBox(width: 4),
+            Flexible(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                  color: isSelected ? AppColors.headerGreenDark : AppColors.textMuted,
+                ),
+              ),
             ),
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      ),
+    );
+  }
+
+  Widget _buildThreadCard(BuildContext context, ChatThread thread) {
+    final l10n = AppLocalizations.of(context);
+    final isReadOnly = thread.isReadOnly;
+    final timeStr = _formatTimestamp(thread.lastMessageAt);
+
+    return Dismissible(
+      key: ValueKey('thread_${thread.id}'),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        decoration: BoxDecoration(
+          color: Colors.red.shade400,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            // Top Row: Avatar, Name, Role Tag, Time
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: AppColors.paleMint,
-                  child: Text(
-                    thread.otherPartyName.isNotEmpty ? thread.otherPartyName[0].toUpperCase() : 'U',
-                    style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.headerGreenDark),
-                  ),
+            Icon(Icons.delete_outline_rounded, color: Colors.white, size: 22),
+            SizedBox(width: 6),
+            Text(
+              'Delete',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+            ),
+          ],
+        ),
+      ),
+      onDismissed: (_) async {
+        await ref.read(chatRepositoryProvider).deleteOrArchiveConversation(thread.id);
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(l10n?.chatDeletedNotice ?? 'Conversation removed from your inbox.'),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+      },
+      child: BouncingPressable(
+        borderRadius: BorderRadius.circular(14),
+        child: InkWell(
+          onTap: () {
+            context.push('${AppRoutes.chatDetail}/${thread.id}');
+          },
+          borderRadius: BorderRadius.circular(14),
+          child: Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: thread.unreadCount > 0 ? AppColors.headerGreenDark.withValues(alpha: 0.4) : const Color(0xFFE2E8F0),
+                width: thread.unreadCount > 0 ? 1.5 : 1.0,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.03),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        spacing: 6,
-                        runSpacing: 2,
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Top Row: Avatar, Name, Role Tag, Time & Status
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: AppColors.paleMint,
+                      child: Text(
+                        thread.otherPartyName.isNotEmpty ? thread.otherPartyName[0].toUpperCase() : 'U',
+                        style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.headerGreenDark),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: 6,
+                            runSpacing: 2,
+                            children: [
+                              Text(
+                                thread.otherPartyName,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.textDark,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              _buildRoleTag(thread.otherPartyRole),
+                              if (thread.id.startsWith('cccccccc-'))
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFEFF6FF),
+                                    borderRadius: BorderRadius.circular(4),
+                                    border: Border.all(color: const Color(0xFF93C5FD)),
+                                  ),
+                                  child: const Text(
+                                    'Demo mode',
+                                    style: TextStyle(
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFF1D4ED8),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                          const SizedBox(height: 2),
                           Text(
-                            thread.otherPartyName,
+                            thread.subject,
                             style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textDark,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.headerGreenDark,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          _buildRoleTag(thread.otherPartyRole),
                         ],
                       ),
-                      const SizedBox(height: 2),
-                      Text(
-                        thread.subject,
+                    ),
+                    const SizedBox(width: 6),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          timeStr,
+                          style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
+                        ),
+                        const SizedBox(height: 4),
+                        _buildStatusChip(isReadOnly),
+                      ],
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 10),
+
+                // Middle Row: Booking Code & Last Message Snippet
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF1F5F9),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        thread.bookingCode,
                         style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5,
+                          color: Color(0xFF475569),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        thread.lastMessageSnippet ?? 'No messages yet',
+                        style: TextStyle(
                           fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.headerGreenDark,
+                          color: thread.unreadCount > 0 ? AppColors.textDark : AppColors.textMuted,
+                          fontWeight: thread.unreadCount > 0 ? FontWeight.w600 : FontWeight.normal,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 6),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      timeStr,
-                      style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
                     ),
-                    const SizedBox(height: 4),
-                    _buildStatusChip(isReadOnly),
+                    if (thread.unreadCount > 0)
+                      Container(
+                        margin: const EdgeInsets.only(left: 6),
+                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                        decoration: const BoxDecoration(
+                          color: AppColors.accentOrange,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Text(
+                          '${thread.unreadCount}',
+                          style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                        ),
+                      ),
                   ],
                 ),
               ],
             ),
-
-            const SizedBox(height: 10),
-
-            // Middle Row: Booking Code & Last Message Snippet
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF1F5F9),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(
-                    thread.bookingCode,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 0.5,
-                      color: Color(0xFF475569),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    thread.lastMessageSnippet ?? 'No messages yet',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: thread.unreadCount > 0 ? AppColors.textDark : AppColors.textMuted,
-                      fontWeight: thread.unreadCount > 0 ? FontWeight.w600 : FontWeight.normal,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                if (thread.unreadCount > 0)
-                  Container(
-                    margin: const EdgeInsets.only(left: 6),
-                    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                    decoration: const BoxDecoration(
-                      color: AppColors.accentOrange,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Text(
-                      '${thread.unreadCount}',
-                      style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-              ],
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -533,6 +726,7 @@ class _ProtectedInboxScreenState extends ConsumerState<ProtectedInboxScreen> {
 
     switch (role.toLowerCase()) {
       case 'worker':
+      case 'seeker':
         bg = const Color(0xFFE0E7FF);
         fg = const Color(0xFF3730A3);
         label = 'Worker';
@@ -543,6 +737,16 @@ class _ProtectedInboxScreenState extends ConsumerState<ProtectedInboxScreen> {
         label = 'Farmer';
         break;
       case 'employer':
+      case 'provider':
+        bg = const Color(0xFFEDE9FE);
+        fg = const Color(0xFF5B21B6);
+        label = 'Employer';
+        break;
+      case 'buyer':
+        bg = const Color(0xFFE0F2FE);
+        fg = const Color(0xFF0369A1);
+        label = 'Buyer';
+        break;
       case 'customer':
       default:
         bg = const Color(0xFFFEF3C7);
@@ -573,16 +777,29 @@ class _ProtectedInboxScreenState extends ConsumerState<ProtectedInboxScreen> {
       decoration: BoxDecoration(
         color: isReadOnly ? const Color(0xFFF1F5F9) : const Color(0xFFDCFCE7),
         borderRadius: BorderRadius.circular(6),
+        border: Border.all(
+          color: isReadOnly ? const Color(0xFFCBD5E1) : const Color(0xFF86EFAC),
+          width: 0.5,
+        ),
       ),
       child: FittedBox(
         fit: BoxFit.scaleDown,
-        child: Text(
-          isReadOnly ? 'Read-only' : 'Active',
-          style: TextStyle(
-            fontSize: 10,
-            fontWeight: FontWeight.bold,
-            color: isReadOnly ? const Color(0xFF64748B) : const Color(0xFF15803D),
-          ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (isReadOnly) ...[
+              const Icon(Icons.lock_rounded, size: 10, color: Color(0xFF64748B)),
+              const SizedBox(width: 3),
+            ],
+            Text(
+              isReadOnly ? 'Ended' : 'Active',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                color: isReadOnly ? const Color(0xFF64748B) : const Color(0xFF15803D),
+              ),
+            ),
+          ],
         ),
       ),
     );

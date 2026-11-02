@@ -202,6 +202,9 @@ class MockJobExecutionRepository implements JobExecutionRepository {
       selfiePath: selfiePath,
     );
   }
+
+  @override
+  Future<bool> cancelAssignment(String assignmentId, {String? reason}) async => true;
 }
 
 void main() {

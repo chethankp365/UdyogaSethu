@@ -180,6 +180,9 @@ class TestFakeJobExecutionRepository implements JobExecutionRepository {
     double? faceScore,
   }) async =>
       JobVerificationResult.success(status: 'in_progress_verified');
+
+  @override
+  Future<bool> cancelAssignment(String assignmentId, {String? reason}) async => true;
 }
 
 class TestFakePaymentRepository implements PaymentRepository {
@@ -210,6 +213,8 @@ class TestFakePaymentRepository implements PaymentRepository {
     required String refId,
     required PaymentMethod method,
     bool? protectionOverride,
+    String? upiFlow,
+    String? upiVpa,
   }) async {
     throw UnimplementedError();
   }
@@ -256,6 +261,15 @@ class TestFakePaymentRepository implements PaymentRepository {
     releaseEscrowCalled = true;
     return true;
   }
+
+  @override
+  Future<Map<String, dynamic>> reconcilePayment(String paymentId) async => {
+    'reconciled': true,
+    'status': 'held',
+  };
+
+  @override
+  Future<bool> validateVpa(String vpa) async => true;
 }
 
 void main() {

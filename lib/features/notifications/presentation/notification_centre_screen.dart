@@ -1,6 +1,3 @@
-// Screen: NotificationCentreScreen (Step P7.4)
-// Notification centre with day grouping, category filters, unread counts, mark all read, and deep-link routing
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +5,9 @@ import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/theme/app_spacing.dart';
 import 'package:udyogasethu/features/notifications/data/notification_repository.dart';
 import 'package:udyogasethu/features/notifications/domain/app_notification.dart';
+import 'package:udyogasethu/features/privacy/data/consent_repository.dart';
+import 'package:udyogasethu/features/privacy/domain/consent_purpose.dart';
+import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class NotificationCentreScreen extends ConsumerStatefulWidget {
   const NotificationCentreScreen({super.key});
@@ -21,6 +21,81 @@ class _NotificationCentreScreenState
     extends ConsumerState<NotificationCentreScreen> {
   String _selectedCategory = 'all';
 
+  void _showWhatsAppPreferenceModal(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
+    final repo = ref.read(consentRepositoryProvider);
+    final currentLog = await repo.getLatestConsent(ConsentPurpose.notifications);
+    bool isOptedIn = currentLog?.granted ?? true;
+
+    if (!context.mounted) return;
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setModalState) {
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.mark_chat_unread_rounded, color: Color(0xFF25D366), size: 28),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        l10n?.whatsappNotifyOptIn ?? 'WhatsApp Notifications',
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  l10n?.whatsappNotifyDesc ??
+                      'Receive critical job updates, booking status, and payment receipts via WhatsApp',
+                  style: const TextStyle(fontSize: 13, color: Color(0xFF475569)),
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF1F5F9),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: const Text('Enable WhatsApp Alerts', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                    subtitle: Text(
+                      isOptedIn ? 'Subscribed to transactional alerts' : 'Notifications disabled',
+                      style: TextStyle(fontSize: 12, color: isOptedIn ? const Color(0xFF0D6548) : Colors.grey),
+                    ),
+                    value: isOptedIn,
+                    activeTrackColor: const Color(0xFF25D366),
+                    onChanged: (val) async {
+                      setModalState(() => isOptedIn = val);
+                      await repo.recordConsent(purpose: ConsentPurpose.notifications, granted: val);
+                    },
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  l10n?.whatsappConsentNote ??
+                      'By enabling, you agree to receive transactional alerts from UdyogaSethu on your registered mobile number.',
+                  style: const TextStyle(fontSize: 11, color: Colors.grey),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final notificationsAsync = ref.watch(notificationsStreamProvider);
@@ -33,6 +108,11 @@ class _NotificationCentreScreenState
         foregroundColor: const Color(0xFF0F172A),
         elevation: 0,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.tune_rounded, size: 20, color: Color(0xFF0F172A)),
+            tooltip: 'WhatsApp Preferences',
+            onPressed: () => _showWhatsAppPreferenceModal(context),
+          ),
           TextButton(
             onPressed: () async {
               final repo = ref.read(notificationRepositoryProvider);

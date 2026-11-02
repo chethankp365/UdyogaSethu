@@ -682,80 +682,204 @@ class _PostJobWizardScreenState extends ConsumerState<PostJobWizardScreen> {
 
           const SizedBox(height: 16),
           const Text(
-            'Choose Cover Source:',
+            'Select Job Thumbnail (Informal vs Student):',
             style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.textDark),
           ),
           const SizedBox(height: 10),
 
-          // Choice 1: Suggested Illustration
-          InkWell(
-            onTap: () {
-              notifier.setCoverThumbnail(null);
-              notifier.setSitePhotoUrl(null);
-            },
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: (!hasCustomUpload && !hasChosenLibrary)
-                    ? const Color(0xFFECFDF5)
-                    : Colors.grey.shade50,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: (!hasCustomUpload && !hasChosenLibrary)
-                      ? const Color(0xFF0D6548)
-                      : Colors.grey.shade300,
-                  width: (!hasCustomUpload && !hasChosenLibrary) ? 1.5 : 1,
+          // TWO OPTIONS SIDE BY SIDE: Informal Worker vs Student Job
+          Builder(
+            builder: (context) {
+              final categorySlug = draft.categoryName?.toLowerCase() ?? 'general';
+
+              final informalItem = ThumbnailLibrary.items.firstWhere(
+                (item) => item.categoryGroup == 'services' && (
+                  item.key == categorySlug ||
+                  item.keywords.contains(categorySlug) ||
+                  draft.title.toLowerCase().contains(item.key)
                 ),
-              ),
-              child: Row(
+                orElse: () => ThumbnailLibrary.items.firstWhere(
+                  (item) => item.categoryGroup == 'services',
+                  orElse: () => ThumbnailLibrary.items.first,
+                ),
+              );
+
+              final studentItem = ThumbnailLibrary.items.firstWhere(
+                (item) => item.categoryGroup == 'gigs' && (
+                  item.keywords.any((k) => draft.title.toLowerCase().contains(k)) ||
+                  item.keywords.contains(categorySlug)
+                ),
+                orElse: () => ThumbnailLibrary.items.firstWhere(
+                  (item) => item.key == 'campus_ambassador' || item.key == 'tutoring',
+                  orElse: () => ThumbnailLibrary.items.firstWhere((i) => i.categoryGroup == 'gigs'),
+                ),
+              );
+
+              final selectedPath = draft.thumbnailPath ?? (
+                draft.suitableFor.contains('student') && !draft.suitableFor.contains('informal')
+                    ? studentItem.assetPath
+                    : informalItem.assetPath
+              );
+
+              final isInformalSelected = selectedPath == informalItem.assetPath && !hasCustomUpload;
+              final isStudentSelected = selectedPath == studentItem.assetPath && !hasCustomUpload;
+
+              return Row(
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(6),
-                    child: Image.asset(
-                      suggested.assetPath,
-                      width: 48,
-                      height: 27,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
+                  // Option 1: Informal Worker Thumbnail
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
+                    child: InkWell(
+                      onTap: () {
+                        notifier.setCoverThumbnail(informalItem.assetPath);
+                        notifier.setSitePhotoUrl(null);
+                      },
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: isInformalSelected ? const Color(0xFFECFDF5) : Colors.grey.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: isInformalSelected ? const Color(0xFF0D6548) : Colors.grey.shade300,
+                            width: isInformalSelected ? 2.5 : 1,
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Suggested Illustration',
-                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                            Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: AspectRatio(
+                                    aspectRatio: 16 / 9,
+                                    child: Image.asset(informalItem.assetPath, fit: BoxFit.cover),
+                                  ),
+                                ),
+                                if (isInformalSelected)
+                                  Positioned(
+                                    top: 4,
+                                    right: 4,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(2),
+                                      decoration: const BoxDecoration(color: Color(0xFF0D6548), shape: BoxShape.circle),
+                                      child: const Icon(Icons.check, size: 14, color: Colors.white),
+                                    ),
+                                  ),
+                              ],
                             ),
-                            const SizedBox(width: 6),
+                            const SizedBox(height: 8),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFD1FAE5),
+                                color: const Color(0xFFFEF3C7),
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: const Text(
-                                'Auto',
-                                style: TextStyle(fontSize: 10, color: Color(0xFF047857), fontWeight: FontWeight.bold),
+                                'INFORMAL WORKER',
+                                style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Color(0xFF92400E)),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              informalItem.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              isInformalSelected ? '✓ Selected' : 'Tap to select',
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: isInformalSelected ? FontWeight.bold : FontWeight.normal,
+                                color: isInformalSelected ? const Color(0xFF0D6548) : Colors.grey.shade600,
                               ),
                             ),
                           ],
                         ),
-                        Text(
-                          suggested.title,
-                          style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                  if (!hasCustomUpload && !hasChosenLibrary)
-                    const Icon(Icons.check_circle_rounded, color: Color(0xFF0D6548), size: 20),
+
+                  const SizedBox(width: 10),
+
+                  // Option 2: Student Job Thumbnail
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        notifier.setCoverThumbnail(studentItem.assetPath);
+                        notifier.setSitePhotoUrl(null);
+                      },
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: isStudentSelected ? const Color(0xFFECFDF5) : Colors.grey.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: isStudentSelected ? const Color(0xFF0D6548) : Colors.grey.shade300,
+                            width: isStudentSelected ? 2.5 : 1,
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: AspectRatio(
+                                    aspectRatio: 16 / 9,
+                                    child: Image.asset(studentItem.assetPath, fit: BoxFit.cover),
+                                  ),
+                                ),
+                                if (isStudentSelected)
+                                  Positioned(
+                                    top: 4,
+                                    right: 4,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(2),
+                                      decoration: const BoxDecoration(color: Color(0xFF0D6548), shape: BoxShape.circle),
+                                      child: const Icon(Icons.check, size: 14, color: Colors.white),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF3E8FF),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: const Text(
+                                'STUDENT / GIG',
+                                style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Color(0xFF7E22CE)),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              studentItem.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              isStudentSelected ? '✓ Selected' : 'Tap to select',
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: isStudentSelected ? FontWeight.bold : FontWeight.normal,
+                                color: isStudentSelected ? const Color(0xFF0D6548) : Colors.grey.shade600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
-              ),
-            ),
+              );
+            },
           ),
 
           const SizedBox(height: 8),

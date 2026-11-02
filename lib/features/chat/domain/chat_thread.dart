@@ -43,7 +43,8 @@ class ChatThread {
     this.unreadCount = 0,
   });
 
-  bool get isReadOnly => status == 'read_only';
+  bool get isReadOnly =>
+      status == 'read_only' || status == 'completed' || status == 'cancelled' || status == 'archived';
 
   factory ChatThread.fromJson(Map<String, dynamic> json, String currentUserId) {
     final pa = json['participant_a'] as String? ?? '';

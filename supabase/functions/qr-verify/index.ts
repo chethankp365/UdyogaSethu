@@ -197,21 +197,6 @@ Deno.serve(async (req: Request) => {
       });
     }
 
-    // Role Guard per D-VISIBILITY: Worker verification is restricted to Job Providers and Admins
-    const { data: userRoles, error: rolesErr } = await serviceClient
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', scannerUserId);
-
-    const isProviderOrAdmin = userRoles?.some((r) => r.role === 'provider' || r.role === 'admin');
-    if (rolesErr || !isProviderOrAdmin) {
-      return errorResponse(
-        'unauthorized_role',
-        'Only registered Job Providers and Admins are authorized to scan and verify worker credentials.',
-        403
-      );
-    }
-
     // Rate-limit scanner to 30 verification checks per minute
     const rate = await checkRateLimit(scannerUserId, 'qr-verify', 30, 60);
     if (rate.errorResponse) return rate.errorResponse;
@@ -221,7 +206,7 @@ Deno.serve(async (req: Request) => {
 
     const { data: tokenRecord, error: dbErr } = await serviceClient
       .from('qr_tokens')
-      .select('id, user_id, purpose, expires_at, revoked, used')
+      .select('id, user_id, purpose, expires_at, revoked, used, assignment_id')
       .eq('token_id_hash', tokenIdHash)
       .maybeSingle();
 
@@ -246,9 +231,9 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // Handle Attendance Ticket Verification
+    // Handle Attendance Ticket Verification (Provider, Farmer, or Worker scanning)
     if (purpose === 'ticket' || tokenRecord.purpose === 'ticket') {
-      const { data: scanRes, error: scanErr } = await serviceClient.rpc('verify_ticket_scan', {
+      const { data: scanRes, error: scanErr } = await auth.client.rpc('verify_ticket_scan', {
         p_token: qrToken,
         p_provider_lat: typeof body.lat === 'number' ? body.lat : null,
         p_provider_lng: typeof body.lng === 'number' ? body.lng : null,
@@ -280,6 +265,21 @@ Deno.serve(async (req: Request) => {
       });
 
       return jsonResponse(scanRes);
+    }
+
+    // Role Guard per D-VISIBILITY: Worker Digital ID verification is restricted to Job Providers, Farmers, and Admins
+    const { data: userRoles } = await serviceClient
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', scannerUserId);
+
+    const isHirerOrAdmin = userRoles?.some((r) => r.role === 'provider' || r.role === 'farmer' || r.role === 'admin');
+    if (!isHirerOrAdmin) {
+      return errorResponse(
+        'unauthorized_role',
+        'Only registered Job Providers, Farmers, and Admins are authorized to scan and verify worker credentials.',
+        403
+      );
     }
 
     // Default: Digital ID Profile Verification

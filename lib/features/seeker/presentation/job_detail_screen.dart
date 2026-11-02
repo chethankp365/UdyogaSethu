@@ -972,6 +972,23 @@ class _JobDetailScreenState extends ConsumerState<JobDetailScreen> {
                                   SnackBar(
                                     content: Text('${applicant.workerName} accepted! Booking confirmed.'),
                                     backgroundColor: AppColors.headerGreenDark,
+                                    action: SnackBarAction(
+                                      label: 'Chat',
+                                      textColor: Colors.amberAccent,
+                                      onPressed: () async {
+                                        try {
+                                          final chatRepo = ref.read(chatRepositoryProvider);
+                                          final threadId = await chatRepo.getOrCreateThread(
+                                            contextType: 'job',
+                                            contextId: job.id,
+                                            recipientId: applicant.workerId,
+                                          );
+                                          if (context.mounted && threadId.isNotEmpty && threadId != 'offline_thread') {
+                                            context.push('/');
+                                          }
+                                        } catch (_) {}
+                                      },
+                                    ),
                                   ),
                                 );
                               }

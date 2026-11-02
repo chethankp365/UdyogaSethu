@@ -27,10 +27,6 @@ import 'package:udyogasethu/features/safety/presentation/job_protection_claim_sc
 import 'package:udyogasethu/features/notifications/presentation/notification_centre_screen.dart';
 import 'package:udyogasethu/features/wallet/presentation/credit_readiness_screen.dart';
 import 'package:udyogasethu/features/wellness/presentation/wellness_benefits_screen.dart';
-import 'package:udyogasethu/core/config/env.dart';
-import 'package:udyogasethu/features/demo/presentation/admin_trust_preview_screen.dart';
-import 'package:udyogasethu/features/demo/presentation/demo_accounts_screen.dart';
-import 'package:udyogasethu/features/demo/presentation/demo_launcher_sheet.dart';
 import 'package:udyogasethu/features/farmer/domain/farm_resource_model.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_home_screen.dart';
 import 'package:udyogasethu/features/farmer/presentation/farmer_listings_screen.dart';
@@ -110,6 +106,7 @@ import 'package:udyogasethu/features/job_execution/presentation/job_ticket_scree
 import 'package:udyogasethu/features/job_execution/presentation/worker_schedule_screen.dart';
 import 'package:udyogasethu/features/job_execution/presentation/verify_presence_screen.dart';
 import 'package:udyogasethu/features/job_execution/presentation/job_completion_screen.dart';
+import 'package:udyogasethu/features/voice/presentation/voice_assistant_modal.dart';
 
 /// RouterNotifier notifies [GoRouter] when session state changes without recreating the router.
 class RouterNotifier extends ChangeNotifier {
@@ -242,6 +239,41 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ref.read(appSessionProvider.notifier).setDeepLinkPending(null);
           if (pending != loc && pending != AppRoutes.login && pending != AppRoutes.splash) {
             target = pending;
+          }
+        }
+
+        if (target == null) {
+          // Voice & Direct Shortcut Navigation Aliases
+          final uri = state.uri;
+          if (uri.path == '/jobs') {
+            final query = uri.query;
+            target = query.isNotEmpty ? '${AppRoutes.seekerJobs}?$query' : AppRoutes.seekerJobs;
+          } else if (uri.path == '/safety/hub' || uri.path == '/safety') {
+            target = AppRoutes.safetyHub;
+          } else if (uri.path == '/marketplace' || uri.path == '/mandi') {
+            final query = uri.query;
+            target = query.isNotEmpty ? '${AppRoutes.farmerMarket}?$query' : AppRoutes.farmerMarket;
+          } else if (uri.path == '/profile') {
+            switch (sessionData.activeRole) {
+              case UserRole.provider:
+                target = AppRoutes.providerProfile;
+              case UserRole.farmer:
+                target = AppRoutes.farmerProfile;
+              case UserRole.seeker:
+                target = AppRoutes.seekerProfile;
+            }
+          } else if (uri.path == '/orders') {
+            target = sessionData.activeRole == UserRole.farmer
+                ? AppRoutes.farmerOrders
+                : AppRoutes.customerOrders;
+          } else if (uri.path == '/chat') {
+            target = sessionData.activeRole == UserRole.farmer
+                ? AppRoutes.farmerChat
+                : (sessionData.activeRole == UserRole.provider
+                    ? AppRoutes.providerChat
+                    : AppRoutes.seekerChat);
+          } else if (uri.path == '/home') {
+            target = AppSessionNotifier.getHomeForRole(sessionData.activeRole);
           }
         }
 
@@ -529,6 +561,60 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const FarmerListingsScreen(),
       ),
       GoRoute(
+        path: '/jobs',
+        builder: (context, state) => const SeekerJobsScreen(),
+      ),
+      GoRoute(
+        path: '/marketplace',
+        builder: (context, state) => const FarmerListingsScreen(),
+      ),
+      GoRoute(
+        path: '/safety/hub',
+        builder: (context, state) => const SafetyHubScreen(),
+      ),
+      GoRoute(
+        path: '/profile',
+        redirect: (context, state) {
+          final role = ref.read(appSessionProvider).activeRole;
+          switch (role) {
+            case UserRole.provider:
+              return AppRoutes.providerProfile;
+            case UserRole.farmer:
+              return AppRoutes.farmerProfile;
+            case UserRole.seeker:
+              return AppRoutes.seekerProfile;
+          }
+        },
+      ),
+      GoRoute(
+        path: '/orders',
+        redirect: (context, state) {
+          final role = ref.read(appSessionProvider).activeRole;
+          return role == UserRole.farmer ? AppRoutes.farmerOrders : AppRoutes.customerOrders;
+        },
+      ),
+      GoRoute(
+        path: '/chat',
+        redirect: (context, state) {
+          final role = ref.read(appSessionProvider).activeRole;
+          switch (role) {
+            case UserRole.provider:
+              return AppRoutes.providerChat;
+            case UserRole.farmer:
+              return AppRoutes.farmerChat;
+            case UserRole.seeker:
+              return AppRoutes.seekerChat;
+          }
+        },
+      ),
+      GoRoute(
+        path: '/home',
+        redirect: (context, state) {
+          final role = ref.read(appSessionProvider).activeRole;
+          return AppSessionNotifier.getHomeForRole(role);
+        },
+      ),
+      GoRoute(
         path: AppRoutes.farmerResources,
         builder: (context, state) {
           final cat = state.uri.queryParameters['category'];
@@ -550,6 +636,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const VendorResourcesScreen(),
       ),
 
+      GoRoute(
+        path: AppRoutes.aiAssistant,
+        builder: (context, state) => const VoiceAssistantModal(),
+      ),
       GoRoute(
         path: AppRoutes.settings,
         builder: (context, state) => const SettingsScreen(),
@@ -890,27 +980,41 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.wellness,
         builder: (context, state) => const WellnessBenefitsScreen(),
       ),
+      // Voice & Direct Shortcut Navigation Aliases
+      GoRoute(
+        path: '/jobs',
+        redirect: (context, state) {
+          final query = state.uri.query;
+          return query.isNotEmpty ? '${AppRoutes.seekerJobs}?$query' : AppRoutes.seekerJobs;
+        },
+      ),
+      GoRoute(
+        path: '/safety/hub',
+        redirect: (context, state) => AppRoutes.safetyHub,
+      ),
+      GoRoute(
+        path: '/marketplace',
+        redirect: (context, state) {
+          final query = state.uri.query;
+          return query.isNotEmpty ? '${AppRoutes.farmerMarket}?$query' : AppRoutes.farmerMarket;
+        },
+      ),
+      GoRoute(
+        path: '/profile',
+        redirect: (context, state) {
+          final session = ref.read(appSessionProvider);
+          switch (session.activeRole) {
+            case UserRole.provider:
+              return AppRoutes.providerProfile;
+            case UserRole.farmer:
+              return AppRoutes.farmerProfile;
+            case UserRole.seeker:
+              return AppRoutes.seekerProfile;
+          }
+        },
+      ),
 
-      // Guided Demo Routes (gated under Env.isDemoBuild)
-      if (Env.isDemoBuild) ...[
-        GoRoute(
-          path: AppRoutes.demo,
-          builder: (context, state) => const Scaffold(
-            backgroundColor: Color(0xFFF8FAFC),
-            body: SafeArea(child: DemoLauncherSheet()),
-          ),
-        ),
-        GoRoute(
-          path: AppRoutes.demoAccounts,
-          builder: (context, state) => const DemoAccountsScreen(),
-        ),
-        GoRoute(
-          path: AppRoutes.demoAdminReview,
-          builder: (context, state) => const AdminTrustPreviewScreen(),
-        ),
-      ],
 
-      // Debug Routes
       if (kDebugMode) ...[
         GoRoute(
           path: AppRoutes.devGallery,

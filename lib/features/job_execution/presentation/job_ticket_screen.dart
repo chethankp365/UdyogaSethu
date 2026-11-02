@@ -41,6 +41,7 @@ class _JobTicketScreenState extends ConsumerState<JobTicketScreen> {
   void initState() {
     super.initState();
     _startTimers();
+    _triggerAutoRefresh();
     _subscribeToAssignmentUpdates();
   }
 

@@ -4,9 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
+import 'package:udyogasethu/features/wallet/data/demo_wallet_transactions.dart';
 import 'package:udyogasethu/features/wallet/data/wallet_repository.dart';
 import 'package:udyogasethu/features/wallet/domain/wallet_balance.dart';
 import 'package:udyogasethu/features/wallet/domain/wallet_transaction.dart';
+import 'package:udyogasethu/features/wallet/presentation/widgets/add_money_dialog.dart';
 import 'package:udyogasethu/features/wallet/presentation/widgets/savings_planner_card.dart';
 import 'package:udyogasethu/features/wallet/presentation/widgets/scan_upi_dialog.dart';
 import 'package:udyogasethu/features/wallet/presentation/widgets/transaction_tile.dart';
@@ -51,6 +53,16 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
     );
   }
 
+  void _openAddMoneyDialog(WalletBalance balance) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AddMoneyDialog(
+        walletBalance: balance,
+        onSuccess: _refresh,
+      ),
+    );
+  }
+
   void _openScanUpiDialog() {
     showDialog(
       context: context,
@@ -60,6 +72,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDemoMode = ref.watch(walletDemoModeProvider);
     final balanceAsync = ref.watch(walletSummaryStreamProvider);
     final transactionsAsync = ref.watch(walletTransactionsProvider(_currentCriteria));
 
@@ -74,6 +87,16 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
         ),
         actions: [
+          IconButton(
+            icon: Icon(
+              isDemoMode ? Icons.theater_comedy_rounded : Icons.theater_comedy_outlined,
+              color: isDemoMode ? Colors.amberAccent : Colors.white70,
+            ),
+            tooltip: isDemoMode ? 'Exit Demo Mode' : 'Presentation Demo Mode',
+            onPressed: () {
+              ref.read(walletDemoModeProvider.notifier).toggle();
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.refresh_rounded),
             tooltip: 'Refresh Balances',
@@ -90,6 +113,75 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Presentation Demo Mode Banner
+              if (isDemoMode) ...[
+                Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFFBEB), // Amber 50
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xFFF59E0B), width: 1.5), // Amber 500
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.info_outline_rounded, color: Color(0xFFD97706), size: 22),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Text(
+                                  'Demo Mode Active',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                    color: Color(0xFF92400E),
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFFFEF3C7),
+                                    borderRadius: BorderRadius.all(Radius.circular(4)),
+                                  ),
+                                  child: const Text(
+                                    'Presentation Only',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFFB45309),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 2),
+                            const Text(
+                              'Displaying sample completed, pending, failed, and refunded transactions. Real wallet balances, ledger entries, and Razorpay are untouched.',
+                              style: TextStyle(fontSize: 11, color: Color(0xFF78350F), height: 1.3),
+                            ),
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          ref.read(walletDemoModeProvider.notifier).reset();
+                        },
+                        style: TextButton.styleFrom(
+                          foregroundColor: const Color(0xFFB45309),
+                          visualDensity: VisualDensity.compact,
+                        ),
+                        child: const Text('Reset', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+
               // 1. TOP HERO CARD & SAVINGS PLANNER (Screen 8 Prototype Match)
               balanceAsync.when(
                 data: (balance) => Column(
@@ -381,10 +473,10 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
           ),
           const SizedBox(height: 18),
 
-          // Action Buttons: ↗ Withdraw & Scan UPI QR
+          // Action Buttons: + Add Money, ↗ Withdraw & Scan UPI QR
           Row(
             children: [
-              // Withdraw Button
+              // Add Money Button
               Expanded(
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -394,18 +486,18 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
                   ),
-                  onPressed: () => _openWithdrawDialog(balance),
+                  onPressed: () => _openAddMoneyDialog(balance),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.arrow_outward_rounded, size: 18),
+                      Icon(Icons.add_circle_outline_rounded, size: 16),
                       SizedBox(width: 4),
                       Flexible(
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
-                            'Withdraw',
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                            'Add Money',
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                           ),
                         ),
                       ),
@@ -413,7 +505,38 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 8),
+
+              // Withdraw Button
+              Expanded(
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: Colors.white.withValues(alpha: 0.15),
+                    foregroundColor: Colors.white,
+                    side: const BorderSide(color: Colors.white38),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                  ),
+                  onPressed: () => _openWithdrawDialog(balance),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.arrow_outward_rounded, size: 16),
+                      SizedBox(width: 4),
+                      Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'Withdraw',
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
 
               // Scan UPI QR Button
               Expanded(
@@ -429,14 +552,14 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.qr_code_scanner_rounded, size: 18),
+                      Icon(Icons.qr_code_scanner_rounded, size: 16),
                       SizedBox(width: 4),
                       Flexible(
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
                             'Scan UPI QR',
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                           ),
                         ),
                       ),

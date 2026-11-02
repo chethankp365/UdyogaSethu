@@ -87,39 +87,14 @@ class _BankUpiScreenState extends ConsumerState<BankUpiScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Honesty Rule Demo Mode Banner
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    color: Colors.amber.shade900.withAlpha(120),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.amber.shade400),
-                  ),
-                  child: const Row(
-                    children: [
-                      Icon(Icons.currency_rupee_rounded, color: Colors.amber, size: 24),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Demo Mode — Simulated Penny-Drop Verification',
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.white),
-                            ),
-                            SizedBox(height: 2),
-                            Text(
-                              'Verification performs a simulated ₹1 deposit to test payout routing until a live payout gateway is configured.',
-                              style: TextStyle(fontSize: 11, color: Colors.white70),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                // Small unobtrusive honesty note
+                const Center(
+                  child: Text(
+                    'Demo Mode — Simulated Penny-Drop Verification sandbox',
+                    style: TextStyle(fontSize: 11, color: Colors.white70),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
 
                 // Method Selector Tabs
                 Container(
@@ -265,7 +240,7 @@ class _BankUpiScreenState extends ConsumerState<BankUpiScreen> {
                 onPressed: _isProcessing ? null : _submitPennyDrop,
                 icon: const Icon(Icons.check_circle_outline, size: 18),
                 label: Text(
-                  _selectedTab == 0 ? 'Verify UPI via Demo Penny-Drop' : 'Verify Bank Account via Demo Penny-Drop',
+                  _selectedTab == 0 ? 'Verify UPI' : 'Verify Bank Account',
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                 ),
               ),

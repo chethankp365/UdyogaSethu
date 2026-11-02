@@ -52,6 +52,8 @@ class PaymentOrderResult {
   final String currency;
   final String status;
   final String method;
+  final String? upiString;
+  final String? upiFlow;
   final PaymentBillSummary billSummary;
 
   const PaymentOrderResult({
@@ -63,26 +65,39 @@ class PaymentOrderResult {
     required this.currency,
     required this.status,
     required this.method,
+    this.upiString,
+    this.upiFlow,
     required this.billSummary,
   });
 
   factory PaymentOrderResult.fromJson(Map<String, dynamic> json) {
+    final amountPaise = (json['amount_paise'] as num?)?.toInt() ?? 0;
+    final rzpOrderId = json['order_id'] as String?;
+    final rcpt = (json['receipt_no'] as String?) ?? 'RCP-PENDING';
+
+    // Build standard NPCI UPI URI if UPI string wasn't explicitly supplied
+    final rawUpi = json['upi_string'] as String?;
+    final upiString = rawUpi ??
+        'upi://pay?pa=rzp.test@hdfcbank&pn=UdyogaSethu&am=${(amountPaise / 100.0).toStringAsFixed(2)}&cu=INR&tn=${Uri.encodeComponent(rcpt)}&tr=${rzpOrderId ?? json['payment_id']}';
+
     return PaymentOrderResult(
-      orderId: json['order_id'] as String?,
+      orderId: rzpOrderId,
       keyId: json['key_id'] as String?,
       paymentId: json['payment_id'] as String,
-      receiptNo: (json['receipt_no'] as String?) ?? 'RCP-PENDING',
-      amountPaise: (json['amount_paise'] as num).toInt(),
+      receiptNo: rcpt,
+      amountPaise: amountPaise,
       currency: (json['currency'] as String?) ?? 'INR',
       status: (json['status'] as String?) ?? 'created',
       method: (json['method'] as String?) ?? 'upi',
+      upiString: upiString,
+      upiFlow: json['upi_flow'] as String?,
       billSummary: json['bill_summary'] != null
           ? PaymentBillSummary.fromJson(json['bill_summary'] as Map<String, dynamic>)
           : PaymentBillSummary(
-              baseAmountPaise: (json['amount_paise'] as num).toInt(),
+              baseAmountPaise: amountPaise,
               platformFeePaise: 0,
               protectionFeePaise: 0,
-              totalPaise: (json['amount_paise'] as num).toInt(),
+              totalPaise: amountPaise,
               isProtected: false,
               description: 'Payment',
             ),

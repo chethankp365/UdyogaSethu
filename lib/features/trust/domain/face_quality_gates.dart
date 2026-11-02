@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:udyogasethu/features/trust/domain/liveness_challenge.dart';
 
 class FaceQualityGateResult {
   final bool isValid;
@@ -21,6 +22,7 @@ class FaceQualityGates {
     required double? rightEyeOpenProb,
     required double? headEulerAngleY,
     required double? headEulerAngleZ,
+    LivenessChallengeType? activeChallenge,
   }) {
     if (faceCount == 0) {
       return const FaceQualityGateResult(isValid: false, hint: 'No face detected. Position face inside oval.');
@@ -37,23 +39,30 @@ class FaceQualityGates {
 
     if (frameArea > 0) {
       final ratio = faceArea / frameArea;
-      if (ratio < 0.12) {
+      if (ratio < 0.05) {
         return const FaceQualityGateResult(isValid: false, hint: 'Move closer to the camera.');
       }
-      if (ratio > 0.70) {
+      if (ratio > 0.85) {
         return const FaceQualityGateResult(isValid: false, hint: 'Move slightly further back.');
       }
     }
 
-    if ((leftEyeOpenProb != null && leftEyeOpenProb < 0.30) || (rightEyeOpenProb != null && rightEyeOpenProb < 0.30)) {
-      return const FaceQualityGateResult(isValid: false, hint: 'Keep your eyes open and ensure good lighting.');
+    // Only enforce eyes-open gate if the current challenge is not asking the user to blink
+    if (activeChallenge != LivenessChallengeType.blink) {
+      if ((leftEyeOpenProb != null && leftEyeOpenProb < 0.25) || (rightEyeOpenProb != null && rightEyeOpenProb < 0.25)) {
+        return const FaceQualityGateResult(isValid: false, hint: 'Keep your eyes open and ensure good lighting.');
+      }
     }
 
-    if ((headEulerAngleY != null && headEulerAngleY.abs() > 15.0) ||
-        (headEulerAngleZ != null && headEulerAngleZ.abs() > 15.0)) {
-      return const FaceQualityGateResult(isValid: false, hint: 'Look straight at the camera.');
+    // Only enforce straight-ahead gate if the current challenge is not asking the user to turn head
+    if (activeChallenge != LivenessChallengeType.turnLeft && activeChallenge != LivenessChallengeType.turnRight) {
+      if ((headEulerAngleY != null && headEulerAngleY.abs() > 18.0) ||
+          (headEulerAngleZ != null && headEulerAngleZ.abs() > 20.0)) {
+        return const FaceQualityGateResult(isValid: false, hint: 'Look straight at the camera.');
+      }
     }
 
     return FaceQualityGateResult.valid;
   }
 }
+

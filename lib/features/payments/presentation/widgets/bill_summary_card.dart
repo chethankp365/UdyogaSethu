@@ -112,17 +112,23 @@ class BillSummaryCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Total Payable',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+              Expanded(
+                child: Text(
+                  'Total Payable',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-              Text(
-                PaymentRecord.formatIndianCurrency(bill.totalPaise),
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF0D6548),
+              const SizedBox(width: 8),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  PaymentRecord.formatIndianCurrency(bill.totalPaise),
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF0D6548),
+                  ),
                 ),
               ),
             ],
@@ -179,10 +185,13 @@ class BillSummaryCard extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: theme.textTheme.bodyMedium?.copyWith(color: color),
+        Expanded(
+          child: Text(
+            label,
+            style: theme.textTheme.bodyMedium?.copyWith(color: color),
+          ),
         ),
+        const SizedBox(width: 8),
         Text(
           value,
           style: theme.textTheme.bodyMedium?.copyWith(

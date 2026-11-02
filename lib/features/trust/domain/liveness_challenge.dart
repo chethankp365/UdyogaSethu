@@ -3,23 +3,23 @@ import 'dart:math';
 class LivenessThresholds {
   LivenessThresholds._();
 
-  /// Eye open probability threshold to register eyes as open (>= 0.55)
-  static const double blinkOpenThreshold = 0.55;
+  /// Eye open probability threshold to register eyes as open (>= 0.50)
+  static const double blinkOpenThreshold = 0.50;
 
-  /// Eye open probability threshold to register eyes as closed (<= 0.35)
-  static const double blinkClosedThreshold = 0.35;
+  /// Eye open probability threshold to register eyes as closed (<= 0.38)
+  static const double blinkClosedThreshold = 0.38;
 
-  /// Head turn angle threshold in degrees (15.0 deg)
-  static const double headTurnAngleDeg = 15.0;
+  /// Head turn angle threshold in degrees (12.0 deg)
+  static const double headTurnAngleDeg = 12.0;
 
   /// Minimum consecutive frames required to hold a head turn
   static const int headTurnHoldFrames = 2;
 
-  /// Smiling probability threshold (>= 0.65)
-  static const double smileThreshold = 0.65;
+  /// Smiling probability threshold (>= 0.50)
+  static const double smileThreshold = 0.50;
 
-  /// Time limit per challenge in seconds (9 s)
-  static const int challengeTimeoutSeconds = 9;
+  /// Time limit per challenge in seconds (14 s)
+  static const int challengeTimeoutSeconds = 14;
 }
 
 enum LivenessChallengeType {
@@ -56,6 +56,7 @@ class BlinkStateMachine {
       return isCompleted;
     }
 
+    final minEye = min(leftEyeOpenProb, rightEyeOpenProb);
     final avgOpen = (leftEyeOpenProb + rightEyeOpenProb) / 2.0;
 
     switch (_state) {
@@ -68,11 +69,11 @@ class BlinkStateMachine {
         break;
 
       case BlinkState.eyesOpen:
-        if (avgOpen <= LivenessThresholds.blinkClosedThreshold) {
+        if (minEye <= LivenessThresholds.blinkClosedThreshold || avgOpen <= 0.40) {
           _state = BlinkState.eyesClosed;
         } else {
           if (_openTimestamp != null &&
-              DateTime.now().difference(_openTimestamp!).inMilliseconds > 3000) {
+              DateTime.now().difference(_openTimestamp!).inMilliseconds > 4000) {
             _openTimestamp = DateTime.now();
           }
         }

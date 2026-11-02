@@ -2723,7 +2723,9 @@ class AppLocalizationsMr extends AppLocalizations {
   String get paymentCash => 'Cash on Completion';
 
   @override
-  String get paymentPaySecurely => 'Pay Securely';
+  String paymentPaySecurely(String amount) {
+    return 'Pay Securely';
+  }
 
   @override
   String get paymentConfirmCash => 'Confirm Cash Booking';
@@ -4173,4 +4175,298 @@ class AppLocalizationsMr extends AppLocalizations {
   @override
   String get disclaimerCreditGuidance =>
       'हे केवळ मार्गदर्शन आहे. हे कोणत्याही कर्जाची हमी देत नाही. नियमन केलेल्या वित्तीय भागीदारांशी भविष्यातील जोडणीसाठी तुमची संमती आवश्यक असेल.';
+
+  @override
+  String get paymentUpiApps => 'UPI ॲप्स (GPay, PhonePe, Paytm)';
+
+  @override
+  String get paymentUpiQr => 'डायनॅमिक UPI QR कोड';
+
+  @override
+  String get paymentUpiCollect => 'UPI ID / VPA प्रविष्ट करा';
+
+  @override
+  String get paymentUpiVpaHint => 'उदा. mobile@upi किंवा username@okhdfcbank';
+
+  @override
+  String get paymentUpiVpaInvalid =>
+      'कृपया वैध UPI ID प्रविष्ट करा (उदा. name@bank)';
+
+  @override
+  String get paymentUpiQrScanPrompt =>
+      'पेमेंट करण्यासाठी कोणत्याही UPI ॲपने हा QR कोड स्कॅन करा';
+
+  @override
+  String paymentUpiQrExpiresIn(String time) {
+    return '$time मध्ये कालबाह्य होईल';
+  }
+
+  @override
+  String get paymentRefreshStatus => 'बँक स्थिती तपासा';
+
+  @override
+  String get paymentReconciling => 'बँकेसोबत पडताळणी करत आहे...';
+
+  @override
+  String get paymentReconcileFailed =>
+      'बँकेकडे पेमेंट पडताळणी प्रलंबित आहे. कृपया थोड्या वेळाने पुन्हा प्रयत्न करा.';
+
+  @override
+  String get paymentStatusTitle => 'पेमेंट स्थिती';
+
+  @override
+  String get paymentStatusSuccess => 'पेमेंट यशस्वी आणि पुष्टी झाले';
+
+  @override
+  String paymentStatusSuccessDesc(String amount) {
+    return 'तुमचे $amount चे पेमेंट पुष्ट झाले आहे.';
+  }
+
+  @override
+  String get paymentStatusPending => 'बँकेसोबत पुष्टी केली जात आहे...';
+
+  @override
+  String get paymentStatusPendingDesc =>
+      'रेझरपे आणि बँकिंग नेटवर्ककडून पुष्टीची प्रतीक्षा आहे. स्क्रीन आपोआप अपडेट होईल.';
+
+  @override
+  String get paymentStatusFailed => 'पेमेंट अयशस्वी झाले';
+
+  @override
+  String get paymentStatusFailedDesc =>
+      'बँकेकडून तुमचा व्यवहार पूर्ण होऊ शकला नाही. कोणतेही पैसे कापले गेले नाहीत.';
+
+  @override
+  String get paymentTotalAmountPaid => 'भरलेली एकूण रक्कम';
+
+  @override
+  String get paymentEscrowProtectedNotice =>
+      'एस्क्रो संरक्षित: पडताळलेले काम पूर्ण झाल्यावरच कामगाराला पैसे दिले जातील.';
+
+  @override
+  String get paymentShareReceipt => 'पीडीएफ पावती शेअर / डाउनलोड करा';
+
+  @override
+  String get paymentContinueAction => 'काम / ऑर्डरकडे पुढे जा';
+
+  @override
+  String get chatReportUser => 'वापरकर्त्याची तक्रार करा';
+
+  @override
+  String get chatBlockUser => 'वापरकर्त्याला ब्लॉक करा';
+
+  @override
+  String get chatUserBlocked =>
+      'हा वापरकर्ता ब्लॉक केला गेला आहे. मेसेज बंद आहेत.';
+
+  @override
+  String get chatReportSubmitted => 'अ‍ॅडमिन पुनरावलोकनासाठी तक्रार सादर केली.';
+
+  @override
+  String get chatFilterAll => 'सर्व';
+
+  @override
+  String get chatFilterJobs => 'नोकऱ्या';
+
+  @override
+  String get chatFilterBookings => 'बुकिंग';
+
+  @override
+  String get chatFilterOrders => 'शेती ऑर्डर';
+
+  @override
+  String get whatsappNotifyOptIn => 'WhatsApp सूचना';
+
+  @override
+  String get whatsappNotifyDesc =>
+      'WhatsApp वर महत्त्वाचे जॉब अपडेट्स, बुकिंग स्थिती आणि पेमेंट पावत्या मिळवा';
+
+  @override
+  String get whatsappConsentNote =>
+      'सक्षम करून, आपण आपल्या नोंदणीकृत मोबाइल नंबरवर उद्योगसेतूकडून व्यवहार अलर्ट प्राप्त करण्यास सहमती दर्शवता.';
+
+  @override
+  String get voiceModalTitle => 'एआय व्हॉइस असिस्टंट';
+
+  @override
+  String get voiceGreetingMorning => 'शुभ प्रभात';
+
+  @override
+  String get voiceGreetingAfternoon => 'शुभ दुपार';
+
+  @override
+  String get voiceGreetingEvening => 'शुभ संध्याकाळ';
+
+  @override
+  String get voiceAskAnything => 'आज मी तुम्हाला कशी मदत करू शकतो?';
+
+  @override
+  String get voiceTapOrbToSpeak => 'बोलण्यासाठी बटण दाबा';
+
+  @override
+  String get voiceListeningNow => 'ऐकत आहे... आता बोला';
+
+  @override
+  String get voiceThinking => 'योग्य माहिती शोधत आहे...';
+
+  @override
+  String get voiceSpeaking => 'उत्तर देत आहे (थांबवण्यासाठी टॅप करा)';
+
+  @override
+  String get voiceHearError =>
+      'स्पष्ट ऐकू आले नाही. पुन्हा प्रयत्न करण्यासाठी टॅप करा';
+
+  @override
+  String get voiceMicRequired => 'मायक्रोफोन परवानगी आवश्यक आहे';
+
+  @override
+  String get voiceMicDeniedDesc =>
+      'व्हॉइस कमांड सक्षम करण्यासाठी परवानगी द्या टॅप करा.';
+
+  @override
+  String get voiceMicPermanentDesc =>
+      'मायक्रोफोन ॲक्सेस देण्यासाठी कृपया ॲप सेटिंग्ज उघडा.';
+
+  @override
+  String get voiceGrantPermission => 'परवानगी द्या';
+
+  @override
+  String get voiceOpenSettings => 'सेटिंग्ज उघडा';
+
+  @override
+  String get voiceTypeInstead => 'टाइप करा';
+
+  @override
+  String get voiceTypeHint => 'तुमचा प्रश्न येथे टाइप करा...';
+
+  @override
+  String get voiceListenAgain => 'पुन्हा ऐका';
+
+  @override
+  String get voiceStopAudio => 'ऑडिओ थांबवा';
+
+  @override
+  String get voiceResetConversation => 'संभाषण रीसेट करा';
+
+  @override
+  String get voiceMuteTooltip => 'आवाज म्यूट करा';
+
+  @override
+  String get voiceUnmuteTooltip => 'आवाज अनम्यूट करा';
+
+  @override
+  String get voiceYouSaid => 'तुम्ही म्हणालात:';
+
+  @override
+  String get voiceAssistantReply => 'असिस्टंट:';
+
+  @override
+  String get voicePromptNearbyJobs => 'जवळची कामे शोधा';
+
+  @override
+  String get voicePromptCheckWallet => 'माझे वॉलेट शिल्लक तपासा';
+
+  @override
+  String get voicePromptOpenProfile => 'माझे प्रोफाईल उघडा';
+
+  @override
+  String get voicePromptActiveJobs => 'माझी सक्रिय कामे दाखवा';
+
+  @override
+  String get voicePromptFindWorkers => 'माझ्या जवळील कामगार शोधा';
+
+  @override
+  String get voicePromptPostJob => 'नवीन काम पोस्ट करा';
+
+  @override
+  String get voicePromptApplicants => 'अर्जदार दाखवा';
+
+  @override
+  String get voicePromptCheckEarnings => 'माझी कमाई तपासा';
+
+  @override
+  String get voicePromptMandiPrices => 'आज टोमॅटोचा भाव काय आहे?';
+
+  @override
+  String get voicePromptMarketplace => 'शेतमाल बाजार उघडा';
+
+  @override
+  String get voicePromptFarmerOrders => 'माझे ऑर्डर्स दाखवा';
+
+  @override
+  String get voicePromptCropHelp => 'पिकांच्या समस्येचे निदान करण्यास मदत करा';
+
+  @override
+  String get voiceLangNotInstalled =>
+      'या भाषेसाठी व्हॉइस आउटपुट तुमच्या डिव्हाइसवर स्थापित नाही.';
+
+  @override
+  String get voiceCloudSttActive =>
+      'या भाषेसाठी क्लाउड स्पीच रेकग्निशन वापरत आहे.';
+
+  @override
+  String get actionCancelJob => 'काम वाटप रद्द करा';
+
+  @override
+  String get actionCancelWorker => 'कामगार बुकिंग रद्द करा';
+
+  @override
+  String get cancelAssignmentTitle => 'वाटप रद्द करायचे?';
+
+  @override
+  String get cancelAssignmentPrompt =>
+      'तुम्हाला खात्री आहे का की तुम्ही हे वाटप रद्द करू इच्छिता? स्लॉट पुन्हा प्लॅटफॉर्मवर उपलब्ध केला जाईल.';
+
+  @override
+  String get cancelAssignmentConfirm => 'रद्दीकरण निश्चित करा';
+
+  @override
+  String get cancelAssignmentSuccess => 'वाटप यशस्वीरित्या रद्द केले.';
+
+  @override
+  String get cancellationReasonPrompt => 'कृपया रद्दीकरणाचे कारण निवडा:';
+
+  @override
+  String get reasonEmergency => 'वैयक्तिक आणीबाणी';
+
+  @override
+  String get reasonScheduleConflict => 'वेळेचा संघर्ष / वेळापत्रक समस्या';
+
+  @override
+  String get reasonFoundAlternative => 'पर्याय सापडला';
+
+  @override
+  String get reasonMutualAgreement => 'परस्पर करार';
+
+  @override
+  String get reasonOther => 'इतर कारण';
+
+  @override
+  String get voiceSelectLanguage => 'व्हॉइस भाषा';
+
+  @override
+  String get voiceLangAuto => 'स्वयं शोध';
+
+  @override
+  String get chatClosedTitle => 'हा चॅट आता उपलब्ध नाही';
+
+  @override
+  String get chatClosedDesc =>
+      'काम पूर्ण झाले आहे. सुरक्षितता आणि गोपनीयतेसाठी मेसेजिंग आणि कॉलिंग बंद करण्यात आले आहे.';
+
+  @override
+  String get chatCallingDisabled =>
+      'काम पूर्ण झाल्यामुळे व्हॉईस कॉलिंग बंद करण्यात आली आहे.';
+
+  @override
+  String get chatFilterActive => 'सक्रिय चॅट्स';
+
+  @override
+  String get chatFilterCompleted => 'पूर्ण झालेले काम';
+
+  @override
+  String get chatDeleteAction => 'संभाषण हटवा';
+
+  @override
+  String get chatDeletedNotice => 'संभाषण इनबॉक्समधून हटवले गेले आहे.';
 }

@@ -8,10 +8,8 @@ import 'package:udyogasethu/core/theme/app_typography.dart';
 import 'package:udyogasethu/core/widgets/app_button.dart';
 import 'package:udyogasethu/core/widgets/compact_language_selector.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:udyogasethu/core/config/env.dart';
 import 'package:udyogasethu/features/auth/data/phone_auth_notifier.dart';
 import 'package:udyogasethu/features/auth/domain/phone_auth_state.dart';
-import 'package:udyogasethu/features/demo/presentation/demo_launcher_sheet.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 /// Mobile Number Login Screen matching Screen 4 in UI_REFERENCE.md.
@@ -328,95 +326,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         style: AppTypography.button(AppColors.textDark).copyWith(fontSize: 14),
                       ),
               ),
-
-              // 7. Evaluator Demo Shortcuts (Strictly Gated to Demo Builds)
-              if (Env.isDemoBuild) ...[
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    color: Colors.amber.shade50,
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: Colors.amber.shade300),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(Icons.science_rounded, size: 18, color: Colors.amber.shade900),
-                              const SizedBox(width: 6),
-                              Text(
-                                'EVALUATOR DEMO SHORTCUTS',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.amber.shade900,
-                                  letterSpacing: 0.8,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: Colors.amber.shade400,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: const Text(
-                              'DEMO BUILD',
-                              style: TextStyle(
-                                fontSize: 9,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Fast evaluator access to seeded accounts and the 5 guided end-to-end scenarios.',
-                        style: TextStyle(fontSize: 11, color: Colors.amber.shade900),
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: OutlinedButton.icon(
-                              onPressed: () => context.push(AppRoutes.demoAccounts),
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.amber.shade900,
-                                side: BorderSide(color: Colors.amber.shade600),
-                                backgroundColor: Colors.white,
-                                visualDensity: VisualDensity.compact,
-                              ),
-                              icon: const Icon(Icons.people_alt_outlined, size: 16),
-                              label: const Text('Demo Accounts', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: () => DemoLauncherSheet.show(context),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.amber.shade800,
-                                foregroundColor: Colors.white,
-                                visualDensity: VisualDensity.compact,
-                              ),
-                              icon: const Icon(Icons.play_circle_fill, size: 16),
-                              label: const Text('5 Scenarios', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
 
               const SizedBox(height: 16),
             ],

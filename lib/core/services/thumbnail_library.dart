@@ -535,10 +535,10 @@ class ThumbnailLibrary {
       }
     }
 
-    // 3. Fallback generic crop illustration
+    // 3. Fallback realistic farm crop photograph
     return const ThumbnailResolution.asset(
-      assetPath: fallbackAsset,
-      itemKey: 'fallback_generic',
+      assetPath: 'assets/thumbnails/produce_vegetables.webp',
+      itemKey: 'produce_vegetables',
       hasBakedInTitle: false,
     );
   }

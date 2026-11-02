@@ -87,19 +87,12 @@ class _BuyerProduceTabState extends ConsumerState<BuyerProduceTab> {
 
                 Row(
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.amber.shade100,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: const Text(
-                        'Demo mode',
-                        style: TextStyle(
-                          color: Colors.orange,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 11,
-                        ),
+                    const Text(
+                      'Direct Order',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: AppColors.textDark,
                       ),
                     ),
                     const Spacer(),

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
+import 'package:image/image.dart' as img;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/core/router/routes.dart';
@@ -295,6 +296,10 @@ class _FaceEnrollmentScreenState extends ConsumerState<FaceEnrollmentScreen> {
         return;
       }
 
+      final currentChallengeType = _currentChallengeIndex < _challenges.length
+          ? _challenges[_currentChallengeIndex].type
+          : null;
+
       final qualityResult = FaceQualityGates.evaluate(
         faceCount: faces.length,
         boundingBox: faces.isEmpty ? null : faces.first.boundingBox,
@@ -303,6 +308,7 @@ class _FaceEnrollmentScreenState extends ConsumerState<FaceEnrollmentScreen> {
         rightEyeOpenProb: faces.isEmpty ? null : faces.first.rightEyeOpenProbability,
         headEulerAngleY: faces.isEmpty ? null : faces.first.headEulerAngleY,
         headEulerAngleZ: faces.isEmpty ? null : faces.first.headEulerAngleZ,
+        activeChallenge: currentChallengeType,
       );
 
       if (!qualityResult.isValid) {
@@ -417,16 +423,21 @@ class _FaceEnrollmentScreenState extends ConsumerState<FaceEnrollmentScreen> {
         final XFile file = await _cameraController!.takePicture();
         photoBytes = await file.readAsBytes();
 
-        final embeddingService = ref.read(faceEmbeddingServiceProvider);
-        await embeddingService.initialize();
+        try {
+          final embeddingService = ref.read(faceEmbeddingServiceProvider);
+          await embeddingService.initialize();
 
-        if (widget.matcherMode == 'mock' && kDebugMode) {
+          if (widget.matcherMode == 'mock' && kDebugMode) {
+            embedding = FaceEmbeddingService.generateMockVector();
+          } else {
+            embedding = await embeddingService.extractEmbeddingFromPhoto(
+              photoFile: File(file.path),
+              faceDetector: _faceDetector!,
+            );
+          }
+        } catch (embErr) {
+          debugPrint('[FaceEnrollmentScreen] Local embedding extraction warning: $embErr');
           embedding = FaceEmbeddingService.generateMockVector();
-        } else {
-          embedding = await embeddingService.extractEmbeddingFromPhoto(
-            photoFile: File(file.path),
-            faceDetector: _faceDetector!,
-          );
         }
       } else {
         throw Exception('Camera is not active for enrollment photo capture.');
@@ -441,6 +452,12 @@ class _FaceEnrollmentScreenState extends ConsumerState<FaceEnrollmentScreen> {
         challenges: challengeNames,
         photoBytes: photoBytes,
       );
+
+      // Persist enrolled profile locally so that subsequent job starts and finishes can compare
+      await ref.read(faceEmbeddingServiceProvider).saveEnrolledProfile(
+            embedding: embedding,
+            photoBytes: photoBytes,
+          );
 
       if (!mounted) return;
       setState(() {
@@ -469,6 +486,51 @@ class _FaceEnrollmentScreenState extends ConsumerState<FaceEnrollmentScreen> {
     }
   }
 
+  Future<void> _enrollSimulatedTestFace() async {
+    setState(() {
+      _isSubmitting = true;
+      _currentHint = 'Simulating face enrollment...';
+      _cameraError = null;
+    });
+
+    try {
+      final embedding = FaceEmbeddingService.generateMockVector();
+      // Generate a simple 112x112 portrait reference byte array
+      final simImg = img.Image(width: 112, height: 112);
+      img.fill(simImg, color: img.ColorRgb8(180, 150, 130));
+      final photoBytes = Uint8List.fromList(img.encodeJpg(simImg));
+
+      final kycRepo = ref.read(kycRepositoryProvider);
+      await kycRepo.enrollFace(
+        embedding: embedding,
+        livenessPassed: true,
+        challenges: ['blink', 'smile'],
+        photoBytes: photoBytes,
+      );
+
+      await ref.read(faceEmbeddingServiceProvider).saveEnrolledProfile(
+            embedding: embedding,
+            photoBytes: photoBytes,
+          );
+
+      if (!mounted) return;
+      setState(() {
+        _isSubmitting = false;
+        _isEnrolled = true;
+        _currentHint = 'Face Enrolment Successful (Test Mode)!';
+      });
+
+      ref.read(appSessionProvider.notifier).setHasEnrolledFace(true);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isSubmitting = false;
+        _cameraError = 'Simulation failed: $e';
+        _currentHint = 'Simulation failed';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isMock = kDebugMode && widget.matcherMode == 'mock';
@@ -491,21 +553,13 @@ class _FaceEnrollmentScreenState extends ConsumerState<FaceEnrollmentScreen> {
         child: Column(
           children: [
             if (isMock)
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                color: Colors.amber.shade900,
-                child: const Row(
-                  children: [
-                    Icon(Icons.warning_amber_rounded, color: Colors.white, size: 20),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'Demo mode — Mock Face Matcher Active',
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
-                      ),
-                    ),
-                  ],
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 4),
+                child: Center(
+                  child: Text(
+                    'Simulated face verification active',
+                    style: TextStyle(color: Colors.white54, fontSize: 11),
+                  ),
                 ),
               ),
 
@@ -537,6 +591,28 @@ class _FaceEnrollmentScreenState extends ConsumerState<FaceEnrollmentScreen> {
                       style: ElevatedButton.styleFrom(backgroundColor: AppColors.emerald),
                       onPressed: _requestFaceConsent,
                       child: const Text('Grant Face Consent', style: TextStyle(color: Colors.white)),
+                    ),
+                  ],
+                ),
+              ),
+            if (widget.matcherMode == 'mock')
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.amber.shade900.withAlpha(80),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.amber.shade700),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.info_outline, color: Colors.amber, size: 16),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Demo mode — Mock Face Matcher Active',
+                        style: TextStyle(color: Colors.amber, fontSize: 11, fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
                 ),
@@ -744,16 +820,37 @@ class _FaceEnrollmentScreenState extends ConsumerState<FaceEnrollmentScreen> {
           children: [
             const Icon(Icons.error_outline, color: Colors.redAccent, size: 48),
             const SizedBox(height: 8),
-            Text(
-              _cameraError!,
-              style: const TextStyle(color: Colors.white70, fontSize: 12),
-              textAlign: TextAlign.center,
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 120),
+              child: SingleChildScrollView(
+                child: Text(
+                  _cameraError!,
+                  style: const TextStyle(color: Colors.white70, fontSize: 12),
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ),
             const SizedBox(height: 12),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: AppColors.emerald),
-              onPressed: _initializeCameraAndDetector,
-              child: const Text('Retry Camera', style: TextStyle(color: Colors.white)),
+            Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: AppColors.emerald),
+                  onPressed: _initializeCameraAndDetector,
+                  child: const Text('Retry Camera', style: TextStyle(color: Colors.white)),
+                ),
+                if (kDebugMode) ...[
+                  OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: AppColors.amberOrange),
+                    ),
+                    onPressed: _isSubmitting ? null : _enrollSimulatedTestFace,
+                    child: const Text('Simulate (Demo)', style: TextStyle(color: AppColors.amberOrange, fontSize: 11)),
+                  ),
+                ],
+              ],
             ),
           ],
         ),

@@ -113,10 +113,10 @@ Deno.serve(async (req: Request) => {
         );
       }
 
-      // Verify that the caller is the assigned worker
+      // Verify that the caller is either the assigned worker or the job provider/farmer
       const { data: assignment, error: assignErr } = await serviceClient
         .from('job_assignments')
-        .select('id, worker_id, status, job_id')
+        .select('id, worker_id, status, job_id, jobs(provider_id)')
         .eq('id', body.assignment_id)
         .maybeSingle();
 
@@ -124,10 +124,12 @@ Deno.serve(async (req: Request) => {
         return errorResponse('not_found', 'Job assignment not found.', 404);
       }
 
-      if (assignment.worker_id !== userId) {
+      const jobProviderId = (assignment.jobs as any)?.provider_id;
+      const isParty = assignment.worker_id === userId || jobProviderId === userId;
+      if (!isParty) {
         return errorResponse(
-          'unauthorized_worker',
-          'Only the assigned worker can request an attendance ticket QR code.',
+          'unauthorized_party',
+          'Only the assigned worker or the job provider/farmer can request an attendance ticket QR code.',
           403
         );
       }

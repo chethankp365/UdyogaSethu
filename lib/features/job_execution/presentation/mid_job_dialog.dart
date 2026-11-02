@@ -1,9 +1,14 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:udyogasethu/core/supabase/edge_api.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/job_execution/data/job_execution_repository.dart';
+import 'package:udyogasethu/features/trust/data/face_embedding_service.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class MidJobDialog extends ConsumerStatefulWidget {
@@ -45,22 +50,82 @@ class _MidJobDialogState extends ConsumerState<MidJobDialog> {
     try {
       final repo = ref.read(jobExecutionRepositoryProvider);
 
-      String? selfiePath;
+      final picked = await _picker.pickImage(
+        source: ImageSource.camera,
+        preferredCameraDevice: CameraDevice.front,
+        maxWidth: 720,
+      );
+
+      if (picked == null) {
+        setState(() {
+          _isSubmitting = false;
+          _errorMessage = 'Selfie required to verify mid-job attendance.';
+        });
+        return;
+      }
+
+      final embeddingService = ref.read(faceEmbeddingServiceProvider);
+      final faceDetector = FaceDetector(
+        options: FaceDetectorOptions(enableClassification: false, performanceMode: FaceDetectorMode.fast),
+      );
+
+      List<double>? midVector;
       try {
-        final picked = await _picker.pickImage(
-          source: ImageSource.camera,
-          preferredCameraDevice: CameraDevice.front,
-          maxWidth: 720,
+        await embeddingService.initialize();
+        midVector = await embeddingService.extractEmbeddingFromPhoto(
+          photoFile: File(picked.path),
+          faceDetector: faceDetector,
         );
-        if (picked != null) {
-          final bytes = await picked.readAsBytes();
-          selfiePath = await repo.uploadJobEvidence(
-            assignmentId: widget.assignmentId,
-            fileBytes: bytes,
-            fileName: 'midjob_selfie.jpg',
-          );
+      } catch (err) {
+        faceDetector.close();
+        setState(() {
+          _isSubmitting = false;
+          _errorMessage = 'Face detection failed: Please frame your face clearly facing the camera.';
+        });
+        return;
+      }
+      faceDetector.close();
+
+      if (midVector.isEmpty) {
+        setState(() {
+          _isSubmitting = false;
+          _errorMessage = 'No face detected in mid-job selfie.';
+        });
+        return;
+      }
+
+      final matchResult = await embeddingService.verifyAgainstEnrolledFace(midVector);
+      if (!matchResult.isMatch && !matchResult.notEnrolled) {
+        setState(() {
+          _isSubmitting = false;
+          _errorMessage = 'Face mismatch: The selfie does not match your enrolled profile face (${(matchResult.similarity * 100).toStringAsFixed(0)}% match). Only the enrolled worker can verify presence.';
+        });
+        return;
+      }
+
+      final bytes = await picked.readAsBytes();
+      try {
+        final edgeApi = ref.read(edgeApiClientProvider);
+        final faceRes = await edgeApi.faceVerifyVector(
+          embedding: midVector,
+          imageBase64: base64Encode(bytes),
+          context: 'mid_job',
+          assignmentId: widget.assignmentId,
+        );
+        if (faceRes['result'] == 'fail') {
+          setState(() {
+            _isSubmitting = false;
+            _errorMessage = faceRes['message']?.toString() ?? 'Face verification failed.';
+          });
+          return;
         }
       } catch (_) {}
+
+      final selfiePath = await repo.uploadJobEvidence(
+        assignmentId: widget.assignmentId,
+        fileBytes: bytes,
+        fileName: 'midjob_selfie.jpg',
+      );
 
       double? lat;
       double? lng;
@@ -79,7 +144,7 @@ class _MidJobDialogState extends ConsumerState<MidJobDialog> {
         lat: lat,
         lng: lng,
         isMocked: isMocked,
-        selfiePath: selfiePath ?? 'midjob_selfie_default.jpg',
+        selfiePath: selfiePath,
       );
 
       if (!mounted) return;

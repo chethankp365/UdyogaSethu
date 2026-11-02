@@ -1,5 +1,8 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:udyogasethu/core/l10n/locale_controller.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/features/farmer/data/farmer_ai_repository.dart';
@@ -17,6 +20,9 @@ class _SoilAiTestScreenState extends ConsumerState<SoilAiTestScreen> {
   String _selectedSoilType = 'Red Loamy (ಕೆಂಪು ಮಣ್ಣು)';
   String _targetCrop = 'Tomato & Vegetables';
   bool _isLoading = false;
+  File? _reportFile;
+  String? _base64Report;
+  int? _reportSizeBytes;
   AiAssistResponse<SoilAdviceResult>? _result;
 
   final List<String> _soilTypes = [
@@ -26,6 +32,36 @@ class _SoilAiTestScreenState extends ConsumerState<SoilAiTestScreen> {
     'Laterite / Coastal (ಲ್ಯಾಟರೈಟ್ ಮಣ್ಣು)',
     'Sandy Loam (ಮರಳು ಮಿಶ್ರಿತ ಮಣ್ಣು)',
   ];
+
+  Future<void> _pickReportImage(ImageSource source) async {
+    try {
+      final picker = ImagePicker();
+      final picked = await picker.pickImage(
+        source: source,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 80,
+      );
+
+      if (picked != null) {
+        final file = File(picked.path);
+        final bytes = await file.readAsBytes();
+        final base64Str = base64Encode(bytes);
+
+        setState(() {
+          _reportFile = file;
+          _base64Report = base64Str;
+          _reportSizeBytes = bytes.length;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to pick soil report photo: $e')),
+        );
+      }
+    }
+  }
 
   Future<void> _analyze() async {
     setState(() => _isLoading = true);
@@ -39,13 +75,18 @@ class _SoilAiTestScreenState extends ConsumerState<SoilAiTestScreen> {
         crop: _targetCrop,
         district: 'Karnataka',
         language: currentLocale.languageCode,
+        imageBase64: _base64Report,
+        imageMime: 'image/jpeg',
       );
 
       setState(() => _result = res);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Soil analysis error: $e')),
+          SnackBar(
+            backgroundColor: Colors.red.shade700,
+            content: Text('Soil analysis error: ${e.toString().replaceAll("Exception: ", "")}'),
+          ),
         );
       }
     } finally {
@@ -99,6 +140,99 @@ class _SoilAiTestScreenState extends ConsumerState<SoilAiTestScreen> {
               ),
             ),
             const SizedBox(height: 16),
+
+            // Soil Test Report Photo Card (Gemini Vision)
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFFE2E8F0)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Row(
+                    children: [
+                      Icon(Icons.document_scanner_rounded, color: Color(0xFF059669), size: 20),
+                      SizedBox(width: 8),
+                      Text('Soil Report / Card Photo (Gemini Vision)',
+                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Attach a clear photo of your Soil Health Card or lab report for AI analysis.',
+                    style: TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+                  ),
+                  const SizedBox(height: 10),
+                  if (_reportFile != null) ...[
+                    Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.file(_reportFile!, height: 160, width: double.infinity, fit: BoxFit.cover),
+                        ),
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: InkWell(
+                            onTap: () => setState(() {
+                              _reportFile = null;
+                              _base64Report = null;
+                              _reportSizeBytes = null;
+                            }),
+                            child: Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: const BoxDecoration(color: Colors.black54, shape: BoxShape.circle),
+                              child: const Icon(Icons.close, color: Colors.white, size: 16),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      'Report photo attached (${((_reportSizeBytes ?? 0) / 1024).toStringAsFixed(0)} KB)',
+                      style: const TextStyle(fontSize: 11, color: Color(0xFF059669), fontWeight: FontWeight.w600),
+                    ),
+                  ] else ...[
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: const Color(0xFF059669),
+                              side: const BorderSide(color: Color(0xFF059669)),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                            ),
+                            icon: const Icon(Icons.camera_alt_outlined, size: 18),
+                            label: const Text('Camera', style: TextStyle(fontSize: 12)),
+                            onPressed: () => _pickReportImage(ImageSource.camera),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: const Color(0xFF059669),
+                              side: const BorderSide(color: Color(0xFF059669)),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                            ),
+                            icon: const Icon(Icons.photo_library_outlined, size: 18),
+                            label: const Text('Gallery', style: TextStyle(fontSize: 12)),
+                            onPressed: () => _pickReportImage(ImageSource.gallery),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(height: 14),
 
             // pH Input Slider Card
             Container(

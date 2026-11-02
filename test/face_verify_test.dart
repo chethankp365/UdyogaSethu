@@ -75,6 +75,7 @@ void main() {
         'result': 'manual_review_required',
         'match_score': 35.0,
         'similarity': 0.35,
+        'provider': 'eden_ai_amazon',
         'message': 'Three consecutive verification attempts failed. Account requires manual review.',
         'fraud_flag_created': true,
         'attempts_count': 3,
@@ -84,6 +85,82 @@ void main() {
       expect(result.status, equals(FaceCheckStatus.manualReviewRequired));
       expect(result.fraudFlagCreated, isTrue);
       expect(result.attemptsCount, equals(3));
+      expect(result.provider, equals('eden_ai_amazon'));
+    });
+
+    test('FaceCheckResult.fromJson parses needs_enrollment flag when no profile enrolled', () {
+      final json = {
+        'result': 'fail',
+        'match_score': 0.0,
+        'similarity': 0.0,
+        'provider': 'none',
+        'message': 'No enrolled face profile found. Please complete face enrollment first.',
+        'fraud_flag_created': false,
+        'attempts_count': 1,
+        'needs_enrollment': true,
+      };
+
+      final result = FaceCheckResult.fromJson(json);
+      expect(result.status, equals(FaceCheckStatus.fail));
+      expect(result.needsEnrollment, isTrue);
+      expect(result.matchScore, equals(0.0));
+      expect(result.provider, equals('none'));
+    });
+
+    test('FaceCheckResult.fromJson unwraps edge function { success: true, data: { ... } } envelope', () {
+      final edgeFunctionWrapped = {
+        'success': true,
+        'data': {
+          'result': 'pass',
+          'match_score': 95.2,
+          'similarity': 0.952,
+          'threshold': 0.65,
+          'provider': 'eden_ai_amazon',
+          'message': 'Face identity verified successfully.',
+          'fraud_flag_created': false,
+          'attempts_count': 0,
+        },
+      };
+
+      final result = FaceCheckResult.fromJson(edgeFunctionWrapped);
+      expect(result.status, equals(FaceCheckStatus.pass));
+      expect(result.provider, equals('eden_ai_amazon'));
+      expect(result.similarity, equals(0.952));
+      expect(result.matchScore, equals(95.2));
+      expect(result.threshold, equals(0.65));
+      expect(result.message, equals('Face identity verified successfully.'));
+      expect(result.needsEnrollment, isFalse);
+    });
+
+    test('FaceCheckResult.fromJson parses error envelope with diagnostic codes', () {
+      final errorEnvelope = {
+        'success': false,
+        'error': {
+          'code': 'no_face_detected',
+          'message': 'No face detected in verification selfie.',
+        },
+      };
+
+      final result = FaceCheckResult.fromJson(errorEnvelope);
+      expect(result.status, equals(FaceCheckStatus.error));
+      expect(result.diagnosticCode, equals('no_face_detected'));
+      expect(result.message, equals('No face detected in verification selfie.'));
+      expect(result.needsEnrollment, isFalse);
+    });
+
+    test('FaceCheckResult.fromJson handles reference_photo_missing and sets needsEnrollment', () {
+      final missingRefEnvelope = {
+        'success': false,
+        'error': {
+          'code': 'reference_photo_missing',
+          'message': 'Enrolled reference photo not found in storage.',
+        },
+      };
+
+      final result = FaceCheckResult.fromJson(missingRefEnvelope);
+      expect(result.status, equals(FaceCheckStatus.error));
+      expect(result.diagnosticCode, equals('reference_photo_missing'));
+      expect(result.needsEnrollment, isTrue);
     });
   });
 

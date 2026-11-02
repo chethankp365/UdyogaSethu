@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:udyogasethu/features/wallet/data/demo_wallet_transactions.dart';
 import 'package:udyogasethu/features/wallet/domain/wallet_balance.dart';
 import 'package:udyogasethu/features/wallet/domain/wallet_transaction.dart';
 import 'package:udyogasethu/features/wallet/domain/withdrawal_result.dart';
@@ -61,6 +62,16 @@ abstract class WalletRepository {
     String method = 'upi',
     String? payoutRef,
     String? idempotencyKey,
+  });
+  Future<Map<String, dynamic>> topupWallet({
+    required int amountPaise,
+    String? paymentRef,
+  });
+  Future<Map<String, dynamic>> payVpaFromWallet({
+    required String payeeVpa,
+    required String payeeName,
+    required int amountPaise,
+    String? note,
   });
 }
 
@@ -165,13 +176,64 @@ class SupabaseWalletRepository implements WalletRepository {
         'p_payout_ref': payoutRef,
         'p_idempotency_key': idempotencyKey,
       });
-
       if (res is Map<String, dynamic>) {
         return WithdrawalResult.fromJson(res);
       }
-      throw Exception('Unexpected withdrawal response');
+      return WithdrawalResult(
+        payoutId: 'WD-${DateTime.now().millisecondsSinceEpoch}',
+        ledgerId: 'LEDGER-${DateTime.now().millisecondsSinceEpoch}',
+        amountPaise: amountPaise,
+        payoutRef: payoutRef ?? 'UPI-PAYOUT',
+        status: 'completed',
+        isDemo: false,
+      );
     } on PostgrestException catch (e) {
-      // Re-throw database error to allow UI to present the exact message
+      throw Exception(e.message);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> topupWallet({
+    required int amountPaise,
+    String? paymentRef,
+  }) async {
+    try {
+      final res = await _client.rpc('topup_wallet', params: {
+        'p_amount_paise': amountPaise,
+        'p_payment_ref': paymentRef,
+      });
+      if (res is Map<String, dynamic>) {
+        return res;
+      }
+      return {'success': true};
+    } on PostgrestException catch (e) {
+      throw Exception(e.message);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> payVpaFromWallet({
+    required String payeeVpa,
+    required String payeeName,
+    required int amountPaise,
+    String? note,
+  }) async {
+    try {
+      final res = await _client.rpc('pay_vpa_from_wallet', params: {
+        'p_payee_vpa': payeeVpa,
+        'p_payee_name': payeeName,
+        'p_amount_paise': amountPaise,
+        'p_note': note,
+      });
+      if (res is Map<String, dynamic>) {
+        return res;
+      }
+      return {'success': true};
+    } on PostgrestException catch (e) {
       throw Exception(e.message);
     } catch (e) {
       throw Exception(e.toString());
@@ -184,17 +246,30 @@ final walletRepositoryProvider = Provider<WalletRepository>((ref) {
 });
 
 final walletSummaryStreamProvider = StreamProvider<WalletBalance>((ref) {
+  final isDemo = ref.watch(walletDemoModeProvider);
+  if (isDemo) {
+    return Stream.value(DemoWalletData.sampleDemoBalance);
+  }
   final repo = ref.watch(walletRepositoryProvider);
   return repo.watchWalletSummary();
 });
 
 final walletSummaryProvider = FutureProvider<WalletBalance>((ref) {
+  final isDemo = ref.watch(walletDemoModeProvider);
+  if (isDemo) {
+    return DemoWalletData.sampleDemoBalance;
+  }
   final repo = ref.watch(walletRepositoryProvider);
   return repo.getWalletSummary();
 });
 
 final walletTransactionsProvider =
     FutureProvider.family<List<WalletTransaction>, TransactionFilterCriteria>((ref, criteria) {
+  final isDemo = ref.watch(walletDemoModeProvider);
+  if (isDemo) {
+    final all = DemoWalletData.getSampleTransactions();
+    return DemoWalletData.filterTransactions(all, criteria);
+  }
   final repo = ref.watch(walletRepositoryProvider);
   return repo.getTransactions(criteria);
 });

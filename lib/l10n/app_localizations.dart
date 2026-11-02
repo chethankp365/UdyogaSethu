@@ -5086,7 +5086,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Pay Securely'**
-  String get paymentPaySecurely;
+  String paymentPaySecurely(String amount);
 
   /// No description provided for @paymentConfirmCash.
   ///
@@ -7751,6 +7751,552 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This is guidance only. It does not guarantee any loan. Future links to regulated financial partners would need your consent.'**
   String get disclaimerCreditGuidance;
+
+  /// No description provided for @paymentUpiApps.
+  ///
+  /// In en, this message translates to:
+  /// **'UPI Apps (GPay, PhonePe, Paytm)'**
+  String get paymentUpiApps;
+
+  /// No description provided for @paymentUpiQr.
+  ///
+  /// In en, this message translates to:
+  /// **'Dynamic UPI QR Code'**
+  String get paymentUpiQr;
+
+  /// No description provided for @paymentUpiCollect.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter UPI ID / VPA'**
+  String get paymentUpiCollect;
+
+  /// No description provided for @paymentUpiVpaHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. mobile@upi or username@okhdfcbank'**
+  String get paymentUpiVpaHint;
+
+  /// No description provided for @paymentUpiVpaInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid UPI ID (e.g. name@bank)'**
+  String get paymentUpiVpaInvalid;
+
+  /// No description provided for @paymentUpiQrScanPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan this QR code using any UPI app to pay'**
+  String get paymentUpiQrScanPrompt;
+
+  /// No description provided for @paymentUpiQrExpiresIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires in {time}'**
+  String paymentUpiQrExpiresIn(String time);
+
+  /// No description provided for @paymentRefreshStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Check Bank Status'**
+  String get paymentRefreshStatus;
+
+  /// No description provided for @paymentReconciling.
+  ///
+  /// In en, this message translates to:
+  /// **'Verifying with Bank...'**
+  String get paymentReconciling;
+
+  /// No description provided for @paymentReconcileFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment verification pending with bank. Please retry in a few moments.'**
+  String get paymentReconcileFailed;
+
+  /// No description provided for @paymentStatusTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Status'**
+  String get paymentStatusTitle;
+
+  /// No description provided for @paymentStatusSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Successful and Confirmed'**
+  String get paymentStatusSuccess;
+
+  /// No description provided for @paymentStatusSuccessDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your payment of {amount} is confirmed.'**
+  String paymentStatusSuccessDesc(String amount);
+
+  /// No description provided for @paymentStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirming with Bank...'**
+  String get paymentStatusPending;
+
+  /// No description provided for @paymentStatusPendingDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Awaiting confirmation from Razorpay and banking network. Your screen will update automatically.'**
+  String get paymentStatusPendingDesc;
+
+  /// No description provided for @paymentStatusFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Failed'**
+  String get paymentStatusFailed;
+
+  /// No description provided for @paymentStatusFailedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your transaction could not be completed by the bank. No money was deducted.'**
+  String get paymentStatusFailedDesc;
+
+  /// No description provided for @paymentTotalAmountPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Amount Paid'**
+  String get paymentTotalAmountPaid;
+
+  /// No description provided for @paymentEscrowProtectedNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Escrow Protected: Money will only be released to the worker once verified job completion is recorded.'**
+  String get paymentEscrowProtectedNotice;
+
+  /// No description provided for @paymentShareReceipt.
+  ///
+  /// In en, this message translates to:
+  /// **'Share / Download PDF Receipt'**
+  String get paymentShareReceipt;
+
+  /// No description provided for @paymentContinueAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to Job / Order'**
+  String get paymentContinueAction;
+
+  /// No description provided for @chatReportUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Report User'**
+  String get chatReportUser;
+
+  /// No description provided for @chatBlockUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Block User'**
+  String get chatBlockUser;
+
+  /// No description provided for @chatUserBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'This user has been blocked. Messages disabled.'**
+  String get chatUserBlocked;
+
+  /// No description provided for @chatReportSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Report submitted for admin review.'**
+  String get chatReportSubmitted;
+
+  /// No description provided for @chatFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get chatFilterAll;
+
+  /// No description provided for @chatFilterJobs.
+  ///
+  /// In en, this message translates to:
+  /// **'Jobs'**
+  String get chatFilterJobs;
+
+  /// No description provided for @chatFilterBookings.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookings'**
+  String get chatFilterBookings;
+
+  /// No description provided for @chatFilterOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm Orders'**
+  String get chatFilterOrders;
+
+  /// No description provided for @whatsappNotifyOptIn.
+  ///
+  /// In en, this message translates to:
+  /// **'WhatsApp Notifications'**
+  String get whatsappNotifyOptIn;
+
+  /// No description provided for @whatsappNotifyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive critical job updates, booking status, and payment receipts via WhatsApp'**
+  String get whatsappNotifyDesc;
+
+  /// No description provided for @whatsappConsentNote.
+  ///
+  /// In en, this message translates to:
+  /// **'By enabling, you agree to receive transactional alerts from UdyogaSethu on your registered mobile number.'**
+  String get whatsappConsentNote;
+
+  /// No description provided for @voiceModalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Voice Assistant'**
+  String get voiceModalTitle;
+
+  /// No description provided for @voiceGreetingMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get voiceGreetingMorning;
+
+  /// No description provided for @voiceGreetingAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Good afternoon'**
+  String get voiceGreetingAfternoon;
+
+  /// No description provided for @voiceGreetingEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening'**
+  String get voiceGreetingEvening;
+
+  /// No description provided for @voiceAskAnything.
+  ///
+  /// In en, this message translates to:
+  /// **'How can I help you today?'**
+  String get voiceAskAnything;
+
+  /// No description provided for @voiceTapOrbToSpeak.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap orb to speak'**
+  String get voiceTapOrbToSpeak;
+
+  /// No description provided for @voiceListeningNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening... Speak now'**
+  String get voiceListeningNow;
+
+  /// No description provided for @voiceThinking.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding the right information...'**
+  String get voiceThinking;
+
+  /// No description provided for @voiceSpeaking.
+  ///
+  /// In en, this message translates to:
+  /// **'Speaking reply (Tap to interrupt)'**
+  String get voiceSpeaking;
+
+  /// No description provided for @voiceHearError.
+  ///
+  /// In en, this message translates to:
+  /// **'I didn\'t catch that. Tap to try again'**
+  String get voiceHearError;
+
+  /// No description provided for @voiceMicRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone permission required'**
+  String get voiceMicRequired;
+
+  /// No description provided for @voiceMicDeniedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap Grant Permission to enable voice commands.'**
+  String get voiceMicDeniedDesc;
+
+  /// No description provided for @voiceMicPermanentDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Please open App Settings to allow microphone access.'**
+  String get voiceMicPermanentDesc;
+
+  /// No description provided for @voiceGrantPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant Permission'**
+  String get voiceGrantPermission;
+
+  /// No description provided for @voiceOpenSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get voiceOpenSettings;
+
+  /// No description provided for @voiceTypeInstead.
+  ///
+  /// In en, this message translates to:
+  /// **'Type instead'**
+  String get voiceTypeInstead;
+
+  /// No description provided for @voiceTypeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Type your question here...'**
+  String get voiceTypeHint;
+
+  /// No description provided for @voiceListenAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Listen again'**
+  String get voiceListenAgain;
+
+  /// No description provided for @voiceStopAudio.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop audio'**
+  String get voiceStopAudio;
+
+  /// No description provided for @voiceResetConversation.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset conversation'**
+  String get voiceResetConversation;
+
+  /// No description provided for @voiceMuteTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute voice'**
+  String get voiceMuteTooltip;
+
+  /// No description provided for @voiceUnmuteTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Unmute voice'**
+  String get voiceUnmuteTooltip;
+
+  /// No description provided for @voiceYouSaid.
+  ///
+  /// In en, this message translates to:
+  /// **'You said:'**
+  String get voiceYouSaid;
+
+  /// No description provided for @voiceAssistantReply.
+  ///
+  /// In en, this message translates to:
+  /// **'Assistant:'**
+  String get voiceAssistantReply;
+
+  /// No description provided for @voicePromptNearbyJobs.
+  ///
+  /// In en, this message translates to:
+  /// **'Find nearby jobs'**
+  String get voicePromptNearbyJobs;
+
+  /// No description provided for @voicePromptCheckWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Check my wallet balance'**
+  String get voicePromptCheckWallet;
+
+  /// No description provided for @voicePromptOpenProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Open my profile'**
+  String get voicePromptOpenProfile;
+
+  /// No description provided for @voicePromptActiveJobs.
+  ///
+  /// In en, this message translates to:
+  /// **'Show my active jobs'**
+  String get voicePromptActiveJobs;
+
+  /// No description provided for @voicePromptFindWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Find workers near me'**
+  String get voicePromptFindWorkers;
+
+  /// No description provided for @voicePromptPostJob.
+  ///
+  /// In en, this message translates to:
+  /// **'Post a new job'**
+  String get voicePromptPostJob;
+
+  /// No description provided for @voicePromptApplicants.
+  ///
+  /// In en, this message translates to:
+  /// **'Show my applicants'**
+  String get voicePromptApplicants;
+
+  /// No description provided for @voicePromptCheckEarnings.
+  ///
+  /// In en, this message translates to:
+  /// **'Check my earnings'**
+  String get voicePromptCheckEarnings;
+
+  /// No description provided for @voicePromptMandiPrices.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s today\'s tomato price?'**
+  String get voicePromptMandiPrices;
+
+  /// No description provided for @voicePromptMarketplace.
+  ///
+  /// In en, this message translates to:
+  /// **'Open produce marketplace'**
+  String get voicePromptMarketplace;
+
+  /// No description provided for @voicePromptFarmerOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'Show my orders'**
+  String get voicePromptFarmerOrders;
+
+  /// No description provided for @voicePromptCropHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Help me diagnose a crop problem'**
+  String get voicePromptCropHelp;
+
+  /// No description provided for @voiceLangNotInstalled.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice playback for this language is not installed on your device.'**
+  String get voiceLangNotInstalled;
+
+  /// No description provided for @voiceCloudSttActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Using cloud speech recognition for this language.'**
+  String get voiceCloudSttActive;
+
+  /// No description provided for @actionCancelJob.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Job Assignment'**
+  String get actionCancelJob;
+
+  /// No description provided for @actionCancelWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Worker Booking'**
+  String get actionCancelWorker;
+
+  /// No description provided for @cancelAssignmentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Assignment?'**
+  String get cancelAssignmentTitle;
+
+  /// No description provided for @cancelAssignmentPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to cancel this assignment? The slot will be released back to the platform.'**
+  String get cancelAssignmentPrompt;
+
+  /// No description provided for @cancelAssignmentConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Cancellation'**
+  String get cancelAssignmentConfirm;
+
+  /// No description provided for @cancelAssignmentSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Assignment cancelled successfully.'**
+  String get cancelAssignmentSuccess;
+
+  /// No description provided for @cancellationReasonPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a reason for cancellation:'**
+  String get cancellationReasonPrompt;
+
+  /// No description provided for @reasonEmergency.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal emergency'**
+  String get reasonEmergency;
+
+  /// No description provided for @reasonScheduleConflict.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule conflict / timing issue'**
+  String get reasonScheduleConflict;
+
+  /// No description provided for @reasonFoundAlternative.
+  ///
+  /// In en, this message translates to:
+  /// **'Found an alternative'**
+  String get reasonFoundAlternative;
+
+  /// No description provided for @reasonMutualAgreement.
+  ///
+  /// In en, this message translates to:
+  /// **'Mutual agreement'**
+  String get reasonMutualAgreement;
+
+  /// No description provided for @reasonOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other reason'**
+  String get reasonOther;
+
+  /// No description provided for @voiceSelectLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice Language'**
+  String get voiceSelectLanguage;
+
+  /// No description provided for @voiceLangAuto.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto Detect'**
+  String get voiceLangAuto;
+
+  /// No description provided for @chatClosedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This chat is no longer available'**
+  String get chatClosedTitle;
+
+  /// No description provided for @chatClosedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'The job has ended. For safety and privacy, messaging and calling are closed.'**
+  String get chatClosedDesc;
+
+  /// No description provided for @chatCallingDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice calling is disabled because this job has ended.'**
+  String get chatCallingDisabled;
+
+  /// No description provided for @chatFilterActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get chatFilterActive;
+
+  /// No description provided for @chatFilterCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed Jobs'**
+  String get chatFilterCompleted;
+
+  /// No description provided for @chatDeleteAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Conversation'**
+  String get chatDeleteAction;
+
+  /// No description provided for @chatDeletedNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Conversation removed from your inbox.'**
+  String get chatDeletedNotice;
 }
 
 class _AppLocalizationsDelegate

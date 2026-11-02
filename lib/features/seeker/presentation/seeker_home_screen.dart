@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/l10n/locale_controller.dart';
 import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
+import 'package:udyogasethu/core/theme/app_motion.dart';
 import 'package:udyogasethu/core/widgets/job_row.dart';
 import 'package:udyogasethu/core/widgets/user_avatar.dart';
 import 'package:udyogasethu/features/seeker/domain/job_application_status.dart';
@@ -19,6 +20,7 @@ import 'package:udyogasethu/features/safety/presentation/widgets/sos_confirmatio
 import 'package:udyogasethu/features/notifications/presentation/widgets/notification_bell_badge.dart';
 import 'package:udyogasethu/core/widgets/simple_mode_action_dock.dart';
 import 'package:udyogasethu/features/account/presentation/settings_controller.dart';
+import 'package:udyogasethu/features/voice/presentation/voice_assistant_modal.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 class SeekerHomeScreen extends ConsumerStatefulWidget {
@@ -468,51 +470,7 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> with Widget
   }
 
   void _showAiAssistantSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (ctx) => Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Row(
-              children: [
-                Icon(Icons.auto_awesome_rounded, color: Colors.purple, size: 24),
-                SizedBox(width: 10),
-                Text('UdyogaSethu AI Assistant', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-              ],
-            ),
-            const SizedBox(height: 12),
-            const Text(
-              'Ask any question in your native language or speak using the microphone. '
-              'For example: "Find delivery jobs near Koramangala paying more than 400 rupees."',
-              style: TextStyle(fontSize: 13, color: AppColors.textDark),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple,
-                foregroundColor: Colors.white,
-                minimumSize: const Size(double.infinity, 44),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-              icon: const Icon(Icons.mic, size: 20),
-              label: const Text('Speak Command'),
-              onPressed: () {
-                Navigator.pop(ctx);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Listening for voice command...')),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
+    VoiceAssistantModal.show(context);
   }
 
 
@@ -1516,10 +1474,13 @@ class _SeekerHomeScreenState extends ConsumerState<SeekerHomeScreen> with Widget
               separatorBuilder: (context, index) => const SizedBox(height: 10),
               itemBuilder: (context, index) {
                 final job = filtered[index];
-                return JobRow(
-                  job: job,
-                  seekerType: seekerType,
-                  onTap: () => context.push('/job/${job.id}', extra: job),
+                return FadeSlideEntrance(
+                  index: index,
+                  child: JobRow(
+                    job: job,
+                    seekerType: seekerType,
+                    onTap: () => context.push('/job/${job.id}', extra: job),
+                  ),
                 );
               },
             );

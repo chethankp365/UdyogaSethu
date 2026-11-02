@@ -493,7 +493,7 @@ class CartScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    l10n?.redeemRewardCredits ?? 'Reward Credits (Demo mode)',
+                    l10n?.redeemRewardCredits ?? 'Reward Credits',
                     style: const TextStyle(
                       fontSize: 13.5,
                       fontWeight: FontWeight.bold,

@@ -106,11 +106,6 @@ void main() {
       AppRoutes.creditReadiness,
       AppRoutes.wellness,
 
-      // Guided Demo Routes (P10.1)
-      AppRoutes.demo,
-      AppRoutes.demoAccounts,
-      AppRoutes.demoAdminReview,
-
       // Debug Routes
       AppRoutes.devGallery,
       AppRoutes.devConnection,
@@ -294,11 +289,6 @@ void main() {
       // Financial Inclusion & Wellness (Batch 3: P8.5 & P8.6)
       AppRoutes.creditReadiness,
       AppRoutes.wellness,
-
-      // Guided Demo Routes (P10.1)
-      AppRoutes.demo,
-      AppRoutes.demoAccounts,
-      AppRoutes.demoAdminReview,
 
       // Shell Tabs
       'shell_seeker_tab_0_home',

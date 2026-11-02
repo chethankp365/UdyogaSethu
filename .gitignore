@@ -8,8 +8,21 @@ key.properties
 .env*
 google-services.json
 supabase/.temp
+supabase/.env.local
 
-# Miscellaneous / Temporary
+# Android & iOS local build / platform files
+android/local.properties
+android/.gradle/
+android/app/build/
+android/build/
+android/*.log
+*.iml
+android/*.iml
+*.apk
+*.aab
+ios/Flutter/ephemeral/
+
+# Miscellaneous / Temporary & IDE
 *.log
 .DS_Store
 Thumbs.db
@@ -19,5 +32,5 @@ build/
 .dart_tool/
 .pub/
 .packages
-pubspec.lock
 scratch/
+tool/detailed_contract_scan.txt

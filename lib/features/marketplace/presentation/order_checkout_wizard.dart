@@ -643,29 +643,17 @@ class _OrderCheckoutWizardState extends ConsumerState<OrderCheckoutWizard> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Demo Mode Banner
-        Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: const Color(0xFFFFFBEB),
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: const Color(0xFFFDE68A)),
-          ),
-          child: Row(
-            children: [
-              const Icon(Icons.info, color: Color(0xFFD97706), size: 18),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  l10n?.paymentDemoModeNotice ??
-                      'Demo mode — Simulated payment checkout with instant verification.',
-                  style: const TextStyle(fontSize: 11.5, color: Color(0xFF92400E)),
-                ),
-              ),
-            ],
+        // Unobtrusive payment notice
+        const Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 4),
+            child: Text(
+              'Simulated payment checkout with instant verification.',
+              style: TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+            ),
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
 
         // Escrow Protection Card
         Card(

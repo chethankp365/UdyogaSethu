@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -96,37 +95,6 @@ class _SafetyOnboardingScreenState extends ConsumerState<SafetyOnboardingScreen>
     }
   }
 
-  Future<void> _simulateStatus(String targetStatus) async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      final repo = ref.read(safetyOnboardingRepositoryProvider);
-      final updatedStatus = await repo.simulateStatus(_getUserId(), targetStatus);
-      if (mounted) {
-        setState(() {
-          _status = updatedStatus;
-          _isLoading = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Demo Mode: Status set to "$targetStatus"'),
-            backgroundColor: AppColors.amberOrange,
-          ),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Simulation error: $e'), backgroundColor: Colors.red),
-        );
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -250,11 +218,6 @@ class _SafetyOnboardingScreenState extends ConsumerState<SafetyOnboardingScreen>
                     ),
                     const SizedBox(height: 20),
 
-                    // Debug Simulation Panel (gated strictly under kDebugMode)
-                    if (kDebugMode) ...[
-                      _buildDebugPanel(),
-                      const SizedBox(height: 24),
-                    ],
                   ],
                 ),
               ),
@@ -784,75 +747,4 @@ class _SafetyOnboardingScreenState extends ConsumerState<SafetyOnboardingScreen>
     );
   }
 
-  Widget _buildDebugPanel() {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.amber.shade50,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.amber.shade300),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.bug_report_rounded, color: AppColors.amberOrange, size: 20),
-              const SizedBox(width: 8),
-              Text(
-                'Demo Mode: Admin Simulation Tools (P3.6 / P9.2)',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.amber.shade900),
-              ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          const Text(
-            'Simulate status transitions to test 4-tick badge logic & XP events without web admin console.',
-            style: TextStyle(fontSize: 11, color: AppColors.textDark),
-          ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              ElevatedButton(
-                onPressed: () => _simulateStatus('attended'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue.shade700,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                ),
-                child: const Text('1. Simulate Attended', style: TextStyle(fontSize: 11)),
-              ),
-              ElevatedButton(
-                onPressed: () => _simulateStatus('document_review'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple.shade700,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                ),
-                child: const Text('2. Simulate Doc Review', style: TextStyle(fontSize: 11)),
-              ),
-              ElevatedButton(
-                onPressed: () => _simulateStatus('approved'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.headerGreenDark,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                ),
-                child: const Text('3. Simulate Approved (Earn Badge)', style: TextStyle(fontSize: 11)),
-              ),
-              OutlinedButton(
-                onPressed: () => _simulateStatus('not_booked'),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                ),
-                child: const Text('Reset', style: TextStyle(fontSize: 11)),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 }

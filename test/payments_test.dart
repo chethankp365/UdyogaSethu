@@ -44,6 +44,8 @@ class MockPaymentRepository implements PaymentRepository {
     required String refId,
     required PaymentMethod method,
     bool? protectionOverride,
+    String? upiFlow,
+    String? upiVpa,
   }) async {
     if (createOrderShouldThrow) {
       throw Exception('Server error creating order');
@@ -57,6 +59,8 @@ class MockPaymentRepository implements PaymentRepository {
       receiptNo: 'RCP-20261009-000001',
       status: 'created',
       method: method.name,
+      upiString: 'upi://pay?pa=rzp.test@hdfcbank&pn=UdyogaSethu&am=735.00&cu=INR&tn=RCP-20261009-000001&tr=order_test_987',
+      upiFlow: upiFlow ?? 'intent',
       billSummary: const PaymentBillSummary(
         baseAmountPaise: 70000,
         platformFeePaise: 3500,
@@ -133,6 +137,17 @@ class MockPaymentRepository implements PaymentRepository {
 
   @override
   Future<bool> releaseOrderEscrow(String orderId) async => true;
+
+  @override
+  Future<Map<String, dynamic>> reconcilePayment(String paymentId) async => {
+    'reconciled': true,
+    'status': 'held',
+    'payment_id': paymentId,
+    'message': 'Payment confirmed',
+  };
+
+  @override
+  Future<bool> validateVpa(String vpa) async => vpa.contains('@');
 }
 
 Widget createTestWidget(Widget child, {List<dynamic> overrides = const []}) {

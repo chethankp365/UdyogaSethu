@@ -162,39 +162,14 @@ class _JobProtectionClaimScreenState
   }
 
   Widget _buildDemoBanner() {
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFFBEB),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFFDE68A)),
-      ),
-      child: const Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(Icons.info_outline, color: Color(0xFFD97706), size: 22),
-          SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Demo mode: real cover needs a licensed insurance partner',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13,
-                    color: Color(0xFF92400E),
-                  ),
-                ),
-                SizedBox(height: 2),
-                Text(
-                  'This claim simulator checks real on-site criteria (QR attendance, GPS/selfie verification, time log) and registers claims in demo mode for administrative audit.',
-                  style: TextStyle(fontSize: 12, color: Color(0xFF78350F), height: 1.35),
-                ),
-              ],
-            ),
-          ),
-        ],
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 4),
+      child: Center(
+        child: Text(
+          'Simulated claims audit — real cover requires a licensed insurance partner',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+        ),
       ),
     );
   }
@@ -400,7 +375,7 @@ class _JobProtectionClaimScreenState
           ),
           const SizedBox(height: 6),
           Text(
-            'Your claim of ₹${(claim.amountPaise / 100).toStringAsFixed(0)} for "${claim.claimType}" was registered in Demo Mode for safety audit.',
+            'Your claim of ₹${(claim.amountPaise / 100).toStringAsFixed(0)} for "${claim.claimType}" was registered for safety audit.',
             style: const TextStyle(fontSize: 12, color: Color(0xFF047857), height: 1.35),
           ),
         ],

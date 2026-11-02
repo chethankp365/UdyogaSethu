@@ -55,6 +55,24 @@ class MockWalletRepoForTest implements WalletRepository {
       status: 'completed',
     );
   }
+
+  @override
+  Future<Map<String, dynamic>> topupWallet({
+    required int amountPaise,
+    String? paymentRef,
+  }) async {
+    return {'success': true, 'amount_paise': amountPaise};
+  }
+
+  @override
+  Future<Map<String, dynamic>> payVpaFromWallet({
+    required String payeeVpa,
+    required String payeeName,
+    required int amountPaise,
+    String? note,
+  }) async {
+    return {'success': true, 'amount_paise': amountPaise};
+  }
 }
 
 class MockEarningsRepoForTest implements EarningsRepository {
@@ -222,20 +240,22 @@ void main() {
 
     testWidgets('ScanUpiDialog renders real scanner, parses payload and shows Prompt D6 fields', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
-            body: ScanUpiDialog(),
+        const ProviderScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: ScanUpiDialog(),
+            ),
           ),
         ),
       );
 
       expect(find.text('Scan UPI QR'), findsOneWidget);
-      expect(find.textContaining('Test mode: no money is moved'), findsOneWidget);
+      expect(find.textContaining('Instant UPI & Payment Gateway'), findsOneWidget);
       expect(find.text('Live Camera'), findsOneWidget);
-      expect(find.text('Manual Input'), findsOneWidget);
+      expect(find.text('Paste/Type QR'), findsOneWidget);
 
-      // Switch to Manual Input mode (available in test/debug)
-      await tester.tap(find.text('Manual Input'));
+      // Switch to Paste/Type QR mode (available in test/debug)
+      await tester.tap(find.text('Paste/Type QR'));
       await tester.pumpAndSettle();
 
       // Enter valid UPI QR code
@@ -245,23 +265,20 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Check fields per Prompt D6: Name from QR, UPI ID, Amount, Note
-      expect(find.text('Payment Target'), findsOneWidget);
-      expect(find.text('Name from QR'), findsOneWidget);
+      // Check fields: Recipient Name, UPI ID / VPA, Payable Amount, Note
+      expect(find.text('Verified Recipient Details'), findsOneWidget);
+      expect(find.text('Recipient Name'), findsOneWidget);
       expect(find.text('Suresh Agri Produce'), findsOneWidget);
-      expect(find.text('UPI ID'), findsOneWidget);
+      expect(find.text('UPI ID / VPA'), findsOneWidget);
       expect(find.text('farmer.suresh@upi'), findsOneWidget);
-      expect(find.text('Amount'), findsOneWidget);
+      expect(find.text('Payable Amount'), findsOneWidget);
       expect(find.text('₹450.00'), findsOneWidget);
       expect(find.text('Note'), findsOneWidget);
       expect(find.text('Fresh Tomatoes'), findsOneWidget);
 
-      // Verify "Not verified by bank" is shown when Edge Function is not connected in widget test
-      expect(find.text('Not verified by bank'), findsOneWidget);
-
-      // Verify Pay button displays exact Prompt D6 text: "Test mode: no money is moved"
-      expect(find.text('Test mode: no money is moved'), findsOneWidget);
-      expect(find.textContaining('Test mode: no money is moved'), findsNWidgets(2));
+      // Verify payment sources: Wallet and Payment Gateway (Razorpay)
+      expect(find.text('UdyogaSethu Wallet'), findsOneWidget);
+      expect(find.text('Payment Gateway (Razorpay)'), findsOneWidget);
     });
 
     testWidgets('WalletScreen renders hero balance, savings planner, and grouped transactions', (tester) async {

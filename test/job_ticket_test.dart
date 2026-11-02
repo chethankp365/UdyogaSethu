@@ -158,6 +158,9 @@ class MockJobExecutionRepository implements JobExecutionRepository {
     double? faceScore,
   }) async =>
       JobVerificationResult.success(status: 'in_progress_verified');
+
+  @override
+  Future<bool> cancelAssignment(String assignmentId, {String? reason}) async => true;
 }
 
 void main() {

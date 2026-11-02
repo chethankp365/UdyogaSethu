@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
 import 'package:udyogasethu/core/widgets/job_row.dart';
 import 'package:udyogasethu/features/farmer/domain/produce_listing_model.dart';
@@ -215,6 +216,7 @@ class FakeChatRepository implements ChatRepository {
     String filter = 'all',
     String roleFilter = 'all',
     String searchQuery = '',
+    UserRole? activeRole,
   }) async {
     return [
       ChatThread(
@@ -258,7 +260,7 @@ class FakeChatRepository implements ChatRepository {
   }
 
   @override
-  Future<ChatThread> getThread(String threadId) async {
+  Future<ChatThread> getThread(String threadId, {UserRole? activeRole}) async {
     return ChatThread(
       id: threadId,
       contextType: 'assignment',
@@ -363,6 +365,26 @@ class FakeChatRepository implements ChatRepository {
     required String callId,
     int durationSeconds = 0,
   }) async {}
+
+  @override
+  Future<bool> deleteOrArchiveConversation(String conversationId) async => true;
+
+  @override
+  Future<bool> blockUser(String userId) async => true;
+
+  @override
+  Future<bool> unblockUser(String userId) async => true;
+
+  @override
+  Future<bool> isUserBlocked(String userId) async => false;
+
+  @override
+  Future<bool> reportUser({
+    required String reportedUserId,
+    required String conversationId,
+    required String reason,
+    String? details,
+  }) async => true;
 }
 
 void main() {

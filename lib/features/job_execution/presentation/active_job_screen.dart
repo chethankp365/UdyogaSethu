@@ -221,10 +221,11 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
             icon: Icon(isProvider ? Icons.qr_code_scanner_rounded : Icons.qr_code_rounded),
             tooltip: isProvider ? (l10n?.actionScanWorkerQr ?? 'Scan Worker QR') : (l10n?.actionShowTicket ?? 'Show QR Ticket'),
             onPressed: () {
+              final targetId = jobAsync.asData?.value.assignmentId ?? widget.assignmentId;
               if (isProvider) {
-                context.push('/jobs/attendance-scan?assignment_id=${widget.assignmentId}');
+                context.push('/jobs/attendance-scan?assignment_id=$targetId');
               } else {
-                context.push('/jobs/ticket/${widget.assignmentId}');
+                context.push('/jobs/ticket/$targetId');
               }
             },
           ),
@@ -455,6 +456,12 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
         break;
     }
 
+    if (detail.status == 'cancelled') {
+      bg = const Color(0xFFFEF2F2);
+      fg = const Color(0xFFDC2626);
+      statusLabel = 'Assignment Cancelled';
+    }
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
@@ -642,6 +649,18 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
       }
     }
 
+    if (detail.status == 'cancelled') {
+      primaryText = 'Job Assignment Cancelled';
+      primaryIcon = Icons.cancel_outlined;
+      onPrimaryPressed = null;
+    }
+
+    final canCancel = detail.status != 'cancelled' &&
+        (detail.stage == AssignmentStage.accepted ||
+            detail.stage == AssignmentStage.ticketIssued ||
+            detail.stage == AssignmentStage.requestCreated ||
+            detail.stage == AssignmentStage.workerArrived);
+
     if (isSimpleMode) {
       // HUGE Simple Mode Primary Action
       return Column(
@@ -716,6 +735,33 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
             ),
           ),
 
+          if (canCancel) ...[
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFEF2F2),
+                  foregroundColor: const Color(0xFFDC2626),
+                  side: const BorderSide(color: Color(0xFFEF4444), width: 2),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+                icon: const Icon(Icons.cancel_outlined, size: 24),
+                label: Text(
+                  isProvider
+                      ? (l10n?.actionCancelWorker ?? 'Cancel Worker')
+                      : (l10n?.actionCancelJob ?? 'Cancel Job'),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                onPressed: () {
+                  _speak(isProvider ? 'Cancel worker' : 'Cancel job');
+                  _showCancelAssignmentDialog(detail, isProvider);
+                },
+              ),
+            ),
+            const SizedBox(height: 12),
+          ],
+
           // Secondary Simple Mode Action: "Ask for Help"
           SizedBox(
             width: double.infinity,
@@ -750,7 +796,7 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
           height: 54,
           child: ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.headerGreenDark,
+              backgroundColor: detail.status == 'cancelled' ? Colors.grey.shade400 : AppColors.headerGreenDark,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               elevation: 2,
@@ -769,6 +815,32 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
             onPressed: _isActionInProgress ? null : onPrimaryPressed,
           ),
         ),
+
+        // Cancel Option for Worker or Provider
+        if (canCancel) ...[
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            height: 48,
+            child: OutlinedButton.icon(
+              style: OutlinedButton.styleFrom(
+                foregroundColor: const Color(0xFFDC2626),
+                side: const BorderSide(color: Color(0xFFFCA5A5), width: 1.5),
+                backgroundColor: const Color(0xFFFEF2F2),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              icon: const Icon(Icons.cancel_outlined, size: 20),
+              label: Text(
+                isProvider
+                    ? (l10n?.actionCancelWorker ?? 'Cancel Worker Booking')
+                    : (l10n?.actionCancelJob ?? 'Cancel Job Assignment'),
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              ),
+              onPressed: () => _showCancelAssignmentDialog(detail, isProvider),
+            ),
+          ),
+        ],
+
         // Rate Job Button on Completion
         if (detail.stage == AssignmentStage.completed || detail.stage == AssignmentStage.paymentReleased) ...[
           const SizedBox(height: 10),
@@ -846,6 +918,176 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
         ),
       ],
     );
+  }
+
+  Future<void> _showCancelAssignmentDialog(
+    ActiveJobDetail detail,
+    bool isProvider,
+  ) async {
+    final l10n = AppLocalizations.of(context);
+    String selectedReason = l10n?.reasonEmergency ?? 'Personal emergency';
+    final reasons = [
+      l10n?.reasonEmergency ?? 'Personal emergency',
+      l10n?.reasonScheduleConflict ?? 'Schedule conflict / timing issue',
+      l10n?.reasonFoundAlternative ?? 'Found an alternative',
+      l10n?.reasonMutualAgreement ?? 'Mutual agreement',
+      l10n?.reasonOther ?? 'Other reason',
+    ];
+
+    final confirmed = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx, setSheetState) {
+            return Container(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 20,
+                bottom: MediaQuery.of(ctx).viewInsets.bottom + 24,
+              ),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      margin: const EdgeInsets.only(bottom: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade300,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFFEF2F2),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.cancel_outlined, color: Color(0xFFDC2626), size: 24),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          isProvider
+                              ? (l10n?.actionCancelWorker ?? 'Cancel Worker Booking')
+                              : (l10n?.actionCancelJob ?? 'Cancel Job Assignment'),
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    l10n?.cancelAssignmentPrompt ??
+                        'Are you sure you want to cancel this assignment? The slot will be released back to the platform.',
+                    style: const TextStyle(fontSize: 13, color: AppColors.textMuted),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    l10n?.cancellationReasonPrompt ?? 'Please select a reason for cancellation:',
+                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 8),
+                  ...reasons.map((r) {
+                    final isSel = selectedReason == r;
+                    return InkWell(
+                      onTap: () => setSheetState(() => selectedReason = r),
+                      borderRadius: BorderRadius.circular(8),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+                        child: Row(
+                          children: [
+                            Icon(
+                              isSel ? Icons.radio_button_checked : Icons.radio_button_off,
+                              size: 20,
+                              color: isSel ? const Color(0xFFDC2626) : Colors.grey,
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(child: Text(r, style: const TextStyle(fontSize: 14))),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => Navigator.pop(ctx, false),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                          child: Text(l10n?.cancel ?? 'Back'),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () => Navigator.pop(ctx, true),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFDC2626),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                          child: Text(l10n?.cancelAssignmentConfirm ?? 'Confirm Cancel'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+
+    if (confirmed == true && mounted) {
+      setState(() => _isActionInProgress = true);
+      try {
+        await ref.read(jobExecutionRepositoryProvider).cancelAssignment(
+              detail.assignmentId,
+              reason: selectedReason,
+            );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(l10n?.cancelAssignmentSuccess ?? 'Assignment cancelled successfully.'),
+              backgroundColor: const Color(0xFFDC2626),
+            ),
+          );
+          ref.invalidate(activeJobDetailProvider(widget.assignmentId));
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to cancel assignment: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } finally {
+        if (mounted) {
+          setState(() => _isActionInProgress = false);
+        }
+      }
+    }
   }
 
   Widget _buildStep2RealtimePrompt(
@@ -1039,7 +1281,14 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
     final route = _routingResult;
     final jobLoc = detail.validJobLocation!;
     final workerLoc = _currentWorkerLocation ?? detail.workerLocation ?? jobLoc;
-    final hasWorkerPoint = workerLoc != jobLoc;
+    final distanceMeters = const Distance().as(LengthUnit.Meter, workerLoc, jobLoc);
+    final hasSeparatedWorkerPoint = distanceMeters > 30.0;
+    final centerPoint = hasSeparatedWorkerPoint
+        ? LatLng(
+            (workerLoc.latitude + jobLoc.latitude) / 2,
+            (workerLoc.longitude + jobLoc.longitude) / 2,
+          )
+        : jobLoc;
 
     return Container(
       decoration: BoxDecoration(
@@ -1107,27 +1356,26 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
                 FlutterMap(
                   mapController: _mapController,
                   options: MapOptions(
-                    initialCenter: hasWorkerPoint
-                        ? LatLng(
-                            (workerLoc.latitude + jobLoc.latitude) / 2,
-                            (workerLoc.longitude + jobLoc.longitude) / 2,
-                          )
-                        : jobLoc,
-                    initialZoom: hasWorkerPoint ? 13.0 : 15.0,
-                    initialCameraFit: hasWorkerPoint
+                    initialCenter: centerPoint,
+                    initialZoom: hasSeparatedWorkerPoint ? 14.0 : 15.5,
+                    initialCameraFit: hasSeparatedWorkerPoint
                         ? CameraFit.bounds(
                             bounds: LatLngBounds.fromPoints([workerLoc, jobLoc]),
-                            padding: const EdgeInsets.all(36),
+                            padding: const EdgeInsets.all(40),
+                            maxZoom: 16.0,
                           )
                         : null,
                   ),
                   children: [
                     TileLayer(
-                      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      subdomains: const ['a', 'b', 'c'],
+                      fallbackUrl: 'https://tile.openstreetmap.de/{z}/{x}/{y}.png',
                       userAgentPackageName: 'in.udyogasethu',
                       maxZoom: 19,
+                      minZoom: 3,
                     ),
-                    if (route != null && route.points.isNotEmpty)
+                    if (route != null && route.points.isNotEmpty && hasSeparatedWorkerPoint)
                       PolylineLayer(
                         polylines: [
                           Polyline(
@@ -1139,21 +1387,22 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
                       ),
                     MarkerLayer(
                       markers: [
-                        // Worker Marker
-                        Marker(
-                          point: workerLoc,
-                          width: 40,
-                          height: 40,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF2563EB),
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white, width: 2),
-                              boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 4)],
+                        // Worker Marker (shown when worker is separated from job site)
+                        if (hasSeparatedWorkerPoint)
+                          Marker(
+                            point: workerLoc,
+                            width: 40,
+                            height: 40,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF2563EB),
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.white, width: 2),
+                                boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 4)],
+                              ),
+                              child: const Icon(Icons.person, color: Colors.white, size: 20),
                             ),
-                            child: const Icon(Icons.person, color: Colors.white, size: 20),
                           ),
-                        ),
                         // Job Site Marker
                         Marker(
                           point: jobLoc,
@@ -1193,23 +1442,36 @@ class _ActiveJobScreenState extends ConsumerState<ActiveJobScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          const Icon(Icons.directions_car_rounded, size: 16, color: AppColors.textDark),
-                          const SizedBox(width: 4),
-                          Text(
-                            route?.formattedDistance ?? 'Calculating...',
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                          ),
-                          const SizedBox(width: 10),
-                          const Icon(Icons.schedule_rounded, size: 16, color: AppColors.warningOrange),
-                          const SizedBox(width: 4),
-                          Text(
-                            route?.formattedDuration ?? '...',
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.warningOrange),
-                          ),
-                        ],
-                      ),
+                      if (!hasSeparatedWorkerPoint) ...[
+                        const Row(
+                          children: [
+                            Icon(Icons.check_circle_rounded, size: 16, color: AppColors.headerGreenDark),
+                            SizedBox(width: 6),
+                            Text(
+                              'On Site • At Work Location',
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.headerGreenDark),
+                            ),
+                          ],
+                        ),
+                      ] else ...[
+                        Row(
+                          children: [
+                            const Icon(Icons.directions_car_rounded, size: 16, color: AppColors.textDark),
+                            const SizedBox(width: 4),
+                            Text(
+                              route?.formattedDistance ?? 'Calculating...',
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                            ),
+                            const SizedBox(width: 10),
+                            const Icon(Icons.schedule_rounded, size: 16, color: AppColors.warningOrange),
+                            const SizedBox(width: 4),
+                            Text(
+                              route?.formattedDuration ?? '...',
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.warningOrange),
+                            ),
+                          ],
+                        ),
+                      ],
                       const SizedBox(height: 2),
                       Text(
                         detail.addressText,

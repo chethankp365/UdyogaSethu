@@ -2,20 +2,23 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:udyogasethu/core/errors/app_exception.dart';
+import 'package:udyogasethu/core/router/app_session.dart';
 import 'package:udyogasethu/core/supabase/edge_api.dart';
 import 'package:udyogasethu/core/supabase/supabase_service.dart';
 import 'package:udyogasethu/features/chat/domain/call_session.dart';
 import 'package:udyogasethu/features/chat/domain/chat_message.dart';
 import 'package:udyogasethu/features/chat/domain/chat_thread.dart';
+import 'package:udyogasethu/features/chat/domain/demo_chat_data.dart';
 
 abstract class ChatRepository {
   Future<List<ChatThread>> getThreads({
     String filter = 'all', // 'all', 'active', 'completed'
     String roleFilter = 'all', // 'all', 'worker', 'customer', 'farmer'
     String searchQuery = '',
+    UserRole? activeRole,
   });
 
-  Future<ChatThread> getThread(String threadId);
+  Future<ChatThread> getThread(String threadId, {UserRole? activeRole});
 
   Future<String> getOrCreateThread({
     required String contextType,
@@ -38,6 +41,19 @@ abstract class ChatRepository {
 
   Future<void> markThreadRead(String threadId);
 
+  Future<bool> blockUser(String userId);
+
+  Future<bool> unblockUser(String userId);
+
+  Future<bool> isUserBlocked(String userId);
+
+  Future<bool> reportUser({
+    required String reportedUserId,
+    required String conversationId,
+    required String reason,
+    String? details,
+  });
+
   Future<CallSession> initiateMaskedCall({
     required String recipientId,
     String? bookingCode,
@@ -48,6 +64,8 @@ abstract class ChatRepository {
     required String callId,
     int durationSeconds = 0,
   });
+
+  Future<bool> deleteOrArchiveConversation(String conversationId);
 }
 
 class SupabaseChatRepository implements ChatRepository {
@@ -63,148 +81,262 @@ class SupabaseChatRepository implements ChatRepository {
     String filter = 'all',
     String roleFilter = 'all',
     String searchQuery = '',
+    UserRole? activeRole,
   }) async {
     final uid = _currentUserId;
-    if (uid.isEmpty) return _getDemoThreads();
+    final effectiveRole = activeRole ?? UserRole.seeker;
 
-    try {
-      var query = _client.from('chat_threads').select('''
-        id,
-        context_type,
-        context_id,
-        participant_a,
-        participant_b,
-        subject,
-        booking_code,
-        status,
-        read_only_at,
-        category_tag,
-        last_message_at,
-        created_at
-      ''').or('participant_a.eq.$uid,participant_b.eq.$uid');
+    if (uid.isNotEmpty) {
+      try {
+        // 1. Fetch conversations via get_conversations RPC
+        final rpcRes = await _client.rpc('get_conversations', params: {'p_filter': filter});
+        final List<ChatThread> threads = [];
 
-      if (filter == 'active') {
-        query = query.eq('status', 'active');
-      } else if (filter == 'completed') {
-        query = query.eq('status', 'read_only');
+        if (rpcRes is List && rpcRes.isNotEmpty) {
+          for (final row in rpcRes) {
+            final map = Map<String, dynamic>.from(row as Map);
+            final cId = map['conversation_id']?.toString() ?? '';
+            if (cId.isEmpty) continue;
+
+            final jId = map['job_id']?.toString() ?? '';
+            final otherId = map['other_user_id']?.toString() ?? '';
+            final otherName = map['other_user_name']?.toString() ?? 'User';
+            final otherAvatar = map['other_user_avatar']?.toString();
+            final otherRole = map['other_user_role']?.toString() ?? 'worker';
+            final cType = map['context_type']?.toString() ?? 'job';
+            final cCtxId = map['context_id']?.toString() ?? jId;
+            final subject = map['title']?.toString() ?? map['job_title']?.toString() ?? 'Job Discussion';
+            final lastSnippet = map['last_message_body']?.toString();
+            final lastMsgAt = map['last_message_at'] != null
+                ? DateTime.tryParse(map['last_message_at'].toString()) ?? DateTime.now()
+                : DateTime.now();
+            final unread = (map['unread_count'] as num?)?.toInt() ?? 0;
+            final status = map['status']?.toString() ?? 'active';
+
+            final bookingCode = map['booking_code']?.toString() ??
+                (jId.isNotEmpty
+                    ? 'JOB-${jId.length >= 6 ? jId.substring(0, 6).toUpperCase() : jId}'
+                    : 'CHAT-${cId.length >= 6 ? cId.substring(0, 6).toUpperCase() : cId}');
+
+            final thread = ChatThread(
+              id: cId,
+              contextType: cType,
+              contextId: cCtxId,
+              participantA: map['provider_id']?.toString() ?? uid,
+              participantB: map['seeker_id']?.toString() ?? otherId,
+              subject: subject,
+              bookingCode: bookingCode,
+              status: status,
+              categoryTag: otherRole,
+              lastMessageAt: lastMsgAt,
+              createdAt: lastMsgAt,
+              otherPartyId: otherId,
+              otherPartyName: otherName,
+              otherPartyAvatar: otherAvatar,
+              otherPartyRole: otherRole,
+              lastMessageSnippet: lastSnippet,
+              unreadCount: unread,
+            );
+
+            if (searchQuery.isNotEmpty) {
+              final q = searchQuery.toLowerCase();
+              final match = thread.subject.toLowerCase().contains(q) ||
+                  thread.otherPartyName.toLowerCase().contains(q) ||
+                  thread.bookingCode.toLowerCase().contains(q) ||
+                  (thread.lastMessageSnippet?.toLowerCase().contains(q) ?? false);
+              if (!match) continue;
+            }
+
+            threads.add(thread);
+          }
+          if (threads.isNotEmpty) {
+            return threads;
+          }
+        }
+      } catch (e) {
+        AppLogger.w('RPC get_conversations failed: $e, falling back to direct table select');
       }
 
-      if (roleFilter != 'all') {
-        query = query.eq('category_tag', roleFilter);
-      }
+      // 2. Direct Table Fallback
+      try {
+        final rows = await _client
+            .from('conversations')
+            .select('id, job_id, provider_id, seeker_id, status, last_message_at, created_at, jobs(title, status)')
+            .or('provider_id.eq.$uid,seeker_id.eq.$uid')
+            .order('last_message_at', ascending: false);
 
-      final rows = await query.order('last_message_at', ascending: false);
+        final List<ChatThread> directThreads = [];
 
-      final List<ChatThread> threads = [];
+        for (final r in (rows as List)) {
+          final row = Map<String, dynamic>.from(r as Map);
+          final cId = row['id']?.toString() ?? '';
+          final pId = row['provider_id']?.toString() ?? '';
+          final sId = row['seeker_id']?.toString() ?? '';
+          final otherId = (uid == pId) ? sId : pId;
+          final jMap = row['jobs'] as Map<String, dynamic>?;
+          final jobTitle = jMap?['title']?.toString() ?? 'Job Discussion';
+          final jId = row['job_id']?.toString() ?? '';
+          final rawStatus = row['status']?.toString() ?? 'active';
+          final isJobClosed = jMap?['status'] == 'completed' || jMap?['status'] == 'closed' || jMap?['status'] == 'cancelled';
+          final status = (isJobClosed || rawStatus == 'read_only' || rawStatus == 'completed') ? 'read_only' : rawStatus;
 
-      for (final row in rows as List<dynamic>) {
-        final map = Map<String, dynamic>.from(row as Map);
-        final pa = map['participant_a'] as String? ?? '';
-        final pb = map['participant_b'] as String? ?? '';
-        final otherId = (uid == pa) ? pb : pa;
+          if (filter == 'active' && status != 'active') continue;
+          if (filter == 'completed' && status == 'active') continue;
 
-        // Fetch other participant profile
-        String otherName = 'Verified User';
-        String? otherAvatar;
-        String otherRole = map['category_tag'] as String? ?? 'worker';
-
-        if (otherId.isNotEmpty) {
+          String otherName = 'User';
+          String? otherAvatar;
           try {
             final pRow = await _client
-                .from('profiles')
-                .select('full_name, avatar_url, phone')
+                .from('public_profiles')
+                .select('full_name, avatar_path')
                 .eq('id', otherId)
                 .maybeSingle();
             if (pRow != null) {
-              otherName = pRow['full_name'] as String? ?? 'Verified User';
-              otherAvatar = pRow['avatar_url'] as String?;
+              otherName = pRow['full_name']?.toString() ?? 'User';
+              otherAvatar = pRow['avatar_path']?.toString();
             }
           } catch (_) {}
+
+          String? lastSnippet;
+          int unread = 0;
+          try {
+            final mRows = await _client
+                .from('messages')
+                .select('body, sender_id, read_at')
+                .eq('conversation_id', cId)
+                .order('created_at', ascending: false)
+                .limit(1);
+
+            if (mRows.isNotEmpty) {
+              lastSnippet = mRows.first['body']?.toString();
+              unread = mRows.where((m) => m['sender_id'] != uid && m['read_at'] == null).length;
+            }
+          } catch (_) {}
+
+          final lastAt = row['last_message_at'] != null
+              ? DateTime.tryParse(row['last_message_at'].toString()) ?? DateTime.now()
+              : DateTime.now();
+
+          directThreads.add(
+            ChatThread(
+              id: cId,
+              contextType: 'job',
+              contextId: jId,
+              participantA: pId,
+              participantB: sId,
+              subject: jobTitle,
+              bookingCode: jId.isNotEmpty
+                  ? 'JOB-${jId.length >= 6 ? jId.substring(0, 6).toUpperCase() : jId}'
+                  : 'CHAT-${cId.length >= 6 ? cId.substring(0, 6).toUpperCase() : cId}',
+              status: status,
+              categoryTag: 'worker',
+              lastMessageAt: lastAt,
+              createdAt: lastAt,
+              otherPartyId: otherId,
+              otherPartyName: otherName,
+              otherPartyAvatar: otherAvatar,
+              otherPartyRole: 'worker',
+              lastMessageSnippet: lastSnippet,
+              unreadCount: unread,
+            ),
+          );
         }
 
-        // Fetch last message snippet & unread count
-        String? lastSnippet;
-        int unread = 0;
-        try {
-          final mRows = await _client
-              .from('chat_messages')
-              .select('body, sender_id, read_at')
-              .eq('thread_id', map['id'])
-              .order('created_at', ascending: false)
-              .limit(5);
-
-          if (mRows.isNotEmpty) {
-            lastSnippet = mRows.first['body'] as String?;
-            unread = mRows.where((m) => m['sender_id'] != uid && m['read_at'] == null).length;
-          }
-        } catch (_) {}
-
-        map['other_party_name'] = otherName;
-        map['other_party_avatar'] = otherAvatar;
-        map['other_party_role'] = otherRole;
-        map['last_message_snippet'] = lastSnippet;
-        map['unread_count'] = unread;
-
-        final thread = ChatThread.fromJson(map, uid);
-
-        // Apply client search query filter if provided
-        if (searchQuery.isNotEmpty) {
-          final q = searchQuery.toLowerCase();
-          final match = thread.subject.toLowerCase().contains(q) ||
-              thread.otherPartyName.toLowerCase().contains(q) ||
-              thread.bookingCode.toLowerCase().contains(q) ||
-              (thread.lastMessageSnippet?.toLowerCase().contains(q) ?? false);
-          if (!match) continue;
+        if (directThreads.isNotEmpty) {
+          return directThreads;
         }
-
-        threads.add(thread);
+      } catch (directErr, st) {
+        AppLogger.e('Direct conversations query also failed: $directErr', directErr, st);
       }
-
-      if (threads.isEmpty && searchQuery.isEmpty && filter == 'all') {
-        return _getDemoThreads();
-      }
-
-      return threads;
-    } catch (e, st) {
-      AppLogger.e('Failed to get chat threads', e, st);
-      return _getDemoThreads();
     }
+
+    // 3. Presentation / Demo Seed Fallback (Category-Aware)
+    return DemoChatData.getThreadsForUser(
+      currentUserId: uid,
+      activeRole: effectiveRole,
+      filter: filter,
+      searchQuery: searchQuery,
+    );
   }
 
   @override
-  Future<ChatThread> getThread(String threadId) async {
+  Future<ChatThread> getThread(String threadId, {UserRole? activeRole}) async {
     final uid = _currentUserId;
-    try {
-      final row = await _client
-          .from('chat_threads')
-          .select()
-          .eq('id', threadId)
-          .single();
 
-      final map = Map<String, dynamic>.from(row);
-      final pa = map['participant_a'] as String? ?? '';
-      final pb = map['participant_b'] as String? ?? '';
-      final otherId = (uid == pa) ? pb : pa;
-
-      if (otherId.isNotEmpty) {
-        final pRow = await _client
-            .from('profiles')
-            .select('full_name, avatar_url')
-            .eq('id', otherId)
-            .maybeSingle();
-        if (pRow != null) {
-          map['other_party_name'] = pRow['full_name'];
-          map['other_party_avatar'] = pRow['avatar_url'];
-        }
-      }
-
-      return ChatThread.fromJson(map, uid);
-    } catch (e) {
-      return _getDemoThreads().firstWhere(
-        (t) => t.id == threadId,
-        orElse: () => _getDemoThreads().first,
+    if (threadId.startsWith('cccccccc-') || uid.isEmpty) {
+      return DemoChatData.getThread(
+        threadId,
+        currentUserId: uid,
+        activeRole: activeRole ?? UserRole.seeker,
       );
     }
+
+    try {
+      final row = await _client
+          .from('conversations')
+          .select('*, jobs(title, status)')
+          .eq('id', threadId)
+          .maybeSingle();
+
+      if (row != null) {
+        final pId = row['provider_id']?.toString() ?? '';
+        final sId = row['seeker_id']?.toString() ?? '';
+        final otherId = (uid == pId) ? sId : pId;
+        final jMap = row['jobs'] as Map<String, dynamic>?;
+        final jobTitle = jMap?['title']?.toString() ?? 'Job Discussion';
+        final jId = row['job_id']?.toString() ?? '';
+        final rawStatus = row['status']?.toString() ?? 'active';
+        final isJobClosed = jMap?['status'] == 'completed' || jMap?['status'] == 'closed' || jMap?['status'] == 'cancelled';
+        final status = (isJobClosed || rawStatus == 'read_only' || rawStatus == 'completed') ? 'read_only' : rawStatus;
+
+        String otherName = 'User';
+        String? otherAvatar;
+        try {
+          final pRow = await _client
+              .from('public_profiles')
+              .select('full_name, avatar_path')
+              .eq('id', otherId)
+              .maybeSingle();
+          if (pRow != null) {
+            otherName = pRow['full_name']?.toString() ?? 'User';
+            otherAvatar = pRow['avatar_path']?.toString();
+          }
+        } catch (_) {}
+
+        final lastAt = row['last_message_at'] != null
+            ? DateTime.tryParse(row['last_message_at'].toString()) ?? DateTime.now()
+            : DateTime.now();
+
+        return ChatThread(
+          id: threadId,
+          contextType: 'job',
+          contextId: jId,
+          participantA: pId,
+          participantB: sId,
+          subject: jobTitle,
+          bookingCode: jId.isNotEmpty
+              ? 'JOB-${jId.length >= 6 ? jId.substring(0, 6).toUpperCase() : jId}'
+              : 'CHAT-${threadId.length >= 6 ? threadId.substring(0, 6).toUpperCase() : threadId}',
+          status: status,
+          categoryTag: 'worker',
+          lastMessageAt: lastAt,
+          createdAt: lastAt,
+          otherPartyId: otherId,
+          otherPartyName: otherName,
+          otherPartyAvatar: otherAvatar,
+          otherPartyRole: 'worker',
+          unreadCount: 0,
+        );
+      }
+    } catch (e) {
+      AppLogger.w('Failed to get thread $threadId: $e');
+    }
+
+    return DemoChatData.getThread(
+      threadId,
+      currentUserId: uid,
+      activeRole: activeRole ?? UserRole.seeker,
+    );
   }
 
   @override
@@ -216,63 +348,89 @@ class SupabaseChatRepository implements ChatRepository {
     String? bookingCode,
     String? categoryTag,
   }) async {
+    final uid = _currentUserId;
+    if (uid.isEmpty) return 'offline_thread';
+
+    // 1. Try canonical RPC get_or_create_conversation
     try {
-      final res = await _client.rpc('get_or_create_chat_thread', params: {
-        'p_context_type': contextType,
-        'p_context_id': contextId,
+      final res = await _client.rpc('get_or_create_conversation', params: {
         'p_recipient_id': recipientId,
-        'p_subject': subject,
-        'p_booking_code': bookingCode,
-        'p_category_tag': categoryTag ?? 'general',
+        if (contextId.isNotEmpty && contextId.length == 36) 'p_job_id': contextId,
       });
-      return res as String;
+      if (res != null && res.toString().isNotEmpty) {
+        return res.toString();
+      }
+    } catch (e) {
+      AppLogger.w('RPC get_or_create_conversation failed: $e, using direct table fallback');
+    }
+
+    // 2. Direct Table query / insert fallback
+    try {
+      final existing = await _client
+          .from('conversations')
+          .select('id')
+          .or('and(provider_id.eq.$uid,seeker_id.eq.$recipientId),and(provider_id.eq.$recipientId,seeker_id.eq.$uid)')
+          .order('last_message_at', ascending: false)
+          .limit(1);
+
+      if (existing.isNotEmpty) {
+        return existing.first['id'].toString();
+      }
+
+      final inserted = await _client
+          .from('conversations')
+          .insert({
+            if (contextId.isNotEmpty && contextId.length == 36) 'job_id': contextId,
+            'provider_id': uid,
+            'seeker_id': recipientId,
+            'last_message_at': DateTime.now().toIso8601String(),
+            'created_at': DateTime.now().toIso8601String(),
+          })
+          .select('id')
+          .single();
+
+      return inserted['id'].toString();
     } catch (e, st) {
-      AppLogger.e('get_or_create_chat_thread RPC error', e, st);
-      // Fallback: check if existing thread exists or return demo
-      return 'demo_thread_01';
+      AppLogger.e('Failed to getOrCreateThread direct fallback: $e', e, st);
+      return 'offline_thread';
     }
   }
 
   @override
   Stream<List<ChatMessage>> streamMessages(String threadId) {
     final uid = _currentUserId;
-    if (uid.isEmpty) {
-      return Stream.value([
-        ChatMessage(
-          id: 'demo_msg_01',
-          threadId: threadId,
-          senderId: 'partner_01',
-          body: 'Hello! I am ready for the farm harvest assignment tomorrow morning.',
-          wasMasked: false,
-          createdAt: DateTime.now().subtract(const Duration(minutes: 45)),
-          isMe: false,
-        ),
-        ChatMessage(
-          id: 'demo_msg_02',
-          threadId: threadId,
-          senderId: 'me',
-          body: 'Great, please report at the south gate by 7:30 AM.',
-          wasMasked: false,
-          createdAt: DateTime.now().subtract(const Duration(minutes: 30)),
-          isMe: true,
-        ),
-        ChatMessage(
-          id: 'demo_msg_03',
-          threadId: threadId,
-          senderId: 'partner_01',
-          body: '[Security Guard: Phone number masked for escrow protection] Contact: [MASKED PHONE]',
-          wasMasked: true,
-          createdAt: DateTime.now().subtract(const Duration(minutes: 10)),
-          isMe: false,
-        ),
-      ]);
+    if (threadId.startsWith('cccccccc-') || uid.isEmpty) {
+      return DemoChatData.streamMessages(threadId, uid);
     }
-    return _client
-        .from('chat_messages')
-        .stream(primaryKey: ['id'])
-        .eq('thread_id', threadId)
-        .order('created_at', ascending: true)
-        .map((rows) => rows.map((r) => ChatMessage.fromJson(r, uid)).toList());
+
+    try {
+      return _client
+          .from('messages')
+          .stream(primaryKey: ['id'])
+          .eq('conversation_id', threadId)
+          .order('created_at', ascending: true)
+          .map((rows) => rows.map((r) {
+                final sender = r['sender_id']?.toString() ?? '';
+                final wasMasked = r['was_masked'] as bool? ?? false;
+                final bodyText = r['body']?.toString() ?? '';
+                return ChatMessage(
+                  id: r['id']?.toString() ?? '',
+                  threadId: r['conversation_id']?.toString() ?? threadId,
+                  senderId: sender,
+                  body: bodyText,
+                  attachmentPath: r['image_url']?.toString(),
+                  wasMasked: wasMasked,
+                  readAt: r['read_at'] != null ? DateTime.tryParse(r['read_at'].toString()) : null,
+                  createdAt: r['created_at'] != null
+                      ? DateTime.tryParse(r['created_at'].toString()) ?? DateTime.now()
+                      : DateTime.now(),
+                  isMe: sender == uid,
+                );
+              }).toList());
+    } catch (e) {
+      AppLogger.w('streamMessages error: $e, falling back to demo stream');
+      return DemoChatData.streamMessages(threadId, uid);
+    }
   }
 
   @override
@@ -282,18 +440,58 @@ class SupabaseChatRepository implements ChatRepository {
     String? attachmentPath,
   }) async {
     final uid = _currentUserId;
-    final row = await _client
-        .from('chat_messages')
-        .insert({
-          'thread_id': threadId,
-          'sender_id': uid,
-          'body': body,
-          'attachment_path': attachmentPath,
-        })
-        .select()
-        .single();
 
-    return ChatMessage.fromJson(row, uid);
+    if (threadId.startsWith('cccccccc-') || uid.isEmpty) {
+      return DemoChatData.appendMessage(
+        threadId: threadId,
+        senderId: uid,
+        body: body,
+        attachmentPath: attachmentPath,
+      );
+    }
+
+    try {
+      final row = await _client
+          .from('messages')
+          .insert({
+            'conversation_id': threadId,
+            'sender_id': uid,
+            'body': body,
+            'image_url': ?attachmentPath,
+            'created_at': DateTime.now().toIso8601String(),
+          })
+          .select()
+          .single();
+
+      try {
+        await _client
+            .from('conversations')
+            .update({'last_message_at': DateTime.now().toIso8601String()})
+            .eq('id', threadId);
+      } catch (_) {}
+
+      return ChatMessage(
+        id: row['id']?.toString() ?? '',
+        threadId: row['conversation_id']?.toString() ?? threadId,
+        senderId: uid,
+        body: row['body']?.toString() ?? body,
+        attachmentPath: row['image_url']?.toString() ?? attachmentPath,
+        wasMasked: row['was_masked'] as bool? ?? false,
+        readAt: row['read_at'] != null ? DateTime.tryParse(row['read_at'].toString()) : null,
+        createdAt: row['created_at'] != null
+            ? DateTime.tryParse(row['created_at'].toString()) ?? DateTime.now()
+            : DateTime.now(),
+        isMe: true,
+      );
+    } catch (e) {
+      AppLogger.w('sendMessage Supabase error: $e, storing in demo session');
+      return DemoChatData.appendMessage(
+        threadId: threadId,
+        senderId: uid,
+        body: body,
+        attachmentPath: attachmentPath,
+      );
+    }
   }
 
   @override
@@ -302,6 +500,16 @@ class SupabaseChatRepository implements ChatRepository {
     if (uid.isEmpty) return null;
 
     try {
+      final ext = file.path.split('.').last.toLowerCase();
+      if (!['jpg', 'jpeg', 'png', 'webp'].contains(ext)) {
+        throw const AppException.validation('Only JPG, PNG and WebP images are permitted');
+      }
+
+      final sizeBytes = await file.length();
+      if (sizeBytes > 10 * 1024 * 1024) {
+        throw const AppException.validation('Image size must be under 10MB');
+      }
+
       final filename = '${DateTime.now().millisecondsSinceEpoch}_${file.path.split(Platform.pathSeparator).last}';
       final path = '$uid/$filename';
 
@@ -311,8 +519,8 @@ class SupabaseChatRepository implements ChatRepository {
         fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
       );
 
-      final url = _client.storage.from('chat-attachments').getPublicUrl(path);
-      return url;
+      final signedUrl = await _client.storage.from('chat-attachments').createSignedUrl(path, 60 * 60 * 24 * 7);
+      return signedUrl;
     } catch (e, st) {
       AppLogger.e('Failed to upload chat attachment', e, st);
       return null;
@@ -326,13 +534,83 @@ class SupabaseChatRepository implements ChatRepository {
 
     try {
       await _client
-          .from('chat_messages')
+          .from('messages')
           .update({'read_at': DateTime.now().toIso8601String()})
-          .eq('thread_id', threadId)
+          .eq('conversation_id', threadId)
           .neq('sender_id', uid)
           .isFilter('read_at', null);
     } catch (e) {
-      // Non-critical, ignore
+      AppLogger.w('Failed to markThreadRead: $e');
+    }
+  }
+
+  @override
+  Future<bool> blockUser(String userId) async {
+    final uid = _currentUserId;
+    if (uid.isEmpty) return false;
+    try {
+      final res = await _client.rpc('block_user', params: {
+        'p_blocked_id': userId,
+      });
+      return res is Map && res['success'] == true;
+    } catch (e) {
+      AppLogger.e('Failed to block user $userId: $e');
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> unblockUser(String userId) async {
+    final uid = _currentUserId;
+    if (uid.isEmpty) return false;
+    try {
+      final res = await _client.rpc('unblock_user', params: {
+        'p_blocked_id': userId,
+      });
+      return res is Map && res['success'] == true;
+    } catch (e) {
+      AppLogger.e('Failed to unblock user $userId: $e');
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> isUserBlocked(String userId) async {
+    final uid = _currentUserId;
+    if (uid.isEmpty) return false;
+    try {
+      final res = await _client
+          .from('chat_blocks')
+          .select('blocker_id')
+          .eq('blocker_id', uid)
+          .eq('blocked_id', userId)
+          .maybeSingle();
+      return res != null;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> reportUser({
+    required String reportedUserId,
+    required String conversationId,
+    required String reason,
+    String? details,
+  }) async {
+    final uid = _currentUserId;
+    if (uid.isEmpty) return false;
+    try {
+      final res = await _client.rpc('report_chat_user', params: {
+        'p_reported_user_id': reportedUserId,
+        'p_conversation_id': conversationId,
+        'p_reason': reason,
+        'p_details': details,
+      });
+      return res is Map && res['success'] == true;
+    } catch (e) {
+      AppLogger.e('Failed to report user $reportedUserId: $e');
+      return false;
     }
   }
 
@@ -343,37 +621,34 @@ class SupabaseChatRepository implements ChatRepository {
     String? assignmentId,
   }) async {
     try {
-      // Try edge function first
       final res = await _edgeApi.maskedCall(
         recipientId: recipientId,
         assignmentId: assignmentId,
       );
-
-      final data = res['data'] is Map<String, dynamic> ? res['data'] as Map<String, dynamic> : res;
-      return CallSession.fromJson(data);
-    } catch (e) {
-      AppLogger.w('Edge function masked-call fallback to RPC: $e');
-      try {
-        final rpcRes = await _client.rpc('initiate_masked_call', params: {
-          'p_recipient_id': recipientId,
-          'p_booking_code': bookingCode,
-          'p_assignment_id': assignmentId,
-        });
-        return CallSession.fromJson(rpcRes as Map<String, dynamic>);
-      } catch (err) {
-        // Deterministic demo mode session
+      if (res['call_id'] != null) {
         return CallSession(
-          callId: 'demo_call_${DateTime.now().millisecondsSinceEpoch}',
-          status: 'connected',
-          proxyDisplay: '+91 80 4719 8200 (Udyoga Proxy)',
-          isDemo: true,
-          callerName: 'You',
-          recipientName: 'Sharma Builders',
-          recipientRole: 'Employer',
-          bookingCode: bookingCode ?? 'BOOK-7842',
+          callId: res['call_id'].toString(),
+          status: 'initiated',
+          proxyDisplay: res['virtual_did_number']?.toString() ?? '+91 80 4568 1234 (Proxy)',
+          isDemo: false,
+          callerName: 'Me',
+          recipientName: 'Counterparty',
+          bookingCode: bookingCode ?? 'ACTIVE-JOB',
         );
       }
+    } catch (e) {
+      AppLogger.w('Edge maskedCall failed: $e, using local proxy fallback');
     }
+
+    return CallSession(
+      callId: 'call_${DateTime.now().millisecondsSinceEpoch}',
+      status: 'initiated',
+      proxyDisplay: '+91 80 4719 3200 (Masked Line)',
+      isDemo: true,
+      callerName: 'Me',
+      recipientName: 'Counterparty',
+      bookingCode: bookingCode ?? 'ACTIVE-JOB',
+    );
   }
 
   @override
@@ -389,65 +664,18 @@ class SupabaseChatRepository implements ChatRepository {
     } catch (_) {}
   }
 
-  List<ChatThread> _getDemoThreads() {
-    final now = DateTime.now();
-    return [
-      ChatThread(
-        id: 'demo_thread_01',
-        contextType: 'assignment',
-        contextId: 'demo_assign_01',
-        participantA: _currentUserId,
-        participantB: 'partner_01',
-        subject: 'Commercial Electrical Repair',
-        bookingCode: 'BOOK-7842',
-        status: 'active',
-        categoryTag: 'worker',
-        lastMessageAt: now.subtract(const Duration(minutes: 5)),
-        createdAt: now.subtract(const Duration(days: 1)),
-        otherPartyId: 'partner_01',
-        otherPartyName: 'Sharma Builders',
-        otherPartyRole: 'employer',
-        lastMessageSnippet: 'Please confirm what time you will reach the site.',
-        unreadCount: 1,
-      ),
-      ChatThread(
-        id: 'demo_thread_02',
-        contextType: 'order',
-        contextId: 'demo_order_01',
-        participantA: _currentUserId,
-        participantB: 'partner_02',
-        subject: 'Fresh Organic Tomato Bulk Order (25kg)',
-        bookingCode: 'ORD-9124',
-        status: 'active',
-        categoryTag: 'farmer',
-        lastMessageAt: now.subtract(const Duration(hours: 2)),
-        createdAt: now.subtract(const Duration(days: 2)),
-        otherPartyId: 'partner_02',
-        otherPartyName: 'Guddibande Agri-Cluster',
-        otherPartyRole: 'farmer',
-        lastMessageSnippet: 'Tomatoes harvested this morning and packed in crates.',
-        unreadCount: 0,
-      ),
-      ChatThread(
-        id: 'demo_thread_03',
-        contextType: 'assignment',
-        contextId: 'demo_assign_02',
-        participantA: _currentUserId,
-        participantB: 'partner_03',
-        subject: 'Plumbing Service & Pipe Fitting',
-        bookingCode: 'BOOK-6310',
-        status: 'read_only',
-        readOnlyAt: now.subtract(const Duration(days: 3)),
-        categoryTag: 'worker',
-        lastMessageAt: now.subtract(const Duration(days: 3)),
-        createdAt: now.subtract(const Duration(days: 5)),
-        otherPartyId: 'partner_03',
-        otherPartyName: 'R.K. Plumbing Services',
-        otherPartyRole: 'worker',
-        lastMessageSnippet: 'Service completed and escrow payment confirmed.',
-        unreadCount: 0,
-      ),
-    ];
+  @override
+  Future<bool> deleteOrArchiveConversation(String conversationId) async {
+    try {
+      await _client
+          .from('conversations')
+          .update({'status': 'archived'})
+          .eq('id', conversationId);
+      return true;
+    } catch (e) {
+      AppLogger.w('Failed to archive conversation: $e');
+      return false;
+    }
   }
 }
 

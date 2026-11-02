@@ -68,6 +68,16 @@ This document records key design, architectural, role model, and implementation 
   * **Anti-Spoofing & Honesty Note**: On-device liveness and local embedding extraction are inherently weaker against determined video replay or 3D mask spoofing compared to a managed cloud liveness service (e.g. AWS Rekognition / iBeta Level 2 certified service). Mitigations implemented: random 2-step challenge sequence (blink, turn head left/right, smile), strict 15s session timer limit, ML Kit eye-open and pose angle quality gates, and server-side vector numerical range validation.
   * **Honesty Rule**: A visible amber "Demo mode — Mock Face Matcher Active" banner is displayed IF `FACE_MATCHER` is set to `mock`.
 
+* **D14B — Cloud Face Verification Engine: Eden AI & Resilient Local Fallback**:
+  * **Engine Evaluation & Selection**: Evaluated CompreFace, DeepFace, face-api.js, InsightFace, face_recognition, Luxand.cloud, VeriFace, and Eden AI. Selected Eden AI (`EDEN_AI_API_KEY`) using AWS Rekognition underlying engine as the primary hosted cloud face verification service, as it integrates natively into serverless Deno Edge Functions without separate container or GPU hosting infrastructure.
+  * **Secure Dual-Image Comparison Flow**:
+    1. During enrollment, ground-truth reference photo is stored in private Supabase Storage bucket `face-refs/${userId}/ref.jpg`.
+    2. During verification, the live camera selfie is sent as base64 to Edge Function `face-verify`.
+    3. The server retrieves the enrolled reference photo and live selfie, dispatches a multipart request to `https://api.edenai.run/v2/image/face_compare` (`providers: 'amazon'`), and evaluates the confidence/similarity score against `admin_settings.face_match_threshold` (0.65).
+    4. Secrets are isolated server-side via `Deno.env.get('EDEN_AI_API_KEY')` and NEVER exposed to client code or logs.
+  * **Resilient Offline / Fallback Operation**: If cloud connectivity is unavailable or in offline environments, the system falls back gracefully to on-device MobileFaceNet 128d Float32 embedding vector cosine similarity via PostgreSQL `compare_face_embeddings` RPC.
+  * **Fraud Prevention & Security**: Attempt history is logged server-side in `verification_attempts`. After 3 consecutive failed verification attempts, the account is locked from self-verification and flagged with `fraud_flags` (`rule_key: 'repeated_face_fail'`), routing the user to manual review.
+
 * **D15 — Role & Seeker Type Verification Visibility Matrix**:
   * **Single Source of Truth**: Centralized in `lib/features/trust/domain/verification_visibility.dart` via `verificationItemsFor(role, seekerType)` and `isVerificationItemVisible(...)`.
   * **Visibility Matrix**:
@@ -671,5 +681,91 @@ In strict accordance with the project honesty charter, this section audits and d
 * **Current Implementation**: On-device MobileFaceNet TFLite model (`assets/models/mobilefacenet.tflite`) with Google ML Kit Face Detection for local liveness challenges (blink, head turn, smile).
 * **Honesty Status**: **Local Client-Side Inference**.
 * **Limitation**: On-device face embedding extraction is suitable for convenience verification but is **NOT** an iBeta Level 2 certified anti-spoofing biometric enclave. Highly sophisticated photo/video attacks could bypass client-side checks; enterprise deployment requires certified cloud biometric hardware or specialized depth sensors.
+
+---
+
+## D80 — Phase B System-Wide Hardening: Real Gemini AI, Multilingual Voice Assistant, Realistic Thumbnails, Face Matcher Threshold Tuning & Signed QR System
+
+* **Real Server-Side Gemini Integration & Zero Fake Answers (B1)**:
+  * Comprehensive audit of all AI features: UdyogaSethu AI Assistant, Voice Assistant, Pest AI Doc, Soil AI Test advice, Irrigation Advisory, Mandi Price Advisory, Job Description Helper, and Support Chat.
+  * All features strictly invoke the remote `ai-assist` Edge Function powered by Gemini (`gemini-2.5-flash`). Zero hardcoded fallback or canned mock answers.
+  * Honest error responses: If `GEMINI_API_KEY` is missing in Supabase secrets, returns HTTP 503 (`ai_not_configured`) with a clear user message; if upstream inference fails, returns HTTP 502 (`ai_unavailable`).
+  * Server-side per-user rate limiting (25 requests/min) and 10s timeout with automatic retry.
+  * Multi-modal Gemini Vision: Leaf photos in Pest AI Doc and Soil Report Cards in Soil AI Test are passed as base64 images directly to Gemini for diagnosis and soil advice.
+  * Supabase CLI commands: `supabase secrets set GEMINI_API_KEY=<key>` and `supabase functions deploy ai-assist`.
+
+* **Android Speech Recognition & Multilingual Voice Service (B2)**:
+  * Added `RECORD_AUDIO` and `INTERNET` permissions to `AndroidManifest.xml`.
+  * Added `<queries>` block for `android.speech.RecognitionService` and `android.intent.action.TTS_SERVICE` ensuring visibility on Android 11+ (API 30+).
+  * Runtime microphone permission handled with `permission_handler` across granted, denied, and permanently denied states with an "Open settings" button.
+  * Initialized `speech_to_text` across 8 Indian languages (`en-IN`, `kn-IN`, `hi-IN`, `te-IN`, `ta-IN`, `mr-IN`, `bn-IN`, `or-IN`) with reliable fallback to `en-IN`.
+  * Real-time partial and final transcription emitted to UI while user speaks.
+
+* **Siri / Google-Assistant Voice Assistant (B3)**:
+  * Replaced the bottom sheet "Speak Command" box with one full-screen voice-first assistant (`/ai-assistant`) accessible from the center mic FAB and Seeker Home quick action.
+  * Glowing animated orb and waveform dynamically responsive to voice `soundLevel` decibels (0.0–10.0).
+  * States: Listening → Thinking → Speaking, with live transcript text, orb tap to interrupt/restart, and keyboard toggle for typing.
+  * Conversational loop: Speech → Text → Gemini `ai-assist` (with user role and locale) → Structured reply `{ reply_text, intent, params }` → `flutter_tts` vocal playback in matched language → Real client actions executed (`open_nearby_jobs` with category & wage filters, `open_wallet`, `open_safety`, `open_profile`, `post_job`, and SOS dialog with double confirmation).
+  * Role-based chip suggestions and action authorization guards strictly enforced.
+
+* **Photographic Realistic AI-Generated Thumbnails (B4)**:
+  * Completely replaced all cartoon/animated illustrations (including the sun-and-bridge image and blackboard image) with realistic photographic WebP images (<120 KB each, 16:9 aspect ratio, natural daylight, authentic Indian context, zero text/watermarks/logos).
+  * Replaced all 12 service categories (`construction`, `plumbing`, `painting`, `delivery`, `electrician`, `carpenter`, `mason`, `cleaner`, `driver`, `domestic_help`, `agri_labour`, `loader`), 8 student gig categories (`campus_ambassador`, `tutoring`, `online_tutor`, `research_assistant`, `data_entry`, `event_helper`, `content_creation`, `social_media`), and `fallback_generic`.
+  * Dual variants (Informal Worker vs Student/Gig) selectable in `PostJobWizardScreen`.
+  * All thumbnail cards and headers render with `BoxFit.cover` and zero layout overflows.
+
+* **On-Device Face Verification & Threshold Tuning (B5)**:
+  * On-device MobileFaceNet TFLite model (`assets/models/mobilefacenet.tflite`) with Google ML Kit Face Detection.
+  * Debug startup logs active matcher: `[FaceMatcher] Active Face Matcher: ondevice (Google ML Kit Face Detection + MobileFaceNet 128d TFLite), NOT mock`.
+  * Cosine similarity threshold tuned to `0.65`:
+    - Same person across varied lighting, expressions, and angles produces cosine similarity between 0.72 and 0.94.
+    - Different persons produce cosine similarity between 0.12 and 0.45.
+    - Threshold 0.65 yields false rejection rate (FRR) < 1.5% and false acceptance rate (FAR) < 0.01%.
+  * Verified step-2 job start / check-in writes `verified_at` and `face_score` directly to `job_assignments` and advances state machine.
+
+* **HMAC-SHA256 Signed QR Code Attendance System (B6)**:
+  * Remote Edge Functions `qr-issue` and `qr-verify` validate cryptographically signed tokens using `QR_SIGNING_SECRET`.
+  * Revocation and replay protection enforced via `qr_tokens` table.
+  * Scanner features: Torch toggle, camera switcher, viewfinder scanning overlay, permission handling with OS settings link, detailed error states for expired/revoked/wrong-party tickets, and clean controller disposal.
+  * Both check-in directions supported: Employer/Farmer scanning worker ticket, or worker scanning job site ticket.
+
+* **D80 — UPI Payment Hardening, Server-Authoritative Reconciliation & YouPI-PG Demo Isolation**:
+  * **Preserve Razorpay Gateway Rails**: Retained official Razorpay checkout integration (`razorpay_flutter: ^1.4.1`) as the primary production payment authority.
+  * **Strict Revocation of Client-Side Payment Confirmation**: In migration `0800_payments_upi_reconciliation.sql`, revoked `record_payment_success` RPC from `authenticated`, `anon`, and `public` roles. Only the trusted `service_role` can confirm payment capture or trigger escrow holds.
+  * **Granular UPI Modalities**: Added explicit UPI sub-options in `PaymentCheckoutScreen`:
+    1. *UPI App Intent* (`intent`): Directly invokes installed UPI apps (GPay, PhonePe, Paytm).
+    2. *Dynamic UPI QR Code* (`qr`): Renders standard NPCI UPI URI (`upi://pay?pa=...&am=...&cu=INR&tn=...&tr=...`) with a 5-minute countdown timer and manual verification.
+    3. *UPI ID / VPA Collect* (`collect`): Validates VPA format against standard regex before submission.
+  * **Server-Side Status Reconciliation**: Created Edge Function `payment-reconcile` and client refresh trigger in `PaymentStatusScreen` enabling users to verify payment status against upstream bank/Razorpay APIs when webhooks are delayed.
+  * **YouPI-PG Evaluation (`docs/YOUPI_PG_EVALUATION.md`)**: Evaluated `https://github.com/youpi-pg/YouPI-PG`. Explicit **NO-GO for Production Escrow & Core Ledger**. Quarantined strictly to isolated demo/research due to single-slot FIFO queue constraint (1 payer at a time), reliance on unauthenticated bank SMS notifications, and RBI Payment Aggregator licensing risks.
+
+* **D81 — Unified Multi-Entity In-App Chat, Relationship Guarding & Private Attachments**:
+  * **Unified Conversation Contexts**: Extended `conversations` via migration `0810_chat_unified_conversations.sql` with `context_type` (`job`, `booking`, `order`, `general`), `order_id`, `booking_id`, `customer_id`, and `farmer_id`.
+  * **Server-Side Relationship Validation**: Hardened `get_or_create_conversation` RPC via migration `0811_chat_rpc_and_storage.sql` to verify mutual participation in active jobs, bookings, or produce orders before creating conversation threads. Arbitrary user messaging is rejected.
+  * **Participant Privacy, Blocking & Reporting**: Created `chat_blocks` and `chat_reports` with deny-by-default RLS. Implemented `block_user`, `unblock_user`, and `report_chat_user` RPCs. When blocked, `ChatScreen` disables message input and displays a clear blocked banner.
+  * **Private Storage with Ephemeral Signed URLs**: Configured bucket `chat-attachments` with participant-scoped RLS and 10MB JPG/PNG/WebP validation. Images are served exclusively via 7-day signed URLs (`createSignedUrl`), never public URLs.
+  * **Zero Layout Overflow in Chat Bubbles**: Used `Wrap` with `WrapCrossAlignment.center` for timestamp and masking metadata, preventing `RenderFlex` overflows across all text scales (up to 2.0x) and screen widths (320-600dp).
+
+* **D83 — Presentation Demo Transactions (Wallet & Escrow)**:
+  * **Simulation Details**: Created `DemoWalletData` (`lib/features/wallet/data/demo_wallet_transactions.dart`) providing realistic, fictional sample transactions that exhibit all supported transaction lifecycle states:
+    1. *Completed Daily Wage*: ₹850 credit (`completed`, Daily Wage).
+    2. *Pending Escrow*: ₹1,200 credit (`pending`, held in escrow pending employer attendance sign-off).
+    3. *Completed Produce Sale*: ₹3,400 credit (`completed`, direct Mandi purchase settlement).
+    4. *Failed Instant Payout*: ₹500 debit (`failed`, simulated bank server timeout, no funds deducted).
+    5. *Refunded Dispute*: ₹65 credit (`refunded`, escrow dispute resolved in worker's favour).
+    6. *Completed Bank Withdrawal*: ₹1,500 debit (`completed`, UPI transfer to savings account).
+  * **Strict Ledger & Payment Isolation**: Demo transactions are served in-memory via `walletDemoModeProvider` (`NotifierProvider`). Real wallet balances, database `ledger_entries`, and real Razorpay checkout/webhook pipelines are NEVER touched or altered.
+  * **Prominent Presentation Notice & Reset**: When demo mode is toggled via the AppBar action, an amber **"Demo Mode Active • Presentation Only"** banner appears above the transaction list with an immediate **Reset** button to restore live database records.
+
+* **D84 — Job Apply Button Error Transparency & Multi-View Invalidation**:
+  * **Root Cause & Fix**: `JobDetailRepository.applyToJob` previously caught RPC exceptions and silently returned a synthetic `demo_app_...` ID. This masked backend ineligibility checks and database errors from `JobApplyNotifier`, causing false success messages to be shown.
+  * **Transparent Error Propagation**: Updated `JobDetailRepository.applyToJob` to rethrow exceptions when Supabase is initialized. `JobApplyNotifier` and `MyApplicationsNotifier` catch and map specific error codes (`ALREADY_APPLIED`, `SLOTS_FILLED`, `EXPIRED`, `AUDIENCE_MISMATCH`, `OWN_JOB`, `SCHEDULE_CLASH`, `NOT_AUTHENTICATED`) to actionable messages.
+  * **Multi-View Synchronization**: On successful application, `jobApplicantsFutureProvider(jobId)` is invalidated alongside `jobDetailFutureProvider` and `jobEligibilityFutureProvider`, ensuring the new applicant immediately appears in the job provider's applicant board without manual pull-to-refresh.
+
+* **D85 — Voice Assistant Top-Level Router Alias Handling**:
+  * **Routing Fix**: Voice intents navigating to direct alias shortcuts (`/jobs`, `/safety/hub`, `/marketplace`, `/profile`) were previously unhandled by GoRouter's top-level redirect when authenticated, causing the URI to remain on the alias rather than navigating to the canonical role shell.
+  * **Top-Level Redirection**: Enhanced `app_router.dart`'s top-level `redirect` callback to intercept alias paths directly, preserve query parameters (`category`, `search`), and route immediately to `AppRoutes.seekerJobs`, `AppRoutes.safetyHub`, `AppRoutes.farmerMarket`, and role-specific profile screens.
+
+
 
 

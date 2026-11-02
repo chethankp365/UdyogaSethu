@@ -2728,7 +2728,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paymentCash => 'Cash on Completion';
 
   @override
-  String get paymentPaySecurely => 'Pay Securely';
+  String paymentPaySecurely(String amount) {
+    return 'Pay Securely';
+  }
 
   @override
   String get paymentConfirmCash => 'Confirm Cash Booking';
@@ -4185,4 +4187,298 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get disclaimerCreditGuidance =>
       'This is guidance only. It does not guarantee any loan. Future links to regulated financial partners would need your consent.';
+
+  @override
+  String get paymentUpiApps => 'UPI Apps (GPay, PhonePe, Paytm)';
+
+  @override
+  String get paymentUpiQr => 'Dynamic UPI QR Code';
+
+  @override
+  String get paymentUpiCollect => 'Enter UPI ID / VPA';
+
+  @override
+  String get paymentUpiVpaHint => 'e.g. mobile@upi or username@okhdfcbank';
+
+  @override
+  String get paymentUpiVpaInvalid =>
+      'Please enter a valid UPI ID (e.g. name@bank)';
+
+  @override
+  String get paymentUpiQrScanPrompt =>
+      'Scan this QR code using any UPI app to pay';
+
+  @override
+  String paymentUpiQrExpiresIn(String time) {
+    return 'Expires in $time';
+  }
+
+  @override
+  String get paymentRefreshStatus => 'Check Bank Status';
+
+  @override
+  String get paymentReconciling => 'Verifying with Bank...';
+
+  @override
+  String get paymentReconcileFailed =>
+      'Payment verification pending with bank. Please retry in a few moments.';
+
+  @override
+  String get paymentStatusTitle => 'Payment Status';
+
+  @override
+  String get paymentStatusSuccess => 'Payment Successful and Confirmed';
+
+  @override
+  String paymentStatusSuccessDesc(String amount) {
+    return 'Your payment of $amount is confirmed.';
+  }
+
+  @override
+  String get paymentStatusPending => 'Confirming with Bank...';
+
+  @override
+  String get paymentStatusPendingDesc =>
+      'Awaiting confirmation from Razorpay and banking network. Your screen will update automatically.';
+
+  @override
+  String get paymentStatusFailed => 'Payment Failed';
+
+  @override
+  String get paymentStatusFailedDesc =>
+      'Your transaction could not be completed by the bank. No money was deducted.';
+
+  @override
+  String get paymentTotalAmountPaid => 'Total Amount Paid';
+
+  @override
+  String get paymentEscrowProtectedNotice =>
+      'Escrow Protected: Money will only be released to the worker once verified job completion is recorded.';
+
+  @override
+  String get paymentShareReceipt => 'Share / Download PDF Receipt';
+
+  @override
+  String get paymentContinueAction => 'Continue to Job / Order';
+
+  @override
+  String get chatReportUser => 'Report User';
+
+  @override
+  String get chatBlockUser => 'Block User';
+
+  @override
+  String get chatUserBlocked =>
+      'This user has been blocked. Messages disabled.';
+
+  @override
+  String get chatReportSubmitted => 'Report submitted for admin review.';
+
+  @override
+  String get chatFilterAll => 'All';
+
+  @override
+  String get chatFilterJobs => 'Jobs';
+
+  @override
+  String get chatFilterBookings => 'Bookings';
+
+  @override
+  String get chatFilterOrders => 'Farm Orders';
+
+  @override
+  String get whatsappNotifyOptIn => 'WhatsApp Notifications';
+
+  @override
+  String get whatsappNotifyDesc =>
+      'Receive critical job updates, booking status, and payment receipts via WhatsApp';
+
+  @override
+  String get whatsappConsentNote =>
+      'By enabling, you agree to receive transactional alerts from UdyogaSethu on your registered mobile number.';
+
+  @override
+  String get voiceModalTitle => 'AI Voice Assistant';
+
+  @override
+  String get voiceGreetingMorning => 'Good morning';
+
+  @override
+  String get voiceGreetingAfternoon => 'Good afternoon';
+
+  @override
+  String get voiceGreetingEvening => 'Good evening';
+
+  @override
+  String get voiceAskAnything => 'How can I help you today?';
+
+  @override
+  String get voiceTapOrbToSpeak => 'Tap orb to speak';
+
+  @override
+  String get voiceListeningNow => 'Listening... Speak now';
+
+  @override
+  String get voiceThinking => 'Finding the right information...';
+
+  @override
+  String get voiceSpeaking => 'Speaking reply (Tap to interrupt)';
+
+  @override
+  String get voiceHearError => 'I didn\'t catch that. Tap to try again';
+
+  @override
+  String get voiceMicRequired => 'Microphone permission required';
+
+  @override
+  String get voiceMicDeniedDesc =>
+      'Tap Grant Permission to enable voice commands.';
+
+  @override
+  String get voiceMicPermanentDesc =>
+      'Please open App Settings to allow microphone access.';
+
+  @override
+  String get voiceGrantPermission => 'Grant Permission';
+
+  @override
+  String get voiceOpenSettings => 'Open Settings';
+
+  @override
+  String get voiceTypeInstead => 'Type instead';
+
+  @override
+  String get voiceTypeHint => 'Type your question here...';
+
+  @override
+  String get voiceListenAgain => 'Listen again';
+
+  @override
+  String get voiceStopAudio => 'Stop audio';
+
+  @override
+  String get voiceResetConversation => 'Reset conversation';
+
+  @override
+  String get voiceMuteTooltip => 'Mute voice';
+
+  @override
+  String get voiceUnmuteTooltip => 'Unmute voice';
+
+  @override
+  String get voiceYouSaid => 'You said:';
+
+  @override
+  String get voiceAssistantReply => 'Assistant:';
+
+  @override
+  String get voicePromptNearbyJobs => 'Find nearby jobs';
+
+  @override
+  String get voicePromptCheckWallet => 'Check my wallet balance';
+
+  @override
+  String get voicePromptOpenProfile => 'Open my profile';
+
+  @override
+  String get voicePromptActiveJobs => 'Show my active jobs';
+
+  @override
+  String get voicePromptFindWorkers => 'Find workers near me';
+
+  @override
+  String get voicePromptPostJob => 'Post a new job';
+
+  @override
+  String get voicePromptApplicants => 'Show my applicants';
+
+  @override
+  String get voicePromptCheckEarnings => 'Check my earnings';
+
+  @override
+  String get voicePromptMandiPrices => 'What\'s today\'s tomato price?';
+
+  @override
+  String get voicePromptMarketplace => 'Open produce marketplace';
+
+  @override
+  String get voicePromptFarmerOrders => 'Show my orders';
+
+  @override
+  String get voicePromptCropHelp => 'Help me diagnose a crop problem';
+
+  @override
+  String get voiceLangNotInstalled =>
+      'Voice playback for this language is not installed on your device.';
+
+  @override
+  String get voiceCloudSttActive =>
+      'Using cloud speech recognition for this language.';
+
+  @override
+  String get actionCancelJob => 'Cancel Job Assignment';
+
+  @override
+  String get actionCancelWorker => 'Cancel Worker Booking';
+
+  @override
+  String get cancelAssignmentTitle => 'Cancel Assignment?';
+
+  @override
+  String get cancelAssignmentPrompt =>
+      'Are you sure you want to cancel this assignment? The slot will be released back to the platform.';
+
+  @override
+  String get cancelAssignmentConfirm => 'Confirm Cancellation';
+
+  @override
+  String get cancelAssignmentSuccess => 'Assignment cancelled successfully.';
+
+  @override
+  String get cancellationReasonPrompt =>
+      'Please select a reason for cancellation:';
+
+  @override
+  String get reasonEmergency => 'Personal emergency';
+
+  @override
+  String get reasonScheduleConflict => 'Schedule conflict / timing issue';
+
+  @override
+  String get reasonFoundAlternative => 'Found an alternative';
+
+  @override
+  String get reasonMutualAgreement => 'Mutual agreement';
+
+  @override
+  String get reasonOther => 'Other reason';
+
+  @override
+  String get voiceSelectLanguage => 'Voice Language';
+
+  @override
+  String get voiceLangAuto => 'Auto Detect';
+
+  @override
+  String get chatClosedTitle => 'This chat is no longer available';
+
+  @override
+  String get chatClosedDesc =>
+      'The job has ended. For safety and privacy, messaging and calling are closed.';
+
+  @override
+  String get chatCallingDisabled =>
+      'Voice calling is disabled because this job has ended.';
+
+  @override
+  String get chatFilterActive => 'Active';
+
+  @override
+  String get chatFilterCompleted => 'Completed Jobs';
+
+  @override
+  String get chatDeleteAction => 'Delete Conversation';
+
+  @override
+  String get chatDeletedNotice => 'Conversation removed from your inbox.';
 }

@@ -4,9 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:udyogasethu/core/config/env.dart';
 import 'package:udyogasethu/core/errors/app_exception.dart';
 import 'package:udyogasethu/core/supabase/supabase_service.dart';
+import 'package:udyogasethu/features/trust/data/face_embedding_service.dart';
 
 abstract class AuthRepository {
   Future<void> sendSmsOtp(String rawPhone);
@@ -373,7 +375,26 @@ class SupabaseAuthRepository implements AuthRepository {
     } catch (e) {
       AppLogger.w('Google sign-out/disconnect error (handled): $e');
     }
-    await _supabase.auth.signOut();
+
+    try {
+      await _supabase.auth.signOut();
+    } catch (e) {
+      AppLogger.w('Supabase sign-out error (handled): $e');
+    }
+
+    // Clear all user-specific cached preferences and local biometric data
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('cached_auth_status');
+      await prefs.remove('cached_active_role');
+      await prefs.remove('cached_seeker_type');
+      await prefs.remove('pending_role_selection');
+      await prefs.remove('active_role');
+      await FaceEmbeddingService().clearEnrolledProfile();
+      AppLogger.i('Cleaned up user-specific caches on logout');
+    } catch (e) {
+      AppLogger.w('Error clearing local cached preferences on logout: $e');
+    }
   }
 }
 

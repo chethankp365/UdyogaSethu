@@ -9,6 +9,7 @@ import 'package:udyogasethu/core/widgets/job_action_button.dart';
 import 'package:udyogasethu/features/seeker/domain/job_pin.dart';
 import 'package:udyogasethu/features/seeker/presentation/map/nearby_jobs_map_controller.dart';
 import 'package:udyogasethu/features/seeker/presentation/map/tile_config.dart';
+import 'package:udyogasethu/features/seeker/presentation/my_applications_controller.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 /// Screen 7: GPS Based Job Tracking / Nearby Jobs Map
@@ -866,7 +867,8 @@ class _NearbyJobsMapScreenState extends ConsumerState<NearbyJobsMapScreen> {
       itemBuilder: (context, index) {
         final job = state.jobPins[index];
         final isSelected = state.selectedJobId == job.id;
-        final isApplied = state.appliedJobIds.contains(job.id);
+        final myApps = ref.watch(myApplicationsProvider);
+        final isApplied = state.appliedJobIds.contains(job.id) || (myApps[job.id]?.isApplied ?? false);
 
         return _buildJobCard(
           job: job,

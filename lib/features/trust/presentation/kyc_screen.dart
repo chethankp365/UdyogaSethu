@@ -52,39 +52,14 @@ class _KycScreenState extends ConsumerState<KycScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Mandatory Honesty Rule Demo Mode Banner
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.amber.shade50,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.amber.shade400),
-                  ),
-                  child: const Row(
-                    children: [
-                      Icon(Icons.bug_report_rounded, color: Colors.amber, size: 24),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Demo Mode — Simulated eKYC Provider',
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black87),
-                            ),
-                            SizedBox(height: 2),
-                            Text(
-                              'Verification runs in simulated sandbox mode. No live government servers are contacted.',
-                              style: TextStyle(fontSize: 11, color: Colors.black54),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                // Small unobtrusive honesty note
+                Center(
+                  child: Text(
+                    'Demo Mode: Simulated eKYC Provider sandbox',
+                    style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
 
                 // Document Selection Card
                 Card(

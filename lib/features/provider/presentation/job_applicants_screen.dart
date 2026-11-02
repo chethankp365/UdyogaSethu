@@ -284,6 +284,23 @@ class JobApplicantsScreen extends ConsumerWidget {
             SnackBar(
               content: Text(l10n.applicantHiredSuccess),
               backgroundColor: AppColors.headerGreenDark,
+              action: SnackBarAction(
+                label: 'Chat',
+                textColor: Colors.amberAccent,
+                onPressed: () async {
+                  try {
+                    final chatRepo = ref.read(chatRepositoryProvider);
+                    final threadId = await chatRepo.getOrCreateThread(
+                      contextType: 'job',
+                      contextId: jobId,
+                      recipientId: applicant.workerId,
+                    );
+                    if (context.mounted && threadId.isNotEmpty && threadId != 'offline_thread') {
+                      context.push('${AppRoutes.chatDetail}/$threadId');
+                    }
+                  } catch (_) {}
+                },
+              ),
             ),
           );
         }

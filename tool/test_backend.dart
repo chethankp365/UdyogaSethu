@@ -26,6 +26,7 @@ void main(List<String> args) async {
     'supabase/tests/security_audit_tests.sql',
     'supabase/tests/p4_visibility_tests.sql',
     'supabase/tests/unified_application_status_tests.sql',
+    'supabase/tests/chat_and_payment_security_tests.sql',
   ];
 
   // 1. Verify existence and syntax of all SQL test files

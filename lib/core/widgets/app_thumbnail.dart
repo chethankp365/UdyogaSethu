@@ -416,13 +416,12 @@ class ThumbnailTitleOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     final isHeader = size == ThumbnailSize.header;
     final fontSize = isHeader ? 22.0 : 13.5;
-    final outlineWidth = isHeader ? 4.5 : 3.0;
 
-    // Bold comic font with Indic fallbacks
-    final baseStyle = GoogleFonts.lilitaOne(
+    // Modern, crisp typography with clean shadow
+    final baseStyle = GoogleFonts.outfit(
       fontSize: fontSize,
-      fontWeight: FontWeight.w900,
-      letterSpacing: 0.8,
+      fontWeight: FontWeight.w700,
+      letterSpacing: 0.3,
       height: 1.15,
     ).copyWith(
       fontFamilyFallback: AppTypography.fontFallbacks,
@@ -443,7 +442,7 @@ class ThumbnailTitleOverlay extends StatelessWidget {
           gradient: LinearGradient(
             colors: [
               Colors.black.withValues(alpha: 0.85),
-              Colors.black.withValues(alpha: 0.45),
+              Colors.black.withValues(alpha: 0.40),
               Colors.transparent,
             ],
             begin: Alignment.bottomCenter,
@@ -453,39 +452,20 @@ class ThumbnailTitleOverlay extends StatelessWidget {
         child: FittedBox(
           fit: BoxFit.scaleDown,
           alignment: Alignment.bottomLeft,
-          child: Stack(
-            children: [
-              // 1. Black stroke outline layer
-              Text(
-                title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: baseStyle.copyWith(
-                  foreground: Paint()
-                    ..style = PaintingStyle.stroke
-                    ..strokeWidth = outlineWidth
-                    ..strokeCap = StrokeCap.round
-                    ..strokeJoin = StrokeJoin.round
-                    ..color = const Color(0xFF0F172A),
+          child: Text(
+            title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: baseStyle.copyWith(
+              color: Colors.white,
+              shadows: const [
+                Shadow(
+                  color: Color(0xCC000000),
+                  offset: Offset(0, 1.5),
+                  blurRadius: 4,
                 ),
-              ),
-              // 2. Vibrant golden pop fill with drop shadow
-              Text(
-                title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: baseStyle.copyWith(
-                  color: const Color(0xFFFDE047), // Vibrant yellow
-                  shadows: const [
-                    Shadow(
-                      color: Color(0xAA000000),
-                      offset: Offset(0, 2),
-                      blurRadius: 4,
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

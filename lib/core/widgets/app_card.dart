@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:udyogasethu/core/theme/app_colors.dart';
+import 'package:udyogasethu/core/theme/app_motion.dart';
 import 'package:udyogasethu/core/theme/app_spacing.dart';
 
 class AppCard extends StatelessWidget {
@@ -51,13 +52,17 @@ class AppCard extends StatelessWidget {
     if (onTap != null) {
       return Container(
         margin: margin,
-        child: Material(
-          color: Colors.transparent,
+        child: BouncingPressable(
+          onTap: onTap,
           borderRadius: BorderRadius.circular(borderRadius),
-          child: InkWell(
-            onTap: onTap,
+          child: Material(
+            color: Colors.transparent,
             borderRadius: BorderRadius.circular(borderRadius),
-            child: cardContent,
+            child: InkWell(
+              onTap: onTap,
+              borderRadius: BorderRadius.circular(borderRadius),
+              child: cardContent,
+            ),
           ),
         ),
       );

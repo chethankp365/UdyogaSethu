@@ -77,7 +77,7 @@ Deno.serve(async (req: Request) => {
         elapsed_seconds,
         start_selfie_path,
         completion_selfie_path,
-        jobs:job_id (
+        jobs (
           id,
           provider_id,
           title,
@@ -88,7 +88,12 @@ Deno.serve(async (req: Request) => {
       .eq('id', assignmentId)
       .maybeSingle();
 
-    if (asgErr || !assignment) {
+    if (asgErr) {
+      logError('assignment_fetch_error', { error: asgErr, assignmentId });
+      return errorResponse('database_error', `Failed to query assignment: ${asgErr.message}`, 500);
+    }
+
+    if (!assignment) {
       return errorResponse('assignment_not_found', 'Job assignment not found', 404);
     }
 

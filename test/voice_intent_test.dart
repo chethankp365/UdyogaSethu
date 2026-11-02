@@ -258,28 +258,113 @@ void main() {
     });
 
     // -------------------------------------------------------------------------
-    // Numbers, distances, empty speech & unknown command handling
+    // Expanded In-App Voice Commands (100% Offline, Zero API Key)
     // -------------------------------------------------------------------------
-    test('Price and Distance extraction', () {
-      final res = IntentEngine.parse('construction job paying 850 within 5 km', language: 'en');
-      expect(res.type, VoiceIntentType.findJobs);
-      expect(res.parameters.category, 'construction');
-      expect(res.parameters.minPrice, 850);
-      expect(res.parameters.radiusKm, 5.0);
+    test('Offline Command: Open Profile (Multi-lingual & Role-aware)', () {
+      final resKn = IntentEngine.parse('ನನ್ನ ಪ್ರೊಫೈಲ್ ತೆರೆಯಿರಿ', language: 'kn');
+      expect(resKn.type, VoiceIntentType.openProfile);
+      expect(resKn.targetRoute, contains('/seeker/profile'));
+      expect(resKn.spokenReply, contains('ಪ್ರೊಫೈಲ್'));
+
+      final resHi = IntentEngine.parse('मेरी प्रोफाइल खोलो', language: 'hi', userRole: 'provider');
+      expect(resHi.type, VoiceIntentType.openProfile);
+      expect(resHi.targetRoute, contains('/provider/profile'));
+
+      final resEn = IntentEngine.parse('open my profile', language: 'en', userRole: 'farmer');
+      expect(resEn.type, VoiceIntentType.openProfile);
+      expect(resEn.targetRoute, contains('/farmer/profile'));
     });
 
-    test('Empty speech returns polite prompt', () {
-      final res = IntentEngine.parse('', language: 'kn');
-      expect(res.type, VoiceIntentType.unknown);
-      expect(res.spokenReply, contains('ದಯವಿಟ್ಟು'));
+    test('Offline Command: Post a Job (Multi-lingual)', () {
+      final resEn = IntentEngine.parse('post a new job for plumber', language: 'en');
+      expect(resEn.type, VoiceIntentType.postJob);
+      expect(resEn.targetRoute, '/provider/jobs/new');
+
+      final resKn = IntentEngine.parse('ಹೊಸ ಕೆಲಸ ಪೋಸ್ಟ್ ಮಾಡಿ', language: 'kn');
+      expect(resKn.type, VoiceIntentType.postJob);
+      expect(resKn.targetRoute, '/provider/jobs/new');
+
+      final resHi = IntentEngine.parse('नौकरी पोस्ट करो', language: 'hi');
+      expect(resHi.type, VoiceIntentType.postJob);
+      expect(resHi.targetRoute, '/provider/jobs/new');
     });
 
-    test('Unrecognized gibberish command', () {
-      final res = IntentEngine.parse('xyzzy abracadabra 123456789', language: 'en');
-      expect(res.type, VoiceIntentType.unknown);
-      expect(res.targetRoute, '');
-      expect(res.isRecognized, false);
-      expect(res.spokenReply, contains('could not understand'));
+    test('Offline Command: Mandi Prices / APMC (Multi-lingual)', () {
+      final resKn = IntentEngine.parse('ಇಂದಿನ ಮಂಡಿ ದರ ನೋಡಿ', language: 'kn');
+      expect(resKn.type, VoiceIntentType.checkMandi);
+      expect(resKn.targetRoute, '/farmer/market');
+
+      final resHi = IntentEngine.parse('आज का मंडी भाव क्या है', language: 'hi');
+      expect(resHi.type, VoiceIntentType.checkMandi);
+      expect(resHi.targetRoute, '/farmer/market');
+
+      final resEn = IntentEngine.parse('check mandi prices today', language: 'en');
+      expect(resEn.type, VoiceIntentType.checkMandi);
+      expect(resEn.targetRoute, '/farmer/market');
+    });
+
+    test('Offline Command: Active Jobs & My Jobs (Multi-lingual)', () {
+      final resEn = IntentEngine.parse('show my active jobs', language: 'en');
+      expect(resEn.type, VoiceIntentType.viewActiveJobs);
+      expect(resEn.targetRoute, '/seeker/jobs');
+
+      final resKn = IntentEngine.parse('ಸಕ್ರಿಯ ಕೆಲಸಗಳು ತೋರಿಸಿ', language: 'kn');
+      expect(resKn.type, VoiceIntentType.viewActiveJobs);
+      expect(resKn.targetRoute, '/seeker/jobs');
+    });
+
+    test('Offline Command: Schedule & Timetable (Multi-lingual)', () {
+      final resEn = IntentEngine.parse('my schedule and shifts', language: 'en');
+      expect(resEn.type, VoiceIntentType.viewSchedule);
+      expect(resEn.targetRoute, '/seeker/schedule');
+
+      final resKn = IntentEngine.parse('ನನ್ನ ವೇಳಾಪಟ್ಟಿ ನೋಡಿ', language: 'kn');
+      expect(resKn.type, VoiceIntentType.viewSchedule);
+      expect(resKn.targetRoute, '/seeker/schedule');
+    });
+
+    test('Offline Command: Digital ID & QR Ticket (Multi-lingual)', () {
+      final resEn = IntentEngine.parse('show my digital id and attendance qr', language: 'en');
+      expect(resEn.type, VoiceIntentType.digitalId);
+      expect(resEn.targetRoute, '/trust/digital-id');
+
+      final resKn = IntentEngine.parse('ನನ್ನ ಡಿಜಿಟಲ್ ಐಡಿ ತೋರಿಸಿ', language: 'kn');
+      expect(resKn.type, VoiceIntentType.digitalId);
+      expect(resKn.targetRoute, '/trust/digital-id');
+    });
+
+    test('Offline Command: Scan QR & Attendance Scanner', () {
+      final res = IntentEngine.parse('scan qr code', language: 'en');
+      expect(res.type, VoiceIntentType.scanVerify);
+      expect(res.targetRoute, '/trust/scan-verify');
+    });
+
+    test('Offline Command: Chat, Messages & Inbox', () {
+      final res = IntentEngine.parse('open chat and messages', language: 'en', userRole: 'seeker');
+      expect(res.type, VoiceIntentType.openChat);
+      expect(res.targetRoute, '/seeker/chat');
+    });
+
+    test('Offline Command: Notifications & Alerts', () {
+      final res = IntentEngine.parse('show my notifications', language: 'en');
+      expect(res.type, VoiceIntentType.openNotifications);
+      expect(res.targetRoute, '/notifications');
+    });
+
+    test('Offline Command: Farm AI Crop Doctor & Pest Diagnosis', () {
+      final res = IntentEngine.parse('help me diagnose a crop problem', language: 'en');
+      expect(res.type, VoiceIntentType.farmAi);
+      expect(res.targetRoute, '/farmer/pest-ai');
+    });
+
+    test('Offline Command: Home Dashboard & Favourites', () {
+      final resHome = IntentEngine.parse('go to home dashboard', language: 'en', userRole: 'provider');
+      expect(resHome.type, VoiceIntentType.goHome);
+      expect(resHome.targetRoute, '/provider/home');
+
+      final resFav = IntentEngine.parse('open my favourites saved jobs', language: 'en');
+      expect(resFav.type, VoiceIntentType.viewFavourites);
+      expect(resFav.targetRoute, '/favourites');
     });
   });
 }

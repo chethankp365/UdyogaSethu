@@ -72,6 +72,8 @@ The repository strictly enforces credential isolation. **Secrets must never be c
 | `RAZORPAY_KEY_SECRET` | Server (Edge Functions) | **SECRET** | Razorpay Secret for webhook HMAC verification |
 | `FIREBASE_SERVICE_ACCOUNT` | Server (Edge Functions) | **SECRET** | Service Account JSON for FCM HTTP v1 push dispatch |
 | `GEMINI_API_KEY` | Server (Edge Functions) | **SECRET** | Google Gemini Generative AI API key |
+| `WHATSAPP_CLOUD_API_TOKEN` | Server (Edge Functions) | **SECRET** | Meta WhatsApp Business Cloud API Access Token |
+| `WHATSAPP_PHONE_NUMBER_ID` | Server (Edge Functions) | **SECRET** | Meta Registered WhatsApp Business Phone Number ID |
 | `DEMO_BUILD` | Client (`env.json`) | Optional | Set to `"true"` to enable evaluator demo shortcuts |
 
 ### Setting Up `env.json` (Client-Side)
@@ -80,10 +82,10 @@ Create `env.json` at the root of the project:
 
 ```json
 {
-  "SUPABASE_URL": "https://mmzbpeqkfomnywuzoqii.supabase.co",
-  "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "GOOGLE_WEB_CLIENT_ID": "147218087454-84onmnof89drjjktvenajia8qp3p0g3l.apps.googleusercontent.com",
-  "RAZORPAY_KEY_ID": "rzp_test_5123456789ABCD",
+  "SUPABASE_URL": "https://your-supabase-project.supabase.co",
+  "SUPABASE_ANON_KEY": "your-supabase-anon-key-here",
+  "GOOGLE_WEB_CLIENT_ID": "your-google-oauth-client-id.apps.googleusercontent.com",
+  "RAZORPAY_KEY_ID": "rzp_test_your_razorpay_key_id",
   "DEMO_BUILD": "false"
 }
 ```

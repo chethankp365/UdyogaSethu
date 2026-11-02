@@ -252,6 +252,12 @@ class BootstrapNotifier extends Notifier<BootstrapState> {
 
           bool faceRequired = data['face_required_at_login'] as bool? ?? false;
           bool hasEnrolledFace = data['has_enrolled_face'] as bool? ?? false;
+          if (!hasEnrolledFace) {
+            final storedEmbedding = prefs.getString('face_embedding_v1');
+            if (storedEmbedding != null && storedEmbedding.isNotEmpty) {
+              hasEnrolledFace = true;
+            }
+          }
 
           // Fallback RPC check if face_required_at_login not present in RPC payload
           if (!data.containsKey('face_required_at_login')) {
@@ -313,6 +319,11 @@ class BootstrapNotifier extends Notifier<BootstrapState> {
             } else {
               await prefs.remove('cached_seeker_type');
             }
+          } else {
+            // Strictly revoke offline access if user is suspended, in conflict, or signed out
+            await prefs.remove('cached_auth_status');
+            await prefs.remove('cached_active_role');
+            await prefs.remove('cached_seeker_type');
           }
         } catch (e, st) {
           AppLogger.e('Failed to fetch get_bootstrap_state RPC', e, st);

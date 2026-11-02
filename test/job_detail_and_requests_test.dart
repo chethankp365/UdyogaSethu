@@ -40,7 +40,7 @@ class FakeJobDetailRepository implements JobDetailRepository {
       wagePaise: 85000,
       wageType: 'daily',
       estDurationMinutes: 480,
-      startAt: DateTime(2026, 10, 15, 9, 0),
+      startAt: DateTime.now().add(const Duration(days: 2)),
       materialsProvided: true,
       paymentMode: 'escrow',
       slotsTotal: 4,

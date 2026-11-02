@@ -218,15 +218,15 @@
   "farmerStep4Subtitle": "Set your produce pickup availability, delivery radius, and lead time.",
   "farmerStep5Title": "Review & Finish",
   "farmerStep5Subtitle": "Verify your farm profile details before completing setup.",
-  "farmNameLabel": "Farm Name",
+  "farmNameLabel": "Farm / Plantation Name",
   "farmNameHint": "e.g. Green Valley Organic Farm",
   "villageClusterLabel": "Village / Cluster Name",
   "villageClusterHint": "e.g. Devanahalli, Bengaluru Rural",
   "farmLocationLabel": "Farm Location on Map",
-  "acresLabel": "Farm Area (Acres)",
-  "soilTypeLabel": "Soil Type",
+  "acresLabel": "Total Land (Acres)",
+  "soilTypeLabel": "Soil Classification",
   "soilPhLabel": "Soil pH (Optional)",
-  "primaryCropsLabel": "Primary Crops",
+  "primaryCropsLabel": "Primary Crops Grown",
   "farmingMethodLabel": "Farming Method",
   "methodOrganic": "Organic",
   "methodNatural": "Natural / Zero Budget",
@@ -1391,11 +1391,7 @@
   "statusDisputed": "Disputed",
   "editFarmDetails": "Edit Farm Details",
   "editFarmDetailsSubtitle": "Update land area, soil, and crop specializations",
-  "farmNameLabel": "Farm / Plantation Name",
   "clusterVillageLabel": "Cluster / Village Location",
-  "acresLabel": "Total Land (Acres)",
-  "soilTypeLabel": "Soil Classification",
-  "primaryCropsLabel": "Primary Crops Grown",
   "apmcMandiLabel": "Registered APMC Mandi",
   "farmDetailsUpdatedSuccess": "Farm details updated successfully",
   "selfDeclaredProfile": "SELF-DECLARED PROFILE",
@@ -1408,46 +1404,66 @@
   "notifNewApplicantBody": "{worker} applied for {job}",
   "@notifNewApplicantBody": {
     "placeholders": {
-      "worker": { "type": "String" },
-      "job": { "type": "String" }
+      "worker": {
+        "type": "String"
+      },
+      "job": {
+        "type": "String"
+      }
     }
   },
   "notifApplicationStatusTitle": "Application Update",
   "notifApplicationStatusBody": "Your application for {job} was updated to {status}",
   "@notifApplicationStatusBody": {
     "placeholders": {
-      "job": { "type": "String" },
-      "status": { "type": "String" }
+      "job": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
     }
   },
   "notifAssignmentStatusTitle": "Booking Status Update",
   "notifAssignmentStatusBody": "{code} is now {status}",
   "@notifAssignmentStatusBody": {
     "placeholders": {
-      "code": { "type": "String" },
-      "status": { "type": "String" }
+      "code": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
     }
   },
   "notifNewOrderTitle": "New Farm Produce Order",
   "notifNewOrderBody": "New farm produce order {code} received",
   "@notifNewOrderBody": {
     "placeholders": {
-      "code": { "type": "String" }
+      "code": {
+        "type": "String"
+      }
     }
   },
   "notifOrderStatusTitle": "Produce Order Update",
   "notifOrderStatusBody": "{code} status updated to {status}",
   "@notifOrderStatusBody": {
     "placeholders": {
-      "code": { "type": "String" },
-      "status": { "type": "String" }
+      "code": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
     }
   },
   "notifPaymentReceivedTitle": "Payment Received",
   "notifPaymentReceivedBody": "Payment received: {amount}",
   "@notifPaymentReceivedBody": {
     "placeholders": {
-      "amount": { "type": "String" }
+      "amount": {
+        "type": "String"
+      }
     }
   },
   "notifSosAlertTitle": "EMERGENCY SOS ALERT",
@@ -1456,7 +1472,9 @@
   "notifClaimSubmittedBody": "Your claim for {type} was registered for review.",
   "@notifClaimSubmittedBody": {
     "placeholders": {
-      "type": { "type": "String" }
+      "type": {
+        "type": "String"
+      }
     }
   },
   "notifGeneralTitle": "Notification",
@@ -1476,20 +1494,28 @@
   "rewardsTotalXp": "{xp} Total XP",
   "@rewardsTotalXp": {
     "placeholders": {
-      "xp": { "type": "int" }
+      "xp": {
+        "type": "int"
+      }
     }
   },
   "rewardsAvailablePoints": "{points} Available Points",
   "@rewardsAvailablePoints": {
     "placeholders": {
-      "points": { "type": "int" }
+      "points": {
+        "type": "int"
+      }
     }
   },
   "rewardsNextLevelIn": "{points} XP to {level}",
   "@rewardsNextLevelIn": {
     "placeholders": {
-      "points": { "type": "int" },
-      "level": { "type": "String" }
+      "points": {
+        "type": "int"
+      },
+      "level": {
+        "type": "String"
+      }
     }
   },
   "rewardsMaxLevel": "Maximum Level Reached!",
@@ -1497,13 +1523,17 @@
   "rewardsPerkCommission": "Commission: {rate}% (Reduced)",
   "@rewardsPerkCommission": {
     "placeholders": {
-      "rate": { "type": "String" }
+      "rate": {
+        "type": "String"
+      }
     }
   },
   "rewardsPerkSearchBoost": "Search Boost: {boost}x Visibility",
   "@rewardsPerkSearchBoost": {
     "placeholders": {
-      "boost": { "type": "String" }
+      "boost": {
+        "type": "String"
+      }
     }
   },
   "rewardsPerkPrioritySupport": "Priority Customer Support 24/7",
@@ -1512,13 +1542,17 @@
   "rewardsStreakDays": "{count} Days Active",
   "@rewardsStreakDays": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "rewardsStreakJobs": "{count} On-Time Jobs",
   "@rewardsStreakJobs": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "rewardsStreakRisk": "Streak at risk! Complete an action today.",
@@ -1526,14 +1560,20 @@
   "rewardsBadgesEarned": "{earned} of {total} Unlocked",
   "@rewardsBadgesEarned": {
     "placeholders": {
-      "earned": { "type": "int" },
-      "total": { "type": "int" }
+      "earned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "rewardsLockedBadge": "Locked: {criteria}",
   "@rewardsLockedBadge": {
     "placeholders": {
-      "criteria": { "type": "String" }
+      "criteria": {
+        "type": "String"
+      }
     }
   },
   "rewardsReferralsTitle": "Invite & Earn",
@@ -1541,7 +1581,9 @@
   "rewardsReferralCode": "Your Code: {code}",
   "@rewardsReferralCode": {
     "placeholders": {
-      "code": { "type": "String" }
+      "code": {
+        "type": "String"
+      }
     }
   },
   "rewardsReferralCopy": "Copy Code",
@@ -1549,7 +1591,9 @@
   "rewardsReferralSuccessful": "{count} Successful Referrals",
   "@rewardsReferralSuccessful": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "rewardsApplyReferral": "Have a referral code?",
@@ -1560,20 +1604,26 @@
   "rewardsStoreCost": "{points} Points",
   "@rewardsStoreCost": {
     "placeholders": {
-      "points": { "type": "int" }
+      "points": {
+        "type": "int"
+      }
     }
   },
   "rewardsStoreStock": "{count} left in stock",
   "@rewardsStoreStock": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "rewardsStoreOutOfStock": "Out of Stock",
   "rewardsStoreLockedLevel": "Requires Level {level}",
   "@rewardsStoreLockedLevel": {
     "placeholders": {
-      "level": { "type": "int" }
+      "level": {
+        "type": "int"
+      }
     }
   },
   "rewardsStoreLockedBadge": "Requires Badge",
@@ -1596,8 +1646,12 @@
   "communityTrustStats": "{disputeFree}% dispute-free · {completed} jobs verified",
   "@communityTrustStats": {
     "placeholders": {
-      "disputeFree": { "type": "String" },
-      "completed": { "type": "int" }
+      "disputeFree": {
+        "type": "String"
+      },
+      "completed": {
+        "type": "int"
+      }
     }
   },
   "communityHeroSpotlights": "Local Heroes & Success Stories",
@@ -1613,7 +1667,9 @@
   "learningDurationMinutes": "{minutes} mins read",
   "@learningDurationMinutes": {
     "placeholders": {
-      "minutes": { "type": "int" }
+      "minutes": {
+        "type": "int"
+      }
     }
   },
   "learningTakeQuiz": "Take Assessment Quiz",
@@ -1623,13 +1679,17 @@
   "learningQuizPassed": "Congratulations! You passed with {score}%",
   "@learningQuizPassed": {
     "placeholders": {
-      "score": { "type": "int" }
+      "score": {
+        "type": "int"
+      }
     }
   },
   "learningQuizFailed": "You scored {score}%. 80% is needed to pass. Please review and try again.",
   "@learningQuizFailed": {
     "placeholders": {
-      "score": { "type": "int" }
+      "score": {
+        "type": "int"
+      }
     }
   },
   "learningUploadCertificateAction": "Upload External Certificate",
@@ -1643,11 +1703,120 @@
   "learningVerifiedCredential": "Admin Verified",
   "creditReadinessTitle": "Credit Readiness Guidance",
   "wellnessTitle": "Wellness & Benefits",
-  "actionAcceptJob": "Accept Job",
-  "actionStartWork": "Start Work",
-  "actionCompleteJob": "Complete Job",
   "actionBook": "Book Worker",
   "actionPay": "Pay / Wallet",
-  "actionAskForHelp": "Ask for Help",
-  "disclaimerCreditGuidance": "This is guidance only. It does not guarantee any loan. Future links to regulated financial partners would need your consent."
+  "disclaimerCreditGuidance": "This is guidance only. It does not guarantee any loan. Future links to regulated financial partners would need your consent.",
+  "paymentUpiApps": "UPI Apps (GPay, PhonePe, Paytm)",
+  "paymentUpiQr": "Dynamic UPI QR Code",
+  "paymentUpiCollect": "Enter UPI ID / VPA",
+  "paymentUpiVpaHint": "e.g. mobile@upi or username@okhdfcbank",
+  "paymentUpiVpaInvalid": "Please enter a valid UPI ID (e.g. name@bank)",
+  "paymentUpiQrScanPrompt": "Scan this QR code using any UPI app to pay",
+  "paymentUpiQrExpiresIn": "Expires in {time}",
+  "@paymentUpiQrExpiresIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentRefreshStatus": "Check Bank Status",
+  "paymentReconciling": "Verifying with Bank...",
+  "paymentReconcileFailed": "Payment verification pending with bank. Please retry in a few moments.",
+  "@paymentPaySecurely": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentStatusTitle": "Payment Status",
+  "paymentStatusSuccess": "Payment Successful and Confirmed",
+  "paymentStatusSuccessDesc": "Your payment of {amount} is confirmed.",
+  "@paymentStatusSuccessDesc": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentStatusPending": "Confirming with Bank...",
+  "paymentStatusPendingDesc": "Awaiting confirmation from Razorpay and banking network. Your screen will update automatically.",
+  "paymentStatusFailed": "Payment Failed",
+  "paymentStatusFailedDesc": "Your transaction could not be completed by the bank. No money was deducted.",
+  "paymentTotalAmountPaid": "Total Amount Paid",
+  "paymentEscrowProtectedNotice": "Escrow Protected: Money will only be released to the worker once verified job completion is recorded.",
+  "paymentShareReceipt": "Share / Download PDF Receipt",
+  "paymentContinueAction": "Continue to Job / Order",
+  "chatReportUser": "Report User",
+  "chatBlockUser": "Block User",
+  "chatUserBlocked": "This user has been blocked. Messages disabled.",
+  "chatReportSubmitted": "Report submitted for admin review.",
+  "chatFilterAll": "All",
+  "chatFilterJobs": "Jobs",
+  "chatFilterBookings": "Bookings",
+  "chatFilterOrders": "Farm Orders",
+  "whatsappNotifyOptIn": "WhatsApp Notifications",
+  "whatsappNotifyDesc": "Receive critical job updates, booking status, and payment receipts via WhatsApp",
+  "whatsappConsentNote": "By enabling, you agree to receive transactional alerts from UdyogaSethu on your registered mobile number.",
+  "voiceModalTitle": "AI Voice Assistant",
+  "voiceGreetingMorning": "Good morning",
+  "voiceGreetingAfternoon": "Good afternoon",
+  "voiceGreetingEvening": "Good evening",
+  "voiceAskAnything": "How can I help you today?",
+  "voiceTapOrbToSpeak": "Tap orb to speak",
+  "voiceListeningNow": "Listening... Speak now",
+  "voiceThinking": "Finding the right information...",
+  "voiceSpeaking": "Speaking reply (Tap to interrupt)",
+  "voiceHearError": "I didn't catch that. Tap to try again",
+  "voiceMicRequired": "Microphone permission required",
+  "voiceMicDeniedDesc": "Tap Grant Permission to enable voice commands.",
+  "voiceMicPermanentDesc": "Please open App Settings to allow microphone access.",
+  "voiceGrantPermission": "Grant Permission",
+  "voiceOpenSettings": "Open Settings",
+  "voiceTypeInstead": "Type instead",
+  "voiceTypeHint": "Type your question here...",
+  "voiceListenAgain": "Listen again",
+  "voiceStopAudio": "Stop audio",
+  "voiceResetConversation": "Reset conversation",
+  "voiceMuteTooltip": "Mute voice",
+  "voiceUnmuteTooltip": "Unmute voice",
+  "voiceYouSaid": "You said:",
+  "voiceAssistantReply": "Assistant:",
+  "voicePromptNearbyJobs": "Find nearby jobs",
+  "voicePromptCheckWallet": "Check my wallet balance",
+  "voicePromptOpenProfile": "Open my profile",
+  "voicePromptActiveJobs": "Show my active jobs",
+  "voicePromptFindWorkers": "Find workers near me",
+  "voicePromptPostJob": "Post a new job",
+  "voicePromptApplicants": "Show my applicants",
+  "voicePromptCheckEarnings": "Check my earnings",
+  "voicePromptMandiPrices": "What's today's tomato price?",
+  "voicePromptMarketplace": "Open produce marketplace",
+  "voicePromptFarmerOrders": "Show my orders",
+  "voicePromptCropHelp": "Help me diagnose a crop problem",
+  "voiceLangNotInstalled": "Voice playback for this language is not installed on your device.",
+  "voiceCloudSttActive": "Using cloud speech recognition for this language.",
+  "actionCancelJob": "Cancel Job Assignment",
+  "actionCancelWorker": "Cancel Worker Booking",
+  "cancelAssignmentTitle": "Cancel Assignment?",
+  "cancelAssignmentPrompt": "Are you sure you want to cancel this assignment? The slot will be released back to the platform.",
+  "cancelAssignmentConfirm": "Confirm Cancellation",
+  "cancelAssignmentSuccess": "Assignment cancelled successfully.",
+  "cancellationReasonPrompt": "Please select a reason for cancellation:",
+  "reasonEmergency": "Personal emergency",
+  "reasonScheduleConflict": "Schedule conflict / timing issue",
+  "reasonFoundAlternative": "Found an alternative",
+  "reasonMutualAgreement": "Mutual agreement",
+  "reasonOther": "Other reason",
+  "voiceSelectLanguage": "Voice Language",
+  "voiceLangAuto": "Auto Detect",
+  "chatClosedTitle": "This chat is no longer available",
+  "chatClosedDesc": "The job has ended. For safety and privacy, messaging and calling are closed.",
+  "chatCallingDisabled": "Voice calling is disabled because this job has ended.",
+  "chatFilterActive": "Active",
+  "chatFilterCompleted": "Completed Jobs",
+  "chatDeleteAction": "Delete Conversation",
+  "chatDeletedNotice": "Conversation removed from your inbox."
 }
+

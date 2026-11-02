@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:udyogasethu/core/router/routes.dart';
 import 'package:udyogasethu/l10n/app_localizations.dart';
 
 enum EssentialSuiteType {
@@ -155,11 +157,39 @@ class EssentialSuiteGrid extends StatelessWidget {
     EssentialSuiteItem(type: EssentialSuiteType.irrigationAi),
   ];
 
+  static void navigateToFeature(BuildContext context, EssentialSuiteItem item) {
+    switch (item.type) {
+      case EssentialSuiteType.rentTractor:
+        context.push('/farmer/resources?category=tractor');
+        break;
+      case EssentialSuiteType.hireWorkers:
+        context.push('/provider/jobs/new?category=agri_labour');
+        break;
+      case EssentialSuiteType.soilAiTest:
+        context.push(AppRoutes.farmerSoilAi);
+        break;
+      case EssentialSuiteType.sellProduce:
+        context.push(AppRoutes.farmerListings);
+        break;
+      case EssentialSuiteType.pestAiDoc:
+        context.push(AppRoutes.farmerPestAi);
+        break;
+      case EssentialSuiteType.govtSchemes:
+        context.push(AppRoutes.farmerGovtSchemes);
+        break;
+      case EssentialSuiteType.agriDrone:
+        context.push('/farmer/resources?category=drone');
+        break;
+      case EssentialSuiteType.irrigationAi:
+        context.push(AppRoutes.farmerIrrigationAi);
+        break;
+    }
+  }
+
   static void showItemModal(BuildContext context, EssentialSuiteItem item) {
     final l10n = AppLocalizations.of(context);
     final title = item.type.title(l10n);
     final desc = item.type.description(l10n);
-    final phaseText = l10n?.farmerComingInPhase(item.type.phase) ?? 'Coming in ${item.type.phase}';
 
     showModalBottomSheet(
       context: context,
@@ -212,15 +242,15 @@ class EssentialSuiteGrid extends StatelessWidget {
                         margin: const EdgeInsets.only(top: 2),
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFEF3C7),
+                          color: const Color(0xFFDCFCE7),
                           borderRadius: BorderRadius.circular(6),
                         ),
-                        child: Text(
-                          phaseText,
-                          style: const TextStyle(
+                        child: const Text(
+                          'Live Agronomy Feature',
+                          style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFFB45309),
+                            color: Color(0xFF166534),
                           ),
                         ),
                       ),
@@ -248,10 +278,13 @@ class EssentialSuiteGrid extends StatelessWidget {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   padding: const EdgeInsets.symmetric(vertical: 12),
                 ),
-                onPressed: () => Navigator.pop(ctx),
-                child: Text(
-                  l10n?.farmerUnderstood ?? 'Understood',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  navigateToFeature(context, item);
+                },
+                child: const Text(
+                  'Launch Feature Now →',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
             ),
