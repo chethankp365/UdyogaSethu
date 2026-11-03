@@ -236,6 +236,7 @@ Not everyone wants to hunt through menus. **Just say what you need.**
 
 <img src="./assets/svg/us-divider.svg" width="100%" alt=""/>
 
+### 🧷 Architecture
 
 <img src="./assets/svg/us-architecture.svg" width="100%" alt="UdyogaSethu system architecture"/>
 
