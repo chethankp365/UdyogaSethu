@@ -412,6 +412,18 @@ We would rather be clear than impressive. This is a **research prototype**:
 
 <img src="./assets/svg/us-divider.svg" width="100%" alt=""/>
 
+
+## 👨‍💻 Author
+
+<div align="center">
+
+**Chethan Kumar KP** · Department of Computer Science and Design, Atria Institute of Technology, Bengaluru
+
+[![GitHub](https://img.shields.io/badge/GitHub-chethankp365-181717?style=for-the-badge&logo=github)](https://github.com/chethankp365)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-chethan--kumar--kp17-0a66c2?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/chethan-kumar-kp17)
+
+
+
 ### 🌉 Built to connect people with opportunity
 
 
