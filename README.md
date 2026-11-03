@@ -156,107 +156,6 @@ Mandi prices · weather advisories · data from external sources · **cached fal
 
 <img src="./assets/svg/us-divider.svg" width="100%" alt=""/>
 
-## 📱 See It in Action
-
-### 👷 Workers: find jobs, manage work
-
-<table>
-<tr>
-<td width="50%" align="center">
-
-**Worker Dashboard**
-
-<img src="./assets/screenshots/us-worker-home.jpg" width="100%" alt="Worker dashboard"/>
-
-*Opportunities and worker services at a glance.*
-
-</td>
-<td width="50%" align="center">
-
-**Nearby Jobs**
-
-<img src="./assets/screenshots/us-nearby-jobs-map.jpg" width="100%" alt="Nearby jobs map"/>
-
-*Location-based job discovery on a map.*
-
-</td>
-</tr>
-<tr>
-<td width="50%" align="center">
-
-**Digital Job Ticket**
-
-<img src="./assets/screenshots/us-digital-job-ticket.jpg" width="100%" alt="Digital job ticket"/>
-
-*A QR-based ticket for every accepted job.*
-
-</td>
-<td width="50%" align="center">
-
-**Worker Credentials**
-
-<img src="./assets/screenshots/us-worker-credentials.jpg" width="100%" alt="Worker credentials"/>
-
-*Skills, languages and verification status.*
-
-</td>
-</tr>
-</table>
-
-### 🌾 Farmers: manage and sell produce
-
-<table>
-<tr>
-<td width="50%" align="center">
-
-**Farmer Dashboard**
-
-<img src="./assets/screenshots/us-farmer-home.jpg" width="100%" alt="Farmer dashboard"/>
-
-*Weather, mandi prices and farm info.*
-
-</td>
-<td width="50%" align="center">
-
-**Produce Listings**
-
-<img src="./assets/screenshots/us-produce-listings.jpg" width="100%" alt="Produce listings"/>
-
-*Control prices and stock.*
-
-</td>
-</tr>
-<tr>
-<td width="50%" align="center">
-
-**Farmer Profile**
-
-<img src="./assets/screenshots/us-farmer-profile.jpg" width="100%" alt="Farmer profile"/>
-
-*Profile and farm details.*
-
-</td>
-<td width="50%" align="center">
-
-**Farm Produce Marketplace**
-
-<img src="./assets/screenshots/us-farm-produce-market.jpg" width="100%" alt="Farm produce marketplace"/>
-
-*Fresh produce from nearby farms.*
-
-</td>
-</tr>
-</table>
-
-### 🛒 Customers: one home for services and produce
-
-<div align="center">
-
-<img src="./assets/screenshots/us-customer-home.jpg" width="40%" alt="Customer dashboard"/>
-
-*Local workers, services and produce, all in one place.*
-
-</div>
 
 ### 🎬 Interactive Tour
 
@@ -278,6 +177,7 @@ Mandi prices · weather advisories · data from external sources · **cached fal
 </details>
 
 <img src="./assets/svg/us-divider.svg" width="100%" alt=""/>
+
 
 ## 🔐 The Trust Engine
 
@@ -301,17 +201,6 @@ Additional trust layers: identity verification workflows · worker credentials �
 
 ### 🔄 The Job Lifecycle
 
-```mermaid
-flowchart LR
-    A([📝 Job created]) --> B([🔍 Workers discover])
-    B --> C([✋ Apply])
-    C --> D([✅ Employer selects])
-    D --> E([🔒 Backend confirms])
-    E --> F([🔐 QR + Selfie + GPS check-in])
-    F --> G([🛠️ Work completed])
-    G --> H([💳 Payment + ⭐ Review])
-```
-
 <img src="./assets/svg/us-workflow.svg" width="100%" alt="UdyogaSethu job workflow"/>
 
 ### 🧱 The Golden Rule: *the backend is the truth*
@@ -321,10 +210,6 @@ flowchart LR
 
 The farm order flow follows the same discipline:
 
-```text
-🌱 Listing  →  🛒 Cart  →  📦 Order  →  🚚 Fulfilment  →  🤝 Handover  →  💳 Payment  →  ⭐ Review
-```
-
 <img src="./assets/svg/us-divider.svg" width="100%" alt=""/>
 
 ## 🎙️ The Voice Layer
@@ -332,21 +217,6 @@ The farm order flow follows the same discipline:
 Not everyone wants to hunt through menus. **Just say what you need.**
 
 <img src="./assets/svg/us-voice.svg" width="100%" alt="UdyogaSethu voice assistant pipeline"/>
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor U as 🗣️ User
-    participant App as 📱 Flutter App
-    participant EF as ⚙️ Supabase Edge Function
-    participant AI as 🧠 AI Providers
-    U->>App: Speaks a command (8 languages)
-    App->>EF: Audio sent for speech recognition (Deepgram)
-    EF->>AI: Intent classification + response generation
-    AI-->>EF: Intent + answer
-    EF-->>App: Authenticated response
-    App-->>U: Shown on screen AND spoken aloud
-```
 
 | Layer | Technology |
 |---|---|
@@ -564,20 +434,22 @@ We would rather be clear than impressive. This is a **research prototype**:
 
 ### 🌉 Built to connect people with opportunity
 
-## **Work. Farm. Voice. Trust.**
-
-<img src="https://github.com/chethankp365.png" width="110" height="110" style="border-radius:50%;" alt="Chethan Kumar GitHub profile picture"/>
-
-### Chethan Kumar KP
-
-[![GitHub](https://img.shields.io/badge/GitHub-UdyogaSethu-181717?style=for-the-badge&logo=github)](https://github.com/chethankp365/UdyogaSethu)
 
 <a href="https://github.com/chethankp365/UdyogaSethu">
 <img src="./assets/us-logo.png" width="180" alt="UdyogaSethu logo"/>
 </a>
 
+
+### **Work. Farm. Voice. Trust.**
+
+[![GitHub](https://img.shields.io/badge/GitHub-UdyogaSethu-181717?style=for-the-badge&logo=github)](https://github.com/chethankp365/UdyogaSethu)
+
 ⭐ **If this bridge helps you, star the repo.** ⭐
 
+
+<img src="https://github.com/chethankp365.png" width="110" height="110" style="border-radius:50%;" alt="Chethan Kumar GitHub profile picture"/>
+
+### Chethan Kumar KP
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:3ECF8E,50:2c5364,100:0f2027&height=120&section=footer" width="100%" alt=""/>
 
 </div>
