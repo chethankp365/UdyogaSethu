@@ -236,27 +236,6 @@ Not everyone wants to hunt through menus. **Just say what you need.**
 
 <img src="./assets/svg/us-divider.svg" width="100%" alt=""/>
 
-## 🏗️ Architecture
-
-```text
- ┌──────────────────────────┐        ┌──────────────────────────────┐
- │   📱 Flutter Android App │        │  🖥️ Admin Portal             │
- │  Workers·Farmers·Customers│       │  Java 21 · Spring Boot · Vaadin│
- │  GPS · Camera · QR · Voice│       └──────────────┬───────────────┘
- └─────────────┬────────────┘                       │
-               │                                    │
-               ▼                                    ▼
- ┌────────────────────────────────────────────────────────────────┐
- │                    ☁️  SUPABASE  (shared backend)               │
- │  Auth · Storage · Realtime · Edge Functions (TypeScript/Deno)  │
- │  ┌──────────────────────────────────────────────────────────┐  │
- │  │  🐘 PostgreSQL + PostGIS   ·   🔒 Row Level Security     │  │
- │  └──────────────────────────────────────────────────────────┘  │
- └───────┬──────────────┬──────────────┬──────────────┬───────────┘
-         ▼              ▼              ▼              ▼
-     🧠 Groq /       🎤 Deepgram    💳 Razorpay    🔔 Firebase
-   Gemini/OpenRouter                 (sandbox)        FCM
-```
 
 <img src="./assets/svg/us-architecture.svg" width="100%" alt="UdyogaSethu system architecture"/>
 
