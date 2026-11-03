@@ -424,12 +424,4 @@ We would rather be clear than impressive. This is a **research prototype**:
 
 [![GitHub](https://img.shields.io/badge/GitHub-UdyogaSethu-181717?style=for-the-badge&logo=github)](https://github.com/chethankp365/UdyogaSethu)
 
-⭐ **If this bridge helps you, star the repo.** ⭐
-
-
-<img src="https://github.com/chethankp365.png" width="110" height="110" style="border-radius:50%;" alt="Chethan Kumar GitHub profile picture"/>
-
-### Chethan Kumar KP
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:3ECF8E,50:2c5364,100:0f2027&height=120&section=footer" width="100%" alt=""/>
-
 </div>
